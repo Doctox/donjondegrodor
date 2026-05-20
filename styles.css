@@ -67,7 +67,7 @@
   padding: 0;
   border: 0;
   background-color: transparent;
-  background-image: url("assets/Village/panneau-affichage.png");
+  background-image: none;
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
@@ -1902,33 +1902,6 @@ h1 {
   transition: opacity 420ms ease, transform 2000ms ease, filter 420ms ease;
 }
 
-.door[data-door="0"] {
-  background-image: url("assets/Donjon/porte-1-ferme.png");
-}
-
-.door[data-door="1"] {
-  background-image: url("assets/Donjon/porte-2-ferme.png");
-}
-
-.door[data-door="2"] {
-  background-image: url("assets/Donjon/porte-3-ferme.png");
-}
-
-.door[data-door="0"]:hover:not(:disabled),
-.door[data-door="0"].chosen {
-  background-image: url("assets/Donjon/porte-1-ouvert.png");
-}
-
-.door[data-door="1"]:hover:not(:disabled),
-.door[data-door="1"].chosen {
-  background-image: url("assets/Donjon/porte-2-ouvert.png");
-}
-
-.door[data-door="2"]:hover:not(:disabled),
-.door[data-door="2"].chosen {
-  background-image: url("assets/Donjon/porte-3-ouvert.png");
-}
-
 .door:hover:not(:disabled) {
   transform: translateY(-8px);
   filter: brightness(1.12) drop-shadow(0 18px 18px rgba(0, 0, 0, 0.42));
@@ -2448,7 +2421,7 @@ h1 {
 .bank-building {
   min-height: clamp(130px, 19dvh, 220px);
   border-color: transparent;
-  background: url("assets/Village/banque.png") center / contain no-repeat;
+  background: transparent;
   background-color: transparent;
   box-shadow: none;
 }
@@ -2493,7 +2466,7 @@ h1 {
 .tavern-building {
   min-height: clamp(130px, 19dvh, 220px);
   border-color: transparent;
-  background: url("assets/Village/Taverne.png") center / contain no-repeat;
+  background: transparent;
   background-color: transparent;
   box-shadow: none;
 }
@@ -2501,7 +2474,7 @@ h1 {
 .shop-building {
   min-height: clamp(130px, 19dvh, 220px);
   border-color: transparent;
-  background: url("assets/Village/Echoppe.png") center / contain no-repeat;
+  background: transparent;
   background-color: transparent;
   box-shadow: none;
 }
@@ -3443,7 +3416,7 @@ h1 {
   top: 14%;
   width: var(--village-bank-w);
   aspect-ratio: 1.28;
-  background-image: url("assets/Village/banque.png");
+  background-image: none;
 }
 
 .scene.is-village .tavern-building {
@@ -3451,7 +3424,7 @@ h1 {
   top: 17%;
   width: var(--village-tavern-w);
   aspect-ratio: 1.34;
-  background-image: url("assets/Village/Taverne.png");
+  background-image: none;
 }
 
 .scene.is-village .shop-building {
@@ -3459,7 +3432,7 @@ h1 {
   top: 41%;
   width: var(--village-shop-w);
   aspect-ratio: 1.28;
-  background-image: url("assets/Village/Echoppe.png");
+  background-image: none;
 }
 
 .scene.is-village .building-bank-total {
@@ -3481,7 +3454,7 @@ h1 {
   width: var(--village-board-w);
   min-height: 0;
   aspect-ratio: 1.45;
-  background-image: url("assets/Village/panneau-affichage.png");
+  background-image: none;
   color: var(--ink);
   text-align: left;
   transform-origin: center;
@@ -3745,7 +3718,7 @@ h1 {
   top: 11%;
   width: var(--village-bank-w);
   aspect-ratio: 1.25;
-  background-image: url("assets/Village/banque.png");
+  background-image: none;
 }
 
 .scene.is-village .tavern-building {
@@ -3753,7 +3726,7 @@ h1 {
   top: 13%;
   width: var(--village-tavern-w);
   aspect-ratio: 1.28;
-  background-image: url("assets/Village/Taverne.png");
+  background-image: none;
 }
 
 .scene.is-village .shop-building {
@@ -3761,7 +3734,7 @@ h1 {
   top: 38%;
   width: var(--village-shop-w);
   aspect-ratio: 1.25;
-  background-image: url("assets/Village/Echoppe.png");
+  background-image: none;
 }
 
 .scene.is-village .notice-building {
@@ -3769,7 +3742,7 @@ h1 {
   top: 39%;
   width: var(--village-board-w);
   aspect-ratio: 1;
-  background-image: url("assets/Village/panneau-affichage.png");
+  background-image: none;
   color: var(--ink);
   text-align: left;
 }
@@ -4496,7 +4469,7 @@ h1 {
   --village-hodor-y: calc(50% - 18px);
   background:
     linear-gradient(180deg, rgba(10, 9, 6, 0.08), rgba(10, 9, 6, 0.12)),
-    url("assets/Village/Village.png") center / 100% 100% no-repeat,
+    url("assets/Village/village v0.2.png") center / 100% 100% no-repeat,
     #6f8f35;
 }
 
@@ -5233,5 +5206,274 @@ h1 {
   .scene.is-dungeon:not(.is-combat) .door-hint {
     width: min(140px, 42vw);
     font-size: 0.64rem;
+  }
+}
+
+/* Village illustrated stage: one image coordinate system for the background, hitboxes, and Hodor. */
+.scene.is-dungeon:not(.is-combat) .door {
+  border-color: transparent;
+  background: transparent;
+}
+
+.scene.is-dungeon:not(.is-combat) .door:hover:not(:disabled),
+.scene.is-dungeon:not(.is-combat) .doors.resolving .door.chosen {
+  border-color: transparent;
+  background: transparent;
+  filter: none;
+}
+
+.scene.is-dungeon:not(.is-combat) .hodor-sprite {
+  width: clamp(92px, 19%, 190px);
+  max-width: 22%;
+}
+
+.scene.is-village {
+  --village-hodor-x: 50%;
+  --village-hodor-y: 49%;
+  --village-hero-w: clamp(150px, 16%, 230px);
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto minmax(0, 1fr);
+  align-items: stretch;
+  padding: clamp(8px, 1.2dvh, 14px);
+  overflow: hidden;
+  background: linear-gradient(180deg, #273615 0%, #151f10 100%);
+}
+
+.scene.is-village.has-win-banner {
+  grid-template-rows: auto auto minmax(0, 1fr);
+}
+
+.scene.is-village .story-panel {
+  grid-column: 1;
+  grid-row: auto;
+}
+
+.scene.is-village .reward-row {
+  display: contents;
+}
+
+.scene.is-village .action-zone {
+  grid-column: 1;
+  grid-row: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  height: 100%;
+  margin: 0;
+  padding: clamp(4px, 0.8dvh, 8px);
+  border-top: 0;
+  background: transparent;
+  overflow: visible;
+}
+
+.scene.is-village .village-stage {
+  position: relative;
+  width: min(100%, calc(100dvh - 210px));
+  max-width: 900px;
+  aspect-ratio: 1;
+  overflow: visible;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.08)),
+    url("assets/Village/village v0.2.png") center / 100% 100% no-repeat;
+  filter: drop-shadow(0 22px 34px rgba(0, 0, 0, 0.42));
+}
+
+.scene.is-village .village-stage[hidden] {
+  display: none;
+}
+
+.scene.is-village .village-choices {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.scene.is-village .village-choices[hidden] {
+  display: none;
+}
+
+.scene.is-village .building {
+  position: absolute;
+  display: block;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  filter: none;
+  overflow: visible;
+  pointer-events: auto;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+}
+
+.scene.is-village .building:hover {
+  transform: translate(-50%, -50%);
+  filter: none;
+  box-shadow: none;
+}
+
+.scene.is-village .building:focus-visible {
+  outline: 2px solid rgba(244, 234, 214, 0.84);
+  outline-offset: 2px;
+}
+
+.scene.is-village .building::after,
+.scene.is-village .building-roof,
+.scene.is-village .building > strong,
+.scene.is-village .building > small,
+.scene.is-village .notice-building .village-stat-title,
+.scene.is-village .notice-building strong,
+.scene.is-village .notice-building small {
+  display: none;
+}
+
+.scene.is-village .building-bank-total {
+  position: absolute;
+  left: 88%;
+  bottom: 7%;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: clamp(48px, 7vw, 76px);
+  padding: clamp(5px, 0.75dvh, 8px) clamp(9px, 1.1dvh, 13px);
+  border: 1px solid rgba(216, 170, 61, 0.68);
+  border-radius: 999px;
+  background: rgba(12, 9, 5, 0.84);
+  color: var(--gold);
+  font-family: Arial, sans-serif;
+  font-size: clamp(0.78rem, 1.35dvh, 1.05rem);
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.82);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.scene.is-village .bank-building {
+  left: 27%;
+  top: 23%;
+  width: 25%;
+  aspect-ratio: 1.25;
+  background-image: none;
+}
+
+.scene.is-village .shop-building {
+  left: 71%;
+  top: 23%;
+  width: 24%;
+  aspect-ratio: 1.18;
+  background-image: none;
+}
+
+.scene.is-village .sell-building {
+  left: 21%;
+  top: 65%;
+  width: 26%;
+  aspect-ratio: 1.16;
+}
+
+.scene.is-village .tavern-building {
+  left: 75%;
+  top: 66%;
+  width: 25%;
+  aspect-ratio: 1.16;
+  background-image: none;
+}
+
+.scene.is-village .notice-building {
+  left: 50%;
+  top: 86%;
+  width: 19%;
+  min-height: 0;
+  aspect-ratio: 1.15;
+  background-image: none;
+}
+
+.scene.is-village .hodor-sprite {
+  position: absolute;
+  left: var(--village-hodor-x);
+  top: var(--village-hodor-y);
+  z-index: 4;
+  width: var(--village-hero-w);
+  max-width: 22%;
+  max-height: none;
+  transform: translate(-50%, -50%);
+  transform-origin: center bottom;
+  filter: drop-shadow(0 26px 22px rgba(0, 0, 0, 0.44));
+  transition:
+    left 360ms cubic-bezier(0.22, 0.72, 0.24, 1),
+    top 360ms cubic-bezier(0.22, 0.72, 0.24, 1),
+    filter 180ms ease;
+}
+
+.scene.is-village:has(.bank-building:hover) {
+  --village-hodor-x: 36%;
+  --village-hodor-y: 36%;
+}
+
+.scene.is-village:has(.shop-building:hover) {
+  --village-hodor-x: 63%;
+  --village-hodor-y: 36%;
+}
+
+.scene.is-village:has(.sell-building:hover) {
+  --village-hodor-x: 34%;
+  --village-hodor-y: 70%;
+}
+
+.scene.is-village:has(.tavern-building:hover) {
+  --village-hodor-x: 65%;
+  --village-hodor-y: 70%;
+}
+
+.scene.is-village:has(.notice-building:hover) {
+  --village-hodor-x: 50%;
+  --village-hodor-y: 76%;
+}
+
+.scene.is-village:has(.building:hover) .hodor-sprite {
+  filter: drop-shadow(0 30px 24px rgba(0, 0, 0, 0.48)) brightness(1.04);
+}
+
+.scene.is-village.has-win-banner .win-banner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 40;
+  width: min(620px, calc(100% - 32px));
+  margin: 0;
+  transform: translate(-50%, -50%);
+}
+
+@media (max-width: 760px) {
+  .scene.is-dungeon:not(.is-combat) .hodor-sprite {
+    width: clamp(82px, 20%, 160px);
+  }
+
+  .scene.is-village {
+    --village-hero-w: clamp(118px, 18%, 178px);
+  }
+
+  .scene.is-village .village-stage {
+    width: min(100%, calc(100dvh - 190px));
+  }
+}
+
+@media (max-width: 420px), (max-height: 640px) {
+  .scene.is-village {
+    --village-hero-w: clamp(96px, 17%, 140px);
+  }
+
+  .scene.is-village .village-stage {
+    width: min(100%, calc(100dvh - 170px));
   }
 }

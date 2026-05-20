@@ -21,6 +21,7 @@ const cloudState = {
   loaded: false,
   applying: false,
   saveTimer: null,
+  runSaveTimer: null,
 };
 
 let fallbackBankGold = 0;
@@ -175,8 +176,9 @@ document.querySelectorAll(".door").forEach((door) => {
 });
 
 addClick("bank-building", depositGold);
-addClick("tavern-building", startRun);
+addClick("tavern-building", goToCellFromTavern);
 addClick("shop-building", openShop);
+addClick("sell-building", sellStuffAtVillage);
 addClick("close-shop", closeShop);
 addClick("stats-building", openStatsPanel);
 addClick("close-stats", closeStatsPanel);
@@ -357,7 +359,7 @@ function authMessage(message) {
     return passwordPolicyMessage();
   }
   if (lower.includes("user already registered")) {
-    return "Ce compte existe deja. Essaie Connexion.";
+    return "Ce compte existe déjà. Essaie Connexion.";
   }
   return text || "Erreur inconnue. Le donjon nie toute responsabilite.";
 }
@@ -514,7 +516,7 @@ async function resolveLoginEmail(identifier, options = {}) {
   if (error || !data) {
     if (!quiet) {
       setAccountStatus("Pseudo introuvable", "bad");
-      setAccountHelp("Essaie ton email si ton compte a ete cree avant les pseudos.");
+      setAccountHelp("Essaie ton email si ton compte a été créé avant les pseudos.");
     }
     return "";
   }
@@ -576,7 +578,7 @@ async function signUpAccount() {
   setAccountStatus("Creation du compte...", "neutral");
   const existingEmail = await resolveLoginEmail(credentials.alias, { quiet: true });
   if (existingEmail) {
-    setAccountStatus("Pseudo deja pris", "bad");
+    setAccountStatus("Pseudo déjà pris", "bad");
     setAccountHelp("Choisis un autre pseudo pour ce nouveau compte.");
     return;
   }
@@ -606,6 +608,7 @@ async function signUpAccount() {
 async function signOutAccount() {
   if (!supabaseClient) return;
   setAccountStatus("Deconnexion...", "neutral");
+  await saveActiveRunNow({ force: true });
   await supabaseClient.auth.signOut();
   cloudState.user = null;
   cloudState.profile = null;
@@ -627,7 +630,7 @@ async function loadCloudProfileAndSave() {
     const [{ data: profile, error: profileError }, { data: alias, error: aliasError }, { data: save, error: saveError }] = await Promise.all([
       supabaseClient.from("profiles").select("role, display_name").eq("user_id", cloudState.user.id).maybeSingle(),
       supabaseClient.rpc("current_login_alias"),
-      supabaseClient.from("player_saves").select("bank_gold,total_gold,wins,losses,upgrades").eq("user_id", cloudState.user.id).maybeSingle(),
+      supabaseClient.from("player_saves").select("bank_gold,total_gold,wins,losses,upgrades,active_run").eq("user_id", cloudState.user.id).maybeSingle(),
     ]);
 
     if (profileError) {
@@ -669,7 +672,8 @@ async function loadCloudProfileAndSave() {
       await saveCloudNow({ force: true });
     }
 
-    if (returningPlayer) {
+    const restoredRun = restoreActiveRun(save?.active_run);
+    if (returningPlayer && !restoredRun) {
       sendReturningPlayerToVillage();
     }
 
@@ -720,7 +724,7 @@ function sendReturningPlayerToVillage() {
   state.floor = 0;
   state.life = state.maxLife;
   state.hodorPose = "walk";
-  setStory("Hodor retrouve le village. Le garde a l'entree pretend que c'etait prevu.", "neutral");
+  setStory("Hodor retrouve le village. Le garde à l'entrée prétend que c'était prévu.");
 }
 
 function resetRunCarryover() {
@@ -754,10 +758,127 @@ function resetGuestProgress() {
   }
 }
 
+function hasActiveRunToSave() {
+  return !state.runEnded && (state.screen === "dungeon" || state.screen === "combat");
+}
+
+function combatKeyFor(monster) {
+  if (!monster) return "";
+  const match = Object.entries(monsters).find(([, candidate]) => candidate === monster || candidate.asset === monster.asset || candidate.name === monster.name);
+  return match ? match[0] : "";
+}
+
+function buildActiveRunPayload() {
+  if (!hasActiveRunToSave()) return null;
+  return {
+    version: 1,
+    screen: state.screen,
+    floor: state.floor,
+    totalFloors: state.totalFloors,
+    life: state.life,
+    maxLife: state.maxLife,
+    carriedGold: state.carriedGold,
+    inventory: [...state.inventory],
+    runLosses: state.runLosses,
+    floorShift: state.floorShift,
+    combatKey: combatKeyFor(state.combat),
+    updated_at: new Date().toISOString(),
+  };
+}
+
+function restoreActiveRun(activeRun) {
+  const snapshot = sanitizeActiveRun(activeRun);
+  if (!snapshot) return false;
+
+  state.screen = snapshot.screen;
+  state.floor = snapshot.floor;
+  state.totalFloors = snapshot.totalFloors;
+  state.life = snapshot.life;
+  state.maxLife = snapshot.maxLife;
+  state.carriedGold = snapshot.carriedGold;
+  state.inventory = snapshot.inventory;
+  state.runLosses = snapshot.runLosses;
+  state.floorShift = snapshot.floorShift;
+  state.combat = snapshot.screen === "combat" ? monsters[snapshot.combatKey] || null : null;
+  if (snapshot.screen === "combat" && !state.combat) {
+    state.screen = "dungeon";
+  }
+  state.runEnded = false;
+  state.lossRecorded = false;
+  state.winRecorded = false;
+  state.inputLocked = false;
+  state.showWinBanner = false;
+  state.villageLocation = "Village";
+  state.doorHints = [];
+  state.hodorPose = state.screen === "combat" ? "combat" : "question";
+  prepareDoorHints();
+  setStory("Hodor reprend exactement la ou il avait abandonne la paperasse.", "neutral");
+  return true;
+}
+
+function sanitizeActiveRun(activeRun) {
+  if (!activeRun || typeof activeRun !== "object" || activeRun.version !== 1) return null;
+  if (activeRun.screen !== "dungeon" && activeRun.screen !== "combat") return null;
+
+  const floor = Math.max(1, Math.floor(Number(activeRun.floor || 1)));
+  const totalFloors = Math.max(floor, Math.floor(Number(activeRun.totalFloors || floor || TOTAL_FLOORS)));
+  const life = Math.max(1, Math.floor(Number(activeRun.life || START_LIFE)));
+  const maxLife = Math.max(life, Math.floor(Number(activeRun.maxLife || START_LIFE)));
+  const inventory = Array.isArray(activeRun.inventory)
+    ? activeRun.inventory.filter((item) => typeof item === "string" && itemSaleValues[item] !== undefined).slice(0, 12)
+    : [];
+  const combatKey = typeof activeRun.combatKey === "string" && monsters[activeRun.combatKey] ? activeRun.combatKey : "";
+
+  return {
+    screen: activeRun.screen === "combat" && combatKey ? "combat" : "dungeon",
+    floor,
+    totalFloors,
+    life,
+    maxLife,
+    carriedGold: Math.max(0, Math.floor(Number(activeRun.carriedGold || 0))),
+    inventory,
+    runLosses: Math.max(0, Math.floor(Number(activeRun.runLosses || 0))),
+    floorShift: Math.floor(Number(activeRun.floorShift || 0)),
+    combatKey,
+  };
+}
+
 function queueCloudSave() {
   if (!supabaseClient || !cloudState.user || cloudState.applying) return;
   window.clearTimeout(cloudState.saveTimer);
   cloudState.saveTimer = window.setTimeout(saveCloudNow, 500);
+}
+
+function queueActiveRunSave() {
+  if (!supabaseClient || !cloudState.user || cloudState.applying || !hasActiveRunToSave()) return;
+  window.clearTimeout(cloudState.runSaveTimer);
+  cloudState.runSaveTimer = window.setTimeout(saveActiveRunNow, 400);
+}
+
+async function saveActiveRunNow(options = {}) {
+  if (!supabaseClient || !cloudState.user || (cloudState.applying && !options.force)) return;
+  const activeRun = buildActiveRunPayload();
+  const { error } = await supabaseClient
+    .from("player_saves")
+    .update({ active_run: activeRun })
+    .eq("user_id", cloudState.user.id);
+  if (error) {
+    setAccountStatus("Checkpoint run echoue", "bad");
+    setAccountHelp(authMessage(error.message));
+  }
+}
+
+async function clearActiveRunNow(options = {}) {
+  if (!supabaseClient || !cloudState.user || (cloudState.applying && !options.force)) return;
+  window.clearTimeout(cloudState.runSaveTimer);
+  const { error } = await supabaseClient
+    .from("player_saves")
+    .update({ active_run: null })
+    .eq("user_id", cloudState.user.id);
+  if (error) {
+    setAccountStatus("Nettoyage run echoue", "bad");
+    setAccountHelp(authMessage(error.message));
+  }
 }
 
 async function saveCloudNow(options = {}) {
@@ -769,6 +890,7 @@ async function saveCloudNow(options = {}) {
     wins: Math.max(0, Math.floor(Number(state.stats.wins || 0))),
     losses: Math.max(0, Math.floor(Number(state.stats.losses || 0))),
     upgrades: state.upgrades || {},
+    active_run: buildActiveRunPayload(),
   };
   const { error } = await supabaseClient.from("player_saves").upsert(payload, { onConflict: "user_id" });
   if (error) {
@@ -784,7 +906,7 @@ function setStory(text, tone = "neutral") {
   state.storyTone = tone;
   const storyText = deathStoryText(text);
   const split = splitStoryReward(storyText);
-  $("story").innerHTML = formatStory(split.story || "Hodor contemple le resultat avec une comprehension limitee.");
+  $("story").innerHTML = formatStory(split.story || "Hodor contemple le résultat avec une compréhension limitée.");
   setReward(split.reward);
   state.hodorPose = hodorPoseFromStory(storyText, tone);
 }
@@ -792,7 +914,7 @@ function setStory(text, tone = "neutral") {
 function deathStoryText(text) {
   if (state.screen !== "mort") return text;
   if (/Les PO en poche sont perdues/i.test(text)) return text;
-  return `${text} Les PO en poche sont perdues. Les gardes te renvoient dans les geoles.`;
+  return `${text} Les PO en poche sont perdues. Les gardes te renvoient dans les geôles, gros naze.`;
 }
 
 function setReward(text) {
@@ -824,12 +946,13 @@ function hodorPoseFromStory(text, tone) {
   if (/\+\d+\s*coeur|caillou affectif|hache emoussee|casque trop petit|sandales de panique|medaillon|chaussette|gants|slip|cape/.test(effectText)) return "victory";
   if (/-\d+\s*etages/.test(effectText)) return "fuite";
   if (/\+\d+\s*etages/.test(effectText)) return "walk";
+  if (/esquive/.test(effectText)) return "fuite";
   if (/doublon|objet sauve|sauve/.test(effectText)) return "question";
   if (/monte-charge|service client/.test(content)) return "walk";
   if (/malediction|formulaire|vexee/.test(content)) return "question";
   if (/fresque|ressemble|personne ne sait|pourquoi|mystere|etrange|bizarre|statue|salle est vide|coffre.*vide|dramatique/.test(content)) return "question";
   if (/tu l'as deja|deja|dommage|rien|vide|affamee|pauvret/.test(content)) return "releve";
-  if (/mort|ko|retour aux geoles|tombe avec la dignite/.test(content)) return "dead";
+  if (/mort|ko|retour aux geoles|tombe avec la dignite|one shot/.test(content)) return "dead";
   if (/-\d+\s*coeur|mord|tire|violence|baffe|croche-pied|degat|douloureux|coup/.test(content)) return "hurt";
   if (/trappe|descente|trouves un objet|tu trouves un objet|recuperes un objet/.test(content)) return "victory";
   if (/achete|echoppe|vendeur|village/.test(content)) return "walk";
@@ -889,7 +1012,7 @@ function splitSentenceEffect(sentence) {
     };
   }
 
-  const numericEffect = sentence.match(/([+-]\d+\s*(?:PO|coeur|etages))/i);
+  const numericEffect = sentence.match(/([+-]\d+\s*(?:PO|cœurs?|coeur|étages|etages))/i);
   if (numericEffect) {
     return {
       story: cleanupStorySentence(sentence.replace(numericEffect[0], "").replace(/\bmaximum\b/i, "")),
@@ -899,19 +1022,19 @@ function splitSentenceEffect(sentence) {
 
   const goldEffect = goldEffectFromSentence(sentence);
   if (goldEffect) {
-    const replacement = goldEffect.startsWith("-") ? "des pieces" : "quelques pieces";
+    const replacement = goldEffect.startsWith("-") ? "des pièces" : "quelques pièces";
     return {
       story: cleanupStorySentence(sentence.replace(/\d+\s*PO/i, replacement)),
       reward: goldEffect,
     };
   }
 
-  const moveEffect = sentence.match(/(?:remontes?|descends?|gagne|perd)\s+(?:de\s+)?(\d+\s*etages)/i);
+  const moveEffect = sentence.match(/(?:remontes?|descends?|gagne|perd)\s+(?:de\s+)?(\d+\s*(?:étages|etages))/i);
   if (moveEffect) {
     const sign = /remont|perd/i.test(sentence) ? "+" : "-";
     return {
       story: cleanupStorySentence(sentence
-        .replace(/(?:remontes?|descends?|gagne|perd)\s+(?:de\s+)?\d+\s*etages/i, "")
+        .replace(/(?:remontes?|descends?|gagne|perd)\s+(?:de\s+)?\d+\s*(?:étages|etages)/i, "")
         .replace(/\s*:\s*$/g, "")),
       reward: `${sign}${moveEffect[1]}`,
     };
@@ -929,8 +1052,8 @@ function splitSentenceEffect(sentence) {
     return { story: cleanupStorySentence(sentence), reward: "Objet sauve" };
   }
 
-  if (/annule la catastrophe|evitent le pire|esquive/i.test(sentence)) {
-    return { story: cleanupStorySentence(sentence), reward: "Sauve" };
+  if (/annule la catastrophe|évitent le pire|evitent le pire|esquive/i.test(sentence)) {
+    return { story: cleanupStorySentence(sentence), reward: "Esquive" };
   }
 
   return { story: sentence, reward: "" };
@@ -946,12 +1069,12 @@ function goldEffectFromSentence(sentence) {
 }
 
 function duplicateItemEffect(sentence) {
-  if (!/deja|doublon|cumul/i.test(sentence)) return "";
+  if (!/deja|doublon|cumul/i.test(normalizeText(sentence))) return "";
   return knownItemInText(sentence);
 }
 
 function itemGainEffect(sentence) {
-  if (/deja|perdu|pulverise|confisque|se fend|se dechire|explose/i.test(sentence)) return "";
+  if (/deja|perdu|pulverise|confisque|se fend|se dechire|explose/i.test(normalizeText(sentence))) return "";
   const item = knownItemInText(sentence);
   if (!item) return "";
   return item;
@@ -960,7 +1083,7 @@ function itemGainEffect(sentence) {
 function itemLossEffect(sentence) {
   const item = knownItemInText(sentence);
   if (!item) return "";
-  if (/perdu|pulverise|confisque|se fend|se dechire|explose|reste sur place|partent ensuite/i.test(sentence)) {
+  if (/perdu|pulverise|confisque|se fend|se dechire|explose|reste sur place|partent ensuite/i.test(normalizeText(sentence))) {
     return item;
   }
   return "";
@@ -982,9 +1105,9 @@ function itemAliasesFor(item) {
   const aliases = {
     "Casque Trop Petit": ["casque trop petit", "le casque trop petit"],
     "Slip de Guerre": ["slip de guerre", "le slip de guerre"],
-    "Medaillon du Presque-Heros": ["medaillon", "medaillon du presque-heros", "un medaillon du presque-heros"],
+    "Medaillon du Presque-Heros": ["medaillon", "médaillon", "medaillon du presque-heros", "médaillon du presque-héros", "un medaillon du presque-heros", "un médaillon du presque-héros"],
     "Sandales de Panique": ["ces sandales", "des sandales de panique", "sandales de panique", "sandales"],
-    "Hache Emoussee": ["hache emoussee", "une hache emoussee"],
+    "Hache Emoussee": ["hache emoussee", "hache émoussée", "une hache emoussee", "une hache émoussée"],
     "Boulet au Pied": ["boulet au pied", "un boulet au pied"],
     "Chaussette Porte-Bonheur": ["chaussette porte-bonheur", "une chaussette porte-bonheur"],
     "Caillou Affectif": ["caillou affectif", "un caillou affectif"],
@@ -1022,6 +1145,7 @@ function cleanupStorySentence(sentence) {
 
 function normalizeText(text) {
   return String(text)
+    .replace(/[œŒ]/g, "oe")
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase();
@@ -1036,14 +1160,14 @@ function formatStory(text) {
 
 function highlightGold(text) {
   return highlightItems(text)
-    .replace(/(annonce\s+)(\d+\s*etages)/g, '$1<span class="floor-total">$2</span>')
-    .replace(/(-\d+\s*etages)/g, '<span class="floor-down">$1</span>')
-    .replace(/(\+\d+\s*etages)/g, '<span class="floor-up">$1</span>')
-    .replace(/(remonte(?:s)? de\s+)(\d+\s*etages)/g, '$1<span class="floor-up">$2</span>')
-    .replace(/(descend(?:s)? de\s+)(\d+\s*etages)/g, '$1<span class="floor-down">$2</span>')
+    .replace(/(annonce\s+)(\d+\s*(?:étages|etages))/g, '$1<span class="floor-total">$2</span>')
+    .replace(/(-\d+\s*(?:étages|etages))/g, '<span class="floor-down">$1</span>')
+    .replace(/(\+\d+\s*(?:étages|etages))/g, '<span class="floor-up">$1</span>')
+    .replace(/(remonte(?:s)? de\s+)(\d+\s*(?:étages|etages))/g, '$1<span class="floor-up">$2</span>')
+    .replace(/(descend(?:s)? de\s+)(\d+\s*(?:étages|etages))/g, '$1<span class="floor-down">$2</span>')
     .replace(/(\+?\d+\s*PO|PO)/g, '<span class="po-text">$1</span>')
-    .replace(/(\+\d+\s*coeur)/g, '<span class="heart-good">$1</span>')
-    .replace(/(-\d+\s*coeur(?:\s+bonus)?)/g, '<span class="heart-bad">$1</span>');
+    .replace(/(\+\d+\s*(?:cœurs?|coeur))/g, '<span class="heart-good">$1</span>')
+    .replace(/(-\d+\s*(?:cœurs?|coeur)(?:\s+bonus)?)/g, '<span class="heart-bad">$1</span>');
 }
 
 function highlightItems(text) {
@@ -1154,7 +1278,7 @@ function openShop() {
   state.hodorPose = "walk";
   state.showWinBanner = false;
   state.villageLocation = "Echoppe";
-  setStory("Le vendeur sourit comme quelqu'un qui a deja compte ton argent deux fois.");
+  setStory("Le vendeur sourit comme quelqu'un qui a déjà compté ton argent deux fois, gros pigeon médiéval.");
   renderShop();
   render();
 }
@@ -1197,12 +1321,12 @@ function buyUpgrade(id) {
   const cost = upgrade.costs[current];
 
   if (cost === undefined) {
-    setStory(`${upgrade.name} est deja au maximum. Meme l'arnaque a ses limites.`);
+    setStory(`${upgrade.name} est déjà au maximum. Même l'arnaque a ses limites.`);
     return;
   }
 
   if (state.bankGold < cost) {
-    setStory(`Il te manque ${cost - state.bankGold} PO pour acheter ${upgrade.name}. Le vendeur fait semblant d'etre triste.`, "bad");
+    setStory(`Il te manque ${cost - state.bankGold} PO pour acheter ${upgrade.name}. Le vendeur fait semblant d'être triste, pauvre gueux.`);
     return;
   }
 
@@ -1210,7 +1334,7 @@ function buyUpgrade(id) {
   state.upgrades[id] = current + 1;
   saveBankGold(state.bankGold);
   saveUpgrades();
-  setStory(`${upgrade.name} niveau ${current + 1} achete. Hodor se sent progresser, ou peut-etre c'est une allergie.`, "good");
+  setStory(`${upgrade.name} niveau ${current + 1} acheté. Hodor se sent progresser, ou peut-être c'est une allergie.`);
   render();
 }
 
@@ -1223,7 +1347,7 @@ function chooseDoor(door) {
   door.blur();
   flashDoor(door);
   state.inputLocked = true;
-  setStory("Hodor pose la main sur la poignee. Le donjon retient son souffle, probablement pour economiser l'air.");
+  setStory("Hodor pose la main sur la poignée. Le donjon retient son souffle, probablement pour économiser l'air.");
   render();
 
   window.setTimeout(() => resolveDoorChoice(), 2000);
@@ -1321,14 +1445,14 @@ function finalDoorOutcome() {
     state.runEnded = true;
     state.life = state.maxLife;
     recordWin();
-    return "La derniere porte s'ouvre enfin. Dehors, le village cache mal sa surprise.";
+    return "La dernière porte s'ouvre enfin. Dehors, le village cache mal sa surprise.";
   }
 
   if (roll < 0.92) {
-    return takeDamage(1, "La derniere porte s'ouvre sur deux gardes en pause cafe. Ton visage devient l'ordre du jour. -1 coeur.");
+    return takeDamage(1, "La dernière porte s'ouvre sur deux gardes en pause café. Ton visage devient l'ordre du jour, andouille cuirassée. -1 cœur.");
   }
 
-  return takeDamage(2, "La derniere porte disait 'Sortie'. Le mur derriere appelle ca du marketing. -2 coeur.");
+  return takeDamage(2, "La dernière porte disait 'Sortie'. Le mur derrière appelle ça du marketing. -2 cœurs.");
 }
 
 function prepareDoorHints() {
@@ -1348,21 +1472,21 @@ function prepareDoorHints() {
 function doorHintPool(level) {
   const base = {
     true: [
-      "ca sent l'or",
-      "ca grogne",
-      "ca pique",
+      "ça sent l'or",
+      "ça grogne",
+      "ça pique",
       "silence suspect",
       "courant d'air",
-      "ca sent la cave humide",
-      "bruit de pieces",
+      "ça sent la cave humide",
+      "bruit de pièces",
       "ronflement pas rassurant",
-      "odeur de decision nulle",
+      "odeur de décision nulle",
     ],
     false: [
       "panneau menteur",
-      "promis jure, aucun piege",
+      "promis juré, aucun piège",
       "odeur de victoire douteuse",
-      "ca a l'air presque legal",
+      "ça a l'air presque légal",
       "le donjon insiste beaucoup",
     ],
   };
@@ -1370,26 +1494,26 @@ function doorHintPool(level) {
   if (level >= 2) {
     base.true.push(
       "probable coffre ou arnaque brillante",
-      "bruit de ferraille en colere",
-      "escalier quelque part, peut-etre meme utile",
-      "air frais, ou cadavre tres poli",
+      "bruit de ferraille en colère",
+      "escalier quelque part, peut-être même utile",
+      "air frais, ou cadavre très poli",
       "quelque chose gratte la porte",
       "butin possible, humiliation certaine"
     );
     base.false.push(
       "un bruit louche, ou juste un mensonge administratif",
-      "la porte fait semblant d'etre gentille",
-      "ca clignote comme une mauvaise idee",
-      "l'inscription a ete ecrite par un mur",
-      "tres bon choix selon la porte"
+      "la porte fait semblant d'être gentille",
+      "ça clignote comme une mauvaise idée",
+      "l'inscription a été écrite par un mur",
+      "très bon choix selon la porte, donc méfiance"
     );
   }
 
   if (level >= 3) {
     base.true.push(
       "forte chance de combat",
-      "ca ressemble a du butin",
-      "risque de baffe, pas forcement de mort",
+      "ça ressemble à du butin",
+      "risque de baffe, pas forcément de mort",
       "possible raccourci vertical",
       "odeur de boutique sans vendeur",
       "statistiquement moins honteux"
@@ -1410,7 +1534,7 @@ function startCombat(monster) {
   state.screen = "combat";
   state.combat = monster;
   state.hodorPose = "combat";
-  return `${monster.intro} Hodor doit choisir une strategie, ce qui surestime tout le monde.`;
+  return `${monster.intro} Hodor doit choisir une stratégie, ce qui surestime tout le monde.`;
 }
 
 function resolveCombat(strike) {
@@ -1471,24 +1595,24 @@ function combatOutcome(monster, strike) {
   const strikeText = strikeLabel(strike);
 
   if (roll < deathChance) {
-    return useCombatItems(instantDeath(`Tu tentes de ${strikeText}. ${monster.name} corrige ton optimisme.`), usedItems);
+    return useCombatItems(instantDeath(`Tu tentes de ${strikeText}. ${monster.name} corrige ton optimisme. ONE SHOT, GROS NAZE.`), usedItems);
   }
 
   if (roll < deathChance + profile.loseItem && state.inventory.length) {
     const lost = removeRandomItem();
-    return useCombatItems(`Tu tentes de ${strikeText}. Tu survis, mais ${monster.name} pulverise ton objet : ${lost}.`, usedItems);
+    return useCombatItems(`Tu tentes de ${strikeText}. Tu survis, mais ${monster.name} pulvérise ton objet : ${lost}.`, usedItems);
   }
 
   if (roll < deathChance + profile.loseItem + profile.hurt) {
-    return useCombatItems(takeDamage(1, `Tu tentes de ${strikeText}. ${monster.name} refuse ton brouillon tactique. -1 coeur.`), usedItems);
+    return useCombatItems(takeDamage(1, `Tu tentes de ${strikeText}. ${monster.name} refuse ton brouillon tactique, pauvre tanche. -1 cœur.`), usedItems);
   }
 
   if (roll < deathChance + profile.loseItem + profile.hurt + winChance) {
     const gold = randomInt(monster.reward[0], monster.reward[1]);
-    return useCombatItems(addGold(gold, `Tu tentes de ${strikeText}. Le hasard fait semblant d'etre ton ami. +${gold} PO.`), usedItems);
+    return useCombatItems(addGold(gold, `Tu tentes de ${strikeText}. Le hasard fait semblant d'être ton ami. +${gold} PO.`), usedItems);
   }
 
-  return useCombatItems(`Tu tentes de ${strikeText}. Vous vous ratez tous les deux. Le silence juge la scene.`, usedItems);
+  return useCombatItems(`Tu tentes de ${strikeText}. Vous vous ratez tous les deux. Le silence juge la scène.`, usedItems);
 }
 
 function useCombatItems(text, items) {
@@ -1503,7 +1627,7 @@ function useCombatItems(text, items) {
         state.life = Math.min(state.life, state.maxLife);
       }
     } else {
-      return `${text} ${item} a servi, mais ne casse pas cette fois. Le materiel demande des temoins.`;
+      return `${text} ${item} a servi, mais ne casse pas cette fois. Le matériel demande des témoins.`;
     }
   }
 
@@ -1518,7 +1642,7 @@ function itemBreakChance(item) {
 }
 
 function strikeLabel(strike) {
-  if (strike === "head") return "taper dans la tete";
+  if (strike === "head") return "taper dans la tête";
   if (strike === "legs") return "taper dans les jambes";
   return "taper dans le torse";
 }
@@ -1536,7 +1660,7 @@ function descendFloor() {
     state.runEnded = true;
     state.life = state.maxLife;
     recordWin();
-    return " Hodor voit enfin la sortie. Il a survecu, ce qui surprend tout le monde, surtout lui.";
+    return " Hodor voit enfin la sortie. Il a survécu, ce qui surprend tout le monde, surtout lui.";
   }
   return "";
 }
@@ -1547,6 +1671,7 @@ function shiftFloors(amount) {
 
 function recordWin() {
   if (state.winRecorded) return;
+  void clearActiveRunNow();
   state.winRecorded = true;
   state.showWinBanner = true;
   state.villageLocation = "Enfin dehors";
@@ -1558,10 +1683,10 @@ function koTaunt() {
   const losses = Math.max(1, state.runLosses);
   const taunts = [
     "T'as perdu, gros nul.",
-    `Ca fait ${losses} fois que tu perds. Le donjon commence une carte de fidelite.`,
-    `${losses} defaite${losses > 1 ? "s" : ""}. Le village parle de toi a voix basse.`,
-    "Retour aux geoles. Meme la serrure avait pitie.",
-    `Encore perdu. Hodor perfectionne l'art de revenir moins fier.`,
+    `Ça fait ${losses} fois que tu perds, gros naze. Le donjon commence une carte de fidélité.`,
+    `${losses} défaite${losses > 1 ? "s" : ""}. Le village parle de toi à voix basse, pauvre buse.`,
+    "Retour aux geôles. Même la serrure avait pitié.",
+    `Encore perdu. Hodor perfectionne l'art de revenir moins fier, vieux cornichon.`,
   ];
   return taunts[(losses - 1) % taunts.length];
 }
@@ -1569,9 +1694,9 @@ function koTaunt() {
 function winTaunt() {
   const wins = Math.max(1, state.stats.wins);
   const taunts = [
-    "T'as gagne, t'es trop notre heros. La mairie verifie si c'est legal.",
+    "T'as gagné, t'es trop notre héros. La mairie vérifie si c'est légal.",
     "Hodor est vivant. Le village applaudit par prudence.",
-    `Sortie numero ${wins}. Le hasard demande a etre credite.`,
+    `Sortie numéro ${wins}. Le hasard demande à être crédité.`,
   ];
   return taunts[(wins - 1) % taunts.length];
 }
@@ -1581,14 +1706,14 @@ function villageShameText() {
   const losses = state.stats.losses || 0;
   const balance = wins - losses;
 
-  if (wins === 0 && losses === 0) return "Dignite : pas encore abimee";
-  if (balance >= 8) return "Dignite : suspectement haute";
-  if (balance >= 5) return "Dignite : presque reconnue";
-  if (balance >= 2) return "Dignite : tient avec une ficelle";
-  if (balance >= 0) return "Dignite : fragile mais comptable";
-  if (balance >= -2) return "Dignite : cabossee";
-  if (balance >= -5) return "Dignite : vendue en lot";
-  return "Dignite : vue pour la derniere fois pres d'une trappe";
+  if (wins === 0 && losses === 0) return "Dignité : pas encore abîmée";
+  if (balance >= 8) return "Dignité : suspectement haute";
+  if (balance >= 5) return "Dignité : presque reconnue";
+  if (balance >= 2) return "Dignité : tient avec une ficelle";
+  if (balance >= 0) return "Dignité : fragile mais comptable";
+  if (balance >= -2) return "Dignité : cabossée";
+  if (balance >= -5) return "Dignité : vendue en lot";
+  return "Dignité : vue pour la dernière fois près d'une trappe";
 }
 
 function flashDoor(door) {
@@ -1634,12 +1759,12 @@ function addGold(amount, text) {
 }
 
 function withoutPreventedDamageEffect(text) {
-  return cleanupStorySentence(String(text).replace(/-\d+\s*coeur(?:\s+bonus)?/gi, ""));
+  return cleanupStorySentence(String(text).replace(/-\d+\s*(?:cœurs?|coeur)(?:\s+bonus)?/gi, ""));
 }
 
 function takeDamage(amount, text) {
   if (state.godMode) {
-    return `${text} God mode absorbe le degat. Hodor ne comprend pas, mais il approuve.`;
+    return `${text} God mode absorbe le dégât. Hodor ne comprend pas, mais il approuve.`;
   }
 
   if (hasItem("Boulet au Pied") && Math.random() < 0.18) {
@@ -1650,9 +1775,9 @@ function takeDamage(amount, text) {
     const dodgedText = withoutPreventedDamageEffect(text);
     if (state.inventory.length && Math.random() < 0.25) {
       const lost = removeRandomItem();
-      return `${dodgedText} Reflexes de Lache declenche une esquive, mais ${lost} reste sur place pour couvrir la retraite.`;
+      return `${dodgedText} Réflexes de Lâche déclenche une esquive, mais ${lost} reste sur place pour couvrir la retraite.`;
     }
-    return `${dodgedText} Reflexes de Lache declenche une esquive moche mais efficace.`;
+    return `${dodgedText} Réflexes de Lâche déclenche une esquive moche mais efficace.`;
   }
 
   if (hasItem("Cape Trop Longue") && Math.random() < 0.12) {
@@ -1662,17 +1787,17 @@ function takeDamage(amount, text) {
       state.life = 0;
       endRun("mort");
     }
-    return `${text} La cape trop longue s'enroule autour de tes jambes. -1 coeur bonus, puis elle se dechire.`;
+    return `${text} La cape trop longue s'enroule autour de tes jambes. -1 cœur bonus, puis elle se déchire.`;
   }
 
   if (hasItem("Sandales de Panique") && Math.random() < 0.16) {
     removeItem("Sandales de Panique");
-    return `${withoutPreventedDamageEffect(text)} Mais tes sandales paniquent avant toi et t'evitent le pire. Elles partent ensuite vivre leur propre vie.`;
+    return `${withoutPreventedDamageEffect(text)} Mais tes sandales paniquent avant toi et t'évitent le pire. Elles partent ensuite vivre leur propre vie.`;
   }
 
   if (hasItem("Casque Trop Petit") && Math.random() < 0.22) {
     removeItem("Casque Trop Petit");
-    return `${withoutPreventedDamageEffect(text)} Le casque trop petit bloque le coup, comprime une pensee inutile, puis se fend en deux.`;
+    return `${withoutPreventedDamageEffect(text)} Le casque trop petit bloque le coup, comprime une pensée inutile, puis se fend en deux.`;
   }
 
   state.life -= amount;
@@ -1680,7 +1805,7 @@ function takeDamage(amount, text) {
     if (hasItem("Medaillon du Presque-Heros")) {
       removeItem("Medaillon du Presque-Heros");
       state.life = 1;
-      return `${withoutPreventedDamageEffect(text)} Medaillon du Presque-Heros explose et refuse la mort. Hodor ne comprend pas la procedure, mais il vit.`;
+      return `${withoutPreventedDamageEffect(text)} Médaillon du Presque-Héros explose et refuse la mort. Hodor ne comprend pas la procédure, mais il vit.`;
     }
     state.life = 0;
     endRun("mort");
@@ -1695,16 +1820,16 @@ function instantDeath(text) {
 
   if (hasItem("Medaillon du Presque-Heros")) {
     removeItem("Medaillon du Presque-Heros");
-    return `${text} Medaillon du Presque-Heros explose et annule la catastrophe. Hodor hoche la tete comme s'il avait prevu le coup.`;
+    return `${text} Médaillon du Presque-Héros explose et annule la catastrophe. Hodor hoche la tête comme s'il avait prévu le coup.`;
   }
 
   const pityChance = Math.min(0.45, state.runLosses * 0.08);
   if (pityChance && Math.random() < pityChance) {
-    return takeDamage(1, `${text} Le donjon hesite devant tant d'echec et transforme ca en grosse baffe. -1 coeur.`);
+    return takeDamage(1, `${text} Le donjon hésite devant tant d'échec et transforme ça en grosse baffe. -1 cœur.`);
   }
 
   if (Math.random() < upgradeChance("instinct", [0.18, 0.3, 0.44])) {
-    return takeDamage(1, `${text} Instinct Presque Fiable transforme la mort en catastrophe moins definitive. -1 coeur.`);
+    return `${text} Instinct Presque Fiable invente une esquive beaucoup trop tardive, mais techniquement vivante.`;
   }
 
   endRun("mort");
@@ -1712,12 +1837,14 @@ function instantDeath(text) {
 }
 
 function endRun(screen) {
+  void clearActiveRunNow();
   state.screen = screen;
   state.runEnded = true;
   state.combat = null;
   if (screen === "mort") {
     state.life = 0;
     state.carriedGold = 0;
+    state.inventory = [];
     recordLoss();
   }
 }
@@ -1735,14 +1862,24 @@ function depositGold() {
   state.showWinBanner = false;
   state.villageLocation = "Banque";
   const deposited = state.carriedGold;
-  const soldItems = sellInventory();
-  const totalDeposited = deposited + soldItems.total;
-  state.bankGold += totalDeposited;
-  state.stats.goldBankedTotal = (state.stats.goldBankedTotal || 0) + totalDeposited;
+  state.bankGold += deposited;
+  state.stats.goldBankedTotal = (state.stats.goldBankedTotal || 0) + deposited;
   state.carriedGold = 0;
   saveBankGold(state.bankGold);
   saveStats();
-  setStory(bankDepositText(deposited, soldItems), deposited || soldItems.total ? "good" : "neutral");
+  setStory(bankDepositText(deposited), deposited ? "good" : "neutral");
+  render();
+}
+
+function sellStuffAtVillage() {
+  if (state.screen !== "village") return;
+  state.showWinBanner = false;
+  state.villageLocation = "Comptoir de revente";
+  const soldItems = sellInventory();
+  if (soldItems.total) {
+    state.carriedGold += soldItems.total;
+  }
+  setStory(sellStuffText(soldItems), soldItems.total ? "good" : "neutral");
   render();
 }
 
@@ -1760,20 +1897,20 @@ function sellInventory() {
   return { total, details };
 }
 
-function bankDepositText(deposited, soldItems) {
-  if (!deposited && !soldItems.total && !soldItems.details.length) {
-    return "Le banquier regarde ta bourse vide. Il tamponne quand meme un papier pour se sentir puissant.";
+function bankDepositText(deposited) {
+  if (!deposited) {
+    return "Le banquier regarde ta bourse vide. Il tamponne quand même un papier pour se sentir puissant.";
   }
 
-  const lines = [];
-  if (deposited) {
-    lines.push("Le banquier pese ta bourse et retient un rire commercial.");
+  return `Le banquier pèse ta bourse et range ${deposited} PO. Ton stuff reste dans le sac, pour le meilleur et surtout pour le pire.`;
+}
+
+function sellStuffText(soldItems) {
+  if (!soldItems.details.length) {
+    return "Le revendeur inspecte ton sac vide avec une loupe. Il appelle ça une estimation rapide.";
   }
-  if (soldItems.details.length) {
-    lines.push("Il revend aussi tes objets avant meme de demander ton avis.");
-  }
-  lines.push(`Total sauvegarde : ${deposited + soldItems.total} PO.`);
-  return lines.join(" ");
+
+  return `Le revendeur rachète ${soldItems.details.length} objet${soldItems.details.length > 1 ? "s" : ""} pour ${soldItems.total} PO dans ta bourse. Hodor garde le sac, c'est déjà ça.`;
 }
 
 function startRun() {
@@ -1786,8 +1923,6 @@ function startRun() {
   state.floor = state.totalFloors;
   state.life = START_LIFE;
   state.maxLife = START_LIFE;
-  state.carriedGold = 0;
-  state.inventory = [];
   state.runEnded = false;
   state.combat = null;
   state.doorHints = [];
@@ -1800,18 +1935,36 @@ function startRun() {
   state.winRecorded = false;
   applyRunUpgrades();
   prepareDoorHints();
-  setStory("Hodor force la porte des geoles avec beaucoup d'optimisme et tres peu de technique. Trois portes l'attendent. Bonne chance.");
+  setStory("Hodor force la porte des geôles avec beaucoup d'optimisme et très peu de technique. Trois portes l'attendent. Bonne chance, gros benêt.");
   state.hodorPose = "question";
+  render();
+}
+
+function goToCellFromTavern() {
+  state.showWinBanner = false;
+  state.villageLocation = "Taverne";
+  state.screen = "cell";
+  state.runEnded = true;
+  state.combat = null;
+  state.doorHints = [];
+  state.inputLocked = false;
+  state.floorShift = 0;
+  state.hodorPose = "idle";
+  closeShop();
+  closeStatsPanel();
+  closeInventory();
+  closeAccountPopover();
+  setStory("La taverne sert un conseil imbuvable. Hodor se réveille dans les geôles avec sa bourse, ce qui prouve que même les voleurs ont des limites.");
   render();
 }
 
 function runFloorRange() {
   const wins = state.stats.wins;
   if (wins < 10) return { min: 5, max: 10 };
-  if (wins < 20) return { min: 10, max: 15 };
-  if (wins < 30) return { min: 15, max: 20 };
-  if (wins < 40) return { min: 20, max: 25 };
-  return { min: 25, max: 30 };
+  if (wins < 20) return { min: 5, max: 15 };
+  if (wins < 30) return { min: 5, max: 20 };
+  if (wins < 40) return { min: 5, max: 25 };
+  return { min: 5, max: 30 };
 }
 
 function applyRunUpgrades() {
@@ -1850,13 +2003,13 @@ function randomDungeonItemText() {
   const item = randomStartingItem();
   const texts = {
     "Casque Trop Petit": "Tu trouves un casque trop petit sous une pancarte 'taille universelle'. Mensonge artisanal.",
-    "Medaillon du Presque-Heros": "Tu ramasses un medaillon du presque-heros. Il brille comme une promesse pas tenue.",
-    "Sandales de Panique": "Tu trouves des sandales de panique. Elles tremblent deja sans toi.",
-    "Hache Emoussee": "Tu recuperes une hache emoussee. Elle menace surtout la patience des ennemis.",
-    "Boulet au Pied": "Tu trouves un boulet au pied. Il a l'air de vouloir une relation serieuse.",
-    "Chaussette Porte-Bonheur": "Tu trouves une chaussette porte-bonheur. Elle sent la victoire mal rangee.",
+    "Medaillon du Presque-Heros": "Tu ramasses un médaillon du presque-héros. Il brille comme une promesse pas tenue.",
+    "Sandales de Panique": "Tu trouves des sandales de panique. Elles tremblent déjà sans toi.",
+    "Hache Emoussee": "Tu récupères une hache émoussée. Elle menace surtout la patience des ennemis.",
+    "Boulet au Pied": "Tu trouves un boulet au pied. Il a l'air de vouloir une relation sérieuse.",
+    "Chaussette Porte-Bonheur": "Tu trouves une chaussette porte-bonheur. Elle sent la victoire mal rangée.",
     "Caillou Affectif": "Tu adoptes un caillou affectif. Il ne juge pas, avantage rare ici.",
-    "Cape Trop Longue": "Tu trouves une cape trop longue. Elle a deja enterre plusieurs ambitions.",
+    "Cape Trop Longue": "Tu trouves une cape trop longue. Elle a déjà enterré plusieurs ambitions.",
     "Gants Collants": "Tu enfiles des gants collants. Ils connaissent des poches que tu n'as jamais vues.",
   };
   return addItem(item, texts[item] || `Tu trouves ${item}. Le donjon refuse d'expliquer pourquoi.`);
@@ -1865,7 +2018,7 @@ function randomDungeonItemText() {
 function resetBank() {
   state.bankGold = 0;
   saveBankGold(0);
-  setStory("La banque est videe. Le banquier sourit, ce qui n'est jamais bon signe.", "bad");
+  setStory("La banque est vidée. Le banquier sourit, ce qui n'est jamais bon signe.");
   $("debug-panel").hidden = true;
   $("debug-toggle").setAttribute("aria-expanded", "false");
   render();
@@ -1903,7 +2056,7 @@ function debugGoVillage() {
   state.runEnded = true;
   state.combat = null;
   state.doorHints = [];
-  setStory("Debug : Hodor apparait au village sans explication credible.", "good");
+  setStory("Debug : Hodor apparaît au village sans explication crédible.");
   render();
 }
 
@@ -1939,8 +2092,8 @@ function debugAddStuff(item) {
   state.hodorPose = "victory";
   setStory(
     alreadyEquipped
-      ? `Debug : ${item} est deja dans les poches. Hodor insiste quand meme pour avoir l'air equipe.`
-      : `Debug : ${item} ajoute. Hodor parade avec un serieux inquietant.`,
+      ? `Debug : ${item} est déjà dans les poches. Hodor insiste quand même pour avoir l'air équipé.`
+      : `Debug : ${item} ajouté. Hodor parade avec un sérieux inquiétant.`,
     alreadyEquipped ? "neutral" : "good"
   );
   render();
@@ -1990,7 +2143,7 @@ function addItem(item, text) {
     return text;
   }
   state.eventToneOverride = "bad";
-  return itemDuplicateTexts[item] || `Tu trouves ${item}, mais tu l'as deja. Dommage. Le donjon ricane doucement.`;
+  return itemDuplicateTexts[item] || `Tu trouves ${item}, mais tu l'as déjà. Dommage. Le donjon ricane doucement.`;
 }
 
 function removeItem(item) {
@@ -2177,17 +2330,18 @@ function render() {
   $("location").textContent = isVillage
     ? state.villageLocation
     : isDead
-      ? "Retour aux geoles"
+      ? "Retour aux geôles"
       : isCell
-        ? "Dans ta cellule"
+        ? "Dans les geôles"
         : isShop
           ? "Echoppe douteuse"
           : isCombat
-            ? "Ca va taper"
+            ? "Ça va taper"
             : "Couloirs du donjon";
 
   $("doors").hidden = !isDungeon;
   $("dungeon-stage").hidden = !isDungeon;
+  $("village-stage").hidden = !isVillage;
   $("combat-choices").hidden = !isCombat;
   const monsterAsset = state.combat?.asset;
   const usesMonsterTarget = isCombat && Boolean(monsterAsset);
@@ -2221,22 +2375,25 @@ function render() {
 
   $("god-mode").textContent = `God mode : ${state.godMode ? "ON" : "OFF"}`;
   $("god-mode").setAttribute("aria-pressed", String(state.godMode));
-  $("restart-label").textContent = isCell ? "Sortir de sa cellule" : "S'echapper des geoles";
+  $("restart-label").textContent = isCell ? "Sortir des geôles" : "S'échapper des geôles";
   $("restart-help").textContent = isCell
-    ? "La porte grince. Hodor appelle ca de la discretion."
+    ? "La porte grince. Hodor appelle ça de la discrétion."
     : "Les gardes t'ont ramene en haut. Ils auraient du mieux fermer.";
 
   playPendingCoinAnimation();
   playPendingPurseLossAnimation();
+  queueActiveRunSave();
 }
 
 function placeHodorForScreen(isDungeon) {
   const hodor = document.querySelector(".hodor-sprite");
   const dungeonStage = $("dungeon-stage");
+  const villageStage = $("village-stage");
   const rewardRow = $("reward-row");
   if (!hodor || !dungeonStage || !rewardRow) return;
 
-  const target = isDungeon ? dungeonStage : rewardRow;
+  const target = isDungeon ? dungeonStage : state.screen === "village" ? villageStage : rewardRow;
+  if (!target) return;
   if (hodor.parentElement !== target) {
     target.appendChild(hodor);
   }
@@ -2387,8 +2544,7 @@ function hodorStuffLayerUrl(layer, cleanPose, walkFrameIndex) {
     return walkFramePaths[walkFrameIndex];
   }
 
-  const stuffPose = cleanPose === "folie" ? "question" : cleanPose;
-  const poseFile = layer.poseFiles && layer.poseFiles[stuffPose] ? layer.poseFiles[stuffPose] : `${stuffPose}-${layer.suffix}`;
+  const poseFile = layer.poseFiles && layer.poseFiles[cleanPose] ? layer.poseFiles[cleanPose] : `${cleanPose}-${layer.suffix}`;
   return `${HODOR_BASE_PATH}/Stuff/${layer.folder}/${poseFile}.png`;
 }
 
