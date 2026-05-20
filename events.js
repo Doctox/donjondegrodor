@@ -185,41 +185,19 @@ const eventPool = [
   {
     weight: 2,
     run() {
-      if (state.carriedGold <= 0) {
-        return takeDamage(1, "Tu trouves une table de quitte ou double. Sans argent, tu mises ta dignité. Le croupier accepte trop vite, pauvre cornichon. -1 cœur.");
-      }
-
-      const stake = state.carriedGold;
-      const roll = Math.random();
-      if (roll < 0.03) {
-        return addGold(stake * 2, `Une table de quitte ou double avale ta bourse. Contre toute logique, elle rend davantage. +${stake * 2} PO.`);
-      }
-      if (roll < 0.14) {
-        return addGold(stake, `Une table de quitte ou double avale ta bourse. Le donjon vérifie ses papiers: tu doubles. +${stake} PO.`);
-      }
-
-      state.carriedGold = 0;
-      return `Une table de quitte ou double avale ta bourse. Le croupier sourit comme une porte piégée. -${stake} PO.`;
+      return startMiniGame("double");
     },
   },
   {
     weight: 1,
     run() {
-      const roll = Math.random();
-      if (roll < 0.04) {
-        return addGold(50, "Tu tires le levier d'une machine à sous maudite. Trois têtes de Hodor s'alignent. La machine demande un avocat. +50 PO.");
-      }
-      if (roll < 0.16) {
-        return addGold(15, "Tu tires le levier d'une machine à sous maudite. Elle tousse, panique, puis recrache un compromis. +15 PO.");
-      }
-      if (roll < 0.78) {
-        const loss = Math.min(state.carriedGold, randomInt(3, 9));
-        state.carriedGold -= loss;
-        return loss
-          ? `Tu tires le levier d'une machine à sous maudite. Elle affiche trois pancartes 'presque'. Les presque coûtent cher. -${loss} PO.`
-          : "Tu tires le levier d'une machine à sous maudite. Elle fouille ta bourse vide et découvre la tristesse.";
-      }
-      return takeDamage(1, "Tu tires le levier d'une machine à sous maudite. Elle paie en formation professionnelle douloureuse, espèce de manche. -1 cœur.");
+      return startMiniGame("slots");
+    },
+  },
+  {
+    weight: 1,
+    run() {
+      return startMiniGame("cards");
     },
   },
   {
@@ -236,7 +214,7 @@ const eventPool = [
     weight: 3,
     run() {
       if (Math.random() < 0.4) {
-        return instantDeath("Tu entres dans une salle marquée 'Test de confiance'. Le sol n'avait pas signé. ONE SHOT, GROS NAZE.");
+        return instantDeath("Tu entres dans une salle marquée 'Test de confiance'. Le sol n'avait pas signé.");
       }
       return addGold(4, "Tu entres dans une salle marquée 'Test de confiance'. Le sol tient, probablement par erreur. +4 PO.");
     },
@@ -364,13 +342,13 @@ const eventPool = [
   {
     weight: 1,
     run() {
-      return instantDeath("Tu ouvres la porte. Derrière, une décision de game design te regarde sans remords. ONE SHOT, GROS NAZE.");
+      return instantDeath("Tu ouvres la porte. Derrière, une décision de game design te regarde sans remords.");
     },
   },
   {
     weight: 1,
     run() {
-      return instantDeath('Une pancarte indique "Ne pas entrer". Hodor lit, réfléchit, puis trahit la lecture. ONE SHOT, SOMBRE ANDOUILLE.');
+      return instantDeath('Une pancarte indique "Ne pas entrer". Hodor lit, réfléchit, puis trahit la lecture.');
     },
   },
 ];

@@ -51,7 +51,10 @@ const state = {
   showWinBanner: false,
   lossRecorded: false,
   winRecorded: false,
+  koBannerText: "",
+  winBannerText: "",
   inputLocked: false,
+  miniGame: null,
   hodorPose: "idle",
   pendingCoinGain: 0,
   pendingPurseLoss: false,
@@ -60,6 +63,7 @@ const state = {
 
 let shopPanelOpen = false;
 let statsPanelOpen = false;
+let villageActionTimer = null;
 
 const elementCache = new Map();
 const $ = (id) => {
@@ -98,6 +102,8 @@ const HODOR_POSE_FILES = {
   mort: "mort",
 };
 const HODOR_WALK_FRAME_MS = 170;
+const VILLAGE_ACTION_DELAY_MS = 650;
+const CELL_OPEN_DELAY_MS = 650;
 const HODOR_WALK_FRAME_PATHS = [
   `${HODOR_BASE_PATH}/Corps/Marche/marche-1.png`,
   `${HODOR_BASE_PATH}/Corps/Marche/marche-2.png`,
@@ -149,8 +155,21 @@ const HODOR_WALK_STUFF_FRAME_PATHS = {
 };
 let hodorWalkAnimationTimer = null;
 let dungeonEffectPoseTimer = null;
+let cellOpenTimer = null;
 
 document.addEventListener("click", (event) => {
+  const miniGameAction = event.target.closest("[data-mini-game-action]");
+  if (miniGameAction) {
+    resolveMiniGame(miniGameAction.dataset.miniGameAction);
+    return;
+  }
+
+  const deadHodor = event.target.closest(".scene.is-dead .hodor-sprite");
+  if (deadHodor) {
+    returnToCellFromDeath();
+    return;
+  }
+
   const door = event.target.closest(".door");
   if (door) {
     chooseDoor(door);
@@ -175,15 +194,15 @@ document.querySelectorAll(".door").forEach((door) => {
   door.addEventListener("mouseout", stopDungeonDoorWalkPreview);
 });
 
-addClick("bank-building", depositGold);
-addClick("tavern-building", goToCellFromTavern);
-addClick("shop-building", openShop);
-addClick("sell-building", sellStuffAtVillage);
+addClick("bank-building", () => delayVillageAction("bank", depositGold));
+addClick("tavern-building", () => delayVillageAction("tavern", goToCellFromTavern));
+addClick("shop-building", () => delayVillageAction("shop", openShop));
+addClick("sell-building", () => delayVillageAction("sell", sellStuffAtVillage));
 addClick("close-shop", closeShop);
-addClick("stats-building", openStatsPanel);
+addClick("stats-building", () => delayVillageAction("stats", openStatsPanel));
 addClick("close-stats", closeStatsPanel);
 addClick("village-modal-backdrop", closeVillagePanels);
-addClick("restart-action", startRun);
+addClick("restart-action", openCellDoor);
 addClick("reset-save", resetBank);
 addClick("debug-toggle", toggleDebug);
 addClick("god-mode", toggleGodMode);
@@ -215,6 +234,8 @@ document.querySelectorAll("[data-debug-combat]").forEach((button) => {
 document.querySelectorAll("[data-debug-stuff]").forEach((button) => {
   button.addEventListener("click", () => debugAddStuff(button.dataset.debugStuff));
 });
+
+renderDebugEvents();
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
@@ -732,6 +753,7 @@ function resetRunCarryover() {
   state.carriedGold = 0;
   state.inventory = [];
   state.combat = null;
+  state.miniGame = null;
   state.inputLocked = false;
   state.doorHints = [];
   state.pendingCoinGain = 0;
@@ -1269,6 +1291,25 @@ function upgradeChance(id, values) {
   return values[level - 1] || 0;
 }
 
+function clearVillageActionTarget() {
+  $("scene")?.classList.remove("village-target-bank", "village-target-shop", "village-target-sell", "village-target-tavern", "village-target-stats");
+}
+
+function delayVillageAction(target, action) {
+  if (state.screen !== "village" || villageActionTimer) return;
+
+  closeInventory();
+  closeAccountPopover();
+  clearVillageActionTarget();
+  $("scene")?.classList.add(`village-target-${target}`);
+
+  villageActionTimer = window.setTimeout(() => {
+    villageActionTimer = null;
+    clearVillageActionTarget();
+    action();
+  }, VILLAGE_ACTION_DELAY_MS);
+}
+
 function openShop() {
   if (state.screen !== "village") return;
   closeInventory();
@@ -1400,6 +1441,13 @@ function resolveDoorChoice() {
   const text = weightedEvent().run();
   let suffix = "";
 
+  if (state.miniGame) {
+    setStory(text, "neutral");
+    resetDoorEffects();
+    render();
+    return;
+  }
+
   if (!state.runEnded && state.screen === "dungeon") {
     suffix = descendFloor();
   }
@@ -1410,6 +1458,141 @@ function resolveDoorChoice() {
   resetDoorEffects();
   holdDungeonEffectPoseBriefly();
   render();
+}
+
+function startMiniGame(type) {
+  const configs = {
+    double: {
+      title: "Quitte ou double",
+      text: state.carriedGold > 0
+        ? `Le croupier lorgne tes ${state.carriedGold} PO. Il promet que les probabilites sont presque legales.`
+        : "Le croupier regarde ta bourse vide. Il propose de miser un bout de dignite, ce qui n'est pas une monnaie stable.",
+      display: ["PILE", "FACE"],
+      actions: state.carriedGold > 0
+        ? [
+            { id: "double-all", label: "Tout miser" },
+            { id: "double-half", label: "Miser la moitie" },
+            { id: "double-flee", label: "Fuir" },
+          ]
+        : [
+            { id: "double-dignity", label: "Miser la dignite" },
+            { id: "double-flee", label: "Fuir" },
+          ],
+    },
+    slots: {
+      title: "Machine a sous maudite",
+      text: "Trois rouleaux grincent comme des genoux de squelette. Le levier a l'air coupable.",
+      display: ["?", "?", "?"],
+      actions: [{ id: "slots-spin", label: "Tirer le levier" }],
+    },
+    cards: {
+      title: "Bonneteau du donjon",
+      text: "Trois cartes. Une promesse. Deux humiliations. Le marchand jure qu'il ne triche qu'avec passion.",
+      display: ["I", "II", "III"],
+      actions: [
+        { id: "card-0", label: "Carte I" },
+        { id: "card-1", label: "Carte II" },
+        { id: "card-2", label: "Carte III" },
+      ],
+    },
+  };
+
+  state.miniGame = { type, ...configs[type] };
+  return "Le donjon ouvre un petit jeu de hasard. Hodor sent que son avenir vient de devenir cliquable.";
+}
+
+function resolveMiniGame(action) {
+  if (!state.miniGame || state.screen !== "dungeon") return;
+
+  const before = snapshotRun();
+  const outcome = miniGameOutcome(action);
+  let suffix = "";
+
+  state.miniGame = null;
+  if (!state.runEnded && state.screen === "dungeon") {
+    suffix = descendFloor();
+  }
+
+  setStory(outcome + suffix, toneFromSnapshot(before));
+  prepareDoorHints();
+  state.inputLocked = false;
+  resetDoorEffects();
+  holdDungeonEffectPoseBriefly();
+  render();
+}
+
+function miniGameOutcome(action) {
+  if (action === "double-flee") {
+    return "Hodor recule lentement devant la table. Le croupier note 'lache mais solvable' dans son carnet.";
+  }
+
+  if (action === "double-dignity") {
+    return takeDamage(1, "Hodor mise sa dignite. Le croupier demande une monnaie moins abimee, puis frappe la table. -1 coeur.");
+  }
+
+  if (action === "double-all" || action === "double-half") {
+    const stake = action === "double-all"
+      ? state.carriedGold
+      : Math.max(1, Math.floor(state.carriedGold / 2));
+    const roll = Math.random();
+
+    if (roll < 0.04) {
+      return addGold(stake * 3, `Hodor mise ${stake} PO. La table fait une erreur administrative magnifique. +${stake * 3} PO.`);
+    }
+    if (roll < 0.18) {
+      return addGold(stake, `Hodor mise ${stake} PO. La table grogne, puis paie a contrecour. +${stake} PO.`);
+    }
+    if (roll < 0.78) {
+      state.carriedGold = Math.max(0, state.carriedGold - stake);
+      return `Hodor mise ${stake} PO. Le croupier retourne une carte nommee 'non'. -${stake} PO.`;
+    }
+    state.carriedGold = Math.max(0, state.carriedGold - stake);
+    return takeDamage(1, `Hodor mise ${stake} PO. La table perd patience et gagne physiquement. -${stake} PO. -1 coeur.`);
+  }
+
+  if (action === "slots-spin") {
+    const symbols = ["HODOR", "PO", "CRANE", "RIEN", "BOTTE"];
+    const reels = [randomFrom(symbols), randomFrom(symbols), randomFrom(symbols)];
+    if (reels.every((symbol) => symbol === "HODOR")) {
+      return addGold(50, `La machine affiche ${reels.join(" / ")}. Le jackpot tombe comme une erreur de jugement. +50 PO.`);
+    }
+    if (reels.every((symbol) => symbol === "PO")) {
+      return addGold(20, `La machine affiche ${reels.join(" / ")}. Elle paie en soupirant. +20 PO.`);
+    }
+    if (reels.every((symbol) => symbol === "CRANE")) {
+      return takeDamage(1, `La machine affiche ${reels.join(" / ")}. Elle appelle ca un lot de consolation osseux. -1 coeur.`);
+    }
+    if (reels[0] === reels[1]) {
+      return addGold(5, `La machine affiche ${reels.join(" / ")}. Deux symboles presque utiles suffisent a vexer la caisse. +5 PO.`);
+    }
+
+    const loss = Math.min(state.carriedGold, randomInt(2, 6));
+    state.carriedGold -= loss;
+    return loss
+      ? `La machine affiche ${reels.join(" / ")}. Rien ne s'aligne, sauf la honte. -${loss} PO.`
+      : `La machine affiche ${reels.join(" / ")}. Elle tente de voler ta bourse vide et repart avec un malaise.`;
+  }
+
+  if (/^card-[0-2]$/.test(action)) {
+    const picked = Number(action.slice(-1));
+    const jackpot = randomInt(0, 2);
+    const skull = (jackpot + randomInt(1, 2)) % 3;
+
+    if (picked === jackpot) {
+      return addGold(25, "Hodor retourne la bonne carte. Le marchand accuse le destin de tricher. +25 PO.");
+    }
+    if (picked === skull) {
+      return takeDamage(1, "Hodor retourne une carte avec un crane qui avait manifestement des bras. -1 coeur.");
+    }
+
+    const loss = Math.min(state.carriedGold, randomInt(4, 10));
+    state.carriedGold -= loss;
+    return loss
+      ? `Hodor retourne une carte vide. Le marchand appelle ca une lecon premium. -${loss} PO.`
+      : "Hodor retourne une carte vide. Le marchand facture le silence, mais ta bourse est deja un desert.";
+  }
+
+  return "Hodor hesite si fort que le mini-jeu abandonne.";
 }
 
 function clearDungeonEffectPoseTimer() {
@@ -1595,7 +1778,7 @@ function combatOutcome(monster, strike) {
   const strikeText = strikeLabel(strike);
 
   if (roll < deathChance) {
-    return useCombatItems(instantDeath(`Tu tentes de ${strikeText}. ${monster.name} corrige ton optimisme. ONE SHOT, GROS NAZE.`), usedItems);
+    return useCombatItems(instantDeath(`Tu tentes de ${strikeText}. ${monster.name} corrige ton optimisme.`), usedItems);
   }
 
   if (roll < deathChance + profile.loseItem && state.inventory.length) {
@@ -1676,29 +1859,42 @@ function recordWin() {
   state.showWinBanner = true;
   state.villageLocation = "Enfin dehors";
   state.stats.wins += 1;
+  state.winBannerText = winTaunt();
   saveStats();
 }
 
 function koTaunt() {
+  if (state.koBannerText) return state.koBannerText;
   const losses = Math.max(1, state.runLosses);
   const taunts = [
-    "T'as perdu, gros nul.",
-    `Ça fait ${losses} fois que tu perds, gros naze. Le donjon commence une carte de fidélité.`,
-    `${losses} défaite${losses > 1 ? "s" : ""}. Le village parle de toi à voix basse, pauvre buse.`,
-    "Retour aux geôles. Même la serrure avait pitié.",
-    `Encore perdu. Hodor perfectionne l'art de revenir moins fier, vieux cornichon.`,
+    "ONE SHOOT, GROS NUL. Le panneau Perdu vient de te gifler avec de la typographie.",
+    "Non mais on t'a aidé pour être aussi mauvais, ou c'est du talent brut ?",
+    "Tu te fous de qui pour rater un donjon sans boss, vieille quiche molle ?",
+    `Défaite numéro ${losses}. À ce stade, même le tutoriel demanderait un tuteur.`,
+    "T'es trop nul. Pas nul normal: nul avec finition artisanale.",
+    "Le donjon n'avait même pas mis son pantalon de combat, et tu t'es couché quand même.",
+    "Retour aux geôles. Même la serrure a demandé à changer de héros.",
+    "Franchement, là, Hodor a joué comme un PNJ de fond de taverne.",
   ];
-  return taunts[(losses - 1) % taunts.length];
+  state.koBannerText = randomFrom(taunts);
+  return state.koBannerText;
 }
 
 function winTaunt() {
+  if (state.winBannerText) return state.winBannerText;
   const wins = Math.max(1, state.stats.wins);
   const taunts = [
-    "T'as gagné, t'es trop notre héros. La mairie vérifie si c'est légal.",
-    "Hodor est vivant. Le village applaudit par prudence.",
-    `Sortie numéro ${wins}. Le hasard demande à être crédité.`,
+    "Franchement GG mon gars. Même le donjon a vérifié les logs.",
+    "Hé bé, well played. Le village est étonné de te revoir en un seul morceau.",
+    "Victoire validée. Les anciens disent que c'est louche, mais ils applaudissent quand même.",
+    `Sortie numéro ${wins}. Hodor commence à ressembler à un bug exploitable.`,
+    "GG, presque-héros. La taverne t'offre un regard moins méprisant que d'habitude.",
+    "Bien joué, espèce de sac à surprises. Personne n'avait misé plus de trois croûtons.",
+    "Le donjon annonce une enquête interne. Tu étais censé perdre, techniquement.",
+    "Hodor est vivant. Le village spamme /clap par prudence.",
   ];
-  return taunts[(wins - 1) % taunts.length];
+  state.winBannerText = randomFrom(taunts);
+  return state.winBannerText;
 }
 
 function villageShameText() {
@@ -1841,6 +2037,7 @@ function endRun(screen) {
   state.screen = screen;
   state.runEnded = true;
   state.combat = null;
+  state.miniGame = null;
   if (screen === "mort") {
     state.life = 0;
     state.carriedGold = 0;
@@ -1854,6 +2051,7 @@ function recordLoss() {
   state.lossRecorded = true;
   state.stats.losses += 1;
   state.runLosses += 1;
+  state.koBannerText = koTaunt();
   saveStats();
 }
 
@@ -1913,6 +2111,33 @@ function sellStuffText(soldItems) {
   return `Le revendeur rachète ${soldItems.details.length} objet${soldItems.details.length > 1 ? "s" : ""} pour ${soldItems.total} PO dans ta bourse. Hodor garde le sac, c'est déjà ça.`;
 }
 
+function openCellDoor() {
+  if (state.screen !== "cell") return;
+  if (cellOpenTimer) return;
+
+  $("scene")?.classList.add("is-cell-opening");
+  $("restart-action").disabled = true;
+  cellOpenTimer = window.setTimeout(() => {
+    cellOpenTimer = null;
+    $("scene")?.classList.remove("is-cell-opening");
+    $("restart-action").disabled = false;
+    startRun();
+  }, CELL_OPEN_DELAY_MS);
+}
+
+function returnToCellFromDeath() {
+  if (state.screen !== "mort") return;
+  state.screen = "cell";
+  state.runEnded = true;
+  state.combat = null;
+  state.doorHints = [];
+  state.inputLocked = false;
+  state.floorShift = 0;
+  state.hodorPose = "idle";
+  setStory("Hodor se reveille dans sa geole. Le sol refuse de commenter ce qu'il vient de voir.", "neutral");
+  render();
+}
+
 function startRun() {
   const resetLossStreak = state.screen === "village" || state.screen === "shop" || state.screen === "cell";
   const floorRange = runFloorRange();
@@ -1933,6 +2158,8 @@ function startRun() {
   }
   state.lossRecorded = false;
   state.winRecorded = false;
+  state.koBannerText = "";
+  state.winBannerText = "";
   applyRunUpgrades();
   prepareDoorHints();
   setStory("Hodor force la porte des geôles avec beaucoup d'optimisme et très peu de technique. Trois portes l'attendent. Bonne chance, gros benêt.");
@@ -1946,6 +2173,7 @@ function goToCellFromTavern() {
   state.screen = "cell";
   state.runEnded = true;
   state.combat = null;
+  state.miniGame = null;
   state.doorHints = [];
   state.inputLocked = false;
   state.floorShift = 0;
@@ -2055,8 +2283,53 @@ function debugGoVillage() {
   state.floor = 0;
   state.runEnded = true;
   state.combat = null;
+  state.miniGame = null;
   state.doorHints = [];
   setStory("Debug : Hodor apparaît au village sans explication crédible.");
+  render();
+}
+
+function renderDebugEvents() {
+  const list = $("debug-event-list");
+  if (!list || typeof eventPool === "undefined") return;
+
+  const miniGameEvents = [
+    { type: "double", label: "Quitte ou double" },
+    { type: "slots", label: "Machine a sous" },
+    { type: "cards", label: "Bonneteau" },
+  ];
+
+  list.textContent = "";
+  miniGameEvents.forEach((event) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.dataset.debugEvent = event.type;
+    button.textContent = event.label;
+    button.addEventListener("click", () => debugRunMiniGame(event.type));
+    list.appendChild(button);
+  });
+}
+
+function debugRunMiniGame(type) {
+  state.screen = "dungeon";
+  state.runEnded = false;
+  state.showWinBanner = false;
+  state.inputLocked = false;
+  state.lossRecorded = false;
+  state.winRecorded = false;
+  state.miniGame = null;
+  state.combat = null;
+  state.doorHints = [];
+  state.floorShift = 0;
+  state.totalFloors = Math.max(state.totalFloors || 10, 10);
+  state.floor = Math.max(2, Math.min(state.floor || state.totalFloors, state.totalFloors));
+  state.maxLife = Math.max(state.maxLife || START_LIFE, START_LIFE);
+  state.life = Math.max(1, Math.min(state.life || state.maxLife, state.maxLife));
+  state.hodorPose = "question";
+
+  setStory(startMiniGame(type), "neutral");
+  $("debug-panel").hidden = true;
+  $("debug-toggle").setAttribute("aria-expanded", "false");
   render();
 }
 
@@ -2267,6 +2540,44 @@ function randomFrom(list) {
   return list[randomInt(0, list.length - 1)];
 }
 
+function renderMiniGame() {
+  const panel = $("mini-game-panel");
+  const title = $("mini-game-title");
+  const text = $("mini-game-text");
+  const display = $("mini-game-display");
+  const actions = $("mini-game-actions");
+  if (!panel || !title || !text || !display || !actions) return;
+
+  const miniGame = state.miniGame;
+  panel.hidden = !miniGame;
+  if (!miniGame) {
+    display.textContent = "";
+    actions.textContent = "";
+    return;
+  }
+
+  title.textContent = miniGame.title;
+  text.textContent = miniGame.text;
+  display.textContent = "";
+  actions.textContent = "";
+
+  (miniGame.display || []).forEach((value) => {
+    const tile = document.createElement("span");
+    tile.className = `mini-game-tile ${miniGame.type === "cards" ? "is-card" : ""}`.trim();
+    tile.textContent = value;
+    display.appendChild(tile);
+  });
+
+  miniGame.actions.forEach((action) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "mini-game-button";
+    button.dataset.miniGameAction = action.id;
+    button.textContent = action.label;
+    actions.appendChild(button);
+  });
+}
+
 function render() {
   if (state.screen === "village" || state.screen === "shop") {
     state.life = state.maxLife;
@@ -2339,8 +2650,9 @@ function render() {
             ? "Ça va taper"
             : "Couloirs du donjon";
 
-  $("doors").hidden = !isDungeon;
-  $("dungeon-stage").hidden = !isDungeon;
+  $("doors").hidden = !isDungeon || Boolean(state.miniGame);
+  $("dungeon-stage").hidden = !isDungeon || Boolean(state.miniGame);
+  renderMiniGame();
   $("village-stage").hidden = !isVillage;
   $("combat-choices").hidden = !isCombat;
   const monsterAsset = state.combat?.asset;
@@ -2352,14 +2664,14 @@ function render() {
   $("shop-panel").hidden = !isShop;
   $("stats-panel").hidden = !isStatsPanel;
   $("village-modal-backdrop").hidden = !(isShop || isStatsPanel);
-  $("death-choices").hidden = !(isDead || isCell);
+  $("death-choices").hidden = !isCell;
   $("ko-banner").hidden = !isDead;
   $("win-banner").hidden = !(isVillage && state.showWinBanner);
-  $("ko-taunt").textContent = koTaunt();
-  $("win-taunt").textContent = winTaunt();
+  if (isDead) $("ko-taunt").textContent = koTaunt();
+  if (isVillage && state.showWinBanner) $("win-taunt").textContent = winTaunt();
 
   document.querySelectorAll(".door").forEach((door) => {
-    door.disabled = !isDungeon || state.inputLocked;
+    door.disabled = !isDungeon || state.inputLocked || Boolean(state.miniGame);
   });
 
   document.querySelectorAll("[data-strike]").forEach((button) => {

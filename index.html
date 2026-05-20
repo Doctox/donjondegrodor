@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Le Donjon de Hodor</title>
-    <link rel="stylesheet" href="styles.css?v=20260520-sell-to-purse">
+    <link rel="stylesheet" href="styles.css?v=20260520-dead-hodor-return">
   </head>
   <body>
     <main class="game-shell">
@@ -36,6 +36,10 @@
               <button type="button" data-debug-combat="rat">Rat</button>
               <button type="button" data-debug-combat="skeleton">Squelette</button>
               <button type="button" data-debug-combat="guard">Guard</button>
+            </details>
+            <details class="debug-section debug-event-menu">
+              <summary>Events</summary>
+              <div class="debug-event-list" id="debug-event-list"></div>
             </details>
             <details class="debug-section debug-stuff-menu">
               <summary>Stuff</summary>
@@ -152,12 +156,12 @@
         </div>
 
         <div class="ko-banner" id="ko-banner" hidden>
-          <strong>Perdus</strong>
+          <strong>Perdu</strong>
           <span id="ko-taunt">Hodor retourne aux geôles sans passer par la dignité.</span>
         </div>
 
         <div class="win-banner" id="win-banner" hidden>
-          <strong>Gagner</strong>
+          <strong>Gagné</strong>
           <span id="win-taunt">Hodor sort vivant. Le village envisage une statue minuscule, par politesse.</span>
         </div>
 
@@ -177,7 +181,15 @@
           <div class="hodor-sprite" aria-hidden="true"></div>
         </div>
 
-        <div class="action-zone" aria-label="Actions disponibles">
+          <div class="action-zone" aria-label="Actions disponibles">
+          <div class="mini-game-panel" id="mini-game-panel" hidden>
+            <p class="mini-game-eyebrow">Mauvaise idee jouable</p>
+            <strong id="mini-game-title">Mini-jeu</strong>
+            <p id="mini-game-text"></p>
+            <div class="mini-game-display" id="mini-game-display"></div>
+            <div class="mini-game-actions" id="mini-game-actions"></div>
+          </div>
+
           <div class="dungeon-stage" id="dungeon-stage" aria-hidden="true" hidden>
             <div class="doors" id="doors">
               <button class="door" type="button" data-door="0">
@@ -292,10 +304,12 @@
           </div>
 
           <div class="death-choices" id="death-choices" hidden>
-            <button class="restart-card" id="restart-action" type="button">
+            <div class="cell-stage" id="cell-stage" aria-label="Geole">
+            <button class="restart-card cell-door-hitbox" id="restart-action" type="button" aria-label="Ouvrir la porte de la geole">
               <span id="restart-label">Sortir de sa cellule</span>
               <small id="restart-help">La porte grince. Hodor appelle ça de la discrétion.</small>
             </button>
+            </div>
           </div>
         </div>
 
@@ -308,6 +322,6 @@
     <script src="upgrades.js"></script>
     <script src="supabase-config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="script.js?v=20260520-sell-to-purse"></script>
+    <script src="script.js?v=20260520-dead-hodor-return"></script>
   </body>
 </html>
