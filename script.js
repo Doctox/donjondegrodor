@@ -39,6 +39,7 @@ const state = {
   inventory: [],
   runEnded: false,
   combat: null,
+  combatArenaKey: "",
   godMode: false,
   upgrades: loadUpgrades(),
   doorHints: [],
@@ -56,6 +57,8 @@ const state = {
   inputLocked: false,
   miniGame: null,
   hodorPose: "idle",
+  combatStrike: "",
+  combatImpact: "",
   pendingCoinGain: 0,
   pendingPurseLoss: false,
   renderedLife: null,
@@ -85,6 +88,13 @@ const inventoryIconPaths = {
   "Sandales de Panique": "assets/Hodor V0.1/Stuff/Sandales de Panique/inv-sandale.png",
   "Slip de Guerre": "assets/Hodor V0.1/Stuff/Slip de guerre/inv-slip-de-guerre.png",
 };
+
+const COMBAT_ARENAS = [
+  { key: "arene-1", label: "Arene 1", image: "assets/Arene/arene-1.png" },
+  { key: "arene-2", label: "Arene 2", image: "assets/Arene/arene-2.png" },
+  { key: "arene-3", label: "Arene 3", image: "assets/Arene/arene-3.png" },
+];
+const DEFAULT_COMBAT_ARENA_KEY = COMBAT_ARENAS[0].key;
 
 const HODOR_BASE_PATH = "assets/Hodor V0.1";
 const HODOR_POSE_FILES = {
@@ -740,6 +750,7 @@ function sendReturningPlayerToVillage() {
   state.showWinBanner = false;
   state.runEnded = true;
   state.combat = null;
+  state.combatArenaKey = "";
   state.inputLocked = false;
   state.doorHints = [];
   state.floor = 0;
@@ -753,6 +764,7 @@ function resetRunCarryover() {
   state.carriedGold = 0;
   state.inventory = [];
   state.combat = null;
+  state.combatArenaKey = "";
   state.miniGame = null;
   state.inputLocked = false;
   state.doorHints = [];
@@ -790,6 +802,14 @@ function combatKeyFor(monster) {
   return match ? match[0] : "";
 }
 
+function combatArenaFor(key) {
+  return COMBAT_ARENAS.find((arena) => arena.key === key) || COMBAT_ARENAS[0];
+}
+
+function randomCombatArenaKey() {
+  return COMBAT_ARENAS[randomInt(0, COMBAT_ARENAS.length - 1)].key;
+}
+
 function buildActiveRunPayload() {
   if (!hasActiveRunToSave()) return null;
   return {
@@ -804,6 +824,7 @@ function buildActiveRunPayload() {
     runLosses: state.runLosses,
     floorShift: state.floorShift,
     combatKey: combatKeyFor(state.combat),
+    combatArenaKey: state.screen === "combat" ? combatArenaFor(state.combatArenaKey).key : "",
     updated_at: new Date().toISOString(),
   };
 }
@@ -822,8 +843,10 @@ function restoreActiveRun(activeRun) {
   state.runLosses = snapshot.runLosses;
   state.floorShift = snapshot.floorShift;
   state.combat = snapshot.screen === "combat" ? monsters[snapshot.combatKey] || null : null;
+  state.combatArenaKey = snapshot.screen === "combat" ? snapshot.combatArenaKey : "";
   if (snapshot.screen === "combat" && !state.combat) {
     state.screen = "dungeon";
+    state.combatArenaKey = "";
   }
   state.runEnded = false;
   state.lossRecorded = false;
@@ -850,6 +873,9 @@ function sanitizeActiveRun(activeRun) {
     ? activeRun.inventory.filter((item) => typeof item === "string" && itemSaleValues[item] !== undefined).slice(0, 12)
     : [];
   const combatKey = typeof activeRun.combatKey === "string" && monsters[activeRun.combatKey] ? activeRun.combatKey : "";
+  const combatArenaKey = typeof activeRun.combatArenaKey === "string"
+    ? combatArenaFor(activeRun.combatArenaKey).key
+    : DEFAULT_COMBAT_ARENA_KEY;
 
   return {
     screen: activeRun.screen === "combat" && combatKey ? "combat" : "dungeon",
@@ -862,6 +888,7 @@ function sanitizeActiveRun(activeRun) {
     runLosses: Math.max(0, Math.floor(Number(activeRun.runLosses || 0))),
     floorShift: Math.floor(Number(activeRun.floorShift || 0)),
     combatKey,
+    combatArenaKey,
   };
 }
 
@@ -1719,7 +1746,10 @@ function doorHintPool(level) {
 function startCombat(monster) {
   state.screen = "combat";
   state.combat = monster;
+  state.combatArenaKey = randomCombatArenaKey();
   state.hodorPose = "combat";
+  state.combatStrike = "";
+  state.combatImpact = "";
   return `${monster.intro} Hodor doit choisir une stratégie, ce qui surestime tout le monde.`;
 }
 
@@ -1731,12 +1761,29 @@ function resolveCombat(strike) {
   const attackPose = Math.random() < 0.5 ? "combat-2" : "combat-3";
   state.inputLocked = true;
   state.hodorPose = attackPose;
+  state.combatStrike = strike;
+  state.combatImpact = "windup";
   render();
+
+  window.setTimeout(() => {
+    if (state.screen !== "combat" || state.combat !== monster) return;
+    state.combatImpact = "hit";
+    render();
+  }, 720);
+
+  window.setTimeout(() => {
+    if (state.screen !== "combat" || state.combat !== monster) return;
+    state.combatImpact = "aftermath";
+    render();
+  }, 1280);
 
   window.setTimeout(() => {
     const outcome = combatOutcome(monster, strike);
     state.combat = null;
+    state.combatArenaKey = "";
     state.inputLocked = false;
+    state.combatStrike = "";
+    state.combatImpact = "";
 
     if (!state.runEnded) {
       state.screen = "dungeon";
@@ -2040,6 +2087,7 @@ function endRun(screen) {
   state.screen = screen;
   state.runEnded = true;
   state.combat = null;
+  state.combatArenaKey = "";
   state.miniGame = null;
   if (screen === "mort") {
     state.life = 0;
@@ -2133,6 +2181,7 @@ function returnToCellFromDeath() {
   state.screen = "cell";
   state.runEnded = true;
   state.combat = null;
+  state.combatArenaKey = "";
   state.doorHints = [];
   state.inputLocked = false;
   state.floorShift = 0;
@@ -2153,6 +2202,7 @@ function startRun() {
   state.maxLife = START_LIFE;
   state.runEnded = false;
   state.combat = null;
+  state.combatArenaKey = "";
   state.doorHints = [];
   state.inputLocked = false;
   state.floorShift = 0;
@@ -2177,6 +2227,7 @@ function goToCellFromTavern() {
   state.runEnded = true;
   state.runLosses = 0;
   state.combat = null;
+  state.combatArenaKey = "";
   state.miniGame = null;
   state.doorHints = [];
   state.inputLocked = false;
@@ -2287,6 +2338,7 @@ function debugGoVillage() {
   state.floor = 0;
   state.runEnded = true;
   state.combat = null;
+  state.combatArenaKey = "";
   state.miniGame = null;
   state.doorHints = [];
   setStory("Debug : Hodor apparaît au village sans explication crédible.");
@@ -2323,6 +2375,7 @@ function debugRunMiniGame(type) {
   state.winRecorded = false;
   state.miniGame = null;
   state.combat = null;
+  state.combatArenaKey = "";
   state.doorHints = [];
   state.floorShift = 0;
   state.totalFloors = Math.max(state.totalFloors || 10, 10);
@@ -2633,6 +2686,15 @@ function render() {
   $("scene").classList.toggle("is-dungeon", isDungeon || isCombat);
   $("scene").classList.toggle("is-cell", isCell);
   $("scene").classList.toggle("is-locked", state.inputLocked);
+  const combatArena = combatArenaFor(state.combatArenaKey);
+  $("scene").dataset.combatArena = isCombat ? combatArena.key : "";
+  $("scene").style.setProperty("--combat-arena-image", `url("${combatArena.image}")`);
+  $("scene").classList.toggle("combat-windup", isCombat && state.combatImpact === "windup");
+  $("scene").classList.toggle("combat-hit", isCombat && state.combatImpact === "hit");
+  $("scene").classList.toggle("combat-aftermath", isCombat && state.combatImpact === "aftermath");
+  ["head", "torso", "legs"].forEach((strike) => {
+    $("scene").classList.toggle(`combat-strike-${strike}`, isCombat && state.combatStrike === strike);
+  });
   $("scene").classList.toggle("has-win-banner", isVillage && state.showWinBanner);
   $("scene").classList.toggle("story-good", state.storyTone === "good" && !isDead);
   $("scene").classList.toggle("story-bad", state.storyTone === "bad" && !isDead);
@@ -2680,6 +2742,7 @@ function render() {
 
   document.querySelectorAll("[data-strike]").forEach((button) => {
     button.disabled = !isCombat || state.inputLocked;
+    button.classList.toggle("is-selected", isCombat && button.dataset.strike === state.combatStrike);
   });
 
   document.querySelectorAll(".door-hint").forEach((hint, index) => {

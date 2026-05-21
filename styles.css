@@ -2038,6 +2038,7 @@ h1 {
 }
 
 .monster-part {
+  position: relative;
   display: block;
   width: 100%;
   border: 0;
@@ -2049,7 +2050,9 @@ h1 {
   transition: transform 140ms ease, filter 140ms ease;
 }
 
-.monster-part:hover {
+.monster-part:hover,
+.monster-part.is-selected {
+  z-index: 2;
   transform: scale(1.035);
   filter: brightness(1.14) drop-shadow(0 0 14px rgba(216, 170, 61, 0.26));
 }
@@ -2057,6 +2060,47 @@ h1 {
 .scene.is-combat.is-locked .monster-target {
   pointer-events: none;
   filter: drop-shadow(0 24px 18px rgba(0, 0, 0, 0.45)) brightness(0.78);
+}
+
+.scene.is-combat.is-locked .monster-part {
+  cursor: default;
+}
+
+.scene.is-combat.is-locked .monster-part:not(.is-selected) {
+  opacity: 0.58;
+  filter: saturate(0.76) brightness(0.78);
+}
+
+.scene.is-combat.is-locked .monster-part.is-selected {
+  opacity: 1;
+}
+
+.scene.is-combat.combat-windup .monster-target {
+  animation: monsterBrace 720ms ease-out both;
+}
+
+.scene.is-combat.combat-hit .monster-target {
+  animation: monsterSmacked 360ms cubic-bezier(0.2, 1.5, 0.4, 1) both;
+}
+
+.scene.is-combat.combat-hit .monster-part.is-selected {
+  filter: brightness(1.42) saturate(1.22) drop-shadow(0 0 22px rgba(244, 234, 214, 0.45));
+}
+
+.scene.is-combat.combat-aftermath .monster-target {
+  animation: monsterWobble 620ms ease-out both;
+}
+
+.scene.is-combat.combat-strike-head.combat-hit .monster-target {
+  transform-origin: 50% 18%;
+}
+
+.scene.is-combat.combat-strike-torso.combat-hit .monster-target {
+  transform-origin: 50% 52%;
+}
+
+.scene.is-combat.combat-strike-legs.combat-hit .monster-target {
+  transform-origin: 50% 84%;
 }
 
 .rat-target .monster-head {
@@ -2299,6 +2343,14 @@ h1 {
   grid-template-rows: auto minmax(0, 1fr);
   gap: 14px 18px;
   align-items: center;
+  background:
+    linear-gradient(180deg, rgba(14, 10, 8, 0.08), rgba(14, 10, 8, 0.5)),
+    var(--combat-arena-image, url("assets/Arene/arene-1.png")),
+    url("assets/Arene/arene-1.png"),
+    linear-gradient(180deg, #39372f 0%, #211d18 58%, #14110e 100%);
+  background-position: center, center, center, center;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
+  background-size: 100% 100%, cover, cover, 100% 100%;
   animation: combatPulse 900ms ease-in-out infinite alternate;
   box-shadow: inset 0 0 0 1px rgba(191, 76, 59, 0.35), 0 0 30px rgba(191, 76, 59, 0.16);
 }
@@ -2324,6 +2376,18 @@ h1 {
   width: min(100%, clamp(320px, 44dvh, 500px));
   align-self: center;
   justify-self: center;
+}
+
+.scene.is-combat.combat-windup .hodor-sprite {
+  animation: hodorWindup 720ms ease-out both;
+}
+
+.scene.is-combat.combat-hit .hodor-sprite {
+  animation: hodorBonk 360ms cubic-bezier(0.2, 1.4, 0.35, 1) both;
+}
+
+.scene.is-combat.combat-aftermath .hodor-sprite {
+  animation: hodorRecover 620ms ease-out both;
 }
 
 .scene.is-combat .action-zone {
@@ -2369,6 +2433,92 @@ h1 {
   to {
     background-color: rgba(191, 76, 59, 0.16);
     filter: saturate(1.12);
+  }
+}
+
+@keyframes hodorWindup {
+  0% {
+    transform: translateX(0) rotate(0deg) scale(1);
+    filter: none;
+  }
+
+  100% {
+    transform: translateX(-5%) rotate(-2deg) scale(0.98);
+    filter: brightness(1.04) saturate(1.08);
+  }
+}
+
+@keyframes hodorBonk {
+  0% {
+    transform: translateX(-5%) rotate(-2deg) scale(0.98);
+  }
+
+  48% {
+    transform: translateX(9%) rotate(3deg) scale(1.04);
+    filter: brightness(1.18) saturate(1.2);
+  }
+
+  100% {
+    transform: translateX(4%) rotate(1deg) scale(1.01);
+  }
+}
+
+@keyframes hodorRecover {
+  0% {
+    transform: translateX(4%) rotate(1deg) scale(1.01);
+    filter: brightness(1.08);
+  }
+
+  100% {
+    transform: translateX(0) rotate(0deg) scale(1);
+    filter: none;
+  }
+}
+
+@keyframes monsterBrace {
+  0% {
+    transform: translateX(0) rotate(0deg) scale(1);
+  }
+
+  100% {
+    transform: translateX(2%) rotate(0.8deg) scale(1.01);
+  }
+}
+
+@keyframes monsterSmacked {
+  0% {
+    transform: translateX(2%) rotate(0.8deg) scale(1.01);
+    filter: drop-shadow(0 24px 18px rgba(0, 0, 0, 0.45)) brightness(0.9);
+  }
+
+  35% {
+    transform: translateX(8%) rotate(4deg) scale(1.035);
+    filter: drop-shadow(0 28px 18px rgba(0, 0, 0, 0.5)) brightness(1.25) saturate(1.28);
+  }
+
+  68% {
+    transform: translateX(-3%) rotate(-2deg) scale(0.995);
+  }
+
+  100% {
+    transform: translateX(0) rotate(0deg) scale(1);
+    filter: drop-shadow(0 24px 18px rgba(0, 0, 0, 0.45)) brightness(0.86);
+  }
+}
+
+@keyframes monsterWobble {
+  0% {
+    transform: translateX(0) rotate(0deg) scale(1);
+    filter: drop-shadow(0 24px 18px rgba(0, 0, 0, 0.45)) brightness(0.86);
+  }
+
+  45% {
+    transform: translateX(-1.5%) rotate(-0.9deg) scale(0.99);
+  }
+
+  100% {
+    transform: translateX(0) rotate(0deg) scale(1);
+    filter: drop-shadow(0 24px 18px rgba(0, 0, 0, 0.45)) brightness(0.78);
   }
 }
 
