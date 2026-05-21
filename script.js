@@ -3302,3 +3302,17 @@ function hodorV01PoseName(pose) {
     dead: "mort"
   }[pose] || "idle";
 }
+
+function registerServiceWorker() {
+  if (!("serviceWorker" in navigator)) return;
+  if (!window.isSecureContext && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") return;
+
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("service-worker.js", { scope: "./" })
+      .catch((error) => {
+        console.warn("Service worker non enregistre:", error);
+      });
+  });
+}
+
+registerServiceWorker();
