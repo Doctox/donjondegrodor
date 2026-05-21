@@ -185,14 +185,18 @@ monsters.js             Monstres, récompenses et danger
 upgrades.js             Améliorations permanentes
 supabase-config.js      Configuration Supabase
 assets/                 Images, sprites, décors, objets, monstres et UI
+```
+---
 
 ## Statut du projet
 
 Le jeu est en prototype avancé jouable.
 
-Publication envisagée
+---
 
-## Pistes envisagées :
+## Publication envisagée
+
+Pistes envisagées :
 
 version web publique ;
 Google Play à terme ;
@@ -202,6 +206,8 @@ cosmétiques optionnels.
 
 Le projet ne vise pas une monétisation agressive.
 L’objectif est de conserver un jeu honnête, drôle et accessible.
+
+---
 
 ## Création et crédits
 
@@ -213,6 +219,8 @@ Le développement, la rédaction, certaines idées de structuration, l’assista
 
 Cette mention est volontairement conservée par transparence sur le mode de création du projet.
 
+---
+
 ## Domaine et contact
 
 Nom de domaine officiel :
@@ -222,6 +230,8 @@ donjondegrodor.fr
 Adresse de contact :
 
 contact@donjondegrodor.fr
+
+---
 
 ## Droits
 
