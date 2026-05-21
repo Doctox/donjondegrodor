@@ -1673,12 +1673,17 @@ h1 {
   width: clamp(56px, 8dvh, 82px);
   aspect-ratio: 1;
   pointer-events: none;
-  background: url("assets/Ui/po.png") center / contain no-repeat;
+  background: url("assets/Ui/po-effet.png") center / contain no-repeat;
   filter: drop-shadow(0 8px 8px rgba(0, 0, 0, 0.42));
   transform: translate(-50%, -50%);
   opacity: 0;
   animation: coinToPurse 1550ms cubic-bezier(0.2, 0.82, 0.22, 1) forwards;
   animation-delay: var(--coin-delay, 0ms);
+}
+
+.flying-coin.is-loss {
+  animation-duration: 1320ms;
+  filter: drop-shadow(0 8px 8px rgba(0, 0, 0, 0.48)) saturate(0.9) brightness(0.95);
 }
 
 .flying-purse {
@@ -6170,18 +6175,19 @@ h1 {
   display: grid;
   min-height: 0;
   margin: 0;
-  padding: 0;
+  padding: clamp(8px, 2dvh, 20px) 0;
   place-items: center;
 }
 
 .scene.is-dead .reward-row .hodor-sprite {
-  width: min(84vw, 640px, 68dvh);
+  width: min(88vw, 700px, 72dvh);
   max-width: 100%;
-  aspect-ratio: 9 / 5;
+  aspect-ratio: 315 / 165;
   margin: 0;
-  background-size: 100% auto;
-  background-position: center 54%;
+  background-size: contain;
+  background-position: center;
   filter: drop-shadow(0 38px 34px rgba(0, 0, 0, 0.62));
+  transform: translateY(-2dvh);
 }
 
 .scene.is-dead .death-choices {
@@ -6242,13 +6248,15 @@ h1 {
   position: fixed;
   left: 50vw;
   right: auto;
-  top: 50dvh;
+  top: 62dvh;
   bottom: auto;
   z-index: 22;
   width: fit-content;
+  min-width: 138px;
   max-width: min(360px, calc(100vw - 38px));
   margin: 0;
   translate: -50% -50%;
+  padding: 14px 18px;
   pointer-events: none;
   background:
     linear-gradient(180deg, rgba(45, 34, 20, 0.95), rgba(18, 13, 9, 0.96)),
@@ -6256,6 +6264,16 @@ h1 {
   box-shadow:
     0 24px 52px rgba(0, 0, 0, 0.55),
     0 0 0 1px rgba(216, 170, 61, 0.2);
+}
+
+.scene.is-dungeon:not(.is-combat) .reward-label {
+  font-size: 0.86rem;
+}
+
+.scene.is-dungeon:not(.is-combat) .reward-text {
+  margin-top: 8px;
+  font-size: clamp(1.25rem, 2.4vw, 1.55rem);
+  line-height: 1.25;
 }
 
 .scene.is-dungeon:not(.is-combat) .reward-panel[hidden] {
@@ -6295,7 +6313,8 @@ h1 {
   }
 
   .scene.is-dead .reward-row .hodor-sprite {
-    width: min(92vw, 520px, 62dvh);
+    width: min(90vw, 560px, 64dvh);
+    transform: translateY(-1dvh);
   }
 
   .scene.is-cell .death-choices {
@@ -6314,6 +6333,7 @@ h1 {
 
   .scene.is-dungeon:not(.is-combat) .reward-panel {
     max-width: 84%;
+    min-width: 128px;
   }
 
   .scene.is-village {

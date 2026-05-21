@@ -79,6 +79,7 @@ const state = {
   combatStrike: "",
   combatImpact: "",
   pendingCoinGain: 0,
+  pendingCoinLoss: 0,
   pendingPurseLoss: false,
   renderedLife: null,
 };
@@ -1104,7 +1105,9 @@ function setReward(text) {
   }
   const rewardRaw = String(text || "");
   const coinGain = rewardRaw.match(/\+(\d+)\s*PO/i);
+  const coinLoss = rewardRaw.match(/-(\d+)\s*PO/i);
   state.pendingCoinGain = coinGain && !/banque/i.test(rewardRaw) ? Number(coinGain[1]) : 0;
+  state.pendingCoinLoss = coinLoss && !/banque/i.test(rewardRaw) ? Number(coinLoss[1]) : 0;
   state.pendingPurseLoss = /bourse perdue/i.test(rewardRaw);
 }
 
@@ -3062,6 +3065,7 @@ function render() {
     : "Les gardes t'ont ramené en haut. Ils auraient dû mieux fermer.";
 
   playPendingCoinAnimation();
+  playPendingCoinLossAnimation();
   playPendingPurseLossAnimation();
   queueActiveRunSave();
 }
@@ -3109,6 +3113,37 @@ function playPendingCoinAnimation() {
     coin.addEventListener("animationend", () => coin.remove(), { once: true });
   }
   state.pendingCoinGain = 0;
+}
+
+function playPendingCoinLossAnimation() {
+  if (!state.pendingCoinLoss || state.pendingCoinLoss <= 0) return;
+  const rewardPanel = $("reward-panel");
+  const purse = document.querySelector(".stat-purse .purse-visual") || document.querySelector(".stat-purse");
+  if (!rewardPanel || rewardPanel.hidden || !purse) return;
+
+  const from = purse.getBoundingClientRect();
+  const to = rewardPanel.getBoundingClientRect();
+  if (!from.width || !to.width) return;
+
+  const coinX = to.left + to.width / 2 - (from.left + from.width / 2);
+  const coinY = to.top + to.height / 2 - (from.top + from.height / 2);
+  const coinCount = Math.min(5, Math.max(1, state.pendingCoinLoss));
+  for (let index = 0; index < coinCount; index += 1) {
+    const coin = document.createElement("span");
+    const offset = (index - (coinCount - 1) / 2) * 18;
+    coin.className = "flying-coin is-loss";
+    coin.style.setProperty("--coin-x", `${coinX}px`);
+    coin.style.setProperty("--coin-y", `${coinY}px`);
+    coin.style.setProperty("--coin-mid-x", `${coinX * (0.48 + index * 0.035)}px`);
+    coin.style.setProperty("--coin-mid-y", `${coinY * (0.52 + index * 0.025)}px`);
+    coin.style.setProperty("--coin-drift", `${offset}px`);
+    coin.style.setProperty("--coin-delay", `${index * 95}ms`);
+    coin.style.left = `${from.left + from.width / 2}px`;
+    coin.style.top = `${from.top + from.height / 2}px`;
+    document.body.appendChild(coin);
+    coin.addEventListener("animationend", () => coin.remove(), { once: true });
+  }
+  state.pendingCoinLoss = 0;
 }
 
 function playPendingPurseLossAnimation() {
@@ -3194,6 +3229,9 @@ function cssAssetUrl(asset) {
 function hodorLayerUrlsForInventory(pose) {
   const owned = new Set(state.inventory);
   const cleanPose = hodorV01PoseName(pose);
+  if (cleanPose === "mort") {
+    return [`${HODOR_BASE_PATH}/Corps/mort-mort.png`];
+  }
   const walkFrameIndex = cleanPose === "marche" ? hodorWalkFrameIndex() : 0;
   const layersBottomToTop = [hodorBaseLayerUrl(cleanPose, walkFrameIndex)];
 
