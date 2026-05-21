@@ -1,4 +1,4 @@
-# Le Donjon de Hodor
+# Le Donjon de Grodor
 
 Petit jeu web statique en HTML, CSS et JavaScript.
 
