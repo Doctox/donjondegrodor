@@ -774,12 +774,24 @@ function resetRunCarryover() {
 
 function resetGuestProgress() {
   resetRunCarryover();
+  state.screen = "cell";
+  state.floor = TOTAL_FLOORS;
+  state.totalFloors = TOTAL_FLOORS;
   state.bankGold = 0;
   state.upgrades = {};
   state.stats = { losses: 0, wins: 0, goldBankedTotal: 0 };
   state.runLosses = 0;
   state.life = START_LIFE;
   state.maxLife = START_LIFE;
+  state.runEnded = true;
+  state.lossRecorded = false;
+  state.winRecorded = false;
+  state.showWinBanner = false;
+  state.koBannerText = "";
+  state.winBannerText = "";
+  state.miniGame = null;
+  state.hodorPose = "idle";
+  state.villageLocation = "Village";
   fallbackBankGold = 0;
   fallbackUpgrades = {};
   fallbackStats = { losses: 0, wins: 0, goldBankedTotal: 0 };
