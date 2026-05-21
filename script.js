@@ -867,7 +867,7 @@ function restoreActiveRun(activeRun) {
   state.showWinBanner = false;
   state.villageLocation = "Village";
   state.doorHints = [];
-  state.hodorPose = state.screen === "combat" ? "combat" : "question";
+  state.hodorPose = state.screen === "combat" ? "idle" : "question";
   prepareDoorHints();
   setStory("Hodor reprend exactement là où il avait abandonné la paperasse.");
   return true;
@@ -1759,7 +1759,7 @@ function startCombat(monster) {
   state.screen = "combat";
   state.combat = monster;
   state.combatArenaKey = randomCombatArenaKey();
-  state.hodorPose = "combat";
+  state.hodorPose = "idle";
   state.combatStrike = "";
   state.combatImpact = "";
   return `${monster.intro} Hodor doit choisir une stratégie, ce qui surestime tout le monde.`;
@@ -1770,21 +1770,22 @@ function resolveCombat(strike) {
 
   const monster = state.combat;
   const before = snapshotRun();
-  const attackPose = Math.random() < 0.5 ? "combat-2" : "combat-3";
   state.inputLocked = true;
-  state.hodorPose = attackPose;
+  state.hodorPose = "combat";
   state.combatStrike = strike;
   state.combatImpact = "windup";
   render();
 
   window.setTimeout(() => {
     if (state.screen !== "combat" || state.combat !== monster) return;
+    state.hodorPose = "combat-2";
     state.combatImpact = "hit";
     render();
   }, 720);
 
   window.setTimeout(() => {
     if (state.screen !== "combat" || state.combat !== monster) return;
+    state.hodorPose = "combat-3";
     state.combatImpact = "aftermath";
     render();
   }, 1280);
@@ -2886,7 +2887,7 @@ function renderHodor() {
 
 function hodorPoseForScreen() {
   if (state.screen === "mort") return "dead";
-  if (state.screen === "combat") return state.hodorPose === "combat-2" || state.hodorPose === "combat-3" ? state.hodorPose : "combat";
+  if (state.screen === "combat") return ["idle", "combat", "combat-2", "combat-3"].includes(state.hodorPose) ? state.hodorPose : "idle";
   if (state.screen === "shop") return "walk";
   if (state.screen === "village") return state.showWinBanner ? "victory" : "question";
   if (state.screen === "dungeon") {
