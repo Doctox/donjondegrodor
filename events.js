@@ -243,7 +243,7 @@ const eventPool = [
     weight: 6,
     run() {
       shiftFloors(2);
-      return "Un monte-charge grincheux remonte de 2 étages. Le service client refuse tout sourire.";
+      return "Un monte-charge grincheux te hisse sans sourire. Le service client refuse les héros moites. +2 étages.";
     },
   },
   {
@@ -254,7 +254,7 @@ const eventPool = [
         return "Une trappe s'ouvre sous tes pieds. Tes genoux signent une plainte. -2 étages.";
       }
       shiftFloors(2);
-      return "Une trappe s'ouvre sous tes pieds, puis un ressort idiot corrige l'erreur. Tu remontes de 2 étages.";
+      return "Une trappe s'ouvre sous tes pieds, puis un ressort idiot corrige l'erreur. Le donjon te renvoie plus haut, par mépris. +2 étages.";
     },
   },
   {

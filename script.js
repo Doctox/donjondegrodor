@@ -368,10 +368,10 @@ function authMessage(message) {
   const text = String(message || "");
   const lower = text.toLowerCase();
   if (lower.includes("email not confirmed")) {
-    return "Email non confirme. Va cliquer sur le lien dans ta boite mail. Regarde aussi dans les spams : Hodor y range souvent les trucs importants.";
+    return "Email non confirmé. Va cliquer sur le lien dans ta boîte mail. Regarde aussi dans les spams: Hodor y range souvent les trucs importants.";
   }
   if (lower.includes("invalid login credentials")) {
-    return "Pseudo, email ou mot de passe incorrect. Hodor a probablement tape avec son front. Si tu viens de creer le compte, fouille les spams pour confirmer l'email.";
+    return "Pseudo, email ou mot de passe incorrect. Hodor a probablement tapé avec son front. Si tu viens de créer le compte, fouille les spams pour confirmer l'email.";
   }
   if (lower.includes("password should be")) {
     return passwordPolicyMessage();
@@ -382,7 +382,7 @@ function authMessage(message) {
   if (lower.includes("user already registered")) {
     return "Ce compte existe déjà. Essaie Connexion.";
   }
-  return text || "Erreur inconnue. Le donjon nie toute responsabilite.";
+  return text || "Erreur inconnue. Le donjon nie toute responsabilité.";
 }
 
 function setAccountStatus(message, tone = "neutral") {
@@ -499,7 +499,7 @@ function passwordValue(inputId = "auth-password") {
 }
 
 function passwordPolicyMessage() {
-  return "Choisis un mot de passe d'au moins 8 caracteres, avec des minuscules, des majuscules, un chiffre et un symbole.";
+  return "Choisis un mot de passe d'au moins 8 caractères, avec des minuscules, des majuscules, un chiffre et un symbole.";
 }
 
 function validateNewPassword(password) {
@@ -528,7 +528,7 @@ async function resolveLoginEmail(identifier, options = {}) {
   if (!LOGIN_ALIAS_PATTERN.test(alias)) {
     if (!quiet) {
       setAccountStatus("Pseudo invalide", "bad");
-      setAccountHelp("Utilise 2 a 32 caracteres : lettres, chiffres, point, tiret ou underscore.");
+      setAccountHelp("Utilise 2 à 32 caractères : lettres, chiffres, point, tiret ou underscore.");
     }
     return "";
   }
@@ -551,17 +551,17 @@ function signUpCredentials() {
   const password = passwordValue("signup-password");
   if (!alias || !email || !password) {
     setAccountStatus("Pseudo, email et mot de passe requis", "bad");
-    setAccountHelp("Pour creer un compte, choisis un pseudo puis indique ton email.");
+    setAccountHelp("Pour créer un compte, choisis un pseudo puis indique ton email.");
     return null;
   }
   if (!LOGIN_ALIAS_PATTERN.test(alias)) {
     setAccountStatus("Pseudo invalide", "bad");
-    setAccountHelp("Utilise 2 a 32 caracteres : lettres, chiffres, point, tiret ou underscore.");
+    setAccountHelp("Utilise 2 à 32 caractères : lettres, chiffres, point, tiret ou underscore.");
     return null;
   }
   if (!email.includes("@")) {
     setAccountStatus("Email invalide", "bad");
-    setAccountHelp("Supabase a besoin d'un vrai email pour creer le compte.");
+    setAccountHelp("Supabase a besoin d'un vrai email pour créer le compte.");
     return null;
   }
   if (!validateNewPassword(password)) {
@@ -834,7 +834,7 @@ function restoreActiveRun(activeRun) {
   state.doorHints = [];
   state.hodorPose = state.screen === "combat" ? "combat" : "question";
   prepareDoorHints();
-  setStory("Hodor reprend exactement la ou il avait abandonne la paperasse.", "neutral");
+  setStory("Hodor reprend exactement là où il avait abandonné la paperasse.");
   return true;
 }
 
@@ -1153,15 +1153,18 @@ function knownItemInText(text) {
 function cleanupStorySentence(sentence) {
   return sentence
     .replace(/contient\s+et\s+un mot/i, "contient un mot")
-    .replace(/lache\s*\./i, "lache quelque chose.")
+    .replace(/lâche\s*\./i, "lâche quelque chose.")
+    .replace(/lache\s*\./i, "lâche quelque chose.")
     .replace(/confisque ton objet\s*:\s*un objet/i, "confisque ton objet")
-    .replace(/pulverise ton objet\s*:\s*un objet/i, "pulverise ton objet")
+    .replace(/pulvérise ton objet\s*:\s*un objet/i, "pulvérise ton objet")
+    .replace(/pulverise ton objet\s*:\s*un objet/i, "pulvérise ton objet")
     .replace(/\s+([.,])/g, "$1")
     .replace(/\s*:\s*\./g, ".")
     .replace(/\.\.+/g, ".")
     .replace(/\s{2,}/g, " ")
     .replace(/\s*[:.]\s*$/g, (match) => match.includes(".") ? "." : "")
     .replace(/^\.$/, "")
+    .replace(/^(?:tu|il|elle|hodor)\.$/i, "")
     .trim();
 }
 
@@ -1318,7 +1321,7 @@ function openShop() {
   statsPanelOpen = false;
   state.hodorPose = "walk";
   state.showWinBanner = false;
-  state.villageLocation = "Echoppe";
+  state.villageLocation = "Échoppe";
   setStory("Le vendeur sourit comme quelqu'un qui a déjà compté ton argent deux fois, gros pigeon médiéval.");
   renderShop();
   render();
@@ -1367,7 +1370,7 @@ function buyUpgrade(id) {
   }
 
   if (state.bankGold < cost) {
-    setStory(`Il te manque ${cost - state.bankGold} PO pour acheter ${upgrade.name}. Le vendeur fait semblant d'être triste, pauvre gueux.`);
+    setStory(`Il te manque encore de l'or pour acheter ${upgrade.name}. Le vendeur fait semblant d'être triste, pauvre gueux.`);
     return;
   }
 
@@ -1465,22 +1468,22 @@ function startMiniGame(type) {
     double: {
       title: "Quitte ou double",
       text: state.carriedGold > 0
-        ? `Le croupier lorgne tes ${state.carriedGold} PO. Il promet que les probabilites sont presque legales.`
-        : "Le croupier regarde ta bourse vide. Il propose de miser un bout de dignite, ce qui n'est pas une monnaie stable.",
+        ? `Le croupier lorgne tes ${state.carriedGold} PO. Il promet que les probabilités sont presque légales.`
+        : "Le croupier regarde ta bourse vide. Il propose de miser un bout de dignité, ce qui n'est pas une monnaie stable.",
       display: ["PILE", "FACE"],
       actions: state.carriedGold > 0
         ? [
             { id: "double-all", label: "Tout miser" },
-            { id: "double-half", label: "Miser la moitie" },
+            { id: "double-half", label: "Miser la moitié" },
             { id: "double-flee", label: "Fuir" },
           ]
         : [
-            { id: "double-dignity", label: "Miser la dignite" },
+            { id: "double-dignity", label: "Miser la dignité" },
             { id: "double-flee", label: "Fuir" },
           ],
     },
     slots: {
-      title: "Machine a sous maudite",
+      title: "Machine à sous maudite",
       text: "Trois rouleaux grincent comme des genoux de squelette. Le levier a l'air coupable.",
       display: ["?", "?", "?"],
       actions: [{ id: "slots-spin", label: "Tirer le levier" }],
@@ -1523,11 +1526,11 @@ function resolveMiniGame(action) {
 
 function miniGameOutcome(action) {
   if (action === "double-flee") {
-    return "Hodor recule lentement devant la table. Le croupier note 'lache mais solvable' dans son carnet.";
+    return "Hodor recule lentement devant la table. Le croupier note 'lâche mais solvable' dans son carnet.";
   }
 
   if (action === "double-dignity") {
-    return takeDamage(1, "Hodor mise sa dignite. Le croupier demande une monnaie moins abimee, puis frappe la table. -1 coeur.");
+    return takeDamage(1, "Hodor mise sa dignité. Le croupier demande une monnaie moins abîmée, puis frappe la table. -1 cœur.");
   }
 
   if (action === "double-all" || action === "double-half") {
@@ -1537,17 +1540,17 @@ function miniGameOutcome(action) {
     const roll = Math.random();
 
     if (roll < 0.04) {
-      return addGold(stake * 3, `Hodor mise ${stake} PO. La table fait une erreur administrative magnifique. +${stake * 3} PO.`);
+      return addGold(stake * 3, `Hodor pousse sa mise. La table fait une erreur administrative magnifique. +${stake * 3} PO.`);
     }
     if (roll < 0.18) {
-      return addGold(stake, `Hodor mise ${stake} PO. La table grogne, puis paie a contrecour. +${stake} PO.`);
+      return addGold(stake, `Hodor pousse sa mise. La table grogne, puis paie à contrecœur. +${stake} PO.`);
     }
     if (roll < 0.78) {
       state.carriedGold = Math.max(0, state.carriedGold - stake);
-      return `Hodor mise ${stake} PO. Le croupier retourne une carte nommee 'non'. -${stake} PO.`;
+      return `Hodor pousse sa mise. Le croupier retourne une carte nommée 'non'. -${stake} PO.`;
     }
     state.carriedGold = Math.max(0, state.carriedGold - stake);
-    return takeDamage(1, `Hodor mise ${stake} PO. La table perd patience et gagne physiquement. -${stake} PO. -1 coeur.`);
+    return takeDamage(1, `Hodor pousse sa mise. La table perd patience et gagne physiquement. -${stake} PO. -1 cœur.`);
   }
 
   if (action === "slots-spin") {
@@ -1560,10 +1563,10 @@ function miniGameOutcome(action) {
       return addGold(20, `La machine affiche ${reels.join(" / ")}. Elle paie en soupirant. +20 PO.`);
     }
     if (reels.every((symbol) => symbol === "CRANE")) {
-      return takeDamage(1, `La machine affiche ${reels.join(" / ")}. Elle appelle ca un lot de consolation osseux. -1 coeur.`);
+      return takeDamage(1, `La machine affiche ${reels.join(" / ")}. Elle appelle ça un lot de consolation osseux. -1 cœur.`);
     }
     if (reels[0] === reels[1]) {
-      return addGold(5, `La machine affiche ${reels.join(" / ")}. Deux symboles presque utiles suffisent a vexer la caisse. +5 PO.`);
+      return addGold(5, `La machine affiche ${reels.join(" / ")}. Deux symboles presque utiles suffisent à vexer la caisse. +5 PO.`);
     }
 
     const loss = Math.min(state.carriedGold, randomInt(2, 6));
@@ -1582,17 +1585,17 @@ function miniGameOutcome(action) {
       return addGold(25, "Hodor retourne la bonne carte. Le marchand accuse le destin de tricher. +25 PO.");
     }
     if (picked === skull) {
-      return takeDamage(1, "Hodor retourne une carte avec un crane qui avait manifestement des bras. -1 coeur.");
+      return takeDamage(1, "Hodor retourne une carte avec un crâne qui avait manifestement des bras. -1 cœur.");
     }
 
     const loss = Math.min(state.carriedGold, randomInt(4, 10));
     state.carriedGold -= loss;
     return loss
-      ? `Hodor retourne une carte vide. Le marchand appelle ca une lecon premium. -${loss} PO.`
-      : "Hodor retourne une carte vide. Le marchand facture le silence, mais ta bourse est deja un desert.";
+      ? `Hodor retourne une carte vide. Le marchand appelle ça une leçon premium. -${loss} PO.`
+      : "Hodor retourne une carte vide. Le marchand facture le silence, mais ta bourse est déjà un désert.";
   }
 
-  return "Hodor hesite si fort que le mini-jeu abandonne.";
+  return "Hodor hésite si fort que le mini-jeu abandonne.";
 }
 
 function clearDungeonEffectPoseTimer() {
@@ -2100,7 +2103,7 @@ function bankDepositText(deposited) {
     return "Le banquier regarde ta bourse vide. Il tamponne quand même un papier pour se sentir puissant.";
   }
 
-  return `Le banquier pèse ta bourse et range ${deposited} PO. Ton stuff reste dans le sac, pour le meilleur et surtout pour le pire.`;
+  return `Le banquier pèse ta bourse et range les pièces dans son coffre sinistre. Ton stuff reste dans le sac, pour le meilleur et surtout pour le pire. Total sauvegarde : ${deposited} PO.`;
 }
 
 function sellStuffText(soldItems) {
@@ -2134,12 +2137,12 @@ function returnToCellFromDeath() {
   state.inputLocked = false;
   state.floorShift = 0;
   state.hodorPose = "idle";
-  setStory("Hodor se reveille dans sa geole. Le sol refuse de commenter ce qu'il vient de voir.", "neutral");
+  setStory("Hodor se réveille dans sa geôle. Le sol refuse de commenter ce qu'il vient de voir.");
   render();
 }
 
 function startRun() {
-  const resetLossStreak = state.screen === "village" || state.screen === "shop" || state.screen === "cell";
+  const resetLossStreak = state.screen === "village" || state.screen === "shop";
   const floorRange = runFloorRange();
   state.showWinBanner = false;
   state.villageLocation = "Village";
@@ -2172,6 +2175,7 @@ function goToCellFromTavern() {
   state.villageLocation = "Taverne";
   state.screen = "cell";
   state.runEnded = true;
+  state.runLosses = 0;
   state.combat = null;
   state.miniGame = null;
   state.doorHints = [];
@@ -2272,7 +2276,7 @@ function debugAddBank() {
   const amount = debugBankAmount();
   state.bankGold += amount;
   saveBankGold(state.bankGold);
-  setStory(`Debug : ${amount} PO ajoutes a la banque. Le banquier n'a rien vu, officiellement.`, "good");
+  setStory(`Debug : ${amount} PO ajoutés à la banque. Le banquier n'a rien vu, officiellement.`);
   render();
 }
 
@@ -2295,7 +2299,7 @@ function renderDebugEvents() {
 
   const miniGameEvents = [
     { type: "double", label: "Quitte ou double" },
-    { type: "slots", label: "Machine a sous" },
+    { type: "slots", label: "Machine à sous" },
     { type: "cards", label: "Bonneteau" },
   ];
 
@@ -2352,7 +2356,7 @@ function debugStartCombat(monsterId) {
 
 function debugAddStuff(item) {
   if (!itemDescriptions[item]) {
-    setStory("Debug : objet introuvable. Meme le menu triche vient de rater son jet.", "bad");
+    setStory("Debug : objet introuvable. Même le menu triche vient de rater son jet.");
     render();
     return;
   }
@@ -2375,7 +2379,7 @@ function debugAddStuff(item) {
 function debugClearStuff() {
   state.inventory = [];
   state.hodorPose = "question";
-  setStory("Debug : stuff vide. Hodor regarde ses mains comme si c'etait un plan.", "neutral");
+  setStory("Debug : stuff vide. Hodor regarde ses mains comme si c'était un plan.");
   render();
 }
 
@@ -2474,7 +2478,7 @@ function renderInventory() {
       const button = document.createElement("button");
       button.className = "inventory-item";
       button.type = "button";
-      button.dataset.tooltip = itemDescriptions[item] || "Objet mystere. Meme le donjon a perdu la notice.";
+      button.dataset.tooltip = itemDescriptions[item] || "Objet mystère. Même le donjon a perdu la notice.";
 
       const image = document.createElement("img");
       image.src = icon;
@@ -2492,7 +2496,7 @@ function renderInventory() {
     chip.className = "item-chip inventory-fallback";
     chip.tabIndex = 0;
     chip.textContent = item;
-    chip.dataset.tooltip = itemDescriptions[item] || "Objet mystere. Meme le donjon a perdu la notice.";
+    chip.dataset.tooltip = itemDescriptions[item] || "Objet mystère. Même le donjon a perdu la notice.";
     inventory.appendChild(chip);
   });
 }
@@ -2588,13 +2592,13 @@ function render() {
     $("place-label").textContent = "Lieu";
     $("floor").textContent = "Donjon";
   } else {
-    $("place-label").textContent = showsFloor ? "Etage" : "Lieu";
+    $("place-label").textContent = showsFloor ? "Étage" : "Lieu";
     $("floor").textContent = state.screen === "village" || state.screen === "shop"
       ? "Village"
       : state.screen === "cell"
         ? "Cellule"
         : state.screen === "mort"
-          ? "Geoles"
+          ? "Geôles"
           : state.floor;
   }
   $("carried-gold").textContent = state.carriedGold;
@@ -2645,7 +2649,7 @@ function render() {
       : isCell
         ? "Dans les geôles"
         : isShop
-          ? "Echoppe douteuse"
+          ? "Échoppe douteuse"
           : isCombat
             ? "Ça va taper"
             : "Couloirs du donjon";

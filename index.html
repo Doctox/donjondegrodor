@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Le Donjon de Hodor</title>
-    <link rel="stylesheet" href="styles.css?v=20260520-dead-hodor-return">
+    <link rel="stylesheet" href="styles.css?v=20260521-path-left-more">
   </head>
   <body>
     <main class="game-shell">
@@ -69,9 +69,9 @@
               </div>
               <button class="inventory-close" id="account-close" type="button" aria-label="Fermer les paramètres">x</button>
             </div>
-            <p class="account-line" id="account-line">Connecte : Visiteur</p>
+            <p class="account-line" id="account-line">Connecté : Visiteur</p>
             <button class="account-open-login" id="account-open-login" type="button">Se connecter</button>
-            <button class="account-open-login" id="account-settings-logout" type="button" hidden>Deconnexion</button>
+            <button class="account-open-login" id="account-settings-logout" type="button" hidden>Déconnexion</button>
           </div>
         </div>
       </div>
@@ -109,7 +109,7 @@
           <strong id="loss-count">0</strong>
         </article>
         <article class="stat stat-place">
-          <span id="place-label">Etage</span>
+          <span id="place-label">Étage</span>
           <strong id="floor">20</strong>
         </article>
       </section>
@@ -125,18 +125,18 @@
           </label>
           <label class="account-field account-password-field">
             <input id="auth-password" type="password" autocomplete="current-password" placeholder="Mot de passe" aria-label="Mot de passe">
-            <span class="account-info" tabindex="0" aria-label="Utilisez au moins 8 caracteres, avec des minuscules, des majuscules, un chiffre et un symbole.">i</span>
+            <span class="account-info" tabindex="0" aria-label="Utilisez au moins 8 caractères, avec des minuscules, des majuscules, un chiffre et un symbole.">i</span>
           </label>
           <div class="account-actions">
             <button id="auth-login" type="button">Connexion</button>
-            <button id="auth-signup" type="button">Creation de compte</button>
-            <button id="auth-logout" type="button" hidden>Deconnexion</button>
+            <button id="auth-signup" type="button">Création de compte</button>
+            <button id="auth-logout" type="button" hidden>Déconnexion</button>
           </div>
           <small class="account-help" id="account-help">Compte joueur : sauvegarde cloud. Compte admin : menu debug.</small>
           <div class="account-signup-overlay" id="account-signup-overlay" hidden>
-            <div class="account-signup-modal" role="dialog" aria-label="Creation de compte">
+            <div class="account-signup-modal" role="dialog" aria-label="Création de compte">
               <div class="account-signup-head">
-                <strong>Creation de compte</strong>
+                <strong>Création de compte</strong>
                 <button class="inventory-close" id="auth-signup-close" type="button" aria-label="Fermer la creation de compte">x</button>
               </div>
               <label class="account-field">
@@ -147,10 +147,10 @@
               </label>
               <label class="account-field account-password-field">
                 <input id="signup-password" type="password" autocomplete="new-password" placeholder="Mot de passe" aria-label="Mot de passe">
-                <span class="account-info" tabindex="0" aria-label="Utilisez au moins 8 caracteres, avec des minuscules, des majuscules, un chiffre et un symbole.">i</span>
+                <span class="account-info" tabindex="0" aria-label="Utilisez au moins 8 caractères, avec des minuscules, des majuscules, un chiffre et un symbole.">i</span>
               </label>
               <button class="account-register" id="auth-register" type="button">S'enregistrer</button>
-              <small class="account-signup-note">Apres l'inscription, verifie tes spams pour confirmer la creation du compte.</small>
+              <small class="account-signup-note">Après l'inscription, vérifie tes spams pour confirmer la création du compte.</small>
             </div>
           </div>
         </div>
@@ -169,7 +169,7 @@
           <p class="location" id="location">Dans les geôles</p>
           <p class="story" id="story">
             Hodor entre dans le donjon, se prend les pieds dans le tapis et hurle de douleur en tombant.
-            Il se fait reperer, tabasser, puis se reveille tout en haut du donjon.
+            Il se fait repérer, tabasser, puis se réveille tout en haut du donjon.
           </p>
         </div>
 
@@ -183,7 +183,7 @@
 
           <div class="action-zone" aria-label="Actions disponibles">
           <div class="mini-game-panel" id="mini-game-panel" hidden>
-            <p class="mini-game-eyebrow">Mauvaise idee jouable</p>
+            <p class="mini-game-eyebrow">Mauvaise idée jouable</p>
             <strong id="mini-game-title">Mini-jeu</strong>
             <p id="mini-game-text"></p>
             <div class="mini-game-display" id="mini-game-display"></div>
@@ -243,9 +243,9 @@
                 <strong>Taverne</strong>
               <small>Boire un conseil peu fiable.</small>
               </button>
-              <button class="building shop-building" id="shop-building" type="button" aria-label="Echoppe bizarre">
+              <button class="building shop-building" id="shop-building" type="button" aria-label="Échoppe bizarre">
                 <span class="building-roof"></span>
-                <strong>Echoppe Bizarre</strong>
+                <strong>Échoppe Bizarre</strong>
               <small>Payer pour progresser de travers.</small>
               </button>
               <button class="building sell-building" id="sell-building" type="button" aria-label="Comptoir de revente">
@@ -267,8 +267,8 @@
           <div class="shop-panel" id="shop-panel" hidden>
             <div class="shop-header">
               <div>
-                <span>Echoppe Douteuse</span>
-                <strong>Ameliorations permanentes, resultats discutables</strong>
+                <span>Échoppe Douteuse</span>
+                <strong>Améliorations permanentes, résultats discutables</strong>
               </div>
               <button id="close-shop" type="button" aria-label="Fermer l'échoppe">x</button>
             </div>
@@ -293,7 +293,7 @@
                 <strong id="stats-modal-losses">0</strong>
               </article>
               <article>
-                <span>PO planquees</span>
+                <span>PO planquées</span>
                 <strong id="stats-modal-bank">0</strong>
               </article>
               <article class="stats-panel-dignity">
@@ -304,8 +304,8 @@
           </div>
 
           <div class="death-choices" id="death-choices" hidden>
-            <div class="cell-stage" id="cell-stage" aria-label="Geole">
-            <button class="restart-card cell-door-hitbox" id="restart-action" type="button" aria-label="Ouvrir la porte de la geole">
+            <div class="cell-stage" id="cell-stage" aria-label="Geôle">
+            <button class="restart-card cell-door-hitbox" id="restart-action" type="button" aria-label="Ouvrir la porte de la geôle">
               <span id="restart-label">Sortir de sa cellule</span>
               <small id="restart-help">La porte grince. Hodor appelle ça de la discrétion.</small>
             </button>
@@ -322,6 +322,6 @@
     <script src="upgrades.js"></script>
     <script src="supabase-config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="script.js?v=20260520-dead-hodor-return"></script>
+    <script src="script.js?v=20260521-path-left-more"></script>
   </body>
 </html>
