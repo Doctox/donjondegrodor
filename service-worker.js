@@ -1,4 +1,4 @@
-const CACHE_NAME = "grodor-v1";
+const CACHE_NAME = "grodor-v2";
 
 const CORE_ASSETS = [
   "/",
@@ -11,6 +11,7 @@ const CORE_ASSETS = [
   "/upgrades.js",
   "/manifest.webmanifest",
   "/supabase-config.js",
+  "/vendor/supabase-js-v2.js",
   "/assets/icons/grodor-icon-192.png",
   "/assets/icons/grodor-icon-512.png",
   "/assets/icons/grodor-icon-maskable-192.png",

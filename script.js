@@ -1512,7 +1512,7 @@ function delayVillageAction(target, action) {
       clearVillageActionTarget();
       if (state.screen !== "village") return;
       state.villageLocation = "Village";
-      setStory("Grodor revient au centre du village. Jeu indé : raccourci inclus, dignité non fournie.");
+      setStory("Grodor revient au centre du village. Pour installer le jeu : menu du navigateur, puis « Ajouter à l'écran d'accueil ». Même le village appelle ça du progrès.");
       render();
     }, VILLAGE_RETURN_DELAY_MS);
   }, VILLAGE_ACTION_DELAY_MS);
