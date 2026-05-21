@@ -12,7 +12,7 @@ Le jeu est actuellement en développement.
 
 Version web jouable :
 
-**https://doctox.github.io/donjon-de-hodor/**
+**https://donjondegrodor.fr**
 
 Nom officiel du projet :
 
