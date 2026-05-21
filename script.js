@@ -15,6 +15,7 @@ const supabaseClient = window.supabase && SUPABASE_URL && SUPABASE_KEY
   : null;
 const LOGIN_ALIAS_PATTERN = /^[a-z0-9._-]{2,32}$/;
 const PASSWORD_SPECIAL_PATTERN = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?`~]/;
+const SUPABASE_REQUEST_TIMEOUT_MS = 15000;
 
 const cloudState = {
   user: null,
@@ -637,7 +638,21 @@ async function resolveLoginEmail(identifier, options = {}) {
     return "";
   }
 
-  const { data, error } = await supabaseClient.rpc("resolve_login_alias", { p_alias: alias });
+  let data = null;
+  let error = null;
+  try {
+    ({ data, error } = await withTimeout(
+      supabaseClient.rpc("resolve_login_alias", { p_alias: alias }),
+      SUPABASE_REQUEST_TIMEOUT_MS,
+      "La recherche du pseudo prend trop de temps."
+    ));
+  } catch (timeoutError) {
+    if (!quiet) {
+      setAccountStatus("Connexion trop lente", "bad");
+      setAccountHelp(`${timeoutError.message} Ferme puis rouvre la PWA si elle vient d'être mise à jour.`);
+    }
+    return "";
+  }
   if (error || !data) {
     if (!quiet) {
       setAccountStatus("Pseudo introuvable", "bad");
@@ -647,6 +662,16 @@ async function resolveLoginEmail(identifier, options = {}) {
   }
 
   return String(data).trim().toLowerCase();
+}
+
+function withTimeout(promise, timeoutMs, message) {
+  let timeoutId = 0;
+  const timeout = new Promise((_, reject) => {
+    timeoutId = window.setTimeout(() => reject(new Error(message)), timeoutMs);
+  });
+
+  return Promise.race([promise, timeout])
+    .finally(() => window.clearTimeout(timeoutId));
 }
 
 function signUpCredentials() {
@@ -682,7 +707,18 @@ async function signInAccount() {
   setAccountStatus("Connexion...", "neutral");
   const email = await resolveLoginEmail(loginIdentifier());
   if (!email) return;
-  const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+  let error = null;
+  try {
+    ({ error } = await withTimeout(
+      supabaseClient.auth.signInWithPassword({ email, password }),
+      SUPABASE_REQUEST_TIMEOUT_MS,
+      "La connexion Supabase ne répond pas."
+    ));
+  } catch (timeoutError) {
+    setAccountStatus("Connexion trop lente", "bad");
+    setAccountHelp(`${timeoutError.message} Ferme puis rouvre la PWA, ou vérifie le réseau.`);
+    return;
+  }
   if (error) {
     setAccountStatus("Connexion refusee", "bad");
     setAccountHelp(authMessage(error.message));
@@ -3307,8 +3343,32 @@ function registerServiceWorker() {
   if (!("serviceWorker" in navigator)) return;
   if (!window.isSecureContext && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") return;
 
+  let refreshing = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (refreshing) return;
+    refreshing = true;
+    window.location.reload();
+  });
+
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("service-worker.js", { scope: "./" })
+      .then((registration) => {
+        if (registration.waiting) {
+          registration.waiting.postMessage({ type: "SKIP_WAITING" });
+        }
+
+        registration.addEventListener("updatefound", () => {
+          const nextWorker = registration.installing;
+          if (!nextWorker) return;
+          nextWorker.addEventListener("statechange", () => {
+            if (nextWorker.state === "installed" && navigator.serviceWorker.controller) {
+              nextWorker.postMessage({ type: "SKIP_WAITING" });
+            }
+          });
+        });
+
+        return registration.update();
+      })
       .catch((error) => {
         console.warn("Service worker non enregistre:", error);
       });
