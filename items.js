@@ -5,9 +5,9 @@ const itemDescriptions = {
   "Sandales de Panique": "Chaussures de retraite tactique. Peuvent éviter certains dégâts, puis disparaissent.",
   "Hache Emoussee": "Hache qui a connu des jours moins mous. Augmente tes chances dans certains combats, puis peut casser.",
   "Boulet au Pied": "Mauvaise idée avec chaîne incluse. Rend les esquives moins fiables et les fuites plus bruyantes.",
-  "Chaussette Porte-Bonheur": "Reliquaire humide pour optimiste abîmé. Probablement inutile, mais Hodor insiste.",
+  "Chaussette Porte-Bonheur": "Reliquaire humide pour optimiste abîmé. Probablement inutile, mais Grodor insiste.",
   "Caillou Affectif": "Compagnon minéral sans plan de carrière. Prend de la place émotionnelle, pas stratégique.",
-  "Cape Trop Longue": "Grande pièce de tissu pour chutes nobles. Peut faire perdre 1 cœur quand Hodor parade.",
+  "Cape Trop Longue": "Grande pièce de tissu pour chutes nobles. Peut faire perdre 1 cœur quand Grodor parade.",
   "Gants Collants": "Gants sociaux trop entreprenants. Peuvent rapporter 1 PO après un gain, ou ramener un ennui.",
 };
 
@@ -32,7 +32,7 @@ const itemDuplicateTexts = {
   "Hache Emoussee": "Tu trouves une autre hache émoussée. Deux mauvaises lames ne font pas une stratégie, branquignol.",
   "Boulet au Pied": "Tu trouves un autre boulet au pied. Même la malchance manque de place.",
   "Chaussette Porte-Bonheur": "Tu trouves une autre chaussette porte-bonheur. La chance garde l'autre pied pour elle.",
-  "Caillou Affectif": "Tu trouves un autre caillou affectif. Hodor n'est pas prêt pour une famille.",
+  "Caillou Affectif": "Tu trouves un autre caillou affectif. Grodor n'est pas prêt pour une famille.",
   "Cape Trop Longue": "Tu trouves une autre cape trop longue. Le sol demande le droit de vote.",
   "Gants Collants": "Tu trouves d'autres gants collants. Ils se serrent la main et deviennent un problème.",
 };

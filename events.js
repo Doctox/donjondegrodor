@@ -16,7 +16,7 @@ const eventPool = [
     weight: 7,
     run() {
       if (Math.random() < 0.45) {
-        return addGold(5, "Le coffre contient des pièces et une notice de sécurité ignorée. Hodor prend le tout, comme un âne diplômé. +5 PO.");
+        return addGold(5, "Le coffre contient des pièces et une notice de sécurité ignorée. Grodor prend le tout, comme un âne diplômé. +5 PO.");
       }
       return takeDamage(1, "Le coffre te mord. Les meubles du donjon ont un syndicat très agressif. -1 cœur.");
     },
@@ -61,7 +61,7 @@ const eventPool = [
   {
     weight: 4,
     run() {
-      return addItem("Sandales de Panique", "Ces sandales regardent déjà la sortie. Hodor appelle ça du leadership.");
+      return addItem("Sandales de Panique", "Ces sandales regardent déjà la sortie. Grodor appelle ça du leadership.");
     },
   },
   {
@@ -163,7 +163,7 @@ const eventPool = [
   {
     weight: 4,
     run() {
-      return takeDamage(1, "Une arbalète automatique tire sur tout ce qui respire fort. Hodor est une preuve sonore. -1 cœur.");
+      return takeDamage(1, "Une arbalète automatique tire sur tout ce qui respire fort. Grodor est une preuve sonore. -1 cœur.");
     },
   },
   {
@@ -236,7 +236,7 @@ const eventPool = [
     weight: 4,
     run() {
       shiftFloors(-2);
-      return "Tu trouves un escalier pressé d'en finir. Hodor négocie avec ses genoux. -2 étages.";
+      return "Tu trouves un escalier pressé d'en finir. Grodor négocie avec ses genoux. -2 étages.";
     },
   },
   {
@@ -272,7 +272,7 @@ const eventPool = [
     run() {
       const gold = randomInt(4, 8);
       if (Math.random() < 0.3) {
-        return addGold(gold, `Tu trouves une caisse marquée "salaires des gardes". Hodor invente l'impôt inverse. +${gold} PO.`);
+        return addGold(gold, `Tu trouves une caisse marquée "salaires des gardes". Grodor invente l'impôt inverse. +${gold} PO.`);
       }
       return takeDamage(1, "Tu trouves une caisse marquée 'salaires des gardes'. Les gardes connaissent la comptabilité défensive. -1 cœur.");
     },
@@ -348,7 +348,7 @@ const eventPool = [
   {
     weight: 1,
     run() {
-      return instantDeath('Une pancarte indique "Ne pas entrer". Hodor lit, réfléchit, puis trahit la lecture.');
+      return instantDeath('Une pancarte indique "Ne pas entrer". Grodor lit, réfléchit, puis trahit la lecture.');
     },
   },
 ];

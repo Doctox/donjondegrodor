@@ -2,7 +2,7 @@ const upgradeDefinitions = {
   cardio: {
     name: "Cardio Tragique",
     costs: [25, 60, 120],
-    description: "Au début d'une run, bonne chance de gagner 1 cœur. Parfois l'entraînement gagne et Hodor perd 1 cœur.",
+    description: "Au début d'une run, bonne chance de gagner 1 cœur. Parfois l'entraînement gagne et Grodor perd 1 cœur.",
   },
   colis: {
     name: "Colis Suspect",
@@ -17,7 +17,7 @@ const upgradeDefinitions = {
   reflexes: {
     name: "Reflexes de Lache",
     costs: [35, 85, 160],
-    description: "Chance correcte d'esquiver un dégât. Parfois Hodor laisse un objet négocier à sa place.",
+    description: "Chance correcte d'esquiver un dégât. Parfois Grodor laisse un objet négocier à sa place.",
   },
   lecture: {
     name: "Lecture de Porte",

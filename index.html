@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Le Donjon de Hodor</title>
-    <link rel="stylesheet" href="styles.css?v=20260521-path-left-more">
+    <title>Le Donjon de Grodor</title>
+    <link rel="stylesheet" href="styles.css?v=20260521-effect-death-polish">
   </head>
   <body>
     <main class="game-shell">
@@ -90,11 +90,11 @@
           <button class="inventory-toggle" id="inventory-toggle" type="button" aria-expanded="false" aria-controls="inventory-popover">
             <span>Inventaire</span>
           </button>
-          <div class="inventory-popover" id="inventory-popover" role="dialog" aria-label="Inventaire de Hodor" hidden>
+          <div class="inventory-popover" id="inventory-popover" role="dialog" aria-label="Inventaire de Grodor" hidden>
             <div class="inventory-card">
               <div class="inventory-card-head">
                 <div>
-                  <p class="inventory-eyebrow">Sac de Hodor</p>
+                  <p class="inventory-eyebrow">Sac de Grodor</p>
                   <strong>Inventaire</strong>
                 </div>
                 <button class="inventory-close" id="inventory-close" type="button" aria-label="Fermer l'inventaire">x</button>
@@ -137,7 +137,7 @@
             <div class="account-signup-modal" role="dialog" aria-label="Création de compte">
               <div class="account-signup-head">
                 <strong>Création de compte</strong>
-                <button class="inventory-close" id="auth-signup-close" type="button" aria-label="Fermer la creation de compte">x</button>
+                <button class="inventory-close" id="auth-signup-close" type="button" aria-label="Fermer la création de compte">x</button>
               </div>
               <label class="account-field">
                 <input id="signup-alias" type="text" autocomplete="username" placeholder="Pseudo" aria-label="Pseudo">
@@ -150,6 +150,7 @@
                 <span class="account-info" tabindex="0" aria-label="Utilisez au moins 8 caractères, avec des minuscules, des majuscules, un chiffre et un symbole.">i</span>
               </label>
               <button class="account-register" id="auth-register" type="button">S'enregistrer</button>
+              <p class="account-signup-status" id="signup-status" data-tone="neutral" aria-live="polite">Création de compte</p>
               <small class="account-signup-note">Après l'inscription, vérifie tes spams pour confirmer la création du compte.</small>
             </div>
           </div>
@@ -157,18 +158,18 @@
 
         <div class="ko-banner" id="ko-banner" hidden>
           <strong>Perdu</strong>
-          <span id="ko-taunt">Hodor retourne aux geôles sans passer par la dignité.</span>
+          <span id="ko-taunt">Grodor retourne aux geôles sans passer par la dignité.</span>
         </div>
 
         <div class="win-banner" id="win-banner" hidden>
           <strong>Gagné</strong>
-          <span id="win-taunt">Hodor sort vivant. Le village envisage une statue minuscule, par politesse.</span>
+          <span id="win-taunt">Grodor sort vivant. Le village envisage une statue minuscule, par politesse.</span>
         </div>
 
         <div class="story-panel">
           <p class="location" id="location">Dans les geôles</p>
           <p class="story" id="story">
-            Hodor entre dans le donjon, se prend les pieds dans le tapis et hurle de douleur en tombant.
+            Grodor entre dans le donjon, se prend les pieds dans le tapis et hurle de douleur en tombant.
             Il se fait repérer, tabasser, puis se réveille tout en haut du donjon.
           </p>
         </div>
@@ -254,10 +255,10 @@
               </button>
               <button class="building notice-building village-stat-card" id="stats-building" type="button" aria-label="Statistiques du village">
                 <span class="village-stat-title">Panneau d'affichage</span>
-                <strong><span id="village-win-count">0</span> sorties miraculeuses</strong>
-                <strong><span id="village-loss-count">0</span> humiliations</strong>
-              <strong><span id="village-bank-count">0</span> PO planquées</strong>
-              <small id="village-shame">Dignité estimée : introuvable</small>
+                <strong><span id="village-win-count">0</span> gloire</strong>
+                <strong><span id="village-loss-count">0</span> souffrance</strong>
+              <strong><span id="village-bank-count">0</span> score grodorien</strong>
+              <small id="village-shame">Avidité 0 / Obstination 0</small>
               </button>
             </div>
           </div>
@@ -283,37 +284,29 @@
               </div>
               <button id="close-stats" type="button" aria-label="Fermer les statistiques">x</button>
             </div>
-            <div class="stats-panel-grid">
-              <article>
-                <span>Sorties miraculeuses</span>
-                <strong id="stats-modal-wins">0</strong>
-              </article>
-              <article>
-                <span>Humiliations</span>
-                <strong id="stats-modal-losses">0</strong>
-              </article>
-              <article>
-                <span>PO planquées</span>
-                <strong id="stats-modal-bank">0</strong>
-              </article>
-              <article class="stats-panel-dignity">
-                <span>Dignité estimée</span>
-                <strong id="stats-modal-dignity">Introuvable</strong>
-              </article>
+            <div class="stats-panel-tabs" role="tablist" aria-label="Type de panneau">
+              <button id="stats-tab-stats" type="button" aria-selected="true">Statistique</button>
+              <button id="stats-tab-ranking" type="button" aria-selected="false">Classement</button>
             </div>
+            <div class="stats-panel-grid" id="stats-panel-grid"></div>
           </div>
 
           <div class="death-choices" id="death-choices" hidden>
             <div class="cell-stage" id="cell-stage" aria-label="Geôle">
             <button class="restart-card cell-door-hitbox" id="restart-action" type="button" aria-label="Ouvrir la porte de la geôle">
               <span id="restart-label">Sortir de sa cellule</span>
-              <small id="restart-help">La porte grince. Hodor appelle ça de la discrétion.</small>
+              <small id="restart-help">La porte grince. Grodor appelle ça de la discrétion.</small>
             </button>
             </div>
+            <aside class="cell-info-card" id="cell-info-card" aria-live="polite"></aside>
           </div>
         </div>
 
       </section>
+      <footer class="site-footer" aria-label="Informations légales">
+        <span>Contact : <a href="mailto:contact@donjondegrodor.fr">contact@donjondegrodor.fr</a></span>
+        <span>© 2026 Donjon de Grodor — Tous droits réservés.</span>
+      </footer>
     </main>
 
     <script src="items.js"></script>
@@ -322,6 +315,6 @@
     <script src="upgrades.js"></script>
     <script src="supabase-config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="script.js?v=20260521-path-left-more"></script>
+    <script src="script.js?v=20260521-effect-death-polish"></script>
   </body>
 </html>
