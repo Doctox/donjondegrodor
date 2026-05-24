@@ -28,7 +28,7 @@ const itemDuplicateTexts = {
   "Casque Trop Petit": "Tu trouves un autre casque trop petit. Même ton crâne refuse la collection, espèce de mou du heaume.",
   "Slip de Guerre": "Tu trouves un autre slip de guerre. Le donjon ferme les yeux par pudeur, gros pignouf.",
   "Medaillon du Presque-Heros": "Tu trouves un autre médaillon du presque-héros. Le destin refuse l'abonnement.",
-  "Sandales de Panique": "Tu trouves d'autres sandales de panique. Fuir plus vite serait presque injuste, va-nu-pieds.",
+  "Sandales de Panique": "Grodor trouve un objet identique. Il regarde ses pieds. Ses pieds regardent ailleurs. Effet : Doublon : Sandales de Panique.",
   "Hache Emoussee": "Tu trouves une autre hache émoussée. Deux mauvaises lames ne font pas une stratégie, branquignol.",
   "Boulet au Pied": "Tu trouves un autre boulet au pied. Même la malchance manque de place.",
   "Chaussette Porte-Bonheur": "Tu trouves une autre chaussette porte-bonheur. La chance garde l'autre pied pour elle.",

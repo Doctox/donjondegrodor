@@ -13,7 +13,7 @@
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/grodor-icon-192.png">
     <link rel="apple-touch-icon" href="assets/icons/grodor-icon-192.png">
-    <link rel="stylesheet" href="styles.css?v=20260521-death-mort-mort">
+    <link rel="stylesheet" href="styles.css?v=20260525-death-door-one">
   </head>
   <body>
     <main class="game-shell">
@@ -178,8 +178,8 @@
         <div class="story-panel">
           <p class="location" id="location">Dans les geôles</p>
           <p class="story" id="story">
-            Grodor entre dans le donjon, se prend les pieds dans le tapis et hurle de douleur en tombant.
-            Il se fait repérer, tabasser, puis se réveille tout en haut du donjon.
+            Grodor entre dans le donjon. Son premier adversaire… euh… un tapis. Le tapis gagne par K.O.
+            Grodor se réveille en cellule, face à une porte qui hurle : « Vous ne passerez pas ! »
           </p>
         </div>
 
@@ -220,6 +220,7 @@
             </div>
           </div>
 
+          <div class="combat-stage" id="combat-stage" aria-label="Arène de combat" hidden>
           <div class="combat-choices" id="combat-choices" hidden>
             <div class="monster-target rat-target" id="monster-target" hidden aria-label="Rat commandant">
               <button class="monster-part monster-head" type="button" data-strike="head" aria-label="Taper la tête"></button>
@@ -238,6 +239,8 @@
               <span>Taper le torse</span>
               <small>Le choix moyen d'un cerveau moyen.</small>
             </button>
+          </div>
+
           </div>
 
           <div class="village-stage" id="village-stage" aria-label="Village" hidden>
@@ -271,6 +274,12 @@
               </button>
             </div>
           </div>
+          <aside class="village-tip-card" id="village-tip-card" hidden>
+            <strong>Astuce du Village</strong>
+            <p>Pose ton or et vends tes objets.</p>
+            <p>Pour jouer comme une vraie appli :</p>
+            <small>iPhone : Partager &rarr; Ajouter à l'écran d'accueil.<br>Android : menu du navigateur &rarr; Ajouter à l'écran d'accueil.</small>
+          </aside>
 
           <div class="village-modal-backdrop" id="village-modal-backdrop" hidden></div>
 
@@ -324,6 +333,6 @@
     <script src="upgrades.js"></script>
     <script src="supabase-config.js"></script>
     <script src="vendor/supabase-js-v2.js"></script>
-    <script src="script.js?v=20260521-death-mort-mort"></script>
+    <script src="script.js?v=20260525-long-towers"></script>
   </body>
 </html>

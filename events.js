@@ -9,7 +9,11 @@ const eventPool = [
   {
     weight: 9,
     run() {
-      return addGold(2, "Une bourse traîne sous une dalle. Elle appartenait sûrement à quelqu'un de moins nigaud. +2 PO.");
+      return addGold(2, `${randomFrom([
+        "Une bourse est posée là. Grodor a comme un sentiment de déjà-vu.",
+        "Une bourse est posée par terre. Ce n’était pas celle de ton dernier passage ?",
+        "Une bourse au nom de Grodor est posée par terre. Pratique. Inquiétant, mais pratique.",
+      ])} +2 PO.`);
     },
   },
   {
@@ -27,13 +31,17 @@ const eventPool = [
       if (Math.random() < 0.18) {
         return "Tu marches sur une dalle. Elle claque, tousse, puis abandonne. Même le piège te trouve fatigant.";
       }
-      return takeDamage(1, "Tu marches sur une dalle. Elle le prend comme une critique architecturale, espèce de sabot. -1 cœur.");
+      return takeDamage(1, "Grodor marche sur une dalle. La dalle fait “clic”. Grodor fait “oh”. -1 cœur.");
     },
   },
   {
     weight: 7,
     run() {
-      return takeDamage(1, "Tu descends trois marches avec panache. Les sept suivantes choisissent ton visage, grosse quiche. -1 cœur.");
+      return takeDamage(1, `${randomFrom([
+        "Grodor évite un piège avec grâce. Puis se cogne contre le panneau “Attention au piège”",
+        "Une pierre tombe du plafond. Grodor l’esquive. Une deuxième, plus petite, réussit. Dommage.",
+        "Un panneau “Quai 9 ¾” pend sur le mur d’en face. Grodor fonce. Le mur gagne.",
+      ])} -1 cœur.`);
     },
   },
   {
@@ -67,7 +75,7 @@ const eventPool = [
   {
     weight: 4,
     run() {
-      return addItem("Hache Emoussee", "Tu récupères une hache émoussée. Elle a l'air dangereuse pour le mobilier mou.");
+      return addItem("Hache Emoussee", "Grodor ramasse la hache. Même Gimli demanderait un reçu. Effet : Hache Emoussee.");
     },
   },
   {
@@ -99,16 +107,25 @@ const eventPool = [
     run() {
       if (Math.random() < 0.45) {
         state.life = Math.min(state.maxLife, state.life + 1);
-        return "Tu bois l'eau louche. Elle avait le goût d'une erreur, mais une erreur nourrissante. +1 cœur.";
+        return `${randomFrom([
+          "Une petite bouteille marquée “Bois-moi” roule jusqu’à Grodor. Il boit. Rien ne grandit, sauf son courage.",
+          "Une vieille femme tend une pomme rouge à Grodor. Il croque sans réfléchir. Pour une fois, le conte se trompe.",
+        ])} Effet : Soigne.`;
       }
-      return takeDamage(1, "Tu bois l'eau louche. Le donjon respecte ton engagement dans la mauvaise idée, sombre buse. -1 cœur.");
+      return takeDamage(1, `${randomFrom([
+        "Un capitaine pirate nommé Jack Boit-de-l’Eau arrive en tanguant. Il tend sa bouteille à Grodor. Une gorgée plus tard, Grodor tangue aussi.",
+        "Grodor trouve une tasse de thé fumante. Le Chapelier Fou crie “pas celle-là !”. Trop tard.",
+      ])} -1 cœur.`);
     },
   },
   {
     weight: 5,
     run() {
       const gold = randomInt(1, 4);
-      return addGold(gold, `Tu trouves une tirelire en forme de démon triste. Tu l'achèves avec une compassion rentable. +${gold} PO.`);
+      return addGold(gold, `${randomFrom([
+        "Grodor éternue. Quelques pièces tombent du plafond. Personne ne revendique le miracle.",
+        "Quelqu’un jette quelques pièces dans un puits. Mauvais puits. Grodor les reçoit sur le crâne.",
+      ])} +${gold} PO.`);
     },
   },
   {
@@ -127,7 +144,11 @@ const eventPool = [
       const loss = Math.min(state.carriedGold, randomInt(1, 3));
       state.carriedGold -= loss;
       return loss > 0
-        ? `Un péage fantôme te réclame ${loss} PO. Tu paies une route qui n'existe pas, gros jambon.`
+        ? `${randomFrom([
+          "Une barrière fantôme descend devant Grodor. Une main transparente réclame des PO. Grodor paie. La barrière était déjà ouverte.",
+          "Un gamin en pyjama vert promet le Pays Imaginaire contre quelques PO. Grodor paie. Le gamin s’envole. Grodor reste au sol.",
+          "Un vieil homme en robe bloque le passage. « Vous ne passerez pas sans payer. » Grodor paie. La porte d’à côté était ouverte.",
+        ])} -${loss} PO.`
         : "Un péage fantôme te réclame de l'argent. Ta pauvreté passe sans ticket.";
     },
   },
@@ -136,7 +157,10 @@ const eventPool = [
     run() {
       if (state.life < state.maxLife) {
         state.life += 1;
-        return "Tu trouves une soupe tiède dans un casque. C'est honteux, donc parfaitement local. +1 cœur.";
+        return `${randomFrom([
+          "Une petite bouteille marquée “Bois-moi” roule jusqu’à Grodor. Il boit. Rien ne grandit, sauf son courage.",
+          "Une vieille femme tend une pomme rouge à Grodor. Il croque sans réfléchir. Pour une fois, le conte se trompe.",
+        ])} Effet : Soigne.`;
       }
       return "Tu trouves une soupe tiède dans un casque. Tu es déjà en forme, luxe insolent.";
     },
@@ -156,21 +180,21 @@ const eventPool = [
       const loss = Math.min(state.carriedGold, 2);
       state.carriedGold -= loss;
       return loss
-        ? `Tu glisses sur une flaque de mystère. ${loss} PO roulent sous une grille qui avait l'air d'attendre ça.`
+        ? `Grodor trébuche et part en roulade héroïque. Ses pièces, elles, choisissent la fuite. -${loss} PO.`
         : "Tu glisses sur une flaque de mystère. Aucun argent perdu, juste une posture sociale.";
     },
   },
   {
     weight: 4,
     run() {
-      return takeDamage(1, "Une arbalète automatique tire sur tout ce qui respire fort. Grodor est une preuve sonore. -1 cœur.");
+      return takeDamage(1, "Une arbalète sort du mur. Grodor retient son souffle. Son ventre gargouille. L’arbalète tire. -1 cœur.");
     },
   },
   {
     weight: 4,
     run() {
       if (Math.random() < 0.55) {
-        return "Tu entres dans une salle remplie de leviers. Tu n'en touches aucun. Le donjon note l'anomalie.";
+        return "Grodor entre dans une salle remplie de leviers. Il en tire un avec confiance. Le donjon réfléchit. Puis rien.";
       }
       return takeDamage(1, "Tu entres dans une salle remplie de leviers. Tu les touches tous, comme un audit idiot. -1 cœur.");
     },
@@ -179,7 +203,10 @@ const eventPool = [
     weight: 4,
     run() {
       const gold = randomInt(1, 5);
-      return addGold(gold, `Un marchand invisible te vend de l'air premium. Tu refuses et fouilles sa caisse théorique. +${gold} PO.`);
+      return addGold(gold, `${randomFrom([
+        "Une dame très correcte se présente comme Mary Popièce. Elle sort des PO de son sac, ouvre une porte qui n’était pas là, puis s’envole avec son parapluie.",
+        "Un petit elfe nommé Dobourse apparaît. Il offre une chaussette à Grodor. Elle était pleine de PO.",
+      ])} +${gold} PO.`);
     },
   },
   {
@@ -204,10 +231,14 @@ const eventPool = [
     weight: 4,
     run() {
       if (!state.inventory.length) {
-        return "Une malédiction cherche un objet à casser. Tes poches vides la mettent mal à l'aise.";
+        return "Une petite créature maigre sort de l’ombre en murmurant : « Mon précieux… » Elle fouille le sac de Grodor. Rien. Elle repart en soufflant : « Décevant. »";
       }
       const lost = removeRandomItem();
-      return `Une malédiction administrative confisque ton objet : ${lost}. Motif : existence mal déclarée.`;
+      return `${randomFrom([
+        "Deux yeux apparaissent. Puis une queue. Puis un sourire. Le chat disparaît. Grodor se sent plus léger.",
+        "Grodor se retrouve face à un sorcier aux lunettes rondes. “Expelliarmus !” Un objet s’envole. Grodor applaudit, puis comprend.",
+        "Une armure se réveille et tend la main. Grodor lui donne son objet par réflexe. L’armure repart avec.",
+      ])} Effet : Objet perdu : ${lost}.`;
     },
   },
   {
@@ -236,14 +267,22 @@ const eventPool = [
     weight: 4,
     run() {
       shiftFloors(-2);
-      return "Tu trouves un escalier pressé d'en finir. Grodor négocie avec ses genoux. -2 étages.";
+      return `${randomFrom([
+        "Grodor tombe sur ses fesses quelques étages plus bas. Il repart comme si de rien n’était.",
+        "Grodor trouve un escalier. Ah… non. C’était un toboggan. Un cri traverse tout le donjon.",
+      ])} -2 étages.`;
     },
   },
   {
     weight: 6,
     run() {
       shiftFloors(2);
-      return "Un monte-charge grincheux te hisse sans sourire. Le service client refuse les héros moites. +2 étages.";
+      return `${randomFrom([
+        "Grodor entre dans un vieux monte-charge. Il appuie sur le 1. Le monte-charge remonte de deux étages.",
+        "Un tapis magique passe sous Grodor. Il monte deux étages.",
+        "Une main géante sort du mur, attrape Grodor par le col, et le range deux étages plus haut.",
+        "Grodor s’assoit sur un vieux trône. Le trône tousse, puis l’expédie deux étages plus haut.",
+      ])} +2 étages.`;
     },
   },
   {
@@ -289,7 +328,10 @@ const eventPool = [
       const loss = Math.min(state.carriedGold, randomInt(2, 5));
       state.carriedGold -= loss;
       return loss
-        ? `Une bourse vivante mord ta bourse normale et avale ${loss} PO. L'économie locale applaudit.`
+        ? `${randomFrom([
+          "Grodor gronde sa bourse. Elle ouvre grand la bouche et recrache quelques PO dans sa figure.",
+          "La bourse de Grodor sème des PO derrière lui. Grodor ne remarque rien. Le Petit Poucet faisait ça avec des cailloux.",
+        ])} -${loss} PO.`
         : "Une bourse vivante essaie de voler ton argent. Elle repart avec une crise existentielle.";
     },
   },
@@ -320,13 +362,13 @@ const eventPool = [
   {
     weight: 7,
     run() {
-      return "Une statue te regarde. Même en pierre, elle attendait mieux.";
+      return "Grodor arrive devant une immense peinture d’une grosse dame. Elle demande le mot de passe. Grodor répond : « Grodor. » La dame hésite, puis le laisse passer.";
     },
   },
   {
     weight: 7,
     run() {
-      return "La salle est vide. Tu remportes un duel intellectuel contre rien, de peu.";
+      return "La salle est vide. Grodor attend le piège. Le piège attend Grodor. Rien ne se passe.";
     },
   },
   {
@@ -335,20 +377,28 @@ const eventPool = [
       const loss = Math.min(state.carriedGold, randomInt(1, 4));
       state.carriedGold -= loss;
       return loss
-        ? `Une main sort du mur, te vole et applaudit ta vigilance avec mépris. -${loss} PO.`
-        : "Une main sort du mur, fouille ta bourse vide, puis te rend ta pauvreté.";
+        ? `Une main sort de derrière un tableau et pique la bourse de Grodor. Le tableau ricane. -${loss} PO.`
+        : "Une main sort du mur, attrape la bourse de Grodor, la secoue. Rien. Elle la repose avec pitié.";
     },
   },
   {
     weight: 1,
     run() {
-      return instantDeath("Tu ouvres la porte. Derrière, une décision de game design te regarde sans remords.");
+      return instantDeath(randomFrom([
+        "Grodor ouvre une porte. Une voix murmure : « Avada Kedavra. ».",
+        "Grodor franchit une porte. Une grosse dame en robe rouge lève une petite couronne de travers. « Qu’on lui coupe la tête ! » Mauvaise porte.",
+        "Grodor pousse une porte. Un homme à crochet sourit dans l’ombre. Derrière lui, quelque chose fait tic-tac.",
+      ]));
     },
   },
   {
     weight: 1,
     run() {
-      return instantDeath('Une pancarte indique "Ne pas entrer". Grodor lit, réfléchit, puis trahit la lecture.');
+      return instantDeath(randomFrom([
+        "Grodor ouvre une porte. Une voix murmure : « Avada Kedavra. ».",
+        "Grodor franchit une porte. Une grosse dame en robe rouge lève une petite couronne de travers. « Qu’on lui coupe la tête ! » Mauvaise porte.",
+        "Grodor pousse une porte. Un homme à crochet sourit dans l’ombre. Derrière lui, quelque chose fait tic-tac.",
+      ]));
     },
   },
 ];

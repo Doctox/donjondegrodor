@@ -4,6 +4,13 @@ const BANK_KEY = "barbare_portes_binouse_bank";
 const UPGRADES_KEY = "barbare_portes_binouse_upgrades";
 const STATS_KEY = "barbare_portes_binouse_stats";
 const CELL_TUTORIAL_KEY = "barbare_portes_binouse_cell_tutorial_seen";
+const COIN_FLIP_ASSET_PATH = "assets/Mini-jeu/pile-ou-face";
+const COIN_FLIP_FRAME_MS = 360;
+const SLOT_MACHINE_ASSET_PATH = "assets/Mini-jeu/machine-a-sous";
+const SLOT_MACHINE_SYMBOLS = ["Grodor", "Po", "Crane", "Bourse-vide"];
+const SLOT_MACHINE_FRAME_MS = 125;
+const BONNETEAU_ASSET_PATH = "assets/Mini-jeu/Bonneteau";
+const BONNETEAU_SYMBOLS = ["grodor", "po", "crane", "bourse"];
 const SUPABASE_CONFIG = window.HODOR_SUPABASE || {};
 const SUPABASE_URL = SUPABASE_CONFIG.url || "";
 const SUPABASE_KEY = SUPABASE_CONFIG.publishableKey || SUPABASE_CONFIG.anonKey || "";
@@ -45,6 +52,18 @@ const DEFAULT_STATS = {
   runsTotal: 0,
   etagesVisites: 0,
 };
+const DETAILED_STATS_KEYS = [
+  "sortiesReussies",
+  "combatsGagnes",
+  "miniJeuxReussis",
+  "humiliations",
+  "degatsSubis",
+  "mortsRidicules",
+  "poGagnes",
+  "objetsRamasses",
+  "runsTotal",
+  "etagesVisites",
+];
 
 let fallbackStats = { ...DEFAULT_STATS };
 
@@ -115,9 +134,9 @@ const inventoryIconPaths = {
 };
 
 const COMBAT_ARENAS = [
-  { key: "arene-1", label: "Arene 1", image: "assets/Arene/arene-1.png" },
-  { key: "arene-2", label: "Arene 2", image: "assets/Arene/arene-2.png" },
-  { key: "arene-3", label: "Arene 3", image: "assets/Arene/arene-3.png" },
+  { key: "arene-1", label: "Arene 1", image: "assets/Arene/arene-1.webp" },
+  { key: "arene-2", label: "Arene 2", image: "assets/Arene/arene-2.webp" },
+  { key: "arene-3", label: "Arene 3", image: "assets/Arene/arene-3.webp" },
 ];
 const DEFAULT_COMBAT_ARENA_KEY = COMBAT_ARENAS[0].key;
 
@@ -139,6 +158,7 @@ const HODOR_POSE_FILES = {
 const HODOR_WALK_FRAME_MS = 170;
 const VILLAGE_ACTION_DELAY_MS = 650;
 const VILLAGE_RETURN_DELAY_MS = 900;
+const VILLAGE_SERVICE_RETURN_DELAY_MS = 4000;
 const CELL_OPEN_DELAY_MS = 650;
 const DUNGEON_EFFECT_VISIBLE_MS = 3000;
 const HODOR_WALK_FRAME_PATHS = [
@@ -193,6 +213,8 @@ const HODOR_WALK_STUFF_FRAME_PATHS = {
 let hodorWalkAnimationTimer = null;
 let dungeonEffectPoseTimer = null;
 let cellOpenTimer = null;
+let coinFlipAnimationTimers = [];
+let slotMachineAnimationTimers = [];
 
 document.addEventListener("click", (event) => {
   const miniGameAction = event.target.closest("[data-mini-game-action]");
@@ -372,6 +394,14 @@ function normalizeStats(stats = {}) {
 function addStat(key, amount = 1) {
   state.stats = normalizeStats(state.stats);
   state.stats[key] = Math.max(0, Math.floor(Number(state.stats[key] || 0) + amount));
+}
+
+function detailedStatsPayload(stats = state.stats) {
+  const normalized = normalizeStats(stats);
+  return DETAILED_STATS_KEYS.reduce((payload, key) => {
+    payload[key] = normalized[key];
+    return payload;
+  }, {});
 }
 
 function hodorianStats() {
@@ -800,7 +830,7 @@ async function loadCloudProfileAndSave() {
     const [{ data: profile, error: profileError }, { data: alias, error: aliasError }, { data: save, error: saveError }] = await Promise.all([
       supabaseClient.from("profiles").select("role, display_name").eq("user_id", cloudState.user.id).maybeSingle(),
       supabaseClient.rpc("current_login_alias"),
-      supabaseClient.from("player_saves").select("bank_gold,total_gold,wins,losses,upgrades,active_run").eq("user_id", cloudState.user.id).maybeSingle(),
+      supabaseClient.from("player_saves").select("bank_gold,total_gold,wins,losses,upgrades,detailed_stats,active_run").eq("user_id", cloudState.user.id).maybeSingle(),
     ]);
 
     if (profileError) {
@@ -826,10 +856,18 @@ async function loadCloudProfileAndSave() {
       : hasPlayedProgress();
 
     if (save && !keepLocalProgress) {
+      const detailedStats = save.detailed_stats && typeof save.detailed_stats === "object" ? save.detailed_stats : {};
+      const hasDetailedStats = Object.keys(detailedStats).length > 0;
+      const localStatsMatchCloud = state.bankGold === Number(save.bank_gold || 0)
+        && Number(state.stats.wins || 0) === Number(save.wins || 0)
+        && Number(state.stats.losses || 0) === Number(save.losses || 0)
+        && Number(state.stats.goldBankedTotal || 0) === Number(save.total_gold || 0);
+      const legacyDetailedStats = !hasDetailedStats && localStatsMatchCloud ? detailedStatsPayload() : {};
       resetRunCarryover();
       state.bankGold = Number(save.bank_gold || 0);
       state.stats = normalizeStats({
-        ...state.stats,
+        ...detailedStats,
+        ...legacyDetailedStats,
         wins: Number(save.wins || 0),
         losses: Number(save.losses || 0),
         goldBankedTotal: Number(save.total_gold || 0),
@@ -838,6 +876,9 @@ async function loadCloudProfileAndSave() {
       saveBankGold(state.bankGold);
       saveStats();
       saveUpgrades();
+      if (!hasDetailedStats && localStatsMatchCloud) {
+        await saveCloudNow({ force: true });
+      }
     } else {
       await saveCloudNow({ force: true });
       if (keepLocalProgress || hasPlayedProgress() || hasActiveRunToSave()) {
@@ -871,6 +912,7 @@ function progressScore(save) {
     + Number(save.total_gold || 0)
     + Number(save.wins || 0)
     + Number(save.losses || 0)
+    + Object.values(save.detailed_stats || {}).reduce((sum, value) => sum + Number(value || 0), 0)
     + Object.values(save.upgrades || {}).reduce((sum, level) => sum + Number(level || 0), 0);
   }
 
@@ -1012,7 +1054,11 @@ function restoreActiveRun(activeRun) {
   state.doorHints = [];
   state.hodorPose = state.screen === "combat" ? "idle" : "question";
   prepareDoorHints();
-  setStory("Grodor reprend exactement là où il avait abandonné la paperasse.");
+  setStory(randomFrom([
+    "Grodor cligne des yeux. Le Lapin Blanc hurle qu’il est encore en retard. Tout reprend.",
+    "Grodor ouvre les yeux. Quelque part, le donjon appuie sur Start. Tout reprend.",
+    "Grodor se réveil. Une voix crie “Action !”. Le donjon reprend la scène.",
+  ]));
   return true;
 }
 
@@ -1094,6 +1140,7 @@ async function saveCloudNow(options = {}) {
     wins: Math.max(0, Math.floor(Number(state.stats.wins || 0))),
     losses: Math.max(0, Math.floor(Number(state.stats.losses || 0))),
     upgrades: state.upgrades || {},
+    detailed_stats: detailedStatsPayload(),
     active_run: buildActiveRunPayload(),
   };
   const { error } = await supabaseClient.from("player_saves").upsert(payload, { onConflict: "user_id" });
@@ -1118,7 +1165,7 @@ function setStory(text, tone = "neutral") {
 function deathStoryText(text) {
   if (state.screen !== "mort") return text;
   if (/Les PO en poche sont perdues/i.test(text)) return text;
-  return `${text} Les PO en poche sont perdues. Les gardes te renvoient dans les geôles, gros naze.`;
+  return `${text} Les PO en poche sont perdues. Retour aux geôles.`;
 }
 
 function setReward(text) {
@@ -1182,8 +1229,9 @@ function renderCellInfo() {
 
   card.innerHTML = [
     "<strong>Astuce de geôle</strong>",
-    "<p>Lis les indices, garde ta bourse au chaud, et ne vends ton stuff que si tu assumes vraiment.</p>",
-    "<small>Jeu indé : courage, même les murs apprennent lentement.</small>",
+    "<p>Entre deux runs, passe à la banque. Les PO dans la poche de Grodor ont une espérance de vie très courte.</p>",
+    "<p>Garde les Gants Collants si tu peux. Grodor ne sait pas ce qu’ils touchent, mais ça rapporte.</p>",
+    "<small>Le donjon est en cours d’aménagement. Si quelque chose casse, ce n’est pas Grodor. Enfin… pas toujours.</small>",
   ].join("");
 }
 
@@ -1199,7 +1247,7 @@ function hodorPoseFromStory(text, tone) {
   if (/miroir magique|avenir.*court.*flou.*douloureux/.test(content)) return "folie";
   if (itemWasLost) return "ko";
   if (itemWasDuplicate) return "question";
-  if (/\+\d+\s*coeur|caillou affectif|hache emoussee|casque trop petit|sandales de panique|medaillon|chaussette|gants|slip|cape/.test(effectText)) return "victory";
+  if (/soigne|\+\d+\s*coeur|caillou affectif|hache emoussee|casque trop petit|sandales de panique|medaillon|chaussette|gants|slip|cape/.test(effectText)) return "victory";
   if (/-\d+\s*etages/.test(effectText)) return "fuite";
   if (/\+\d+\s*etages/.test(effectText)) return "walk";
   if (/esquive/.test(effectText)) return "fuite";
@@ -1237,10 +1285,33 @@ function splitStoryReward(text) {
 }
 
 function splitSentenceEffect(sentence) {
+  if (/^Effet\s*:\s*Soigne/i.test(sentence)) {
+    return { story: "", reward: "Soigne" };
+  }
+
+  if (/^Effet\s*:\s*Objet perdu\s*:/i.test(sentence)) {
+    const item = knownItemInText(sentence);
+    return { story: "", reward: item ? `Objet perdu : ${item}` : "Objet perdu" };
+  }
+
+  if (/^Effet\s*:\s*Doublon\s*:/i.test(sentence)) {
+    const item = knownItemInText(sentence);
+    return { story: "", reward: item ? `Doublon : ${item}` : "Doublon" };
+  }
+
+  if (/^Effet\s*:\s*Objet intact/i.test(sentence)) {
+    return { story: "", reward: "Objet intact" };
+  }
+
+  if (/^Effet\s*:/i.test(sentence)) {
+    const item = knownItemInText(sentence);
+    if (item) return { story: "", reward: item };
+  }
+
   const duplicate = duplicateItemEffect(sentence);
   if (duplicate) {
     return {
-      story: "Tu trouves un objet. Le donjon ricane doucement.",
+      story: sentence,
       reward: duplicate,
     };
   }
@@ -1270,9 +1341,10 @@ function splitSentenceEffect(sentence) {
 
   const numericEffect = sentence.match(/([+-]\d+\s*(?:PO|cœurs?|coeur|étages|etages))/i);
   if (numericEffect) {
+    const isMaximumHeartEffect = /[+-]\d+\s*(?:cœurs?|coeur)\s+maximum/i.test(sentence);
     return {
       story: cleanupStorySentence(sentence.replace(numericEffect[0], "").replace(/\bmaximum\b/i, "")),
-      reward: numericEffect[1],
+      reward: `${numericEffect[1]}${isMaximumHeartEffect ? " maximum" : ""}`,
     };
   }
 
@@ -1299,7 +1371,7 @@ function splitSentenceEffect(sentence) {
   const itemGain = itemGainEffect(sentence);
   if (itemGain) {
     return {
-      story: cleanupStorySentence(stripKnownItem(sentence)),
+      story: cleanupStorySentence(sentence),
       reward: itemGain,
     };
   }
@@ -1412,7 +1484,7 @@ function normalizeText(text) {
 
 function formatStory(text) {
   return String(text)
-    .split(/\n+|(?<=\.)\s+/)
+    .split(/\n+/)
     .map((line) => highlightGold(escapeHtml(line)))
     .join("<br>");
 }
@@ -1544,13 +1616,16 @@ function delayVillageAction(target, action) {
   villageActionTimer = window.setTimeout(() => {
     villageActionTimer = null;
     action();
+    const returnDelay = target === "bank" || target === "sell"
+      ? VILLAGE_SERVICE_RETURN_DELAY_MS
+      : VILLAGE_RETURN_DELAY_MS;
     villageReturnTimer = window.setTimeout(() => {
       clearVillageActionTarget();
       if (state.screen !== "village") return;
       state.villageLocation = "Village";
-      setStory("Grodor revient au centre du village. Pour installer le jeu : menu du navigateur, puis « Ajouter à l'écran d'accueil ». Même le village appelle ça du progrès.");
+      setStory("Grodor revient au centre du village.");
       render();
-    }, VILLAGE_RETURN_DELAY_MS);
+    }, returnDelay);
   }, VILLAGE_ACTION_DELAY_MS);
 }
 
@@ -1639,7 +1714,13 @@ function chooseDoor(door) {
   door.blur();
   flashDoor(door);
   state.inputLocked = true;
-  setStory("Grodor pose la main sur la poignée. Le donjon retient son souffle, probablement pour économiser l'air.");
+  setStory(randomFrom([
+    "Grodor pose la main sur la poignée. Quelque part, le destin soupire.",
+    "Grodor attrape la poignée. Le donjon hésite à faire semblant d’être vide.",
+    "Grodor saisit la poignée. Le silence devient beaucoup trop silencieux.",
+    "Grodor tourne la poignée. Derrière, le donjon improvise.",
+    "Grodor s’empare de la poignée. La porte tremble.",
+  ]));
   render();
 
   window.setTimeout(() => resolveDoorChoice(), 2000);
@@ -1699,9 +1780,7 @@ function resolveDoorChoice() {
     return;
   }
 
-  if (!state.runEnded && state.screen === "dungeon") {
-    suffix = descendFloor();
-  }
+  suffix = completeDungeonStep();
 
   setStory(text + suffix, toneFromSnapshot(before));
   prepareDoorHints();
@@ -1714,37 +1793,29 @@ function resolveDoorChoice() {
 function startMiniGame(type) {
   const configs = {
     double: {
-      title: "Quitte ou double",
+      title: "",
+      phase: state.carriedGold > 0 ? "stake" : "empty",
+      stake: state.carriedGold > 0 ? 1 : 0,
       text: state.carriedGold > 0
-        ? `Le croupier lorgne tes ${state.carriedGold} PO. Il promet que les probabilités sont presque légales.`
-        : "Le croupier regarde ta bourse vide. Il propose de miser un bout de dignité, ce qui n'est pas une monnaie stable.",
-      display: ["PILE", "FACE"],
-      actions: state.carriedGold > 0
-        ? [
-            { id: "double-all", label: "Tout miser" },
-            { id: "double-half", label: "Miser la moitié" },
-            { id: "double-flee", label: "Fuir" },
-          ]
-        : [
-            { id: "double-dignity", label: "Miser la dignité" },
-            { id: "double-flee", label: "Fuir" },
-          ],
+        ? `Le croupier lorgne tes ${state.carriedGold} PO. Choisis ta mise : en cas de victoire, elle est doublée.`
+        : "Le croupier regarde ta bourse vide. Sans PO, pas de pari : même lui a une limite.",
+      image: `${COIN_FLIP_ASSET_PATH}/pile-face-1.webp`,
+      actions: [],
     },
     slots: {
-      title: "Machine à sous maudite",
-      text: "Trois rouleaux grincent comme des genoux de squelette. Le levier a l'air coupable.",
-      display: ["?", "?", "?"],
-      actions: [{ id: "slots-spin", label: "Tirer le levier" }],
+      title: "",
+      phase: "ready",
+      text: "",
+      reels: ["Bourse-vide", "Bourse-vide", "Bourse-vide"],
+      actions: [],
     },
     cards: {
-      title: "Bonneteau du donjon",
-      text: "Trois cartes. Une promesse. Deux humiliations. Le marchand jure qu'il ne triche qu'avec passion.",
-      display: ["I", "II", "III"],
-      actions: [
-        { id: "card-0", label: "Carte I" },
-        { id: "card-1", label: "Carte II" },
-        { id: "card-2", label: "Carte III" },
-      ],
+      title: "",
+      phase: "choose",
+      text: "",
+      picked: null,
+      result: "",
+      actions: [],
     },
   };
 
@@ -1755,16 +1826,30 @@ function startMiniGame(type) {
 function resolveMiniGame(action) {
   if (!state.miniGame || state.screen !== "dungeon") return;
 
-  const before = snapshotRun();
-  const outcome = miniGameOutcome(action);
-  let suffix = "";
-
-  state.miniGame = null;
-  if (!state.runEnded && state.screen === "dungeon") {
-    suffix = descendFloor();
+  if (state.miniGame.type === "double") {
+    resolveCoinFlipAction(action);
+    return;
   }
 
-  setStory(outcome + suffix, toneFromSnapshot(before));
+  if (state.miniGame.type === "slots") {
+    resolveSlotMachineAction(action);
+    return;
+  }
+
+  if (state.miniGame.type === "cards") {
+    resolveBonneteauAction(action);
+  }
+}
+
+function completeMiniGame(outcome, tone) {
+  let suffix = "";
+
+  clearCoinFlipAnimation();
+  clearSlotMachineAnimation();
+  state.miniGame = null;
+  suffix = completeDungeonStep();
+
+  setStory(outcome + suffix, tone);
   prepareDoorHints();
   state.inputLocked = false;
   resetDoorEffects();
@@ -1772,63 +1857,229 @@ function resolveMiniGame(action) {
   render();
 }
 
-function miniGameOutcome(action) {
-  if (action === "double-flee") {
-    return "Grodor recule lentement devant la table. Le croupier note 'lâche mais solvable' dans son carnet.";
+function resolveCoinFlipAction(action) {
+  const miniGame = state.miniGame;
+  if (!miniGame || miniGame.type !== "double" || miniGame.phase === "flipping") return;
+
+  if (action === "double-confirm" && miniGame.phase === "stake") {
+    const stakeField = $("mini-game-stake");
+    const selectedStake = Math.floor(Number(stakeField?.value || miniGame.stake || 1));
+    miniGame.stake = Math.min(state.carriedGold, Math.max(1, selectedStake));
+    miniGame.phase = "choice";
+    miniGame.image = `${COIN_FLIP_ASSET_PATH}/pile-face-2.webp`;
+    miniGame.text = "";
+    render();
+    return;
   }
 
-  if (action === "double-dignity") {
-    return takeDamage(1, "Grodor mise sa dignité. Le croupier demande une monnaie moins abîmée, puis frappe la table. -1 cœur.");
+  if ((action === "double-pile" || action === "double-face") && miniGame.phase === "choice") {
+    startCoinFlip(action === "double-pile" ? "pile" : "face");
+    return;
   }
 
-  if (action === "double-all" || action === "double-half") {
-    const stake = action === "double-all"
-      ? state.carriedGold
-      : Math.max(1, Math.floor(state.carriedGold / 2));
-    const roll = Math.random();
+  if (action === "double-continue" && miniGame.phase === "result") {
+    completeMiniGame(miniGame.outcome, miniGame.outcomeTone);
+  }
 
-    if (roll < 0.04) {
-      addStat("miniJeuxReussis");
-      return addGold(stake * 3, `Grodor pousse sa mise. La table fait une erreur administrative magnifique. +${stake * 3} PO.`);
-    }
-    if (roll < 0.18) {
-      addStat("miniJeuxReussis");
-      return addGold(stake, `Grodor pousse sa mise. La table grogne, puis paie à contrecœur. +${stake} PO.`);
-    }
-    if (roll < 0.78) {
-      state.carriedGold = Math.max(0, state.carriedGold - stake);
-      return `Grodor pousse sa mise. Le croupier retourne une carte nommée 'non'. -${stake} PO.`;
-    }
+  if (action === "double-continue" && miniGame.phase === "empty") {
+    completeMiniGame(miniGame.text, "neutral");
+  }
+}
+
+function startCoinFlip(choice) {
+  clearCoinFlipAnimation();
+  const miniGame = state.miniGame;
+  if (!miniGame || miniGame.type !== "double") return;
+
+  miniGame.phase = "flipping";
+  miniGame.choice = choice;
+  miniGame.won = Math.random() < 0.2;
+  miniGame.landedSide = miniGame.won ? choice : choice === "pile" ? "face" : "pile";
+  miniGame.text = "La pièce tourne. Le croupier sourit déjà un peu trop.";
+
+  const frames = ["pile-face-1.webp", "pile-face-2.webp", "pile-face-3.webp", "pile-face-4.webp"];
+  frames.forEach((frame, index) => {
+    coinFlipAnimationTimers.push(window.setTimeout(() => {
+      if (!state.miniGame || state.miniGame !== miniGame || miniGame.phase !== "flipping") return;
+      miniGame.image = `${COIN_FLIP_ASSET_PATH}/${frame}`;
+      render();
+    }, index * COIN_FLIP_FRAME_MS));
+  });
+
+  coinFlipAnimationTimers.push(window.setTimeout(() => settleCoinFlip(miniGame), frames.length * COIN_FLIP_FRAME_MS));
+  render();
+}
+
+function settleCoinFlip(miniGame) {
+  if (!state.miniGame || state.miniGame !== miniGame || miniGame.phase !== "flipping") return;
+
+  const before = snapshotRun();
+  const stake = miniGame.stake;
+  miniGame.image = `${COIN_FLIP_ASSET_PATH}/pile-face-${miniGame.landedSide}.webp`;
+  miniGame.phase = "result";
+
+  if (miniGame.won) {
+    addStat("miniJeuxReussis");
+    miniGame.outcome = addGold(stake, `La pièce tombe sur ${miniGame.landedSide}. Bon choix : Grodor double sa mise. +${stake} PO.`);
+  } else {
     state.carriedGold = Math.max(0, state.carriedGold - stake);
-    return takeDamage(1, `Grodor pousse sa mise. La table perd patience et gagne physiquement. -${stake} PO. -1 cœur.`);
+    miniGame.outcome = `La pièce tombe sur ${miniGame.landedSide}. Mauvais choix : le croupier ramasse la mise. -${stake} PO.`;
   }
 
-  if (action === "slots-spin") {
-    const symbols = ["HODOR", "PO", "CRANE", "RIEN", "BOTTE"];
-    const reels = [randomFrom(symbols), randomFrom(symbols), randomFrom(symbols)];
-    if (reels.every((symbol) => symbol === "HODOR")) {
-      addStat("miniJeuxReussis");
-      return addGold(50, `La machine affiche ${reels.join(" / ")}. Le jackpot tombe comme une erreur de jugement. +50 PO.`);
-    }
-    if (reels.every((symbol) => symbol === "PO")) {
-      addStat("miniJeuxReussis");
-      return addGold(20, `La machine affiche ${reels.join(" / ")}. Elle paie en soupirant. +20 PO.`);
-    }
-    if (reels.every((symbol) => symbol === "CRANE")) {
-      return takeDamage(1, `La machine affiche ${reels.join(" / ")}. Elle appelle ça un lot de consolation osseux. -1 cœur.`);
-    }
-    if (reels[0] === reels[1]) {
-      addStat("miniJeuxReussis");
-      return addGold(5, `La machine affiche ${reels.join(" / ")}. Deux symboles presque utiles suffisent à vexer la caisse. +5 PO.`);
-    }
+  miniGame.outcomeTone = toneFromSnapshot(before);
+  miniGame.text = miniGame.outcome;
+  render();
+}
 
-    const loss = Math.min(state.carriedGold, randomInt(2, 6));
-    state.carriedGold -= loss;
-    return loss
-      ? `La machine affiche ${reels.join(" / ")}. Rien ne s'aligne, sauf la honte. -${loss} PO.`
-      : `La machine affiche ${reels.join(" / ")}. Elle tente de voler ta bourse vide et repart avec un malaise.`;
+function clearCoinFlipAnimation() {
+  coinFlipAnimationTimers.forEach((timer) => window.clearTimeout(timer));
+  coinFlipAnimationTimers = [];
+}
+
+function resolveSlotMachineAction(action) {
+  const miniGame = state.miniGame;
+  if (!miniGame || miniGame.type !== "slots" || miniGame.phase === "spinning") return;
+
+  if (action === "slots-spin" && miniGame.phase === "ready") {
+    startSlotMachine();
+    return;
   }
 
+  if (action === "slots-continue" && miniGame.phase === "result") {
+    completeMiniGame(miniGame.outcome, miniGame.outcomeTone);
+  }
+}
+
+function startSlotMachine() {
+  clearSlotMachineAnimation();
+  const miniGame = state.miniGame;
+  if (!miniGame || miniGame.type !== "slots") return;
+
+  miniGame.phase = "spinning";
+  miniGame.text = "";
+  miniGame.result = [
+    randomFrom(SLOT_MACHINE_SYMBOLS),
+    randomFrom(SLOT_MACHINE_SYMBOLS),
+    randomFrom(SLOT_MACHINE_SYMBOLS),
+  ];
+
+  [8, 12, 16].forEach((stopFrame, reelIndex) => {
+    for (let frame = 1; frame <= stopFrame; frame += 1) {
+      slotMachineAnimationTimers.push(window.setTimeout(() => {
+        if (!state.miniGame || state.miniGame !== miniGame || miniGame.phase !== "spinning") return;
+        miniGame.reels[reelIndex] = randomFrom(SLOT_MACHINE_SYMBOLS);
+        render();
+      }, frame * SLOT_MACHINE_FRAME_MS));
+    }
+    slotMachineAnimationTimers.push(window.setTimeout(() => {
+      if (!state.miniGame || state.miniGame !== miniGame || miniGame.phase !== "spinning") return;
+      miniGame.reels[reelIndex] = miniGame.result[reelIndex];
+      render();
+    }, (stopFrame + 1) * SLOT_MACHINE_FRAME_MS));
+  });
+
+  slotMachineAnimationTimers.push(window.setTimeout(
+    () => settleSlotMachine(miniGame),
+    18 * SLOT_MACHINE_FRAME_MS
+  ));
+  render();
+}
+
+function settleSlotMachine(miniGame) {
+  if (!state.miniGame || state.miniGame !== miniGame || miniGame.phase !== "spinning") return;
+
+  const before = snapshotRun();
+  const reels = miniGame.result;
+  const triple = reels.every((symbol) => symbol === reels[0]);
+  const pair = !triple && new Set(reels).size === 2;
+
+  if (triple && reels[0] === "Grodor") {
+    state.maxLife += 1;
+    state.life += 1;
+    addStat("miniJeuxReussis");
+    saveStats();
+    miniGame.outcome = "Trois Grodor ! Le jackpot offre un cœur supplémentaire. +1 cœur maximum.";
+  } else if (triple && reels[0] === "Po") {
+    const gold = state.carriedGold;
+    state.carriedGold += gold;
+    addStat("miniJeuxReussis");
+    addStat("poGagnes", gold);
+    saveStats();
+    miniGame.outcome = `Trois PO ! La machine double la bourse actuelle. +${gold} PO.`;
+  } else if (triple && reels[0] === "Crane") {
+    const previousMaxLife = state.maxLife;
+    state.maxLife = Math.max(1, state.maxLife - 1);
+    state.life = Math.min(state.life, state.maxLife);
+    miniGame.outcome = state.maxLife < previousMaxLife
+      ? "Trois crânes. La machine dévore un cœur maximum. -1 cœur maximum."
+      : "Trois crânes. La machine tente d'arracher le dernier cœur, mais même elle n'ose pas.";
+  } else if (pair) {
+    const healed = state.life < state.maxLife;
+    state.life = Math.min(state.maxLife, state.life + 1);
+    miniGame.outcome = healed
+      ? "Deux symboles identiques. La machine lâche un soin à contrecœur. +1 cœur."
+      : "Deux symboles identiques. Un soin tombe, mais Grodor est déjà au maximum.";
+  } else {
+    miniGame.outcome = takeDamage(1, "Rien ne s'aligne. La machine cogne Grodor pour équilibrer les comptes. -1 cœur.");
+  }
+
+  miniGame.phase = "result";
+  miniGame.outcomeTone = toneFromSnapshot(before);
+  miniGame.text = miniGame.outcome;
+  render();
+}
+
+function clearSlotMachineAnimation() {
+  slotMachineAnimationTimers.forEach((timer) => window.clearTimeout(timer));
+  slotMachineAnimationTimers = [];
+}
+
+function resolveBonneteauAction(action) {
+  const miniGame = state.miniGame;
+  if (!miniGame || miniGame.type !== "cards") return;
+
+  if (/^card-[0-2]$/.test(action) && miniGame.phase === "choose") {
+    const before = snapshotRun();
+    const picked = Number(action.slice(-1));
+    const result = randomFrom(BONNETEAU_SYMBOLS);
+    miniGame.picked = picked;
+    miniGame.result = result;
+    miniGame.phase = "result";
+
+    if (result === "grodor") {
+      state.maxLife += 1;
+      state.life += 1;
+      addStat("miniJeuxReussis");
+      saveStats();
+      miniGame.outcome = "Grodor ! La carte offre un cœur supplémentaire. +1 cœur maximum.";
+    } else if (result === "po") {
+      state.carriedGold += 10;
+      addStat("miniJeuxReussis");
+      addStat("poGagnes", 10);
+      saveStats();
+      miniGame.outcome = "Des PO ! Le squelette paie en grinçant des dents. +10 PO.";
+    } else if (result === "crane") {
+      miniGame.outcome = takeDamage(1, "Un crâne ! La carte frappe Grodor avant qu'il ne puisse protester. -1 cœur.");
+    } else {
+      const loss = Math.min(3, state.carriedGold);
+      state.carriedGold -= loss;
+      miniGame.outcome = loss
+        ? `Une bourse percée ! Le squelette prélève ses frais. -${loss} PO.`
+        : "Une bourse percée ! Le squelette fouille, mais Grodor n'avait déjà aucune PO.";
+    }
+
+    miniGame.outcomeTone = toneFromSnapshot(before);
+    miniGame.text = miniGame.outcome;
+    render();
+    return;
+  }
+
+  if (action === "cards-continue" && miniGame.phase === "result") {
+    completeMiniGame(miniGame.outcome, miniGame.outcomeTone);
+  }
+}
+
+function miniGameOutcome(action) {
   if (/^card-[0-2]$/.test(action)) {
     const picked = Number(action.slice(-1));
     const jackpot = randomInt(0, 2);
@@ -1879,16 +2130,23 @@ function holdDungeonEffectPoseBriefly() {
 
 function finalDoorOutcome() {
   const roll = Math.random();
+  const difficulty = longTowerDifficulty();
+  const escapeChance = difficulty === 2 ? 0.38 : difficulty === 1 ? 0.52 : 0.68;
+  const bruiseChance = difficulty === 2 ? 0.88 : difficulty === 1 ? 0.9 : 0.92;
 
-  if (roll < 0.68) {
+  if (roll < escapeChance) {
     state.screen = "village";
     state.runEnded = true;
     state.life = state.maxLife;
     recordWin();
-    return "La dernière porte s'ouvre enfin. Dehors, le village cache mal sa surprise.";
+    return randomFrom([
+      "Grodor ouvre la porte. Il est dehors. Le donjon referme doucement, vexé.",
+      "Grodor ouvre la porte. Il est dehors. Les villageois le regardent arriver, étonnés.",
+      "Grodor ouvre la dernière. Dehors, le village cache mal sa surprise",
+    ]);
   }
 
-  if (roll < 0.92) {
+  if (roll < bruiseChance) {
     return takeDamage(1, "La dernière porte s'ouvre sur deux gardes en pause café. Ton visage devient l'ordre du jour, andouille cuirassée. -1 cœur.");
   }
 
@@ -1977,7 +2235,7 @@ function startCombat(monster) {
   state.hodorPose = "idle";
   state.combatStrike = "";
   state.combatImpact = "";
-  return `${monster.intro} Grodor doit choisir une stratégie, ce qui surestime tout le monde.`;
+  return `${monster.intro} Grodor doit attaquer, aide-le à choisir.`;
 }
 
 function resolveCombat(strike) {
@@ -2015,8 +2273,10 @@ function resolveCombat(strike) {
 
     if (!state.runEnded) {
       state.screen = "dungeon";
-      setStory(outcome + descendFloor(), toneFromSnapshot(before));
-      prepareDoorHints();
+      setStory(outcome + completeDungeonStep(), toneFromSnapshot(before));
+      if (!state.runEnded) {
+        prepareDoorHints();
+      }
     } else {
       setStory(outcome, toneFromSnapshot(before));
     }
@@ -2053,31 +2313,37 @@ function combatOutcome(monster, strike) {
   }
 
   const roll = Math.random();
-  const strikeText = strikeLabel(strike);
+  const strikeText = strikeStoryText(strike);
 
   if (roll < deathChance) {
-    return useCombatItems(instantDeath(`Tu tentes de ${strikeText}. ${monster.name} corrige ton optimisme.`), usedItems);
+    return useCombatItems(instantDeath(`${strikeText} ${monster.name} corrige ton optimisme.`), usedItems, strike);
   }
 
   if (roll < deathChance + profile.loseItem && state.inventory.length) {
     const lost = removeRandomItem();
-    return useCombatItems(`Tu tentes de ${strikeText}. Tu survis, mais ${monster.name} pulvérise ton objet : ${lost}.`, usedItems);
+    const story = monster === monsters.skeleton && strike === "torso"
+      ? "Tu tapes dans le torse. Le squelette bâille. Grodor panique et lâche un objet en fuyant."
+      : `${strikeText} Tu survis, mais ${monster.name} pulvérise ton objet.`;
+    return useCombatItems(`${story} Effet : Objet perdu : ${lost}.`, usedItems, strike);
   }
 
   if (roll < deathChance + profile.loseItem + profile.hurt) {
-    return useCombatItems(takeDamage(1, `Tu tentes de ${strikeText}. ${monster.name} refuse ton brouillon tactique, pauvre tanche. -1 cœur.`), usedItems);
+    const story = monster === monsters.skeleton && strike === "head"
+      ? "Tu vises la tête. Le squelette la retire par habitude. Grodor frappe le vide et perd l’équilibre."
+      : `${strikeText} ${monster.name} refuse ton brouillon tactique, pauvre tanche.`;
+    return useCombatItems(takeDamage(1, `${story} -1 cœur.`), usedItems, strike);
   }
 
   if (roll < deathChance + profile.loseItem + profile.hurt + winChance) {
     const gold = randomInt(monster.reward[0], monster.reward[1]);
     addStat("combatsGagnes");
-    return useCombatItems(addGold(gold, `Tu tentes de ${strikeText}. Le hasard fait semblant d'être ton ami. +${gold} PO.`), usedItems);
+    return useCombatItems(addGold(gold, `${strikeText} Le hasard fait semblant d'être ton ami. +${gold} PO.`), usedItems, strike);
   }
 
-  return useCombatItems(`Tu tentes de ${strikeText}. Vous vous ratez tous les deux. Le silence juge la scène.`, usedItems);
+  return useCombatItems(`${strikeText} Vous vous ratez tous les deux. Le silence juge la scène.`, usedItems, strike);
 }
 
-function useCombatItems(text, items) {
+function useCombatItems(text, items, strike) {
   const consumed = [];
   const item = items.find((candidate) => hasItem(candidate));
   if (item) {
@@ -2088,6 +2354,10 @@ function useCombatItems(text, items) {
         state.maxLife = Math.max(START_LIFE, state.maxLife - 1);
         state.life = Math.min(state.life, state.maxLife);
       }
+    } else if (strike === "torso") {
+      return `${text} L’objet cogne, grince, puis tient bon. Grodor le regarde avec un respect nouveau. Effet : Objet intact.`;
+    } else if (strike === "legs") {
+      return `${text} Son objet tient encore debout. Par miracle. Effet : Objet intact.`;
     } else {
       return `${text} ${item} a servi, mais ne casse pas cette fois. Le matériel demande des témoins.`;
     }
@@ -2103,10 +2373,35 @@ function itemBreakChance(item) {
   return 0.35;
 }
 
-function strikeLabel(strike) {
-  if (strike === "head") return "taper dans la tête";
-  if (strike === "legs") return "taper dans les jambes";
-  return "taper dans le torse";
+function strikeStoryText(strike) {
+  if (strike === "head") return "Tu vises la tête.";
+  if (strike === "legs") return "Grodor s’avance, trébuche, et frappe les jambes dans un grand fracas.";
+  return "Tu tapes dans le torse.";
+}
+
+function longTowerDifficulty() {
+  if (state.totalFloors >= 25) return 2;
+  if (state.totalFloors >= 20) return 1;
+  return 0;
+}
+
+function longTowerHazard() {
+  const difficulty = longTowerDifficulty();
+  const chance = difficulty === 2 ? 0.13 : difficulty === 1 ? 0.07 : 0;
+  if (!chance || Math.random() >= chance) return "";
+
+  return takeDamage(1, randomFrom([
+    " Plus la tour est haute, plus elle a le temps de devenir méchante. Une dalle jalouse te gifle. -1 cœur.",
+    " La tour remarque que tu tiens encore debout et corrige cet oubli avec un gravat. -1 cœur.",
+    " Vingt étages de rancune tombent du plafond sous forme de brique. -1 cœur.",
+  ]));
+}
+
+function completeDungeonStep() {
+  if (state.runEnded || state.screen !== "dungeon") return "";
+  const hazard = longTowerHazard();
+  if (state.runEnded || state.screen !== "dungeon") return hazard;
+  return hazard + descendFloor();
 }
 
 function descendFloor() {
@@ -2389,10 +2684,10 @@ function sellInventory() {
 
 function bankDepositText(deposited) {
   if (!deposited) {
-    return "Le banquier regarde ta bourse vide. Il tamponne quand même un papier pour se sentir puissant.";
+    return "Grodor tend sa bourse au banquier. Le banquier la retourne. Rien. Il montre la sortie.";
   }
 
-  return `Le banquier pèse ta bourse et range les pièces dans son coffre sinistre. Ton stuff reste dans le sac, pour le meilleur et surtout pour le pire. Total sauvegarde : ${deposited} PO.`;
+  return `Grodor pose sa bourse sur le comptoir. Le banquier compte les PO, les range dans son coffre, puis lui rend sa bourse vide en montrant la sortie. Total sauvegarde : ${deposited} PO.`;
 }
 
 function sellStuffText(soldItems) {
@@ -2400,7 +2695,7 @@ function sellStuffText(soldItems) {
     return "Le revendeur inspecte ton sac vide avec une loupe. Il appelle ça une estimation rapide.";
   }
 
-  return `Le revendeur rachète ${soldItems.details.length} objet${soldItems.details.length > 1 ? "s" : ""} pour ${soldItems.total} PO dans ta bourse. Grodor garde le sac, c'est déjà ça.`;
+  return `Grodor pose ${soldItems.details.length} objet${soldItems.details.length > 1 ? "s" : ""} sur le comptoir. Le revendeur le regarde à peine, lâche quelques PO, puis le cache très vite sous la table. +${soldItems.total} PO.`;
 }
 
 function openCellDoor() {
@@ -2459,7 +2754,7 @@ function startRun() {
   saveStats();
   applyRunUpgrades();
   prepareDoorHints();
-  setStory("Grodor force la porte des geôles avec beaucoup d'optimisme et très peu de technique. Trois portes l'attendent. Bonne chance, gros benêt.");
+  setStory("Grodor force la porte de sa cellule. Devant lui : trois portes, trois choix, et l’illusion d’une bonne idée.");
   state.hodorPose = "question";
   render();
 }
@@ -2481,7 +2776,7 @@ function goToCellFromTavern() {
   closeStatsPanel();
   closeInventory();
   closeAccountPopover();
-  setStory("La taverne sert un conseil imbuvable. Grodor se réveille dans les geôles avec sa bourse, ce qui prouve que même les voleurs ont des limites.");
+  setStory("Grodor entre à la taverne. Une chope plus tard, il se réveille dans les geôles. C’est reparti pour un tour.");
   render();
 }
 
@@ -2528,18 +2823,18 @@ function randomStartingItem() {
 
 function randomDungeonItemText() {
   const item = randomStartingItem();
-  const texts = {
-    "Casque Trop Petit": "Tu trouves un casque trop petit sous une pancarte 'taille universelle'. Mensonge artisanal.",
-    "Medaillon du Presque-Heros": "Tu ramasses un médaillon du presque-héros. Il brille comme une promesse pas tenue.",
-    "Sandales de Panique": "Tu trouves des sandales de panique. Elles tremblent déjà sans toi.",
-    "Hache Emoussee": "Tu récupères une hache émoussée. Elle menace surtout la patience des ennemis.",
-    "Boulet au Pied": "Tu trouves un boulet au pied. Il a l'air de vouloir une relation sérieuse.",
-    "Chaussette Porte-Bonheur": "Tu trouves une chaussette porte-bonheur. Elle sent la victoire mal rangée.",
-    "Caillou Affectif": "Tu adoptes un caillou affectif. Il ne juge pas, avantage rare ici.",
-    "Cape Trop Longue": "Tu trouves une cape trop longue. Elle a déjà enterré plusieurs ambitions.",
-    "Gants Collants": "Tu enfiles des gants collants. Ils connaissent des poches que tu n'as jamais vues.",
-  };
-  return addItem(item, texts[item] || `Tu trouves ${item}. Le donjon refuse d'expliquer pourquoi.`);
+  if (item === "Casque Trop Petit") {
+    return addItem(item, "Grodor trouve un casque. Il l’enfonce sur sa tête. Il entend le casque dire : « Gryffondor. » Effet : Casque Trop Petit.");
+  }
+  if (item === "Hache Emoussee") {
+    return addItem(item, "Grodor ramasse la hache. Même Gimli demanderait un reçu. Effet : Hache Emoussee.");
+  }
+  return addItem(item, `${randomFrom([
+    "Grodor lève l’objet fièrement. « Mon précieux ! » Le donjon explose de rire.",
+    "Grodor approche l’objet de son oreille. Une voix murmure depuis l’intérieur. Il sourit. L’objet avait pourtant l’air inquiet.",
+    "Grodor glisse l’objet dans son sac. Le sac pousse un petit soupir.",
+    "Grodor range l’objet. Quelque chose dans sa poche change de place tout seul.",
+  ])} Effet : ${item}.`);
 }
 
 function resetBank() {
@@ -2594,9 +2889,9 @@ function renderDebugEvents() {
   if (!list || typeof eventPool === "undefined") return;
 
   const miniGameEvents = [
-    { type: "double", label: "Quitte ou double" },
-    { type: "slots", label: "Machine à sous" },
+    { type: "double", label: "Pile ou face - Quitte ou double" },
     { type: "cards", label: "Bonneteau" },
+    { type: "slots", label: "Machine à sous" },
   ];
 
   list.textContent = "";
@@ -2820,6 +3115,7 @@ function renderUpgradeSummary() {
 function renderStatsPanel() {
   const grid = $("stats-panel-grid");
   if (!grid) return;
+  const expandedFamily = grid.querySelector(".stats-family-card[open] summary span")?.textContent || "";
   $("stats-tab-stats")?.setAttribute("aria-selected", String(statsPanelView === "stats"));
   $("stats-tab-ranking")?.setAttribute("aria-selected", String(statsPanelView === "ranking"));
   grid.classList.toggle("is-ranking", statsPanelView === "ranking");
@@ -2882,6 +3178,13 @@ function renderStatsPanel() {
   families.forEach((family) => {
     const details = document.createElement("details");
     details.className = `stats-family-card stats-tone-${family.tone}`;
+    details.open = family.label === expandedFamily;
+    details.addEventListener("toggle", () => {
+      if (!details.open) return;
+      grid.querySelectorAll(".stats-family-card[open]").forEach((openDetails) => {
+        if (openDetails !== details) openDetails.open = false;
+      });
+    });
 
     const summary = document.createElement("summary");
     const heading = document.createElement("span");
@@ -2946,7 +3249,14 @@ function renderMiniGame() {
 
   const miniGame = state.miniGame;
   panel.hidden = !miniGame;
+  panel.classList.toggle("is-coin-flip-panel", miniGame?.type === "double");
+  panel.classList.toggle("is-slot-machine-panel", miniGame?.type === "slots");
+  panel.classList.toggle("is-bonneteau-panel", miniGame?.type === "cards");
+  panel.dataset.miniGamePhase = miniGame?.phase || "";
   if (!miniGame) {
+    display.classList.remove("is-coin-flip");
+    display.classList.remove("is-slot-machine");
+    display.classList.remove("is-bonneteau");
     display.textContent = "";
     actions.textContent = "";
     return;
@@ -2957,6 +3267,24 @@ function renderMiniGame() {
   display.textContent = "";
   actions.textContent = "";
 
+  if (miniGame.type === "double") {
+    renderCoinFlipMiniGame(miniGame, display, actions);
+    return;
+  }
+
+  if (miniGame.type === "slots") {
+    renderSlotMachineMiniGame(miniGame, display, actions);
+    return;
+  }
+
+  if (miniGame.type === "cards") {
+    renderBonneteauMiniGame(miniGame, display, actions);
+    return;
+  }
+
+  display.classList.remove("is-coin-flip");
+  display.classList.remove("is-slot-machine");
+  display.classList.remove("is-bonneteau");
   (miniGame.display || []).forEach((value) => {
     const tile = document.createElement("span");
     tile.className = `mini-game-tile ${miniGame.type === "cards" ? "is-card" : ""}`.trim();
@@ -2972,6 +3300,130 @@ function renderMiniGame() {
     button.textContent = action.label;
     actions.appendChild(button);
   });
+}
+
+function renderCoinFlipMiniGame(miniGame, display, actions) {
+  display.classList.add("is-coin-flip");
+
+  const image = document.createElement("img");
+  image.className = "coin-flip-scene";
+  image.src = miniGame.image;
+  image.alt = miniGame.phase === "result"
+    ? `La pièce est tombée sur ${miniGame.landedSide}.`
+    : "Grodor face au croupier de pile ou face.";
+  display.appendChild(image);
+
+  if (miniGame.phase === "stake") {
+    const field = document.createElement("label");
+    field.className = "coin-flip-stake";
+    const fieldLabel = document.createElement("span");
+    fieldLabel.textContent = "Mise";
+    const input = document.createElement("input");
+    input.id = "mini-game-stake";
+    input.type = "number";
+    input.inputMode = "numeric";
+    input.min = "1";
+    input.max = String(state.carriedGold);
+    input.value = String(Math.min(state.carriedGold, Math.max(1, miniGame.stake)));
+    field.append(fieldLabel, input);
+    display.appendChild(field);
+
+    appendMiniGameButton(actions, "double-confirm", "Valider la mise");
+    return;
+  }
+
+  if (miniGame.phase === "choice") {
+    appendMiniGameButton(actions, "double-pile", "Pile");
+    appendMiniGameButton(actions, "double-face", "Face");
+    return;
+  }
+
+  if (miniGame.phase === "result") {
+    appendMiniGameButton(actions, "double-continue", "Continuer");
+    return;
+  }
+
+  if (miniGame.phase === "empty") {
+    appendMiniGameButton(actions, "double-continue", "Continuer");
+  }
+}
+
+function appendMiniGameButton(actions, id, label) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "mini-game-button";
+  button.dataset.miniGameAction = id;
+  button.textContent = label;
+  actions.appendChild(button);
+}
+
+function renderSlotMachineMiniGame(miniGame, display, actions) {
+  display.classList.remove("is-coin-flip");
+  display.classList.add("is-slot-machine");
+
+  const machine = document.createElement("img");
+  machine.className = "slot-machine-scene";
+  machine.src = `${SLOT_MACHINE_ASSET_PATH}/Machine-a-sous.webp`;
+  machine.alt = "Grodor devant la machine à sous.";
+  display.appendChild(machine);
+
+  miniGame.reels.forEach((symbol, index) => {
+    const reel = document.createElement("img");
+    reel.className = "slot-machine-reel";
+    reel.src = `${SLOT_MACHINE_ASSET_PATH}/Slot-${index + 1}/${symbol}-slot-${index + 1}.png`;
+    reel.alt = "";
+    display.appendChild(reel);
+  });
+
+  if (miniGame.phase === "ready") {
+    const tapZone = document.createElement("button");
+    tapZone.type = "button";
+    tapZone.className = "slot-machine-tap-zone";
+    tapZone.dataset.miniGameAction = "slots-spin";
+    tapZone.setAttribute("aria-label", "Taper ici pour lancer la machine à sous");
+    display.appendChild(tapZone);
+    return;
+  }
+
+  if (miniGame.phase === "result") {
+    appendMiniGameButton(actions, "slots-continue", "Continuer");
+  }
+}
+
+function renderBonneteauMiniGame(miniGame, display, actions) {
+  display.classList.remove("is-coin-flip", "is-slot-machine");
+  display.classList.add("is-bonneteau");
+
+  const scene = document.createElement("img");
+  scene.className = "bonneteau-scene";
+  scene.src = `${BONNETEAU_ASSET_PATH}/bonneteau-face-cache.webp`;
+  scene.alt = "Grodor face au squelette du Bonneteau.";
+  display.appendChild(scene);
+
+  if (miniGame.phase === "result" && miniGame.picked !== null) {
+    ["carte", miniGame.result].forEach((layer) => {
+      const overlay = document.createElement("img");
+      overlay.className = "bonneteau-card";
+      overlay.src = `${BONNETEAU_ASSET_PATH}/Slot-${miniGame.picked + 1}/bonneteau-slot-${miniGame.picked + 1}-${layer}.png`;
+      overlay.alt = "";
+      display.appendChild(overlay);
+    });
+  }
+
+  if (miniGame.phase === "choose") {
+    [0, 1, 2].forEach((index) => {
+      const choice = document.createElement("button");
+      choice.type = "button";
+      choice.className = `bonneteau-choice-zone is-slot-${index + 1}`;
+      choice.dataset.miniGameAction = `card-${index}`;
+      choice.setAttribute("aria-label", `Choisir la carte ${index + 1}`);
+      display.appendChild(choice);
+    });
+  }
+
+  if (miniGame.phase === "result") {
+    appendMiniGameButton(actions, "cards-continue", "Continuer");
+  }
 }
 
 function render() {
@@ -3020,6 +3472,7 @@ function render() {
   const isShop = isVillage && shopPanelOpen;
   const isStatsPanel = isVillage && statsPanelOpen;
 
+  document.querySelector(".game-shell")?.classList.toggle("is-village-layout", isVillage);
   $("scene").classList.toggle("is-dead", isDead);
   $("scene").classList.toggle("is-combat", isCombat);
   $("scene").classList.toggle("is-village", isVillage || isShop);
@@ -3041,7 +3494,7 @@ function render() {
   $("scene").classList.toggle("story-neutral", state.storyTone === "neutral" && !isDead);
   $("bank-score").hidden = true;
   $("loss-score").hidden = isVillage || isShop;
-  placeHodorForScreen(isDungeon);
+  placeHodorForScreen(isDungeon, isCombat);
   renderHodor();
 
   $("location").textContent = isVillage
@@ -3057,9 +3510,11 @@ function render() {
             : "Couloirs du donjon";
 
   $("doors").hidden = !isDungeon || Boolean(state.miniGame);
-  $("dungeon-stage").hidden = !isDungeon || Boolean(state.miniGame);
+  $("dungeon-stage").hidden = !isDungeon;
   renderMiniGame();
   $("village-stage").hidden = !isVillage;
+  $("village-tip-card").hidden = !isVillage || isShop || isStatsPanel;
+  $("combat-stage").hidden = !isCombat;
   $("combat-choices").hidden = !isCombat;
   const monsterAsset = state.combat?.asset;
   const usesMonsterTarget = isCombat && Boolean(monsterAsset);
@@ -3106,14 +3561,15 @@ function render() {
   queueActiveRunSave();
 }
 
-function placeHodorForScreen(isDungeon) {
+function placeHodorForScreen(isDungeon, isCombat) {
   const hodor = document.querySelector(".hodor-sprite");
   const dungeonStage = $("dungeon-stage");
+  const combatStage = $("combat-stage");
   const villageStage = $("village-stage");
   const rewardRow = $("reward-row");
   if (!hodor || !dungeonStage || !rewardRow) return;
 
-  const target = isDungeon ? dungeonStage : state.screen === "village" ? villageStage : rewardRow;
+  const target = isCombat ? combatStage : isDungeon ? dungeonStage : state.screen === "village" ? villageStage : rewardRow;
   if (!target) return;
   if (hodor.parentElement !== target) {
     target.appendChild(hodor);

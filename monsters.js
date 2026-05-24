@@ -1,14 +1,14 @@
 const monsters = {
   rat: {
     name: "Rat avec un titre officiel",
-    intro: "Un rat capitaine te barre la route. Sa moustache commande mieux que lui, et déjà mieux que toi.",
+    intro: "Un rat capitaine barre la route à Grodor. Son sceptre sent le fromage. Grodor hésite entre combattre et demander une assiette.",
     asset: "rat",
     reward: [1, 3],
     danger: 0.08,
   },
   skeleton: {
     name: "Squelette fatigue",
-    intro: "Un squelette lève son épée. On dirait qu'il préférerait être meuble.",
+    intro: "Un tas d’os regarde Grodor et lève son épée. Son bouclier tombe et sa main avec.",
     asset: "skeleton",
     reward: [2, 4],
     danger: 0.12,

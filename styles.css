@@ -400,7 +400,7 @@ button:disabled {
   border-radius: inherit;
   background:
     linear-gradient(180deg, rgba(9, 10, 11, 0.08), rgba(9, 9, 8, 0.26)),
-    url("assets/Donjon/Donjon-accueil.png") center / cover no-repeat,
+    url("assets/Donjon/Donjon-accueil.webp") center / cover no-repeat,
     #201a13;
   box-shadow: inset 0 0 0 999px rgba(0, 0, 0, 0.08);
   overflow: hidden;
@@ -2291,14 +2291,14 @@ h1 {
   border-radius: 8px;
   background:
     linear-gradient(180deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.1)),
-    url("assets/Donjon/geole-ferme.png") center / 100% 100% no-repeat;
+    url("assets/Donjon/geole-ferme.webp") center / 100% 100% no-repeat;
   filter: drop-shadow(0 22px 34px rgba(0, 0, 0, 0.42));
 }
 
 .scene.is-cell.is-cell-opening .cell-stage {
   background:
     linear-gradient(180deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.1)),
-    url("assets/Donjon/geole-ouvert.png") center / 100% 100% no-repeat;
+    url("assets/Donjon/geole-ouvert.webp") center / 100% 100% no-repeat;
 }
 
 .scene.is-cell .cell-door-hitbox {
@@ -2383,25 +2383,19 @@ h1 {
 }
 
 .scene.is-combat {
-  --combat-hodor-size: clamp(170px, 42vmin, 310px);
-  --combat-rat-size: clamp(155px, 36vmin, 285px);
-  --combat-skeleton-size: clamp(145px, 32vmin, 245px);
-  --combat-guard-size: clamp(150px, 34vmin, 265px);
+  --combat-hodor-size: clamp(205px, 46vmin, 360px);
+  --combat-rat-size: clamp(145px, 30vmin, 235px);
+  --combat-skeleton-size: clamp(138px, 28vmin, 218px);
+  --combat-guard-size: clamp(142px, 29vmin, 225px);
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr);
   gap: 14px 18px;
   align-items: center;
   background:
-    linear-gradient(180deg, rgba(14, 10, 8, 0.08), rgba(14, 10, 8, 0.5)),
-    var(--combat-arena-image, url("assets/Arene/arene-1.png")),
-    url("assets/Arene/arene-1.png"),
-    linear-gradient(180deg, #39372f 0%, #211d18 58%, #14110e 100%);
-  background-position: center, center, center, center;
-  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
-  background-size: 100% 100%, cover, cover, 100% 100%;
-  animation: combatPulse 900ms ease-in-out infinite alternate;
-  box-shadow: inset 0 0 0 1px rgba(191, 76, 59, 0.35), 0 0 30px rgba(191, 76, 59, 0.16);
+    linear-gradient(180deg, rgba(7, 6, 5, 0.46), rgba(7, 6, 5, 0.7)),
+    url("assets/Donjon/Donjon-interieur.webp") center / cover no-repeat,
+    linear-gradient(180deg, #30291f, #12100e);
 }
 
 .scene.is-combat .story-panel {
@@ -2409,27 +2403,50 @@ h1 {
 }
 
 .scene.is-combat .reward-row {
-  position: absolute;
-  left: clamp(18px, 14%, 180px);
-  bottom: clamp(44px, 8%, 78px);
-  grid-column: auto;
-  grid-row: auto;
-  grid-template-columns: 1fr;
-  justify-items: center;
-  align-self: auto;
-  width: var(--combat-hodor-size);
-  margin: 0;
-  pointer-events: none;
+  display: none;
 }
 
 .scene.is-combat .reward-panel[hidden] {
   display: none;
 }
 
+.combat-stage[hidden] {
+  display: none;
+}
+
+.scene.is-combat .combat-stage {
+  --combat-ground-offset: clamp(82px, 25%, 154px);
+  position: relative;
+  flex: 0 0 auto;
+  width: min(820px, calc(100% - 28px), calc((100dvh - 164px) * 4 / 3));
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border: 1px solid rgba(216, 170, 61, 0.5);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(14, 10, 8, 0.08), rgba(14, 10, 8, 0.48)),
+    var(--combat-arena-image, url("assets/Arene/arene-1.webp")),
+    url("assets/Arene/arene-1.webp"),
+    #17110c;
+  background-position: center, center, center, center;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
+  background-size: 100% 100%, cover, cover, 100% 100%;
+  box-shadow:
+    0 28px 70px rgba(0, 0, 0, 0.62),
+    0 0 0 999px rgba(0, 0, 0, 0.2),
+    inset 0 0 0 1px rgba(191, 76, 59, 0.25);
+  animation: combatPulse 900ms ease-in-out infinite alternate;
+  pointer-events: auto;
+}
+
 .scene.is-combat .hodor-sprite {
-  width: 100%;
-  align-self: end;
-  justify-self: center;
+  position: absolute;
+  left: clamp(28px, 10%, 82px);
+  bottom: var(--combat-ground-offset);
+  z-index: 2;
+  width: var(--combat-hodor-size);
+  align-self: auto;
+  justify-self: auto;
 }
 
 .scene.is-combat.combat-windup .hodor-sprite {
@@ -2446,20 +2463,29 @@ h1 {
 
 .scene.is-combat .action-zone {
   position: absolute;
-  right: clamp(18px, 13%, 170px);
-  bottom: clamp(48px, 8%, 82px);
-  grid-column: auto;
-  grid-row: auto;
-  align-self: auto;
-  width: var(--combat-rat-size);
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
   margin: 0;
   border-top: 0;
   background: transparent;
-  padding: 0;
+  padding: clamp(76px, 12dvh, 102px) clamp(10px, 2vw, 18px) clamp(10px, 2vw, 18px);
+  pointer-events: none;
 }
 
 .scene.is-combat .combat-choices {
+  position: absolute;
+  right: clamp(28px, 10%, 82px);
+  bottom: var(--combat-ground-offset);
+  z-index: 3;
+  width: var(--combat-rat-size);
+  margin: 0;
   align-items: center;
+  pointer-events: auto;
 }
 
 .scene.is-combat .combat-choices.has-monster-target {
@@ -2489,20 +2515,31 @@ h1 {
 
 @media (max-width: 620px) {
   .scene.is-combat {
-    --combat-hodor-size: clamp(150px, 42vmin, 170px);
-    --combat-rat-size: clamp(138px, 37vmin, 150px);
-    --combat-skeleton-size: clamp(132px, 35vmin, 144px);
-    --combat-guard-size: clamp(136px, 36vmin, 148px);
+    --combat-hodor-size: clamp(148px, 44vmin, 172px);
+    --combat-rat-size: clamp(102px, 29vmin, 114px);
+    --combat-skeleton-size: clamp(92px, 25vmin, 98px);
+    --combat-guard-size: clamp(98px, 27vmin, 108px);
   }
 
-  .scene.is-combat .reward-row {
-    left: clamp(18px, 5vw, 26px);
-    bottom: clamp(108px, 15%, 124px);
+  .scene.is-combat .combat-stage {
+    --combat-ground-offset: clamp(96px, 27%, 116px);
+    width: min(430px, calc(100% - 20px));
+    aspect-ratio: 0.84;
   }
 
   .scene.is-combat .action-zone {
-    right: clamp(16px, 4vw, 22px);
-    bottom: clamp(112px, 15%, 128px);
+    inset: 0;
+    padding: clamp(72px, 11dvh, 94px) 0 10px;
+  }
+
+  .scene.is-combat .hodor-sprite {
+    left: clamp(16px, 5%, 22px);
+    bottom: var(--combat-ground-offset);
+  }
+
+  .scene.is-combat .combat-choices {
+    right: clamp(16px, 5%, 22px);
+    bottom: var(--combat-ground-offset);
   }
 }
 
@@ -3283,7 +3320,7 @@ h1 {
   .account-panel {
     background:
       linear-gradient(180deg, rgba(9, 10, 11, 0.04), rgba(9, 9, 8, 0.2)),
-      url("assets/Donjon/Donjon-accueil.png") 68% 16% / auto 152% no-repeat,
+      url("assets/Donjon/Donjon-accueil.webp") 68% 16% / auto 152% no-repeat,
       #201a13;
   }
 
@@ -3574,7 +3611,7 @@ h1 {
   .account-panel {
     background:
       linear-gradient(180deg, rgba(9, 10, 11, 0.04), rgba(9, 9, 8, 0.2)),
-      url("assets/Donjon/Donjon-accueil.png") 70% 14% / auto 162% no-repeat,
+      url("assets/Donjon/Donjon-accueil.webp") 70% 14% / auto 162% no-repeat,
       #201a13;
   }
 
@@ -4950,7 +4987,7 @@ h1 {
   --village-hodor-y: calc(50% - 18px);
   background:
     linear-gradient(180deg, rgba(10, 9, 6, 0.08), rgba(10, 9, 6, 0.12)),
-    url("assets/Village/village v0.2.png") center / 100% 100% no-repeat,
+    url("assets/Village/village v0.2.webp") center / 100% 100% no-repeat,
     #6f8f35;
 }
 
@@ -5378,7 +5415,7 @@ h1 {
   overflow: visible;
   background:
     linear-gradient(180deg, rgba(5, 4, 4, 0.04), rgba(5, 4, 4, 0.1)),
-    url("assets/Donjon/Donjon-interieur.png") center / 100% 100% no-repeat;
+    url("assets/Donjon/Donjon-interieur.webp") center / 100% 100% no-repeat;
   filter: drop-shadow(0 22px 34px rgba(0, 0, 0, 0.42));
 }
 
@@ -5502,7 +5539,7 @@ h1 {
   --dungeon-hodor-y: var(--dungeon-hodor-door-0-y);
   background:
     linear-gradient(180deg, rgba(5, 4, 4, 0.04), rgba(5, 4, 4, 0.1)),
-    url("assets/Donjon/Donjon-interieur-porte-1.png") center / 100% 100% no-repeat;
+    url("assets/Donjon/Donjon-interieur-porte-1.webp") center / 100% 100% no-repeat;
 }
 
 .scene.is-dungeon:not(.is-combat).door-target-1 .dungeon-stage {
@@ -5510,7 +5547,7 @@ h1 {
   --dungeon-hodor-y: var(--dungeon-hodor-door-1-y);
   background:
     linear-gradient(180deg, rgba(5, 4, 4, 0.04), rgba(5, 4, 4, 0.1)),
-    url("assets/Donjon/Donjon-interieur-porte-2.png") center / 100% 100% no-repeat;
+    url("assets/Donjon/Donjon-interieur-porte-2.webp") center / 100% 100% no-repeat;
 }
 
 .scene.is-dungeon:not(.is-combat).door-target-2 .dungeon-stage {
@@ -5518,7 +5555,7 @@ h1 {
   --dungeon-hodor-y: var(--dungeon-hodor-door-2-y);
   background:
     linear-gradient(180deg, rgba(5, 4, 4, 0.04), rgba(5, 4, 4, 0.1)),
-    url("assets/Donjon/Donjon-interieur-porte-3.png") center / 100% 100% no-repeat;
+    url("assets/Donjon/Donjon-interieur-porte-3.webp") center / 100% 100% no-repeat;
 }
 
 .scene.is-dungeon:not(.is-combat).is-effect-pose .dungeon-stage {
@@ -5781,7 +5818,7 @@ h1 {
   overflow: visible;
   background:
     linear-gradient(180deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.08)),
-    url("assets/Village/village v0.2.png") center / 100% 100% no-repeat;
+    url("assets/Village/village v0.2.webp") center / 100% 100% no-repeat;
   filter: drop-shadow(0 22px 34px rgba(0, 0, 0, 0.42));
 }
 
@@ -6068,6 +6105,305 @@ h1 {
   margin-bottom: 14px;
 }
 
+.mini-game-display.is-coin-flip {
+  position: absolute;
+  inset: 0;
+  display: block;
+  min-height: 0;
+  margin: 0;
+}
+
+.mini-game-display.is-slot-machine {
+  position: absolute;
+  inset: 0;
+  display: block;
+  min-height: 0;
+  margin: 0;
+}
+
+.mini-game-display.is-bonneteau {
+  position: absolute;
+  inset: 0;
+  display: block;
+  min-height: 0;
+  margin: 0;
+}
+
+.mini-game-panel.is-coin-flip-panel {
+  width: min(730px, calc(100% - 28px), calc(88dvh - 22px));
+  max-height: none;
+  aspect-ratio: 1;
+  padding: 0;
+  border-color: rgba(216, 170, 61, 0.5);
+  overflow: hidden;
+  background: #17110c;
+}
+
+.mini-game-panel.is-coin-flip-panel::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(12, 9, 7, 0.72) 0%,
+    rgba(12, 9, 7, 0.1) 31%,
+    rgba(12, 9, 7, 0.02) 47%,
+    rgba(12, 9, 7, 0.8) 78%,
+    rgba(12, 9, 7, 0.96) 100%
+  );
+  content: "";
+  pointer-events: none;
+}
+
+.mini-game-panel.is-coin-flip-panel #mini-game-text,
+.mini-game-panel.is-coin-flip-panel .mini-game-actions,
+.mini-game-panel.is-coin-flip-panel .coin-flip-stake {
+  position: absolute;
+  left: clamp(14px, 4%, 30px);
+  right: clamp(14px, 4%, 30px);
+  z-index: 2;
+}
+
+.mini-game-panel.is-coin-flip-panel .mini-game-eyebrow,
+.mini-game-panel.is-coin-flip-panel > strong {
+  display: none;
+}
+
+.mini-game-panel.is-coin-flip-panel #mini-game-text {
+  bottom: clamp(72px, 14%, 94px);
+  max-width: none;
+  margin: 0;
+  color: var(--ink);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.82);
+}
+
+.mini-game-panel.is-coin-flip-panel #mini-game-text:empty {
+  display: none;
+}
+
+.mini-game-panel.is-coin-flip-panel .mini-game-actions {
+  bottom: clamp(16px, 3.5%, 26px);
+}
+
+.mini-game-panel.is-coin-flip-panel[data-mini-game-phase="stake"] #mini-game-text {
+  bottom: clamp(124px, 21%, 156px);
+}
+
+.mini-game-panel.is-coin-flip-panel .coin-flip-stake {
+  bottom: clamp(66px, 12%, 88px);
+}
+
+.coin-flip-scene {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  object-fit: cover;
+  border: 0;
+  border-radius: 0;
+}
+
+.coin-flip-stake {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--ink);
+  font-family: var(--ui-font);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.coin-flip-stake input {
+  width: 82px;
+  min-height: 42px;
+  padding: 0 8px;
+  border: 1px solid rgba(216, 170, 61, 0.42);
+  border-radius: 8px;
+  background: rgba(14, 11, 8, 0.7);
+  color: var(--ink);
+  font: inherit;
+  text-align: center;
+}
+
+.coin-flip-stake input:focus-visible {
+  border-color: var(--gold);
+  outline: 2px solid rgba(216, 170, 61, 0.24);
+}
+
+.mini-game-panel.is-slot-machine-panel {
+  width: min(790px, calc(100% - 28px), calc((86dvh - 22px) * 4 / 3));
+  max-height: none;
+  aspect-ratio: 4 / 3;
+  padding: 0;
+  border-color: rgba(216, 170, 61, 0.5);
+  overflow: hidden;
+  background: #17110c;
+}
+
+.mini-game-panel.is-slot-machine-panel .mini-game-eyebrow,
+.mini-game-panel.is-slot-machine-panel > strong {
+  display: none;
+}
+
+.mini-game-panel.is-slot-machine-panel #mini-game-text,
+.mini-game-panel.is-slot-machine-panel .mini-game-actions {
+  position: absolute;
+  left: clamp(14px, 4%, 30px);
+  right: clamp(14px, 4%, 30px);
+  z-index: 3;
+}
+
+.mini-game-panel.is-slot-machine-panel #mini-game-text {
+  bottom: clamp(74px, 12%, 100px);
+  margin: 0;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: rgba(15, 10, 7, 0.76);
+  color: var(--ink);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.82);
+}
+
+.mini-game-panel.is-slot-machine-panel #mini-game-text:empty {
+  display: none;
+}
+
+.mini-game-panel.is-slot-machine-panel .mini-game-actions {
+  bottom: clamp(14px, 3%, 22px);
+}
+
+.slot-machine-scene,
+.slot-machine-reel {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.slot-machine-scene {
+  z-index: 0;
+}
+
+.slot-machine-reel {
+  z-index: 1;
+  pointer-events: none;
+}
+
+.slot-machine-tap-zone {
+  position: absolute;
+  top: 78%;
+  left: 42%;
+  z-index: 2;
+  width: 23%;
+  height: 14%;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+
+.slot-machine-tap-zone:focus-visible {
+  outline: 2px solid rgba(247, 212, 120, 0.8);
+  outline-offset: 2px;
+}
+
+.mini-game-panel.is-bonneteau-panel {
+  width: min(730px, calc(100% - 28px), calc(88dvh - 22px));
+  max-height: none;
+  aspect-ratio: 1;
+  padding: 0;
+  border-color: rgba(216, 170, 61, 0.5);
+  overflow: hidden;
+  background: #17110c;
+}
+
+.mini-game-panel.is-bonneteau-panel .mini-game-eyebrow,
+.mini-game-panel.is-bonneteau-panel > strong {
+  display: none;
+}
+
+.mini-game-panel.is-bonneteau-panel #mini-game-text,
+.mini-game-panel.is-bonneteau-panel .mini-game-actions {
+  position: absolute;
+  left: clamp(14px, 4%, 30px);
+  right: clamp(14px, 4%, 30px);
+  z-index: 3;
+}
+
+.mini-game-panel.is-bonneteau-panel #mini-game-text {
+  bottom: clamp(72px, 13%, 94px);
+  margin: 0;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: rgba(15, 10, 7, 0.76);
+  color: var(--ink);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.82);
+}
+
+.mini-game-panel.is-bonneteau-panel #mini-game-text:empty {
+  display: none;
+}
+
+.mini-game-panel.is-bonneteau-panel .mini-game-actions {
+  bottom: clamp(14px, 3%, 22px);
+}
+
+.bonneteau-scene,
+.bonneteau-card {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.bonneteau-scene {
+  z-index: 0;
+}
+
+.bonneteau-card {
+  z-index: 1;
+  pointer-events: none;
+}
+
+.bonneteau-choice-zone {
+  position: absolute;
+  z-index: 2;
+  width: 15.5%;
+  height: 17%;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.bonneteau-choice-zone.is-slot-1 {
+  top: 38%;
+  left: 37.5%;
+  transform: rotate(27deg);
+}
+
+.bonneteau-choice-zone.is-slot-2 {
+  top: 41%;
+  left: 48.5%;
+  transform: rotate(27deg);
+}
+
+.bonneteau-choice-zone.is-slot-3 {
+  top: 44.5%;
+  left: 59.5%;
+  transform: rotate(27deg);
+}
+
+.bonneteau-choice-zone:focus-visible {
+  background: rgba(247, 212, 120, 0.12);
+  outline: 2px solid rgba(247, 212, 120, 0.86);
+  outline-offset: 2px;
+}
+
 .mini-game-tile {
   display: inline-grid;
   min-width: 64px;
@@ -6132,6 +6468,69 @@ h1 {
   .mini-game-tile.is-card {
     min-height: 66px;
   }
+
+  .mini-game-panel.is-coin-flip-panel {
+    top: 53%;
+    width: min(calc(100% - 16px), calc(76dvh - 12px));
+    padding: 0;
+  }
+
+  .mini-game-panel.is-coin-flip-panel[data-mini-game-phase="stake"] {
+    height: min(62dvh, 500px);
+    aspect-ratio: auto;
+  }
+
+  .mini-game-panel.is-coin-flip-panel #mini-game-text {
+    font-size: clamp(0.78rem, 3.45vw, 0.94rem);
+  }
+
+  .mini-game-panel.is-coin-flip-panel[data-mini-game-phase="stake"] #mini-game-text {
+    bottom: 154px;
+  }
+
+  .mini-game-panel.is-coin-flip-panel[data-mini-game-phase="stake"] .coin-flip-stake {
+    bottom: 72px;
+  }
+
+  .mini-game-panel.is-coin-flip-panel[data-mini-game-phase="stake"] .mini-game-actions {
+    bottom: 14px;
+  }
+
+  .mini-game-panel.is-slot-machine-panel {
+    top: 53%;
+    width: min(calc(100% - 12px), calc((75dvh - 8px) * 4 / 3));
+    padding: 0;
+  }
+
+  .mini-game-panel.is-slot-machine-panel #mini-game-text {
+    bottom: 62px;
+    padding: 5px 8px;
+    font-size: clamp(0.72rem, 3.1vw, 0.86rem);
+  }
+
+  .mini-game-panel.is-slot-machine-panel .mini-game-actions {
+    bottom: 10px;
+  }
+
+  .mini-game-panel.is-bonneteau-panel {
+    top: 53%;
+    width: min(calc(100% - 16px), calc(76dvh - 12px));
+    padding: 0;
+  }
+
+  .mini-game-panel.is-bonneteau-panel #mini-game-text {
+    bottom: 60px;
+    padding: 5px 8px;
+    font-size: clamp(0.72rem, 3.1vw, 0.86rem);
+  }
+
+  .mini-game-panel.is-bonneteau-panel .mini-game-actions {
+    bottom: 10px;
+  }
+
+  .coin-flip-stake {
+    flex-wrap: wrap;
+  }
 }
 
 /* UI polish: cell, death, dungeon effect, village framing */
@@ -6140,8 +6539,8 @@ h1 {
 }
 
 .scene.is-dead {
-  grid-template-rows: auto auto minmax(0, 1fr);
-  align-content: stretch;
+  align-items: center;
+  gap: clamp(8px, 1.2dvh, 14px);
   background:
     radial-gradient(circle at 50% 64%, rgba(191, 76, 59, 0.16), transparent 38%),
     linear-gradient(180deg, #2b2420 0%, #17120f 62%, #0e0b09 100%);
@@ -6155,6 +6554,8 @@ h1 {
 }
 
 .scene.is-dead .ko-banner {
+  flex: 0 0 auto;
+  width: min(860px, 100%);
   margin-bottom: 0;
   padding: clamp(8px, 1.2dvh, 12px) clamp(14px, 2.2vw, 22px);
 }
@@ -6164,8 +6565,9 @@ h1 {
 }
 
 .scene.is-dead .story-panel {
-  max-width: min(780px, 100%);
-  justify-self: center;
+  flex: 0 0 auto;
+  width: min(860px, 100%);
+  max-width: none;
   border-left-color: var(--danger);
   background: rgba(15, 12, 10, 0.76);
 }
@@ -6173,25 +6575,34 @@ h1 {
 .scene.is-dead .reward-row {
   flex: 1 1 auto;
   display: grid;
+  grid-template-columns: 1fr;
+  width: min(960px, 100%);
   min-height: 0;
   margin: 0;
-  padding: clamp(8px, 2dvh, 20px) 0;
+  padding: 0;
   place-items: center;
 }
 
 .scene.is-dead .reward-row .hodor-sprite {
-  width: min(88vw, 700px, 72dvh);
-  max-width: 100%;
+  width: min(760px, calc(100% - 18px), 78dvh);
+  max-width: calc(100% - 18px);
+  max-height: 100%;
+  justify-self: center;
+  align-self: center;
   aspect-ratio: 315 / 165;
   margin: 0;
   background-size: contain;
   background-position: center;
   filter: drop-shadow(0 38px 34px rgba(0, 0, 0, 0.62));
-  transform: translateY(-2dvh);
+  transform: none;
 }
 
 .scene.is-dead .death-choices {
   display: none !important;
+}
+
+.scene.is-dead .action-zone {
+  display: none;
 }
 
 .scene.is-cell .action-zone {
@@ -6202,6 +6613,12 @@ h1 {
   display: grid;
   gap: 10px;
   justify-items: center;
+  grid-template-rows: auto auto;
+  align-content: start;
+}
+
+.scene.is-cell .cell-stage {
+  width: min(100%, calc((100dvh - 375px) * 1448 / 1086));
 }
 
 .cell-info-card[hidden] {
@@ -6313,8 +6730,7 @@ h1 {
   }
 
   .scene.is-dead .reward-row .hodor-sprite {
-    width: min(90vw, 560px, 64dvh);
-    transform: translateY(-1dvh);
+    width: min(90vw, 560px, 68dvh);
   }
 
   .scene.is-cell .death-choices {
@@ -6349,5 +6765,389 @@ h1 {
 @media (max-height: 680px) {
   .scene.is-village .village-stage {
     width: min(100%, calc(100dvh - 188px), calc(100vw - 18px));
+  }
+}
+
+/* Village help and foreground dialogs */
+.village-tip-card[hidden] {
+  display: none;
+}
+
+.scene.is-village .action-zone {
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: clamp(8px, 1.2dvh, 12px);
+}
+
+.scene.is-village .village-stage {
+  width: min(100%, calc(100dvh - 352px), calc(100vw - 30px));
+  max-width: 720px;
+}
+
+.village-tip-card {
+  width: min(720px, calc(100% - 12px));
+  padding: 11px 14px;
+  border: 1px solid rgba(216, 170, 61, 0.38);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(38, 30, 20, 0.94), rgba(18, 14, 10, 0.95)),
+    rgba(24, 18, 12, 0.94);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.3);
+  color: var(--ink);
+  text-align: left;
+}
+
+.village-tip-card strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--gold);
+  font-family: var(--ui-font);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.village-tip-card p,
+.village-tip-card small {
+  display: block;
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(0.78rem, 1.45dvh, 0.92rem);
+  line-height: 1.3;
+}
+
+.village-tip-card p + p {
+  margin-top: 6px;
+}
+
+.village-tip-card small {
+  margin-top: 3px;
+  color: var(--muted);
+}
+
+.scene.is-village:has(.shop-panel:not([hidden])) .action-zone,
+.scene.is-village:has(.stats-panel:not([hidden])) .action-zone {
+  z-index: 40;
+}
+
+.scene.is-village .shop-header,
+.scene.is-village .stats-panel-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding-bottom: 6px;
+  background: linear-gradient(180deg, rgba(31, 26, 18, 0.99) 70%, transparent);
+}
+
+@media (max-width: 760px) {
+  .scene.is-village .village-stage {
+    width: min(100%, calc(100dvh - 338px), calc(100vw - 18px));
+  }
+
+  .village-tip-card {
+    width: min(520px, calc(100% - 8px));
+    padding: 9px 11px;
+  }
+
+  .village-tip-card p,
+  .village-tip-card small {
+    font-size: clamp(0.72rem, 2.5vw, 0.84rem);
+  }
+}
+
+/* Village layout frame: keep UI aligned to the illustrated map width. */
+.game-shell.is-village-layout {
+  --village-frame-width: min(720px, calc(100dvh - 388px), calc(100vw - 32px));
+  width: min(calc(var(--village-frame-width) + 24px), calc(100% - 12px));
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto auto;
+  align-content: start;
+}
+
+.scene.is-village {
+  align-items: center;
+  min-width: 0;
+  width: 100%;
+}
+
+.scene.is-village .story-panel,
+.scene.is-village .village-stage,
+.scene.is-village .village-tip-card {
+  flex: 0 0 auto;
+  width: var(--village-frame-width);
+  max-width: 100%;
+}
+
+.scene.is-village .action-zone {
+  align-items: center;
+  min-width: 0;
+  width: 100%;
+  padding-inline: 0;
+}
+
+@media (max-height: 560px) {
+  .game-shell.is-village-layout {
+    --village-frame-width: min(720px, calc(100dvh - 300px), calc(100vw - 32px));
+  }
+}
+
+/* Dialog polish: readable panels without internal scrollbars. */
+.inventory-popover {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: grid;
+  place-items: center;
+  width: auto;
+  padding: clamp(10px, 2vw, 22px);
+  background: rgba(8, 7, 5, 0.52);
+  backdrop-filter: blur(3px);
+  transform: none;
+}
+
+.inventory-card {
+  width: min(900px, calc(100vw - 28px));
+  max-width: none;
+  max-height: none;
+  overflow: visible;
+  scrollbar-gutter: auto;
+  padding: clamp(12px, 1.4vw, 18px);
+}
+
+.inventory-list {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(6px, 1vw, 10px);
+}
+
+.inventory-item {
+  min-width: 0;
+  grid-template-rows: clamp(46px, 7dvh, 66px) auto;
+  padding: clamp(5px, 0.8vw, 8px);
+}
+
+.inventory-item img {
+  height: clamp(46px, 7dvh, 66px);
+}
+
+.upgrade-summary {
+  justify-content: center;
+}
+
+.upgrade-chip::after,
+.item-chip::after,
+.inventory-item::after {
+  left: 50%;
+  top: auto;
+  bottom: calc(100% + 10px);
+  z-index: 1110;
+  transform: translate(-50%, -4px);
+}
+
+.upgrade-chip::before,
+.item-chip::before,
+.inventory-item::before {
+  left: 50%;
+  top: auto;
+  bottom: calc(100% + 4px);
+  z-index: 1111;
+  transform: translateX(-50%);
+  rotate: 45deg;
+}
+
+.upgrade-chip:hover::after,
+.upgrade-chip:focus::after,
+.item-chip:hover::after,
+.item-chip:focus::after,
+.inventory-item:hover::after,
+.inventory-item:focus::after {
+  transform: translate(-50%, 0);
+}
+
+.scene.is-village .village-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  border-radius: 0;
+}
+
+.scene.is-village .shop-panel,
+.scene.is-village .stats-panel {
+  position: fixed;
+  z-index: 110;
+  left: 50%;
+  top: 50%;
+  right: auto;
+  bottom: auto;
+  max-height: none;
+  overflow: visible;
+  scrollbar-gutter: auto;
+  transform: translate(-50%, -50%);
+}
+
+.scene.is-village .shop-panel::before,
+.scene.is-village .stats-panel::before {
+  display: none;
+}
+
+.scene.is-village .shop-header,
+.scene.is-village .stats-panel-header {
+  position: static;
+  background: transparent;
+  padding-bottom: 0;
+}
+
+.scene.is-village .shop-panel {
+  width: min(980px, calc(100vw - 32px));
+  padding: clamp(12px, 1.6vw, 18px);
+}
+
+.scene.is-village .upgrade-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(8px, 1vw, 12px);
+}
+
+.scene.is-village .upgrade-card {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  padding: clamp(10px, 1vw, 13px);
+}
+
+.scene.is-village .upgrade-card p {
+  min-height: 0;
+  margin: 7px 0 10px;
+  font-size: clamp(0.76rem, 1.35vw, 0.9rem);
+  line-height: 1.25;
+}
+
+.scene.is-village .stats-panel {
+  width: min(760px, calc(100vw - 32px));
+  padding: clamp(12px, 1.8vw, 18px);
+}
+
+.stats-panel-grid {
+  grid-template-columns: 1fr;
+  align-items: start;
+  gap: 8px;
+}
+
+.stats-family-card {
+  min-height: 0;
+  overflow: visible;
+}
+
+.stats-family-card summary {
+  grid-template-columns: 1fr auto auto;
+  grid-template-areas: "label value arrow";
+  min-height: 58px;
+  padding: 10px 12px;
+}
+
+.stats-family-card summary > strong {
+  margin-right: 10px;
+  font-size: clamp(1.28rem, 2.9dvh, 1.75rem);
+}
+
+.stats-family-details {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.stats-total {
+  display: flex;
+  min-height: 60px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.stats-total strong {
+  margin-top: 0;
+}
+
+@media (max-width: 560px) {
+  .inventory-popover {
+    padding: 6px;
+  }
+
+  .inventory-card {
+    width: calc(100vw - 12px);
+    padding: 10px;
+  }
+
+  .inventory-card-head {
+    margin-bottom: 8px;
+  }
+
+  .inventory-list {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 5px;
+  }
+
+  .inventory-item {
+    grid-template-rows: 42px auto;
+    gap: 4px;
+    padding: 4px;
+  }
+
+  .inventory-item img {
+    height: 42px;
+  }
+
+  .inventory-item span {
+    font-size: 0.6rem;
+  }
+
+  .upgrade-chip {
+    padding: 4px 6px;
+    font-size: 0.64rem;
+  }
+
+  .scene.is-village .shop-panel,
+  .scene.is-village .stats-panel {
+    width: calc(100vw - 12px);
+    padding: 10px;
+  }
+
+  .scene.is-village .upgrade-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .scene.is-village .upgrade-card {
+    padding: 8px;
+  }
+
+  .scene.is-village .upgrade-card p {
+    margin: 5px 0 7px;
+    font-size: 0.68rem;
+    line-height: 1.18;
+  }
+
+  .scene.is-village .upgrade-card button {
+    min-height: 34px;
+    padding: 6px;
+    font-size: 0.72rem;
+  }
+
+  .stats-panel-grid {
+    gap: 6px;
+  }
+
+  .stats-family-card summary {
+    min-height: 52px;
+    padding: 8px;
+  }
+
+  .stats-family-details {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4px;
+    padding: 0 8px 8px;
+  }
+
+  .stats-family-details article {
+    min-height: 44px;
+    padding: 5px;
+  }
+
+  .stats-family-details article span {
+    font-size: 0.58rem;
   }
 }

@@ -1,0 +1,3 @@
+Faire un mini jeu de rapidité, event aléatoire, ouverture de la porte, event se lance, écran avec une main mort vivant qui sort d'un tapis, un bouton "lâche ça" apparait à un endroit aléatoire de l'écran. Le joueur doit appuyer très vite dessus pour ne pas perdre sa bourse. 
+
+Faire un temps médiant pour niveau de difficulté

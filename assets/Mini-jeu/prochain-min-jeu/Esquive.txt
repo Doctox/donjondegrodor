@@ -1,0 +1,3 @@
+Grodor ouvre un coffre. Le coffre tente de lui mord la main. 
+
+Image de hodor vu de derriere avec sa main dans la gueul d’un coffre, puis un bouton esquive apparait et bouge sur l’écran, il faut que le joueur clic sur le bouton avant un certain temps pour esquiver
