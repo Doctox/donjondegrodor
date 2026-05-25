@@ -1,4 +1,4 @@
-const CACHE_NAME = "grodor-v28-death-door-one";
+const CACHE_NAME = "grodor-v30-combat-health";
 
 const CORE_ASSETS = [
   "/",

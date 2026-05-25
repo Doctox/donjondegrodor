@@ -2072,6 +2072,7 @@ h1 {
 }
 
 .monster-target {
+  position: relative;
   display: grid;
   width: min(100%, 440px);
   gap: 0;
@@ -2080,6 +2081,26 @@ h1 {
 
 .monster-target[hidden] {
   display: none;
+}
+
+.monster-health {
+  position: absolute;
+  top: clamp(-38px, -5dvh, -30px);
+  left: 50%;
+  z-index: 4;
+  display: flex;
+  gap: 4px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.monster-health[hidden] {
+  display: none;
+}
+
+.monster-health .monster-heart {
+  width: clamp(21px, 3.3dvh, 28px);
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.7));
 }
 
 .monster-part {
@@ -2540,6 +2561,15 @@ h1 {
   .scene.is-combat .combat-choices {
     right: clamp(16px, 5%, 22px);
     bottom: var(--combat-ground-offset);
+  }
+
+  .scene.is-combat .monster-health {
+    top: -27px;
+    gap: 2px;
+  }
+
+  .scene.is-combat .monster-health .monster-heart {
+    width: 20px;
   }
 }
 

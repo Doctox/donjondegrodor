@@ -223,6 +223,7 @@
           <div class="combat-stage" id="combat-stage" aria-label="Arène de combat" hidden>
           <div class="combat-choices" id="combat-choices" hidden>
             <div class="monster-target rat-target" id="monster-target" hidden aria-label="Rat commandant">
+              <div class="monster-health" id="monster-health" aria-label="Vie du monstre"></div>
               <button class="monster-part monster-head" type="button" data-strike="head" aria-label="Taper la tête"></button>
               <button class="monster-part monster-torso" type="button" data-strike="torso" aria-label="Taper le corps"></button>
               <button class="monster-part monster-legs" type="button" data-strike="legs" aria-label="Taper les jambes"></button>
@@ -277,8 +278,8 @@
           <aside class="village-tip-card" id="village-tip-card" hidden>
             <strong>Astuce du Village</strong>
             <p>Pose ton or et vends tes objets.</p>
-            <p>Pour jouer comme une vraie appli :</p>
-            <small>iPhone : Partager &rarr; Ajouter à l'écran d'accueil.<br>Android : menu du navigateur &rarr; Ajouter à l'écran d'accueil.</small>
+            <p id="village-install-prompt">Pour jouer comme une vraie appli :</p>
+            <small id="village-install-steps">iPhone : Partager &rarr; Ajouter à l'écran d'accueil.<br>Android : menu du navigateur &rarr; Ajouter à l'écran d'accueil.</small>
           </aside>
 
           <div class="village-modal-backdrop" id="village-modal-backdrop" hidden></div>
@@ -333,6 +334,6 @@
     <script src="upgrades.js"></script>
     <script src="supabase-config.js"></script>
     <script src="vendor/supabase-js-v2.js"></script>
-    <script src="script.js?v=20260525-long-towers"></script>
+    <script src="script.js?v=20260525-minigames-all-towers"></script>
   </body>
 </html>

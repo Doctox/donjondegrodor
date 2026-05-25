@@ -78,6 +78,7 @@ const state = {
   inventory: [],
   runEnded: false,
   combat: null,
+  combatHp: 0,
   combatArenaKey: "",
   godMode: false,
   upgrades: loadUpgrades(),
@@ -95,6 +96,7 @@ const state = {
   winBannerText: "",
   inputLocked: false,
   miniGame: null,
+  miniGamesEncountered: 0,
   hodorPose: "idle",
   combatStrike: "",
   combatImpact: "",
@@ -102,6 +104,7 @@ const state = {
   pendingCoinLoss: 0,
   pendingPurseLoss: false,
   renderedLife: null,
+  renderedCombatHp: null,
 };
 
 let shopPanelOpen = false;
@@ -935,6 +938,7 @@ function sendReturningPlayerToVillage() {
   state.showWinBanner = false;
   state.runEnded = true;
   state.combat = null;
+  state.combatHp = 0;
   state.combatArenaKey = "";
   state.inputLocked = false;
   state.doorHints = [];
@@ -949,8 +953,10 @@ function resetRunCarryover() {
   state.carriedGold = 0;
   state.inventory = [];
   state.combat = null;
+  state.combatHp = 0;
   state.combatArenaKey = "";
   state.miniGame = null;
+  state.miniGamesEncountered = 0;
   state.inputLocked = false;
   state.doorHints = [];
   state.pendingCoinGain = 0;
@@ -1020,7 +1026,9 @@ function buildActiveRunPayload() {
     inventory: [...state.inventory],
     runLosses: state.runLosses,
     floorShift: state.floorShift,
+    miniGamesEncountered: state.miniGamesEncountered,
     combatKey: combatKeyFor(state.combat),
+    combatHp: state.screen === "combat" ? state.combatHp : 0,
     combatArenaKey: state.screen === "combat" ? combatArenaFor(state.combatArenaKey).key : "",
     updated_at: new Date().toISOString(),
   };
@@ -1039,10 +1047,14 @@ function restoreActiveRun(activeRun) {
   state.inventory = snapshot.inventory;
   state.runLosses = snapshot.runLosses;
   state.floorShift = snapshot.floorShift;
+  state.miniGamesEncountered = snapshot.miniGamesEncountered;
   state.combat = snapshot.screen === "combat" ? monsters[snapshot.combatKey] || null : null;
+  state.combatHp = state.combat ? snapshot.combatHp : 0;
+  state.renderedCombatHp = null;
   state.combatArenaKey = snapshot.screen === "combat" ? snapshot.combatArenaKey : "";
   if (snapshot.screen === "combat" && !state.combat) {
     state.screen = "dungeon";
+    state.combatHp = 0;
     state.combatArenaKey = "";
   }
   state.runEnded = false;
@@ -1074,6 +1086,10 @@ function sanitizeActiveRun(activeRun) {
     ? activeRun.inventory.filter((item) => typeof item === "string" && itemSaleValues[item] !== undefined).slice(0, 12)
     : [];
   const combatKey = typeof activeRun.combatKey === "string" && monsters[activeRun.combatKey] ? activeRun.combatKey : "";
+  const monsterLife = combatKey ? monsters[combatKey].life : 0;
+  const combatHp = monsterLife
+    ? Math.min(monsterLife, Math.max(1, Math.floor(Number(activeRun.combatHp || monsterLife))))
+    : 0;
   const combatArenaKey = typeof activeRun.combatArenaKey === "string"
     ? combatArenaFor(activeRun.combatArenaKey).key
     : DEFAULT_COMBAT_ARENA_KEY;
@@ -1088,7 +1104,9 @@ function sanitizeActiveRun(activeRun) {
     inventory,
     runLosses: Math.max(0, Math.floor(Number(activeRun.runLosses || 0))),
     floorShift: Math.floor(Number(activeRun.floorShift || 0)),
+    miniGamesEncountered: Math.max(0, Math.floor(Number(activeRun.miniGamesEncountered || 0))),
     combatKey,
+    combatHp,
     combatArenaKey,
   };
 }
@@ -1770,7 +1788,7 @@ function resolveDoorChoice() {
   }
 
   const before = snapshotRun();
-  const text = weightedEvent().run();
+  const text = dungeonEvent().run();
   let suffix = "";
 
   if (state.miniGame) {
@@ -1819,6 +1837,7 @@ function startMiniGame(type) {
     },
   };
 
+  state.miniGamesEncountered += 1;
   state.miniGame = { type, ...configs[type] };
   return "Le donjon ouvre un petit jeu de hasard. Grodor sent que son avenir vient de devenir cliquable.";
 }
@@ -2131,8 +2150,8 @@ function holdDungeonEffectPoseBriefly() {
 function finalDoorOutcome() {
   const roll = Math.random();
   const difficulty = longTowerDifficulty();
-  const escapeChance = difficulty === 2 ? 0.38 : difficulty === 1 ? 0.52 : 0.68;
-  const bruiseChance = difficulty === 2 ? 0.88 : difficulty === 1 ? 0.9 : 0.92;
+  const escapeChance = difficulty === 2 ? 0.22 : difficulty === 1 ? 0.4 : 0.68;
+  const bruiseChance = difficulty === 2 ? 0.76 : difficulty === 1 ? 0.86 : 0.92;
 
   if (roll < escapeChance) {
     state.screen = "village";
@@ -2231,10 +2250,12 @@ function doorHintPool(level) {
 function startCombat(monster) {
   state.screen = "combat";
   state.combat = monster;
+  state.combatHp = monster.life;
   state.combatArenaKey = randomCombatArenaKey();
   state.hodorPose = "idle";
   state.combatStrike = "";
   state.combatImpact = "";
+  state.renderedCombatHp = null;
   return `${monster.intro} Grodor doit attaquer, aide-le à choisir.`;
 }
 
@@ -2265,20 +2286,25 @@ function resolveCombat(strike) {
 
   window.setTimeout(() => {
     const outcome = combatOutcome(monster, strike);
-    state.combat = null;
-    state.combatArenaKey = "";
     state.inputLocked = false;
     state.combatStrike = "";
     state.combatImpact = "";
 
-    if (!state.runEnded) {
+    if (!state.runEnded && !outcome.defeated) {
+      state.hodorPose = "idle";
+      setStory(outcome.text, outcome.hit ? "good" : toneFromSnapshot(before));
+    } else if (!state.runEnded) {
+      state.combat = null;
+      state.combatHp = 0;
+      state.combatArenaKey = "";
       state.screen = "dungeon";
-      setStory(outcome + completeDungeonStep(), toneFromSnapshot(before));
+      setStory(outcome.text + completeDungeonStep(), toneFromSnapshot(before));
       if (!state.runEnded) {
         prepareDoorHints();
       }
     } else {
-      setStory(outcome, toneFromSnapshot(before));
+      state.combatHp = 0;
+      setStory(outcome.text, toneFromSnapshot(before));
     }
     render();
   }, 2000);
@@ -2316,7 +2342,11 @@ function combatOutcome(monster, strike) {
   const strikeText = strikeStoryText(strike);
 
   if (roll < deathChance) {
-    return useCombatItems(instantDeath(`${strikeText} ${monster.name} corrige ton optimisme.`), usedItems, strike);
+    return {
+      text: useCombatItems(instantDeath(`${strikeText} ${monster.name} corrige ton optimisme.`), usedItems, strike),
+      defeated: false,
+      hit: false,
+    };
   }
 
   if (roll < deathChance + profile.loseItem && state.inventory.length) {
@@ -2324,23 +2354,47 @@ function combatOutcome(monster, strike) {
     const story = monster === monsters.skeleton && strike === "torso"
       ? "Tu tapes dans le torse. Le squelette bâille. Grodor panique et lâche un objet en fuyant."
       : `${strikeText} Tu survis, mais ${monster.name} pulvérise ton objet.`;
-    return useCombatItems(`${story} Effet : Objet perdu : ${lost}.`, usedItems, strike);
+    return {
+      text: useCombatItems(`${story} Effet : Objet perdu : ${lost}.`, usedItems, strike),
+      defeated: false,
+      hit: false,
+    };
   }
 
   if (roll < deathChance + profile.loseItem + profile.hurt) {
     const story = monster === monsters.skeleton && strike === "head"
       ? "Tu vises la tête. Le squelette la retire par habitude. Grodor frappe le vide et perd l’équilibre."
       : `${strikeText} ${monster.name} refuse ton brouillon tactique, pauvre tanche.`;
-    return useCombatItems(takeDamage(1, `${story} -1 cœur.`), usedItems, strike);
+    return {
+      text: useCombatItems(takeDamage(1, `${story} -1 cœur.`), usedItems, strike),
+      defeated: false,
+      hit: false,
+    };
   }
 
   if (roll < deathChance + profile.loseItem + profile.hurt + winChance) {
+    state.combatHp = Math.max(0, state.combatHp - 1);
+    if (state.combatHp > 0) {
+      return {
+        text: useCombatItems(`${strikeText} ${monster.name} vacille, mais reste debout juste pour être pénible.`, usedItems, strike),
+        defeated: false,
+        hit: true,
+      };
+    }
     const gold = randomInt(monster.reward[0], monster.reward[1]);
     addStat("combatsGagnes");
-    return useCombatItems(addGold(gold, `${strikeText} Le hasard fait semblant d'être ton ami. +${gold} PO.`), usedItems, strike);
+    return {
+      text: useCombatItems(addGold(gold, `${strikeText} Le hasard fait semblant d'être ton ami. +${gold} PO.`), usedItems, strike),
+      defeated: true,
+      hit: true,
+    };
   }
 
-  return useCombatItems(`${strikeText} Vous vous ratez tous les deux. Le silence juge la scène.`, usedItems, strike);
+  return {
+    text: useCombatItems(`${strikeText} Vous vous ratez tous les deux. Le silence juge la scène.`, usedItems, strike),
+    defeated: false,
+    hit: false,
+  };
 }
 
 function useCombatItems(text, items, strike) {
@@ -2387,7 +2441,7 @@ function longTowerDifficulty() {
 
 function longTowerHazard() {
   const difficulty = longTowerDifficulty();
-  const chance = difficulty === 2 ? 0.13 : difficulty === 1 ? 0.07 : 0;
+  const chance = difficulty === 2 ? 0.22 : difficulty === 1 ? 0.12 : 0;
   if (!chance || Math.random() >= chance) return "";
 
   return takeDamage(1, randomFrom([
@@ -2621,6 +2675,7 @@ function endRun(screen) {
   state.screen = screen;
   state.runEnded = true;
   state.combat = null;
+  state.combatHp = 0;
   state.combatArenaKey = "";
   state.miniGame = null;
   if (screen === "mort") {
@@ -2718,10 +2773,12 @@ function returnToCellFromDeath() {
   state.screen = "cell";
   state.runEnded = true;
   state.combat = null;
+  state.combatHp = 0;
   state.combatArenaKey = "";
   state.doorHints = [];
   state.inputLocked = false;
   state.floorShift = 0;
+  state.miniGamesEncountered = 0;
   state.hodorPose = "idle";
   setStory("Grodor se réveille dans sa geôle. Le sol refuse de commenter ce qu'il vient de voir.");
   render();
@@ -2739,10 +2796,12 @@ function startRun() {
   state.maxLife = START_LIFE;
   state.runEnded = false;
   state.combat = null;
+  state.combatHp = 0;
   state.combatArenaKey = "";
   state.doorHints = [];
   state.inputLocked = false;
   state.floorShift = 0;
+  state.miniGamesEncountered = 0;
   if (resetLossStreak) {
     state.runLosses = 0;
   }
@@ -2766,6 +2825,7 @@ function goToCellFromTavern() {
   state.runEnded = true;
   state.runLosses = 0;
   state.combat = null;
+  state.combatHp = 0;
   state.combatArenaKey = "";
   state.miniGame = null;
   state.doorHints = [];
@@ -2877,6 +2937,7 @@ function debugGoVillage() {
   state.floor = 0;
   state.runEnded = true;
   state.combat = null;
+  state.combatHp = 0;
   state.combatArenaKey = "";
   state.miniGame = null;
   state.doorHints = [];
@@ -2914,6 +2975,7 @@ function debugRunMiniGame(type) {
   state.winRecorded = false;
   state.miniGame = null;
   state.combat = null;
+  state.combatHp = 0;
   state.combatArenaKey = "";
   state.doorHints = [];
   state.floorShift = 0;
@@ -3231,6 +3293,26 @@ function weightedEvent() {
   return eventPool[0];
 }
 
+function dungeonEvent() {
+  const mustOfferMiniGame = state.miniGamesEncountered === 0
+    && state.floor <= Math.ceil(state.totalFloors / 2);
+  const extraMiniGameChance = state.totalFloors >= 25
+    ? 0.1
+    : state.totalFloors >= 20
+      ? 0.08
+      : 0.06;
+
+  if (mustOfferMiniGame || Math.random() < extraMiniGameChance) {
+    return {
+      run() {
+        return startMiniGame(randomFrom(["double", "slots", "cards"]));
+      },
+    };
+  }
+
+  return weightedEvent();
+}
+
 function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -3514,6 +3596,8 @@ function render() {
   renderMiniGame();
   $("village-stage").hidden = !isVillage;
   $("village-tip-card").hidden = !isVillage || isShop || isStatsPanel;
+  $("village-install-prompt").hidden = isInstalledApp();
+  $("village-install-steps").hidden = isInstalledApp();
   $("combat-stage").hidden = !isCombat;
   $("combat-choices").hidden = !isCombat;
   const monsterAsset = state.combat?.asset;
@@ -3521,6 +3605,8 @@ function render() {
   $("combat-choices").classList.toggle("has-monster-target", usesMonsterTarget);
   $("monster-target").hidden = !usesMonsterTarget;
   $("monster-target").className = `monster-target ${monsterAsset ? `${monsterAsset}-target` : ""}`.trim();
+  $("monster-target").setAttribute("aria-label", state.combat?.name || "Monstre");
+  renderMonsterHearts();
   $("village-choices").hidden = !isVillage;
   $("shop-panel").hidden = !isShop;
   $("stats-panel").hidden = !isStatsPanel;
@@ -3559,6 +3645,11 @@ function render() {
   playPendingCoinLossAnimation();
   playPendingPurseLossAnimation();
   queueActiveRunSave();
+}
+
+function isInstalledApp() {
+  return window.matchMedia("(display-mode: standalone)").matches
+    || window.navigator.standalone === true;
 }
 
 function placeHodorForScreen(isDungeon, isCombat) {
@@ -3677,6 +3768,34 @@ function renderHearts() {
     heartRow.appendChild(heart);
   }
   state.renderedLife = state.life;
+}
+
+function renderMonsterHearts() {
+  const healthRow = $("monster-health");
+  if (!healthRow) return;
+
+  const monster = state.screen === "combat" ? state.combat : null;
+  const maxLife = monster?.life || 0;
+  const life = Math.max(0, Math.min(maxLife, state.combatHp));
+  const previousLife = state.renderedCombatHp;
+  healthRow.hidden = !monster;
+  healthRow.textContent = "";
+
+  if (!monster) {
+    state.renderedCombatHp = null;
+    return;
+  }
+
+  healthRow.setAttribute("aria-label", `Vie de ${monster.name} : ${life} sur ${maxLife} cœurs`);
+  for (let index = 0; index < maxLife; index += 1) {
+    const heart = document.createElement("span");
+    heart.className = `heart-icon monster-heart${index < life ? " is-full" : ""}`;
+    if (previousLife !== null && index >= life && index < previousLife) {
+      heart.classList.add("is-lost");
+    }
+    healthRow.appendChild(heart);
+  }
+  state.renderedCombatHp = life;
 }
 
 function renderPurse() {
