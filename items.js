@@ -1,6 +1,6 @@
 const itemDescriptions = {
   "Casque Trop Petit": "Armure crânienne pour tête plus ambitieuse que prévu. Peut bloquer un dégât, puis se casse.",
-  "Slip de Guerre": "Textile militaire non homologué. Ajoute 1 cœur maximum. S'il sert en combat, le bonus part avec lui.",
+  "Slip de Guerre": "Textile militaire non homologué. Ajoute 1 cœur maximum, jusqu'à 6. S'il sert en combat, le bonus part avec lui.",
   "Medaillon du Presque-Heros": "Bijou de secours pour destin mal ficelé. Annule une mort instantanée une fois, puis explose.",
   "Sandales de Panique": "Chaussures de retraite tactique. Peuvent éviter certains dégâts, puis disparaissent.",
   "Hache Emoussee": "Hache qui a connu des jours moins mous. Augmente tes chances dans certains combats, puis peut casser.",

@@ -6159,6 +6159,14 @@ h1 {
   margin: 0;
 }
 
+.mini-game-display.is-arm-wrestle {
+  position: absolute;
+  inset: 0;
+  display: block;
+  min-height: 0;
+  margin: 0;
+}
+
 .mini-game-panel.is-coin-flip-panel {
   width: min(730px, calc(100% - 28px), calc(88dvh - 22px));
   max-height: none;
@@ -6434,6 +6442,104 @@ h1 {
   outline-offset: 2px;
 }
 
+.mini-game-panel.is-arm-wrestle-panel {
+  top: 55%;
+  width: min(500px, calc(100% - 28px), calc((78dvh - 8px) * 2 / 3), calc((100dvh - 187px) * 2 / 3));
+  max-height: none;
+  aspect-ratio: 2 / 3;
+  padding: 0;
+  border-color: rgba(216, 170, 61, 0.5);
+  overflow: hidden;
+  background: #17110c;
+}
+
+.mini-game-panel.is-arm-wrestle-panel .mini-game-eyebrow,
+.mini-game-panel.is-arm-wrestle-panel > strong {
+  display: none;
+}
+
+.mini-game-panel.is-arm-wrestle-panel #mini-game-text,
+.mini-game-panel.is-arm-wrestle-panel .mini-game-actions {
+  position: absolute;
+  left: clamp(12px, 4%, 24px);
+  right: clamp(12px, 4%, 24px);
+  z-index: 3;
+}
+
+.mini-game-panel.is-arm-wrestle-panel #mini-game-text {
+  bottom: clamp(110px, 19%, 138px);
+  margin: 0;
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: rgba(15, 10, 7, 0.82);
+  color: var(--ink);
+  font-size: clamp(0.78rem, 1.6vw, 0.92rem);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.82);
+}
+
+.mini-game-panel.is-arm-wrestle-panel #mini-game-text:empty {
+  display: none;
+}
+
+.mini-game-panel.is-arm-wrestle-panel .mini-game-actions {
+  bottom: clamp(42px, 7%, 58px);
+}
+
+.arm-wrestle-scene {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.arm-wrestle-status {
+  position: absolute;
+  left: 50%;
+  z-index: 2;
+  width: max-content;
+  max-width: calc(100% - 28px);
+  margin: 0;
+  padding: 7px 12px;
+  border: 1px solid rgba(216, 170, 61, 0.35);
+  border-radius: 999px;
+  background: rgba(15, 10, 7, 0.76);
+  color: var(--ink);
+  font-family: var(--ui-font);
+  font-size: clamp(0.74rem, 2.1vw, 0.9rem);
+  font-weight: 800;
+  transform: translateX(-50%);
+}
+
+.mini-game-panel.is-arm-wrestle-panel[data-mini-game-phase="ready"] .arm-wrestle-status {
+  top: clamp(12px, 3%, 20px);
+}
+
+.mini-game-panel.is-arm-wrestle-panel[data-mini-game-phase="playing"] .arm-wrestle-status {
+  bottom: clamp(104px, 18%, 124px);
+}
+
+.mini-game-panel.is-arm-wrestle-panel[data-mini-game-phase="playing"] .mini-game-button {
+  min-width: min(220px, 72%);
+  min-height: clamp(48px, 8dvh, 62px);
+  border-color: rgba(239, 183, 55, 0.8);
+  background: linear-gradient(180deg, rgba(220, 142, 35, 0.88), rgba(126, 57, 19, 0.94));
+  font-size: clamp(1rem, 3.4vw, 1.25rem);
+  letter-spacing: 0.05em;
+  touch-action: manipulation;
+  box-shadow: 0 6px 0 rgba(77, 29, 12, 0.96), 0 10px 15px rgba(0, 0, 0, 0.42);
+  transform: translateY(0);
+  transition: transform 65ms ease-out, box-shadow 65ms ease-out, filter 65ms ease-out;
+}
+
+.mini-game-panel.is-arm-wrestle-panel[data-mini-game-phase="playing"] .mini-game-button.is-pressed,
+.mini-game-panel.is-arm-wrestle-panel[data-mini-game-phase="playing"] .mini-game-button:active {
+  box-shadow: 0 1px 0 rgba(77, 29, 12, 0.96), 0 4px 8px rgba(0, 0, 0, 0.38);
+  filter: brightness(0.92);
+  transform: translateY(5px);
+}
+
 .mini-game-tile {
   display: inline-grid;
   min-width: 64px;
@@ -6556,6 +6662,26 @@ h1 {
 
   .mini-game-panel.is-bonneteau-panel .mini-game-actions {
     bottom: 10px;
+  }
+
+  .mini-game-panel.is-arm-wrestle-panel {
+    top: 53%;
+    width: min(calc(100% - 16px), calc((77dvh - 8px) * 2 / 3));
+    padding: 0;
+  }
+
+  .mini-game-panel.is-arm-wrestle-panel #mini-game-text {
+    bottom: 102px;
+    padding: 5px 8px;
+    font-size: clamp(0.7rem, 3vw, 0.84rem);
+  }
+
+  .mini-game-panel.is-arm-wrestle-panel .mini-game-actions {
+    bottom: 38px;
+  }
+
+  .mini-game-panel.is-arm-wrestle-panel[data-mini-game-phase="playing"] .arm-wrestle-status {
+    bottom: 100px;
   }
 
   .coin-flip-stake {

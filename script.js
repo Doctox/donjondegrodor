@@ -1,5 +1,6 @@
 const TOTAL_FLOORS = 20;
 const START_LIFE = 3;
+const MAX_LIFE = 6;
 const BANK_KEY = "barbare_portes_binouse_bank";
 const UPGRADES_KEY = "barbare_portes_binouse_upgrades";
 const STATS_KEY = "barbare_portes_binouse_stats";
@@ -11,6 +12,25 @@ const SLOT_MACHINE_SYMBOLS = ["Grodor", "Po", "Crane", "Bourse-vide"];
 const SLOT_MACHINE_FRAME_MS = 125;
 const BONNETEAU_ASSET_PATH = "assets/Mini-jeu/Bonneteau";
 const BONNETEAU_SYMBOLS = ["grodor", "po", "crane", "bourse"];
+const ARM_WRESTLE_ASSET_PATH = "assets/Mini-jeu/bras-de-fer";
+const ARM_WRESTLE_DURATION_MS = 5000;
+const ARM_WRESTLE_TICK_MS = 120;
+const ARM_WRESTLE_PRESS_MS = 170;
+const ARM_WRESTLE_CONTINUE_DELAY_MS = 850;
+const ARM_WRESTLE_DIFFICULTIES = [
+  { key: "facile", resistance: 1.25, tapPower: 5.4 },
+  { key: "moyen", resistance: 1.8, tapPower: 4.8 },
+  { key: "difficile", resistance: 2.45, tapPower: 4.2 },
+];
+const ARM_WRESTLE_FRAMES = [
+  "bdf-centre.webp",
+  "bdf-gagne-1.webp",
+  "bdf-gagne-2.webp",
+  "bdf-gagne.webp",
+  "bdf-perd-1.webp",
+  "bdf-perd-2.webp",
+  "bdf-perdu.webp",
+];
 const SUPABASE_CONFIG = window.HODOR_SUPABASE || {};
 const SUPABASE_URL = SUPABASE_CONFIG.url || "";
 const SUPABASE_KEY = SUPABASE_CONFIG.publishableKey || SUPABASE_CONFIG.anonKey || "";
@@ -218,6 +238,9 @@ let dungeonEffectPoseTimer = null;
 let cellOpenTimer = null;
 let coinFlipAnimationTimers = [];
 let slotMachineAnimationTimers = [];
+let armWrestleInterval = null;
+let armWrestlePressTimer = null;
+let armWrestleResultTimer = null;
 
 document.addEventListener("click", (event) => {
   const miniGameAction = event.target.closest("[data-mini-game-action]");
@@ -1080,8 +1103,8 @@ function sanitizeActiveRun(activeRun) {
 
   const floor = Math.max(1, Math.floor(Number(activeRun.floor || 1)));
   const totalFloors = Math.max(floor, Math.floor(Number(activeRun.totalFloors || floor || TOTAL_FLOORS)));
-  const life = Math.max(1, Math.floor(Number(activeRun.life || START_LIFE)));
-  const maxLife = Math.max(life, Math.floor(Number(activeRun.maxLife || START_LIFE)));
+  const maxLife = Math.min(MAX_LIFE, Math.max(1, Math.floor(Number(activeRun.maxLife || START_LIFE))));
+  const life = Math.min(maxLife, Math.max(1, Math.floor(Number(activeRun.life || START_LIFE))));
   const inventory = Array.isArray(activeRun.inventory)
     ? activeRun.inventory.filter((item) => typeof item === "string" && itemSaleValues[item] !== undefined).slice(0, 12)
     : [];
@@ -1570,6 +1593,18 @@ function snapshotRun() {
   };
 }
 
+function gainMaxLife() {
+  if (state.maxLife >= MAX_LIFE) {
+    state.maxLife = MAX_LIFE;
+    state.life = Math.min(state.life, state.maxLife);
+    return false;
+  }
+
+  state.maxLife += 1;
+  state.life = Math.min(state.maxLife, state.life + 1);
+  return true;
+}
+
 function toneFromSnapshot(before) {
   if (state.eventToneOverride) {
     const tone = state.eventToneOverride;
@@ -1809,6 +1844,7 @@ function resolveDoorChoice() {
 }
 
 function startMiniGame(type) {
+  clearArmWrestle();
   const configs = {
     double: {
       title: "",
@@ -1835,10 +1871,28 @@ function startMiniGame(type) {
       result: "",
       actions: [],
     },
+    arm: {
+      title: "",
+      phase: "ready",
+      text: "",
+      assetsReady: false,
+      difficulty: randomFrom(ARM_WRESTLE_DIFFICULTIES),
+      frame: "bdf-centre.webp",
+      position: 0,
+      recentTaps: 0,
+      totalTaps: 0,
+      remainingMs: ARM_WRESTLE_DURATION_MS,
+      buttonPressed: false,
+      continueEnabled: false,
+      actions: [],
+    },
   };
 
   state.miniGamesEncountered += 1;
   state.miniGame = { type, ...configs[type] };
+  if (type === "arm") {
+    preloadArmWrestleAssets(state.miniGame);
+  }
   return "Le donjon ouvre un petit jeu de hasard. Grodor sent que son avenir vient de devenir cliquable.";
 }
 
@@ -1857,6 +1911,11 @@ function resolveMiniGame(action) {
 
   if (state.miniGame.type === "cards") {
     resolveBonneteauAction(action);
+    return;
+  }
+
+  if (state.miniGame.type === "arm") {
+    resolveArmWrestleAction(action);
   }
 }
 
@@ -1865,6 +1924,7 @@ function completeMiniGame(outcome, tone) {
 
   clearCoinFlipAnimation();
   clearSlotMachineAnimation();
+  clearArmWrestle();
   state.miniGame = null;
   suffix = completeDungeonStep();
 
@@ -2013,11 +2073,12 @@ function settleSlotMachine(miniGame) {
   const pair = !triple && new Set(reels).size === 2;
 
   if (triple && reels[0] === "Grodor") {
-    state.maxLife += 1;
-    state.life += 1;
+    const gainedHeart = gainMaxLife();
     addStat("miniJeuxReussis");
     saveStats();
-    miniGame.outcome = "Trois Grodor ! Le jackpot offre un cœur supplémentaire. +1 cœur maximum.";
+    miniGame.outcome = gainedHeart
+      ? "Trois Grodor ! Le jackpot offre un cœur supplémentaire. +1 cœur maximum."
+      : "Trois Grodor ! Le jackpot tousse un cœur, mais Grodor en a déjà 6. Maximum atteint.";
   } else if (triple && reels[0] === "Po") {
     const gold = state.carriedGold;
     state.carriedGold += gold;
@@ -2066,11 +2127,12 @@ function resolveBonneteauAction(action) {
     miniGame.phase = "result";
 
     if (result === "grodor") {
-      state.maxLife += 1;
-      state.life += 1;
+      const gainedHeart = gainMaxLife();
       addStat("miniJeuxReussis");
       saveStats();
-      miniGame.outcome = "Grodor ! La carte offre un cœur supplémentaire. +1 cœur maximum.";
+      miniGame.outcome = gainedHeart
+        ? "Grodor ! La carte offre un cœur supplémentaire. +1 cœur maximum."
+        : "Grodor ! La carte offre un cœur, mais les 6 places sont déjà prises. Maximum atteint.";
     } else if (result === "po") {
       state.carriedGold += 10;
       addStat("miniJeuxReussis");
@@ -2096,6 +2158,175 @@ function resolveBonneteauAction(action) {
   if (action === "cards-continue" && miniGame.phase === "result") {
     completeMiniGame(miniGame.outcome, miniGame.outcomeTone);
   }
+}
+
+function resolveArmWrestleAction(action) {
+  const miniGame = state.miniGame;
+  if (!miniGame || miniGame.type !== "arm") return;
+
+  if (action === "arm-start" && miniGame.phase === "ready" && miniGame.assetsReady) {
+    startArmWrestle(miniGame);
+    return;
+  }
+
+  if (action === "arm-push" && miniGame.phase === "playing") {
+    miniGame.totalTaps += 1;
+    miniGame.recentTaps = Math.min(12, miniGame.recentTaps + 1);
+    miniGame.position = Math.min(78, miniGame.position + miniGame.difficulty.tapPower * 0.62);
+    miniGame.buttonPressed = true;
+    if (armWrestlePressTimer) window.clearTimeout(armWrestlePressTimer);
+    armWrestlePressTimer = window.setTimeout(() => {
+      if (!state.miniGame || state.miniGame !== miniGame || miniGame.phase !== "playing") return;
+      miniGame.buttonPressed = false;
+      render();
+    }, ARM_WRESTLE_PRESS_MS);
+    updateArmWrestleFrame(miniGame);
+    render();
+    return;
+  }
+
+  if (action === "arm-continue" && miniGame.phase === "result") {
+    if (!miniGame.continueEnabled) return;
+    if (miniGame.fatal) {
+      const outcome = miniGame.outcome;
+      clearArmWrestle();
+      state.maxLife = 0;
+      state.life = 0;
+      state.miniGame = null;
+      endRun("mort");
+      setStory(outcome, "bad");
+      render();
+      return;
+    }
+    completeMiniGame(miniGame.outcome, miniGame.outcomeTone);
+  }
+}
+
+function startArmWrestle(miniGame) {
+  clearArmWrestle();
+  miniGame.phase = "playing";
+  miniGame.startedAt = Date.now();
+  miniGame.position = 0;
+  miniGame.recentTaps = 0;
+  miniGame.totalTaps = 0;
+  miniGame.remainingMs = ARM_WRESTLE_DURATION_MS;
+  miniGame.frame = "bdf-centre.webp";
+  miniGame.buttonPressed = false;
+  miniGame.continueEnabled = false;
+  armWrestleInterval = window.setInterval(() => advanceArmWrestle(miniGame), ARM_WRESTLE_TICK_MS);
+  render();
+}
+
+function preloadArmWrestleAssets(miniGame) {
+  miniGame.preloadedImages = ARM_WRESTLE_FRAMES.map((frame) => {
+    const image = new Image();
+    image.src = `${ARM_WRESTLE_ASSET_PATH}/${frame}`;
+    return image;
+  });
+
+  Promise.all(miniGame.preloadedImages.map((image) => {
+    if (typeof image.decode === "function") {
+      return image.decode().catch(() => {});
+    }
+    return new Promise((resolve) => {
+      image.addEventListener("load", resolve, { once: true });
+      image.addEventListener("error", resolve, { once: true });
+    });
+  })).then(() => {
+    if (!state.miniGame || state.miniGame !== miniGame || miniGame.phase !== "ready") return;
+    miniGame.assetsReady = true;
+    render();
+  });
+}
+
+function advanceArmWrestle(miniGame) {
+  if (!state.miniGame || state.miniGame !== miniGame || miniGame.phase !== "playing") {
+    clearArmWrestle();
+    return;
+  }
+
+  miniGame.remainingMs = Math.max(0, ARM_WRESTLE_DURATION_MS - (Date.now() - miniGame.startedAt));
+  const clickDrive = miniGame.recentTaps * miniGame.difficulty.tapPower * 0.4;
+  const opponentDrive = miniGame.difficulty.resistance + Math.random() * 1.2;
+  const wobble = (Math.random() - 0.5) * 3.4;
+  miniGame.position = Math.max(-78, Math.min(78, miniGame.position + clickDrive - opponentDrive + wobble));
+  miniGame.recentTaps *= 0.58;
+  updateArmWrestleFrame(miniGame);
+
+  if (miniGame.remainingMs <= 0) {
+    settleArmWrestle(miniGame);
+    return;
+  }
+
+  render();
+}
+
+function updateArmWrestleFrame(miniGame) {
+  if (miniGame.position >= 45) {
+    miniGame.frame = "bdf-gagne-2.webp";
+  } else if (miniGame.position >= 16) {
+    miniGame.frame = "bdf-gagne-1.webp";
+  } else if (miniGame.position <= -45) {
+    miniGame.frame = "bdf-perd-2.webp";
+  } else if (miniGame.position <= -16) {
+    miniGame.frame = "bdf-perd-1.webp";
+  } else {
+    miniGame.frame = "bdf-centre.webp";
+  }
+}
+
+function settleArmWrestle(miniGame) {
+  if (!state.miniGame || state.miniGame !== miniGame || miniGame.phase !== "playing") return;
+
+  clearArmWrestle();
+  const before = snapshotRun();
+  const won = miniGame.position >= 16;
+  miniGame.phase = "result";
+
+  if (won) {
+    const gainedHeart = gainMaxLife();
+    addStat("miniJeuxReussis");
+    saveStats();
+    miniGame.frame = "bdf-gagne.webp";
+    miniGame.outcome = gainedHeart
+      ? "Grodor écrase le bras adverse ! +1 cœur maximum."
+      : "Grodor écrase le bras adverse ! Le cœur promis refuse de dépasser 6. Maximum atteint.";
+  } else {
+    miniGame.frame = "bdf-perdu.webp";
+    miniGame.fatal = state.maxLife <= 1;
+    if (miniGame.fatal) {
+      miniGame.outcome = "Le champion écrase Grodor. Son dernier cœur cède. -1 cœur maximum.";
+    } else {
+      state.maxLife -= 1;
+      state.life = Math.min(state.life, state.maxLife);
+      miniGame.outcome = "Le champion écrase le bras de Grodor. -1 cœur maximum.";
+    }
+  }
+
+  miniGame.outcomeTone = toneFromSnapshot(before);
+  miniGame.text = miniGame.outcome;
+  miniGame.continueEnabled = false;
+  armWrestleResultTimer = window.setTimeout(() => {
+    if (!state.miniGame || state.miniGame !== miniGame || miniGame.phase !== "result") return;
+    miniGame.continueEnabled = true;
+    render();
+  }, ARM_WRESTLE_CONTINUE_DELAY_MS);
+  render();
+}
+
+function clearArmWrestle() {
+  if (armWrestleInterval) {
+    window.clearInterval(armWrestleInterval);
+  }
+  if (armWrestlePressTimer) {
+    window.clearTimeout(armWrestlePressTimer);
+  }
+  if (armWrestleResultTimer) {
+    window.clearTimeout(armWrestleResultTimer);
+  }
+  armWrestleInterval = null;
+  armWrestlePressTimer = null;
+  armWrestleResultTimer = null;
 }
 
 function miniGameOutcome(action) {
@@ -2852,8 +3083,7 @@ function runFloorRange() {
 function applyRunUpgrades() {
   if (Math.random() < upgradeChance("cardio", [0.35, 0.5, 0.68])) {
     if (Math.random() < 0.82) {
-      state.maxLife += 1;
-      state.life += 1;
+      gainMaxLife();
     } else {
       state.maxLife = Math.max(1, state.maxLife - 1);
       state.life = Math.min(state.life, state.maxLife);
@@ -2952,6 +3182,7 @@ function renderDebugEvents() {
   const miniGameEvents = [
     { type: "double", label: "Pile ou face - Quitte ou double" },
     { type: "cards", label: "Bonneteau" },
+    { type: "arm", label: "Bras de fer" },
     { type: "slots", label: "Machine à sous" },
   ];
 
@@ -2981,7 +3212,7 @@ function debugRunMiniGame(type) {
   state.floorShift = 0;
   state.totalFloors = Math.max(state.totalFloors || 10, 10);
   state.floor = Math.max(2, Math.min(state.floor || state.totalFloors, state.totalFloors));
-  state.maxLife = Math.max(state.maxLife || START_LIFE, START_LIFE);
+  state.maxLife = Math.min(MAX_LIFE, Math.max(state.maxLife || START_LIFE, START_LIFE));
   state.life = Math.max(1, Math.min(state.life || state.maxLife, state.maxLife));
   state.hodorPose = "question";
 
@@ -2999,8 +3230,8 @@ function debugStartCombat(monsterId) {
   state.lossRecorded = false;
   state.winRecorded = false;
   state.floor = state.floor > 0 ? state.floor : randomInt(5, 10);
-  state.maxLife = Math.max(state.maxLife || START_LIFE, START_LIFE);
-  state.life = Math.max(1, state.life || state.maxLife);
+  state.maxLife = Math.min(MAX_LIFE, Math.max(state.maxLife || START_LIFE, START_LIFE));
+  state.life = Math.max(1, Math.min(state.life || state.maxLife, state.maxLife));
   state.doorHints = [];
   $("debug-panel").hidden = true;
   $("debug-toggle").setAttribute("aria-expanded", "false");
@@ -3334,11 +3565,13 @@ function renderMiniGame() {
   panel.classList.toggle("is-coin-flip-panel", miniGame?.type === "double");
   panel.classList.toggle("is-slot-machine-panel", miniGame?.type === "slots");
   panel.classList.toggle("is-bonneteau-panel", miniGame?.type === "cards");
+  panel.classList.toggle("is-arm-wrestle-panel", miniGame?.type === "arm");
   panel.dataset.miniGamePhase = miniGame?.phase || "";
   if (!miniGame) {
     display.classList.remove("is-coin-flip");
     display.classList.remove("is-slot-machine");
     display.classList.remove("is-bonneteau");
+    display.classList.remove("is-arm-wrestle");
     display.textContent = "";
     actions.textContent = "";
     return;
@@ -3346,6 +3579,9 @@ function renderMiniGame() {
 
   title.textContent = miniGame.title;
   text.textContent = miniGame.text;
+  if (miniGame.type === "arm" && updatePlayingArmWrestleMiniGame(miniGame, display, actions)) {
+    return;
+  }
   display.textContent = "";
   actions.textContent = "";
 
@@ -3364,9 +3600,15 @@ function renderMiniGame() {
     return;
   }
 
+  if (miniGame.type === "arm") {
+    renderArmWrestleMiniGame(miniGame, display, actions);
+    return;
+  }
+
   display.classList.remove("is-coin-flip");
   display.classList.remove("is-slot-machine");
   display.classList.remove("is-bonneteau");
+  display.classList.remove("is-arm-wrestle");
   (miniGame.display || []).forEach((value) => {
     const tile = document.createElement("span");
     tile.className = `mini-game-tile ${miniGame.type === "cards" ? "is-card" : ""}`.trim();
@@ -3508,7 +3750,60 @@ function renderBonneteauMiniGame(miniGame, display, actions) {
   }
 }
 
+function renderArmWrestleMiniGame(miniGame, display, actions) {
+  display.classList.remove("is-coin-flip", "is-slot-machine", "is-bonneteau");
+  display.classList.add("is-arm-wrestle");
+
+  const scene = document.createElement("img");
+  scene.className = "arm-wrestle-scene";
+  scene.src = `${ARM_WRESTLE_ASSET_PATH}/${miniGame.frame}`;
+  scene.alt = miniGame.phase === "result"
+    ? "Résultat du bras de fer de Grodor."
+    : "Grodor dispute un bras de fer au champion du donjon.";
+  display.appendChild(scene);
+
+  if (miniGame.phase !== "result") {
+    const status = document.createElement("p");
+    status.className = "arm-wrestle-status";
+    status.textContent = miniGame.phase === "ready"
+      ? miniGame.assetsReady
+        ? "5 secondes. Tape aussi vite que possible !"
+        : "Le champion se prépare..."
+      : `${(miniGame.remainingMs / 1000).toFixed(1)} s · ${miniGame.totalTaps} taps`;
+    display.appendChild(status);
+  }
+
+  if (miniGame.phase === "ready" && miniGame.assetsReady) {
+    appendMiniGameButton(actions, "arm-start", "Commencer");
+  } else if (miniGame.phase === "playing") {
+    appendMiniGameButton(actions, "arm-push", "FORCER !");
+    const pushButton = actions.lastElementChild;
+    if (miniGame.buttonPressed && pushButton) pushButton.classList.add("is-pressed");
+  } else if (miniGame.phase === "result") {
+    appendMiniGameButton(actions, "arm-continue", "Continuer");
+    const continueButton = actions.lastElementChild;
+    if (continueButton) continueButton.disabled = !miniGame.continueEnabled;
+  }
+}
+
+function updatePlayingArmWrestleMiniGame(miniGame, display, actions) {
+  if (miniGame.phase !== "playing") return false;
+
+  const scene = display.querySelector(".arm-wrestle-scene");
+  const status = display.querySelector(".arm-wrestle-status");
+  const pushButton = actions.querySelector('[data-mini-game-action="arm-push"]');
+  if (!scene || !status || !pushButton) return false;
+
+  const nextFrame = `${ARM_WRESTLE_ASSET_PATH}/${miniGame.frame}`;
+  if (scene.getAttribute("src") !== nextFrame) scene.src = nextFrame;
+  status.textContent = `${(miniGame.remainingMs / 1000).toFixed(1)} s · ${miniGame.totalTaps} taps`;
+  pushButton.classList.toggle("is-pressed", miniGame.buttonPressed);
+  return true;
+}
+
 function render() {
+  state.maxLife = Math.min(MAX_LIFE, state.maxLife);
+  state.life = Math.min(state.life, state.maxLife);
   if (state.screen === "village" || state.screen === "shop") {
     state.life = state.maxLife;
   }

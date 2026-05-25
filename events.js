@@ -53,11 +53,11 @@ const eventPool = [
   {
     weight: 4,
     run() {
-      if (!hasItem("Slip de Guerre")) {
-        state.maxLife += 1;
-        state.life += 1;
-      }
-      return addItem("Slip de Guerre", "Tu trouves un slip de guerre sur un petit présentoir solennel. Le tissu exige le respect. +1 cœur maximum.");
+      const gainedHeart = !hasItem("Slip de Guerre") && gainMaxLife();
+      const text = gainedHeart
+        ? "Tu trouves un slip de guerre sur un petit présentoir solennel. Le tissu exige le respect. +1 cœur maximum."
+        : "Tu trouves un slip de guerre sur un petit présentoir solennel. Il promet un cœur, mais 6 est déjà beaucoup pour Grodor. Maximum atteint.";
+      return addItem("Slip de Guerre", text);
     },
   },
   {
@@ -225,6 +225,12 @@ const eventPool = [
     weight: 1,
     run() {
       return startMiniGame("cards");
+    },
+  },
+  {
+    weight: 1,
+    run() {
+      return startMiniGame("arm");
     },
   },
   {
