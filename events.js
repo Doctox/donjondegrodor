@@ -3,24 +3,20 @@ const eventPool = [
     weight: 12,
     run() {
       const gold = randomInt(1, 3);
-      return addGold(gold, `Tu trouves un coffre derrière un panneau "Pas un coffre". Le camouflage avait un budget. +${gold} PO.`);
+      return startGoldChestMiniGame("gain", gold);
     },
   },
   {
     weight: 9,
     run() {
-      return addGold(2, `${randomFrom([
-        "Une bourse est posée là. Grodor a comme un sentiment de déjà-vu.",
-        "Une bourse est posée par terre. Ce n’était pas celle de ton dernier passage ?",
-        "Une bourse au nom de Grodor est posée par terre. Pratique. Inquiétant, mais pratique.",
-      ])} +2 PO.`);
+      return startGoldChestMiniGame("gain", 2);
     },
   },
   {
     weight: 7,
     run() {
       if (Math.random() < 0.45) {
-        return addGold(5, "Le coffre contient des pièces et une notice de sécurité ignorée. Grodor prend le tout, comme un âne diplômé. +5 PO.");
+        return startGoldChestMiniGame("gain", 5);
       }
       return takeDamage(1, "Le coffre te mord. Les meubles du donjon ont un syndicat très agressif. -1 cœur.");
     },
@@ -122,10 +118,7 @@ const eventPool = [
     weight: 5,
     run() {
       const gold = randomInt(1, 4);
-      return addGold(gold, `${randomFrom([
-        "Grodor éternue. Quelques pièces tombent du plafond. Personne ne revendique le miracle.",
-        "Quelqu’un jette quelques pièces dans un puits. Mauvais puits. Grodor les reçoit sur le crâne.",
-      ])} +${gold} PO.`);
+      return startGoldChestMiniGame("gain", gold);
     },
   },
   {
@@ -135,21 +128,16 @@ const eventPool = [
       if (Math.random() < 0.35) {
         return takeDamage(1, "Tu fouilles un tonneau. Il contenait un ressort, une brique et une opinion très basse de toi. -1 cœur.");
       }
-      return addGold(gold, `Tu fouilles un tonneau et trouves ${gold} PO dans une substance qui refuse de se présenter.`);
+      return startGoldChestMiniGame("gain", gold);
     },
   },
   {
     weight: 5,
     run() {
       const loss = Math.min(state.carriedGold, randomInt(1, 3));
-      state.carriedGold -= loss;
       return loss > 0
-        ? `${randomFrom([
-          "Une barrière fantôme descend devant Grodor. Une main transparente réclame des PO. Grodor paie. La barrière était déjà ouverte.",
-          "Un gamin en pyjama vert promet le Pays Imaginaire contre quelques PO. Grodor paie. Le gamin s’envole. Grodor reste au sol.",
-          "Un vieil homme en robe bloque le passage. « Vous ne passerez pas sans payer. » Grodor paie. La porte d’à côté était ouverte.",
-        ])} -${loss} PO.`
-        : "Un péage fantôme te réclame de l'argent. Ta pauvreté passe sans ticket.";
+        ? startGoldChestMiniGame("loss", loss)
+        : "Vous avez trouvé un coffre. Il tente de réclamer des PO, mais ta bourse est vide.";
     },
   },
   {
@@ -169,7 +157,7 @@ const eventPool = [
     weight: 4,
     run() {
       if (Math.random() < 0.5) {
-        return addGold(3, "Un vieux coffre s'ouvre tout seul. Il voulait finir sa journée avant toi. +3 PO.");
+        return startGoldChestMiniGame("gain", 3);
       }
       return "Un vieux coffre s'ouvre tout seul. Vide, évidemment. Le théâtre coûte moins cher que l'or.";
     },
@@ -178,10 +166,9 @@ const eventPool = [
     weight: 4,
     run() {
       const loss = Math.min(state.carriedGold, 2);
-      state.carriedGold -= loss;
       return loss
-        ? `Grodor trébuche et part en roulade héroïque. Ses pièces, elles, choisissent la fuite. -${loss} PO.`
-        : "Tu glisses sur une flaque de mystère. Aucun argent perdu, juste une posture sociale.";
+        ? startGoldChestMiniGame("loss", loss)
+        : "Vous avez trouvé un coffre. Il cherche des PO à voler, mais ne trouve que du silence.";
     },
   },
   {
@@ -203,10 +190,7 @@ const eventPool = [
     weight: 4,
     run() {
       const gold = randomInt(1, 5);
-      return addGold(gold, `${randomFrom([
-        "Une dame très correcte se présente comme Mary Popièce. Elle sort des PO de son sac, ouvre une porte qui n’était pas là, puis s’envole avec son parapluie.",
-        "Un petit elfe nommé Dobourse apparaît. Il offre une chaussette à Grodor. Elle était pleine de PO.",
-      ])} +${gold} PO.`);
+      return startGoldChestMiniGame("gain", gold);
     },
   },
   {
@@ -253,7 +237,7 @@ const eventPool = [
       if (Math.random() < 0.4) {
         return instantDeath("Tu entres dans une salle marquée 'Test de confiance'. Le sol n'avait pas signé.");
       }
-      return addGold(4, "Tu entres dans une salle marquée 'Test de confiance'. Le sol tient, probablement par erreur. +4 PO.");
+      return startGoldChestMiniGame("gain", 4);
     },
   },
   {
@@ -266,7 +250,7 @@ const eventPool = [
     weight: 4,
     run() {
       const gold = randomInt(1, 4);
-      return addGold(gold, `Un coffre minuscule contient ${gold} PO et un mot: "ne dépense pas tout en fromage, benêt".`);
+      return startGoldChestMiniGame("gain", gold);
     },
   },
   {
@@ -317,7 +301,7 @@ const eventPool = [
     run() {
       const gold = randomInt(4, 8);
       if (Math.random() < 0.3) {
-        return addGold(gold, `Tu trouves une caisse marquée "salaires des gardes". Grodor invente l'impôt inverse. +${gold} PO.`);
+        return startGoldChestMiniGame("gain", gold);
       }
       return takeDamage(1, "Tu trouves une caisse marquée 'salaires des gardes'. Les gardes connaissent la comptabilité défensive. -1 cœur.");
     },
@@ -332,20 +316,16 @@ const eventPool = [
     weight: 3,
     run() {
       const loss = Math.min(state.carriedGold, randomInt(2, 5));
-      state.carriedGold -= loss;
       return loss
-        ? `${randomFrom([
-          "Grodor gronde sa bourse. Elle ouvre grand la bouche et recrache quelques PO dans sa figure.",
-          "La bourse de Grodor sème des PO derrière lui. Grodor ne remarque rien. Le Petit Poucet faisait ça avec des cailloux.",
-        ])} -${loss} PO.`
-        : "Une bourse vivante essaie de voler ton argent. Elle repart avec une crise existentielle.";
+        ? startGoldChestMiniGame("loss", loss)
+        : "Vous avez trouvé un coffre. Il grogne contre une bourse vide, puis abandonne.";
     },
   },
   {
     weight: 3,
     run() {
       if (Math.random() < 0.6) {
-        return addGold(1, "Tu bats un vieux tapis. Il tousse, insulte ton lignage, puis lâche 1 PO.");
+        return startGoldChestMiniGame("gain", 1);
       }
       return takeDamage(1, "Tu bats un vieux tapis. Il a plus d'expérience que toi, pauvre carpette. -1 cœur.");
     },
@@ -381,10 +361,9 @@ const eventPool = [
     weight: 6,
     run() {
       const loss = Math.min(state.carriedGold, randomInt(1, 4));
-      state.carriedGold -= loss;
       return loss
-        ? `Une main sort de derrière un tableau et pique la bourse de Grodor. Le tableau ricane. -${loss} PO.`
-        : "Une main sort du mur, attrape la bourse de Grodor, la secoue. Rien. Elle la repose avec pitié.";
+        ? startGoldChestMiniGame("loss", loss)
+        : "Vous avez trouvé un coffre. Il secoue ta bourse vide et la repose avec pitié.";
     },
   },
   {

@@ -1,4 +1,4 @@
-const CACHE_NAME = "grodor-v40-bras-de-fer-layout";
+const CACHE_NAME = "grodor-v44-door-hover-preview";
 
 const CORE_ASSETS = [
   "/",
@@ -31,6 +31,23 @@ const CORE_ASSETS = [
   "/assets/Arene/arene-1.webp",
   "/assets/Arene/arene-2.webp",
   "/assets/Arene/arene-3.webp",
+  "/assets/Mini-jeu/coffre-esquive/coffre_open.webp",
+  "/assets/Mini-jeu/coffre-esquive/coffre_esquive.webp",
+  "/assets/Mini-jeu/coffre-esquive/coffre_open-gagner.webp",
+  "/assets/Mini-jeu/coffre-esquive/coffre_esquive-gagner.webp",
+  "/assets/Mini-jeu/coffre-esquive/coffre_esquive-perdu.webp",
+  "/assets/Mini-jeu/coffre-esquive/esquive-1-ok.png",
+  "/assets/Mini-jeu/coffre-esquive/esquive-1-eclate.png",
+  "/assets/Mini-jeu/coffre-esquive/esquive-2-ok.png",
+  "/assets/Mini-jeu/coffre-esquive/esquive-2-eclate.png",
+  "/assets/Mini-jeu/coffre-esquive/esquive-3-ok.png",
+  "/assets/Mini-jeu/coffre-esquive/esquive-3-eclate.png",
+  "/assets/Mini-jeu/coffre-esquive/esquive-4-ok.png",
+  "/assets/Mini-jeu/coffre-esquive/esquive-4-eclate.png",
+  "/assets/Mini-jeu/coffre-esquive/esquive-5-ok.png",
+  "/assets/Mini-jeu/coffre-esquive/esquive-5-eclate.png",
+  "/assets/Mini-jeu/coffre-esquive/esquive-6-ok.png",
+  "/assets/Mini-jeu/coffre-esquive/esquive-6-eclate.png",
   "/assets/Ui/Bourse%20vide.png",
   "/assets/Ui/Bourse%20pleine.png",
   "/assets/Ui/inventaire%20vide.png",
@@ -143,6 +160,11 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  if (url.origin === self.location.origin && (url.pathname.endsWith(".js") || url.pathname.endsWith(".css"))) {
+    event.respondWith(networkFirstStatic(request));
+    return;
+  }
+
   if (isLocalStaticRequest(request, url)) {
     event.respondWith(cacheFirstStatic(request));
   }
@@ -173,4 +195,18 @@ async function cacheFirstStatic(request) {
     await cache.put(request, response.clone());
   }
   return response;
+}
+
+async function networkFirstStatic(request) {
+  const cache = await caches.open(CACHE_NAME);
+  try {
+    const response = await fetch(request, { cache: "no-store" });
+    if (response && response.ok) {
+      await cache.put(request, response.clone());
+    }
+    return response;
+  } catch {
+    return (await cache.match(request, { ignoreSearch: true }))
+      || Response.error();
+  }
 }

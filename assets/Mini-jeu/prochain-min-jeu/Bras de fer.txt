@@ -1,4 +1,0 @@
-idée : faire un jeu de bras de fer, avec un bouton et le but est d'appuyer le plus de fois possible sur le bouton en spammant
-
-mettre des niveaux de difficulté en calculant les spamm médiaux
-

@@ -12,6 +12,10 @@ const SLOT_MACHINE_SYMBOLS = ["Grodor", "Po", "Crane", "Bourse-vide"];
 const SLOT_MACHINE_FRAME_MS = 125;
 const BONNETEAU_ASSET_PATH = "assets/Mini-jeu/Bonneteau";
 const BONNETEAU_SYMBOLS = ["grodor", "po", "crane", "bourse"];
+const CHEST_DODGE_ASSET_PATH = "assets/Mini-jeu/coffre-esquive";
+const CHEST_DODGE_ROUNDS = 3;
+const CHEST_DODGE_WINDOW_MS = 820;
+const CHEST_DODGE_BURST_MS = 190;
 const ARM_WRESTLE_ASSET_PATH = "assets/Mini-jeu/bras-de-fer";
 const ARM_WRESTLE_DURATION_MS = 5000;
 const ARM_WRESTLE_TICK_MS = 120;
@@ -128,6 +132,8 @@ const state = {
 };
 
 let shopPanelOpen = false;
+let shopPanelMode = "upgrades";
+let selectedSaleItems = new Set();
 let statsPanelOpen = false;
 let statsPanelView = "stats";
 let villageActionTimer = null;
@@ -238,6 +244,8 @@ let dungeonEffectPoseTimer = null;
 let cellOpenTimer = null;
 let coinFlipAnimationTimers = [];
 let slotMachineAnimationTimers = [];
+let chestDodgeTimer = null;
+let chestDodgeBurstTimer = null;
 let armWrestleInterval = null;
 let armWrestlePressTimer = null;
 let armWrestleResultTimer = null;
@@ -270,19 +278,17 @@ document.addEventListener("click", (event) => {
 
 document.addEventListener("click", dismissWinBannerOnFirstClick, true);
 
-document.addEventListener("mousemove", previewDungeonDoorWalkFromPointer);
-
 document.querySelectorAll(".door").forEach((door) => {
-  door.addEventListener("pointerenter", previewDungeonDoorWalk);
-  door.addEventListener("pointerleave", stopDungeonDoorWalkPreview);
-  door.addEventListener("mouseover", previewDungeonDoorWalk);
-  door.addEventListener("mouseout", stopDungeonDoorWalkPreview);
+  door.addEventListener("pointerenter", previewDungeonDoorOpen);
+  door.addEventListener("pointerleave", stopDungeonDoorPreview);
+  door.addEventListener("mouseover", previewDungeonDoorOpen);
+  door.addEventListener("mouseout", stopDungeonDoorPreview);
 });
 
 addClick("bank-building", () => delayVillageAction("bank", depositGold));
 addClick("tavern-building", () => delayVillageAction("tavern", goToCellFromTavern));
 addClick("shop-building", () => delayVillageAction("shop", openShop));
-addClick("sell-building", () => delayVillageAction("sell", sellStuffAtVillage));
+addClick("sell-building", () => delayVillageAction("sell", openSellPanel));
 addClick("close-shop", closeShop);
 addClick("stats-building", () => delayVillageAction("stats", openStatsPanel));
 addClick("close-stats", closeStatsPanel);
@@ -483,6 +489,7 @@ function openSignupPanel() {
   const overlay = $("account-signup-overlay");
   if (!overlay) return;
   window.clearTimeout(cloudState.transferResumeTimer);
+  clearSignupFields();
   setSignupStatus("Création de compte", "neutral");
   overlay.hidden = false;
   $("signup-alias")?.focus();
@@ -491,6 +498,13 @@ function openSignupPanel() {
 function closeSignupPanel() {
   const overlay = $("account-signup-overlay");
   if (overlay) overlay.hidden = true;
+}
+
+function clearSignupFields() {
+  ["signup-alias", "signup-email", "signup-password"].forEach((id) => {
+    const input = $(id);
+    if (input) input.value = "";
+  });
 }
 
 function isAccountPanelOpen() {
@@ -589,12 +603,38 @@ async function setupCloudAuth() {
   }
 
   if (data.session?.user) {
-    await applySession(data.session);
+    const { data: userData, error: userError } = await supabaseClient.auth.getUser();
+    if (userError || !userData.user) {
+      await clearInvalidStoredSession();
+      return;
+    }
+    await applySession({ ...data.session, user: userData.user });
   }
 
   supabaseClient.auth.onAuthStateChange((_event, session) => {
     applySession(session);
   });
+}
+
+async function clearInvalidStoredSession() {
+  try {
+    await supabaseClient.auth.signOut({ scope: "local" });
+  } catch {
+    try {
+      await supabaseClient.auth.signOut();
+    } catch {
+      // La session locale peut deja etre invalide cote Supabase.
+    }
+  }
+  cloudState.user = null;
+  cloudState.profile = null;
+  cloudState.loaded = false;
+  resetGuestProgress();
+  updateAccountUi();
+  setAccountStatus("Session supprimée", "bad");
+  setAccountHelp("Ce compte n'existe plus côté Supabase. Les champs de création ont été vidés.");
+  clearSignupFields();
+  render();
 }
 
 async function applySession(session) {
@@ -825,9 +865,11 @@ async function signUpAccount() {
   if (!data.session) {
     setSignupStatus("Compte créé. Vérifie ta boîte mail et tes spams pour confirmer.", "good");
     setAccountHelp("Après confirmation, reconnecte-toi ici : ta progression visiteur restera transférable depuis ce navigateur.");
+    clearSignupFields();
   } else {
     cloudState.transferMessage = "Compte créé : progression visiteur transférée.";
     setSignupStatus("Compte créé. Progression visiteur transférée.", "good");
+    clearSignupFields();
   }
 }
 
@@ -1687,6 +1729,8 @@ function openShop() {
   closeInventory();
   closeAccountPopover();
   shopPanelOpen = true;
+  shopPanelMode = "upgrades";
+  selectedSaleItems.clear();
   statsPanelOpen = false;
   state.hodorPose = "walk";
   state.showWinBanner = false;
@@ -1696,9 +1740,26 @@ function openShop() {
   render();
 }
 
+function openSellPanel() {
+  if (state.screen !== "village") return;
+  closeInventory();
+  closeAccountPopover();
+  shopPanelOpen = true;
+  shopPanelMode = "sell";
+  selectedSaleItems.clear();
+  statsPanelOpen = false;
+  state.hodorPose = "walk";
+  state.showWinBanner = false;
+  state.villageLocation = "Comptoir de revente";
+  setStory("Le revendeur sort une balance, deux sacs et une morale très flexible. Choisis ce que Grodor abandonne.");
+  renderShop();
+  render();
+}
+
 function closeShop() {
   if (!shopPanelOpen) return;
   shopPanelOpen = false;
+  selectedSaleItems.clear();
   state.villageLocation = "Village";
   render();
 }
@@ -1710,6 +1771,7 @@ function openStatsPanel() {
   statsPanelOpen = true;
   statsPanelView = "stats";
   shopPanelOpen = false;
+  selectedSaleItems.clear();
   state.showWinBanner = false;
   state.villageLocation = "Panneau d'affichage";
   setStory("Le panneau d'affichage liste tes exploits avec une ponctuation humiliante.");
@@ -1732,6 +1794,7 @@ function closeVillagePanels() {
   const hadPanel = shopPanelOpen || statsPanelOpen;
   shopPanelOpen = false;
   statsPanelOpen = false;
+  selectedSaleItems.clear();
   if (hadPanel) render();
 }
 
@@ -1762,7 +1825,8 @@ function chooseDoor(door) {
   if (state.runEnded || state.screen !== "dungeon" || state.inputLocked) return;
 
   clearDungeonEffectPoseTimer();
-  stopDungeonDoorWalkPreview();
+  stopDungeonDoorPreview();
+  $("scene")?.classList.add("is-door-walking");
   setDungeonDoorTarget(door.dataset.door);
   door.blur();
   flashDoor(door);
@@ -1776,39 +1840,17 @@ function chooseDoor(door) {
   ]));
   render();
 
-  window.setTimeout(() => resolveDoorChoice(), 2000);
+  window.setTimeout(() => resolveDoorChoice(), 2450);
 }
 
-function previewDungeonDoorWalk(event) {
+function previewDungeonDoorOpen(event) {
   if (state.screen !== "dungeon" || state.inputLocked || dungeonEffectPoseTimer || event.currentTarget.disabled) return;
-  setDungeonDoorTarget(event.currentTarget.dataset.door);
-  state.hodorPose = "walk";
-  renderHodor();
+  setDungeonDoorPreviewTarget(event.currentTarget.dataset.door);
 }
 
-function previewDungeonDoorWalkFromPointer(event) {
+function stopDungeonDoorPreview() {
   if (state.screen !== "dungeon" || state.inputLocked || dungeonEffectPoseTimer) return;
-  const door = event.target.closest(".door");
-  if (door && !door.disabled) {
-    setDungeonDoorTarget(door.dataset.door);
-    if (state.hodorPose !== "walk") {
-      state.hodorPose = "walk";
-      renderHodor();
-    }
-    return;
-  }
-  if (state.hodorPose === "walk") {
-    setDungeonDoorTarget(null);
-    state.hodorPose = "question";
-    renderHodor();
-  }
-}
-
-function stopDungeonDoorWalkPreview() {
-  if (state.screen !== "dungeon" || state.inputLocked || dungeonEffectPoseTimer) return;
-  setDungeonDoorTarget(null);
-  state.hodorPose = "question";
-  renderHodor();
+  setDungeonDoorPreviewTarget(null);
 }
 
 function resolveDoorChoice() {
@@ -1844,6 +1886,7 @@ function resolveDoorChoice() {
 }
 
 function startMiniGame(type) {
+  clearChestDodgeTimers();
   clearArmWrestle();
   const configs = {
     double: {
@@ -1896,6 +1939,35 @@ function startMiniGame(type) {
   return "Le donjon ouvre un petit jeu de hasard. Grodor sent que son avenir vient de devenir cliquable.";
 }
 
+function startGoldChestMiniGame(mode, amount) {
+  const safeAmount = Math.max(0, Math.floor(Number(amount || 0)));
+  if (mode === "loss" && safeAmount <= 0) {
+    return "Vous avez trouvé un coffre. Il claque des dents, mais la bourse de Grodor est déjà vide.";
+  }
+
+  clearChestDodgeTimers();
+  clearArmWrestle();
+  state.miniGamesEncountered += 1;
+  state.miniGame = {
+    type: "chest",
+    title: "",
+    phase: "open",
+    mode,
+    amount: safeAmount,
+    round: 0,
+    totalRounds: CHEST_DODGE_ROUNDS,
+    activeSlot: null,
+    promptState: "ok",
+    image: `${CHEST_DODGE_ASSET_PATH}/coffre_open.webp`,
+    text: "",
+    outcome: "",
+    outcomeTone: "neutral",
+    actions: [],
+  };
+  preloadChestDodgeAssets();
+  return "Vous avez trouvé un coffre.";
+}
+
 function resolveMiniGame(action) {
   if (!state.miniGame || state.screen !== "dungeon") return;
 
@@ -1914,6 +1986,11 @@ function resolveMiniGame(action) {
     return;
   }
 
+  if (state.miniGame.type === "chest") {
+    resolveChestDodgeAction(action);
+    return;
+  }
+
   if (state.miniGame.type === "arm") {
     resolveArmWrestleAction(action);
   }
@@ -1924,6 +2001,7 @@ function completeMiniGame(outcome, tone) {
 
   clearCoinFlipAnimation();
   clearSlotMachineAnimation();
+  clearChestDodgeTimers();
   clearArmWrestle();
   state.miniGame = null;
   suffix = completeDungeonStep();
@@ -2160,6 +2238,134 @@ function resolveBonneteauAction(action) {
   }
 }
 
+function preloadChestDodgeAssets() {
+  [
+    "coffre_open.webp",
+    "coffre_esquive.webp",
+    "coffre_open-gagner.webp",
+    "coffre_esquive-gagner.webp",
+    "coffre_esquive-perdu.webp",
+    ...[1, 2, 3, 4, 5, 6].flatMap((slot) => [`esquive-${slot}-ok.png`, `esquive-${slot}-eclate.png`]),
+  ].forEach((file) => {
+    const image = new Image();
+    image.src = `${CHEST_DODGE_ASSET_PATH}/${file}`;
+  });
+}
+
+function resolveChestDodgeAction(action) {
+  const miniGame = state.miniGame;
+  if (!miniGame || miniGame.type !== "chest") return;
+
+  if (action === "chest-open" && miniGame.phase === "open") {
+    startChestDodgeRound(miniGame);
+    return;
+  }
+
+  if (action === "chest-dodge-hit" && miniGame.phase === "dodge" && miniGame.promptState === "ok") {
+    clearChestDodgeRoundTimer();
+    miniGame.promptState = "eclate";
+    miniGame.round += 1;
+    render();
+    chestDodgeBurstTimer = window.setTimeout(() => {
+      if (!state.miniGame || state.miniGame !== miniGame || miniGame.phase !== "dodge") return;
+      if (miniGame.round >= miniGame.totalRounds) {
+        settleChestDodge(miniGame, true);
+      } else {
+        startChestDodgeRound(miniGame);
+      }
+    }, CHEST_DODGE_BURST_MS);
+    return;
+  }
+
+  if (action === "chest-continue" && miniGame.phase === "result") {
+    completeMiniGame(miniGame.outcome, miniGame.outcomeTone);
+  }
+}
+
+function startChestDodgeRound(miniGame) {
+  clearChestDodgeTimers();
+  if (!state.miniGame || state.miniGame !== miniGame || miniGame.type !== "chest") return;
+  miniGame.phase = "dodge";
+  miniGame.image = `${CHEST_DODGE_ASSET_PATH}/coffre_esquive.webp`;
+  miniGame.activeSlot = randomInt(1, 6);
+  miniGame.promptState = "ok";
+  miniGame.text = `${miniGame.round + 1}/${miniGame.totalRounds}`;
+  chestDodgeTimer = window.setTimeout(() => {
+    if (!state.miniGame || state.miniGame !== miniGame || miniGame.phase !== "dodge") return;
+    settleChestDodge(miniGame, false);
+  }, CHEST_DODGE_WINDOW_MS);
+  render();
+}
+
+function settleChestDodge(miniGame, won) {
+  if (!state.miniGame || state.miniGame !== miniGame || miniGame.type !== "chest") return;
+
+  clearChestDodgeTimers();
+  const before = snapshotRun();
+  miniGame.phase = "result";
+  miniGame.activeSlot = null;
+  miniGame.promptState = "ok";
+  let displayText = "";
+
+  if (won && miniGame.mode === "gain") {
+    addStat("miniJeuxReussis");
+    miniGame.image = `${CHEST_DODGE_ASSET_PATH}/coffre_open-gagner.webp`;
+    miniGame.outcome = addGold(
+      miniGame.amount,
+      `Vous avez trouvé un coffre. Grodor arrache des pièces au coffre. +${miniGame.amount} PO.`
+    );
+    displayText = "Vous avez trouvé un coffre. Grodor arrache des pièces au coffre.";
+  } else if (won && miniGame.mode === "loss") {
+    addStat("miniJeuxReussis");
+    saveStats();
+    miniGame.image = `${CHEST_DODGE_ASSET_PATH}/coffre_esquive-gagner.webp`;
+    miniGame.outcome = "Vous avez trouvé un coffre. Grodor esquive le coffre mordeur. Perte évitée.";
+    displayText = miniGame.outcome;
+  } else if (miniGame.mode === "gain") {
+    miniGame.image = `${CHEST_DODGE_ASSET_PATH}/coffre_esquive-perdu.webp`;
+    miniGame.outcome = takeDamage(
+      1,
+      "Vous avez trouvé un coffre. Le coffre claque trop vite et mord Grodor. Rien gagné. -1 cœur."
+    );
+    displayText = "Vous avez trouvé un coffre. Le coffre claque trop vite et mord Grodor. Rien gagné.";
+  } else {
+    const loss = Math.min(state.carriedGold, miniGame.amount);
+    state.carriedGold = Math.max(0, state.carriedGold - loss);
+    miniGame.image = `${CHEST_DODGE_ASSET_PATH}/coffre_esquive-perdu.webp`;
+    miniGame.outcome = takeDamage(
+      1,
+      `Vous avez trouvé un coffre. Le coffre avale des pièces et mord Grodor. -${loss} PO. -1 cœur.`
+    );
+    displayText = "Vous avez trouvé un coffre. Le coffre avale des pièces et mord Grodor.";
+  }
+
+  miniGame.outcomeTone = toneFromSnapshot(before);
+  miniGame.text = displayText || miniGame.outcome;
+
+  if (state.screen === "mort") {
+    setStory(miniGame.outcome, "bad");
+    render();
+    return;
+  }
+
+  render();
+}
+
+function clearChestDodgeRoundTimer() {
+  if (chestDodgeTimer) {
+    window.clearTimeout(chestDodgeTimer);
+  }
+  chestDodgeTimer = null;
+}
+
+function clearChestDodgeTimers() {
+  clearChestDodgeRoundTimer();
+  if (chestDodgeBurstTimer) {
+    window.clearTimeout(chestDodgeBurstTimer);
+  }
+  chestDodgeBurstTimer = null;
+}
+
 function resolveArmWrestleAction(action) {
   const miniGame = state.miniGame;
   if (!miniGame || miniGame.type !== "arm") return;
@@ -2359,6 +2565,7 @@ function clearDungeonEffectPoseTimer() {
   }
   dungeonEffectPoseTimer = null;
   setDungeonDoorTarget(null);
+  setDungeonDoorPreviewTarget(null);
   $("scene")?.classList.remove("is-effect-pose");
 }
 
@@ -2368,6 +2575,7 @@ function holdDungeonEffectPoseBriefly() {
 
   const effectPose = state.hodorPose || "question";
   setDungeonDoorTarget(null);
+  setDungeonDoorPreviewTarget(null);
   $("scene")?.classList.add("is-effect-pose");
   dungeonEffectPoseTimer = window.setTimeout(() => {
     dungeonEffectPoseTimer = null;
@@ -2785,7 +2993,9 @@ function flashDoor(door) {
 
 function resetDoorEffects() {
   $("doors").classList.remove("resolving");
+  $("scene")?.classList.remove("is-door-walking");
   setDungeonDoorTarget(null);
+  setDungeonDoorPreviewTarget(null);
   document.querySelectorAll(".door").forEach((door) => {
     door.classList.remove("chosen");
     door.blur();
@@ -2801,6 +3011,15 @@ function setDungeonDoorTarget(doorIndex) {
   scene.classList.remove("door-target-0", "door-target-1", "door-target-2");
   if (doorIndex === "0" || doorIndex === "1" || doorIndex === "2") {
     scene.classList.add(`door-target-${doorIndex}`);
+  }
+}
+
+function setDungeonDoorPreviewTarget(doorIndex) {
+  const scene = $("scene");
+  if (!scene) return;
+  scene.classList.remove("door-preview-target-0", "door-preview-target-1", "door-preview-target-2");
+  if (doorIndex === "0" || doorIndex === "1" || doorIndex === "2") {
+    scene.classList.add(`door-preview-target-${doorIndex}`);
   }
 }
 
@@ -2946,26 +3165,36 @@ function sellStuffAtVillage() {
   if (state.screen !== "village") return;
   state.showWinBanner = false;
   state.villageLocation = "Comptoir de revente";
-  const soldItems = sellInventory();
+  const soldItems = sellSelectedInventory();
   if (soldItems.total) {
     state.carriedGold += soldItems.total;
   }
+  selectedSaleItems.clear();
   setStory(sellStuffText(soldItems), soldItems.total ? "good" : "neutral");
+  renderShop();
   render();
 }
 
-function sellInventory() {
-  if (!state.inventory.length) {
+function sellSelectedInventory() {
+  const selectedItems = state.inventory.filter((item) => selectedSaleItems.has(item));
+  if (!selectedItems.length) {
     return { total: 0, details: [] };
   }
 
-  const details = state.inventory.map((item) => ({
+  const details = selectedItems.map((item) => ({
     item,
     value: itemSaleValues[item] ?? 1,
   }));
   const total = details.reduce((sum, entry) => sum + entry.value, 0);
-  state.inventory = [];
+  details.forEach((entry) => applySoldItemEffect(entry.item));
+  state.inventory = state.inventory.filter((item) => !selectedSaleItems.has(item));
   return { total, details };
+}
+
+function applySoldItemEffect(item) {
+  if (item !== "Slip de Guerre") return;
+  state.maxLife = Math.max(START_LIFE, state.maxLife - 1);
+  state.life = Math.min(state.life, state.maxLife);
 }
 
 function bankDepositText(deposited) {
@@ -3271,6 +3500,24 @@ function debugClearStuff() {
 function renderShop() {
   const grid = $("upgrade-grid");
   grid.textContent = "";
+  grid.classList.toggle("is-sell-grid", shopPanelMode === "sell");
+
+  const header = document.querySelector("#shop-panel .shop-header div");
+  if (header) {
+    header.innerHTML = "";
+    const eyebrow = document.createElement("span");
+    const title = document.createElement("strong");
+    eyebrow.textContent = shopPanelMode === "sell" ? "Comptoir de revente" : "Échoppe Douteuse";
+    title.textContent = shopPanelMode === "sell"
+      ? "Choisis les objets à vendre"
+      : "Améliorations permanentes, résultats discutables";
+    header.append(eyebrow, title);
+  }
+
+  if (shopPanelMode === "sell") {
+    renderSellPanel(grid);
+    return;
+  }
 
   Object.entries(upgradeDefinitions).forEach(([id, upgrade]) => {
     const level = upgradeLevel(id);
@@ -3296,6 +3543,84 @@ function renderShop() {
     card.append(title, meta, desc, button);
     grid.appendChild(card);
   });
+}
+
+function renderSellPanel(grid) {
+  if (!state.inventory.length) {
+    const empty = document.createElement("article");
+    empty.className = "sell-empty";
+    empty.textContent = "Sac vide. Le revendeur range déjà sa calculette avec mépris.";
+    grid.appendChild(empty);
+    return;
+  }
+
+  state.inventory.forEach((item) => {
+    const value = itemSaleValues[item] ?? 1;
+    const selected = selectedSaleItems.has(item);
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "sell-item-card";
+    card.classList.toggle("is-selected", selected);
+    card.setAttribute("aria-pressed", String(selected));
+    card.dataset.saleItem = item;
+
+    const image = document.createElement("img");
+    image.src = inventoryIconPaths[item] || "";
+    image.alt = "";
+
+    const text = document.createElement("span");
+    const name = document.createElement("strong");
+    const price = document.createElement("small");
+    name.textContent = item;
+    price.textContent = `${value} PO`;
+    text.append(name, price);
+
+    card.append(image, text);
+    card.addEventListener("click", () => toggleSaleItem(item));
+    grid.appendChild(card);
+  });
+
+  const selectedDetails = state.inventory
+    .filter((item) => selectedSaleItems.has(item))
+    .map((item) => ({ item, value: itemSaleValues[item] ?? 1 }));
+  const selectedTotal = selectedDetails.reduce((sum, entry) => sum + entry.value, 0);
+
+  const actions = document.createElement("div");
+  actions.className = "sell-actions";
+
+  const summary = document.createElement("span");
+  summary.textContent = `${selectedDetails.length} objet${selectedDetails.length > 1 ? "s" : ""} sélectionné${selectedDetails.length > 1 ? "s" : ""} - ${selectedTotal} PO`;
+
+  const selectAll = document.createElement("button");
+  selectAll.type = "button";
+  selectAll.textContent = selectedDetails.length === state.inventory.length ? "Tout désélectionner" : "Tout sélectionner";
+  selectAll.addEventListener("click", () => {
+    if (selectedSaleItems.size === state.inventory.length) {
+      selectedSaleItems.clear();
+    } else {
+      selectedSaleItems = new Set(state.inventory);
+    }
+    renderShop();
+  });
+
+  const confirm = document.createElement("button");
+  confirm.type = "button";
+  confirm.className = "sell-confirm";
+  confirm.textContent = selectedTotal ? `Vendre - ${selectedTotal} PO` : "Vendre";
+  confirm.disabled = !selectedDetails.length;
+  confirm.addEventListener("click", sellStuffAtVillage);
+
+  actions.append(summary, selectAll, confirm);
+  grid.appendChild(actions);
+}
+
+function toggleSaleItem(item) {
+  if (selectedSaleItems.has(item)) {
+    selectedSaleItems.delete(item);
+  } else {
+    selectedSaleItems.add(item);
+  }
+  renderShop();
 }
 
 function addItem(item, text) {
@@ -3346,9 +3671,8 @@ function renderInventory() {
   const inventory = $("inventory");
   const toggle = $("inventory-toggle");
   inventory.textContent = "";
-  const total = state.inventory.length + Object.values(state.upgrades).filter((level) => level > 0).length;
   if (toggle) {
-    toggle.classList.toggle("has-items", total > 0);
+    toggle.classList.toggle("has-items", state.inventory.length > 0);
   }
 
   if (!state.inventory.length) {
@@ -3565,12 +3889,14 @@ function renderMiniGame() {
   panel.classList.toggle("is-coin-flip-panel", miniGame?.type === "double");
   panel.classList.toggle("is-slot-machine-panel", miniGame?.type === "slots");
   panel.classList.toggle("is-bonneteau-panel", miniGame?.type === "cards");
+  panel.classList.toggle("is-chest-dodge-panel", miniGame?.type === "chest");
   panel.classList.toggle("is-arm-wrestle-panel", miniGame?.type === "arm");
   panel.dataset.miniGamePhase = miniGame?.phase || "";
   if (!miniGame) {
     display.classList.remove("is-coin-flip");
     display.classList.remove("is-slot-machine");
     display.classList.remove("is-bonneteau");
+    display.classList.remove("is-chest-dodge");
     display.classList.remove("is-arm-wrestle");
     display.textContent = "";
     actions.textContent = "";
@@ -3600,6 +3926,11 @@ function renderMiniGame() {
     return;
   }
 
+  if (miniGame.type === "chest") {
+    renderChestDodgeMiniGame(miniGame, display, actions);
+    return;
+  }
+
   if (miniGame.type === "arm") {
     renderArmWrestleMiniGame(miniGame, display, actions);
     return;
@@ -3608,6 +3939,7 @@ function renderMiniGame() {
   display.classList.remove("is-coin-flip");
   display.classList.remove("is-slot-machine");
   display.classList.remove("is-bonneteau");
+  display.classList.remove("is-chest-dodge");
   display.classList.remove("is-arm-wrestle");
   (miniGame.display || []).forEach((value) => {
     const tile = document.createElement("span");
@@ -3627,6 +3959,7 @@ function renderMiniGame() {
 }
 
 function renderCoinFlipMiniGame(miniGame, display, actions) {
+  display.classList.remove("is-slot-machine", "is-bonneteau", "is-chest-dodge", "is-arm-wrestle");
   display.classList.add("is-coin-flip");
 
   const image = document.createElement("img");
@@ -3682,7 +4015,7 @@ function appendMiniGameButton(actions, id, label) {
 }
 
 function renderSlotMachineMiniGame(miniGame, display, actions) {
-  display.classList.remove("is-coin-flip");
+  display.classList.remove("is-coin-flip", "is-bonneteau", "is-chest-dodge", "is-arm-wrestle");
   display.classList.add("is-slot-machine");
 
   const machine = document.createElement("img");
@@ -3715,7 +4048,7 @@ function renderSlotMachineMiniGame(miniGame, display, actions) {
 }
 
 function renderBonneteauMiniGame(miniGame, display, actions) {
-  display.classList.remove("is-coin-flip", "is-slot-machine");
+  display.classList.remove("is-coin-flip", "is-slot-machine", "is-chest-dodge", "is-arm-wrestle");
   display.classList.add("is-bonneteau");
 
   const scene = document.createElement("img");
@@ -3750,8 +4083,45 @@ function renderBonneteauMiniGame(miniGame, display, actions) {
   }
 }
 
+function renderChestDodgeMiniGame(miniGame, display, actions) {
+  display.classList.remove("is-coin-flip", "is-slot-machine", "is-bonneteau", "is-arm-wrestle");
+  display.classList.add("is-chest-dodge");
+
+  const scene = document.createElement("img");
+  scene.className = "chest-dodge-scene";
+  scene.src = miniGame.image;
+  scene.alt = miniGame.phase === "result"
+    ? "Résultat du coffre esquive."
+    : "Grodor face au coffre du donjon.";
+  display.appendChild(scene);
+
+  if (miniGame.phase === "open") {
+    appendMiniGameButton(actions, "chest-open", "Ouvrir");
+    return;
+  }
+
+  if (miniGame.phase === "dodge" && miniGame.activeSlot) {
+    const target = document.createElement("button");
+    target.type = "button";
+    target.className = `chest-dodge-target is-slot-${miniGame.activeSlot}`;
+    target.dataset.miniGameAction = "chest-dodge-hit";
+    target.setAttribute("aria-label", `Esquive ${miniGame.round + 1}`);
+
+    const targetImage = document.createElement("img");
+    targetImage.src = `${CHEST_DODGE_ASSET_PATH}/esquive-${miniGame.activeSlot}-${miniGame.promptState}.png`;
+    targetImage.alt = "";
+    target.appendChild(targetImage);
+    display.appendChild(target);
+    return;
+  }
+
+  if (miniGame.phase === "result") {
+    appendMiniGameButton(actions, "chest-continue", "Continuer");
+  }
+}
+
 function renderArmWrestleMiniGame(miniGame, display, actions) {
-  display.classList.remove("is-coin-flip", "is-slot-machine", "is-bonneteau");
+  display.classList.remove("is-coin-flip", "is-slot-machine", "is-bonneteau", "is-chest-dodge");
   display.classList.add("is-arm-wrestle");
 
   const scene = document.createElement("img");

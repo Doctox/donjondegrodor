@@ -4426,9 +4426,120 @@ h1 {
   gap: 12px;
 }
 
+.scene.is-village .upgrade-grid.is-sell-grid {
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  align-items: stretch;
+}
+
 .scene.is-village .upgrade-card {
   border-color: rgba(244, 234, 214, 0.17);
   background: rgba(48, 39, 25, 0.78);
+}
+
+.sell-item-card {
+  min-height: 92px;
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(244, 234, 214, 0.16);
+  border-radius: 8px;
+  background: rgba(48, 39, 25, 0.78);
+  padding: 10px;
+  color: var(--ink);
+  font-family: Arial, sans-serif;
+  text-align: left;
+}
+
+.sell-item-card:hover,
+.sell-item-card.is-selected {
+  border-color: rgba(216, 170, 61, 0.72);
+  background: rgba(84, 61, 33, 0.9);
+}
+
+.sell-item-card.is-selected {
+  box-shadow: inset 0 0 0 2px rgba(216, 170, 61, 0.28);
+}
+
+.sell-item-card img {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  justify-self: center;
+  filter: drop-shadow(0 5px 8px rgba(0, 0, 0, 0.48));
+}
+
+.sell-item-card span {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.sell-item-card strong,
+.sell-item-card small {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.sell-item-card strong {
+  font-size: 0.86rem;
+  line-height: 1.08;
+}
+
+.sell-item-card small {
+  color: var(--gold);
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.sell-actions {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(216, 170, 61, 0.28);
+  border-radius: 8px;
+  background: rgba(18, 15, 10, 0.72);
+  padding: 10px;
+  font-family: Arial, sans-serif;
+}
+
+.sell-actions span {
+  min-width: 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.sell-actions button {
+  min-height: 38px;
+  border: 1px solid rgba(216, 170, 61, 0.46);
+  border-radius: 8px;
+  background: rgba(79, 48, 31, 0.88);
+  padding: 8px 11px;
+  color: var(--ink);
+  font-family: Arial, sans-serif;
+  font-weight: 900;
+}
+
+.sell-actions button:disabled {
+  opacity: 0.48;
+}
+
+.sell-actions .sell-confirm:not(:disabled) {
+  background: #7b472c;
+}
+
+.sell-empty {
+  grid-column: 1 / -1;
+  border: 1px solid rgba(244, 234, 214, 0.16);
+  border-radius: 8px;
+  background: rgba(48, 39, 25, 0.72);
+  padding: 16px;
+  color: var(--muted);
+  font-family: Arial, sans-serif;
+  font-weight: 800;
 }
 
 .stats-panel {
@@ -5564,7 +5675,25 @@ h1 {
   display: none;
 }
 
-.scene.is-dungeon:not(.is-combat).door-target-0 .dungeon-stage {
+.scene.is-dungeon:not(.is-combat).door-preview-target-0 .dungeon-stage {
+  background:
+    linear-gradient(180deg, rgba(5, 4, 4, 0.04), rgba(5, 4, 4, 0.1)),
+    url("assets/Donjon/Donjon-interieur-porte-1.webp") center / 100% 100% no-repeat;
+}
+
+.scene.is-dungeon:not(.is-combat).door-preview-target-1 .dungeon-stage {
+  background:
+    linear-gradient(180deg, rgba(5, 4, 4, 0.04), rgba(5, 4, 4, 0.1)),
+    url("assets/Donjon/Donjon-interieur-porte-2.webp") center / 100% 100% no-repeat;
+}
+
+.scene.is-dungeon:not(.is-combat).door-preview-target-2 .dungeon-stage {
+  background:
+    linear-gradient(180deg, rgba(5, 4, 4, 0.04), rgba(5, 4, 4, 0.1)),
+    url("assets/Donjon/Donjon-interieur-porte-3.webp") center / 100% 100% no-repeat;
+}
+
+.scene.is-dungeon:not(.is-combat).is-door-walking.door-target-0 .dungeon-stage {
   --dungeon-hodor-x: var(--dungeon-hodor-door-0-x);
   --dungeon-hodor-y: var(--dungeon-hodor-door-0-y);
   background:
@@ -5572,7 +5701,7 @@ h1 {
     url("assets/Donjon/Donjon-interieur-porte-1.webp") center / 100% 100% no-repeat;
 }
 
-.scene.is-dungeon:not(.is-combat).door-target-1 .dungeon-stage {
+.scene.is-dungeon:not(.is-combat).is-door-walking.door-target-1 .dungeon-stage {
   --dungeon-hodor-x: var(--dungeon-hodor-door-1-x);
   --dungeon-hodor-y: var(--dungeon-hodor-door-1-y);
   background:
@@ -5580,7 +5709,7 @@ h1 {
     url("assets/Donjon/Donjon-interieur-porte-2.webp") center / 100% 100% no-repeat;
 }
 
-.scene.is-dungeon:not(.is-combat).door-target-2 .dungeon-stage {
+.scene.is-dungeon:not(.is-combat).is-door-walking.door-target-2 .dungeon-stage {
   --dungeon-hodor-x: var(--dungeon-hodor-door-2-x);
   --dungeon-hodor-y: var(--dungeon-hodor-door-2-y);
   background:
@@ -5593,9 +5722,9 @@ h1 {
   --dungeon-hodor-y: var(--dungeon-hodor-base-y);
 }
 
-.scene.is-dungeon:not(.is-combat).door-target-0 .hodor-sprite,
-.scene.is-dungeon:not(.is-combat).door-target-1 .hodor-sprite,
-.scene.is-dungeon:not(.is-combat).door-target-2 .hodor-sprite {
+.scene.is-dungeon:not(.is-combat).is-door-walking.door-target-0 .hodor-sprite,
+.scene.is-dungeon:not(.is-combat).is-door-walking.door-target-1 .hodor-sprite,
+.scene.is-dungeon:not(.is-combat).is-door-walking.door-target-2 .hodor-sprite {
   filter: drop-shadow(0 28px 22px rgba(0, 0, 0, 0.5)) brightness(1.04);
 }
 
@@ -5607,16 +5736,16 @@ h1 {
   filter: drop-shadow(0 28px 22px rgba(0, 0, 0, 0.5));
 }
 
-.scene.is-dungeon:not(.is-combat).door-target-0 .hodor-sprite {
-  animation: hodorPathDoorOne 1150ms cubic-bezier(0.22, 0.72, 0.24, 1) both;
+.scene.is-dungeon:not(.is-combat).is-door-walking.door-target-0 .hodor-sprite {
+  animation: hodorPathDoorOne 2050ms linear both;
 }
 
-.scene.is-dungeon:not(.is-combat).door-target-1 .hodor-sprite {
-  animation: hodorPathDoorTwo 1350ms cubic-bezier(0.22, 0.72, 0.24, 1) both;
+.scene.is-dungeon:not(.is-combat).is-door-walking.door-target-1 .hodor-sprite {
+  animation: hodorPathDoorTwo 2250ms linear both;
 }
 
-.scene.is-dungeon:not(.is-combat).door-target-2 .hodor-sprite {
-  animation: hodorPathDoorThree 1550ms cubic-bezier(0.22, 0.72, 0.24, 1) both;
+.scene.is-dungeon:not(.is-combat).is-door-walking.door-target-2 .hodor-sprite {
+  animation: hodorPathDoorThree 2400ms linear both;
 }
 
 @keyframes hodorPathDoorOne {
@@ -5626,28 +5755,46 @@ h1 {
     transform: translate(-50%, -50%);
   }
 
+  12% {
+    left: 44.5%;
+    top: 10.9%;
+    transform: translate(-50%, -50%) translateY(-3px);
+  }
+
   24% {
-    left: 38.5%;
-    top: 11.2%;
-    transform: translate(-50%, -50%) translateY(-2px);
-  }
-
-  48% {
-    left: 36.5%;
-    top: 24.8%;
+    left: 34.5%;
+    top: 11.7%;
     transform: translate(-50%, -50%);
   }
 
-  68% {
-    left: 45%;
-    top: 30.1%;
-    transform: translate(-50%, -50%) translateY(-2px);
+  38% {
+    left: 33.2%;
+    top: 18.8%;
+    transform: translate(-50%, -50%) translateY(-3px);
   }
 
-  84% {
-    left: 58%;
+  52% {
+    left: 35.7%;
+    top: 26.2%;
+    transform: translate(-50%, -50%);
+  }
+
+  64% {
+    left: 43.8%;
+    top: 30.2%;
+    transform: translate(-50%, -50%) translateY(-3px);
+  }
+
+  78% {
+    left: 56.5%;
     top: 30.1%;
     transform: translate(-50%, -50%);
+  }
+
+  90% {
+    left: 65.2%;
+    top: 30%;
+    transform: translate(-50%, -50%) translateY(-2px);
   }
 
   100% {
@@ -5664,27 +5811,45 @@ h1 {
     transform: translate(-50%, -50%);
   }
 
-  16% {
-    left: 38.5%;
-    top: 11.2%;
-    transform: translate(-50%, -50%) translateY(-2px);
+  10% {
+    left: 44.5%;
+    top: 10.9%;
+    transform: translate(-50%, -50%) translateY(-3px);
   }
 
-  34% {
-    left: 34%;
-    top: 30.5%;
-    transform: translate(-50%, -50%) translateY(-2px);
-  }
-
-  58% {
-    left: 30%;
-    top: 46.5%;
+  20% {
+    left: 34.5%;
+    top: 11.7%;
     transform: translate(-50%, -50%);
   }
 
-  78% {
-    left: 46%;
-    top: 55.5%;
+  34% {
+    left: 33.2%;
+    top: 23.8%;
+    transform: translate(-50%, -50%) translateY(-3px);
+  }
+
+  48% {
+    left: 30.8%;
+    top: 38.6%;
+    transform: translate(-50%, -50%);
+  }
+
+  62% {
+    left: 34.8%;
+    top: 50.6%;
+    transform: translate(-50%, -50%) translateY(-3px);
+  }
+
+  76% {
+    left: 48.5%;
+    top: 52.1%;
+    transform: translate(-50%, -50%);
+  }
+
+  90% {
+    left: 62%;
+    top: 51.4%;
     transform: translate(-50%, -50%) translateY(-2px);
   }
 
@@ -5702,33 +5867,51 @@ h1 {
     transform: translate(-50%, -50%);
   }
 
-  12% {
-    left: 38.5%;
-    top: 11.2%;
-    transform: translate(-50%, -50%) translateY(-2px);
+  8% {
+    left: 44.5%;
+    top: 10.9%;
+    transform: translate(-50%, -50%) translateY(-3px);
   }
 
-  28% {
-    left: 34%;
-    top: 36%;
-    transform: translate(-50%, -50%) translateY(-2px);
-  }
-
-  46% {
-    left: 30%;
-    top: 52%;
+  18% {
+    left: 34.5%;
+    top: 11.7%;
     transform: translate(-50%, -50%);
   }
 
-  68% {
-    left: 30%;
-    top: 70%;
-    transform: translate(-50%, -50%) translateY(-2px);
+  31% {
+    left: 32.7%;
+    top: 27.8%;
+    transform: translate(-50%, -50%) translateY(-3px);
+  }
+
+  44% {
+    left: 30.5%;
+    top: 43.5%;
+    transform: translate(-50%, -50%);
+  }
+
+  58% {
+    left: 30.2%;
+    top: 58.8%;
+    transform: translate(-50%, -50%) translateY(-3px);
+  }
+
+  70% {
+    left: 31.8%;
+    top: 72.8%;
+    transform: translate(-50%, -50%);
   }
 
   84% {
-    left: 48%;
-    top: 81%;
+    left: 49.5%;
+    top: 80.7%;
+    transform: translate(-50%, -50%) translateY(-3px);
+  }
+
+  93% {
+    left: 62.5%;
+    top: 78.9%;
     transform: translate(-50%, -50%);
   }
 
@@ -6167,6 +6350,14 @@ h1 {
   margin: 0;
 }
 
+.mini-game-display.is-chest-dodge {
+  position: absolute;
+  inset: 0;
+  display: block;
+  min-height: 0;
+  margin: 0;
+}
+
 .mini-game-panel.is-coin-flip-panel {
   width: min(730px, calc(100% - 28px), calc(88dvh - 22px));
   max-height: none;
@@ -6442,6 +6633,122 @@ h1 {
   outline-offset: 2px;
 }
 
+.mini-game-panel.is-chest-dodge-panel {
+  top: 54%;
+  width: min(560px, calc(100% - 28px), calc((86dvh - 18px) * 1090 / 1365));
+  max-height: none;
+  aspect-ratio: 1090 / 1365;
+  padding: 0;
+  border-color: rgba(216, 170, 61, 0.5);
+  overflow: hidden;
+  background: #17110c;
+}
+
+.mini-game-panel.is-chest-dodge-panel .mini-game-eyebrow,
+.mini-game-panel.is-chest-dodge-panel > strong {
+  display: none;
+}
+
+.mini-game-panel.is-chest-dodge-panel #mini-game-text,
+.mini-game-panel.is-chest-dodge-panel .mini-game-actions {
+  position: absolute;
+  left: clamp(12px, 4%, 24px);
+  right: clamp(12px, 4%, 24px);
+  z-index: 4;
+}
+
+.mini-game-panel.is-chest-dodge-panel #mini-game-text {
+  bottom: clamp(86px, 15%, 116px);
+  margin: 0;
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: rgba(15, 10, 7, 0.78);
+  color: var(--ink);
+  font-size: clamp(0.78rem, 1.6vw, 0.92rem);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.82);
+}
+
+.mini-game-panel.is-chest-dodge-panel #mini-game-text:empty {
+  display: none;
+}
+
+.mini-game-panel.is-chest-dodge-panel .mini-game-actions {
+  bottom: clamp(24px, 5%, 40px);
+}
+
+.chest-dodge-scene {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.chest-dodge-target {
+  position: absolute;
+  z-index: 3;
+  width: clamp(92px, 31%, 168px);
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  filter: drop-shadow(0 12px 14px rgba(0, 0, 0, 0.5));
+  transform: translate(-50%, -50%);
+  touch-action: manipulation;
+}
+
+.chest-dodge-target img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.chest-dodge-target:hover,
+.chest-dodge-target:focus-visible {
+  filter: drop-shadow(0 0 16px rgba(247, 212, 120, 0.52)) drop-shadow(0 12px 14px rgba(0, 0, 0, 0.5));
+  outline: none;
+}
+
+.chest-dodge-target:active {
+  transform: translate(-50%, -50%) scale(0.94);
+}
+
+.chest-dodge-target.is-slot-1 {
+  left: 26%;
+  top: 28%;
+}
+
+.chest-dodge-target.is-slot-2 {
+  left: 50%;
+  top: 23%;
+}
+
+.chest-dodge-target.is-slot-3 {
+  left: 74%;
+  top: 31%;
+}
+
+.chest-dodge-target.is-slot-4 {
+  left: 24%;
+  top: 55%;
+}
+
+.chest-dodge-target.is-slot-5 {
+  left: 51%;
+  top: 50%;
+}
+
+.chest-dodge-target.is-slot-6 {
+  left: 76%;
+  top: 59%;
+}
+
 .mini-game-panel.is-arm-wrestle-panel {
   top: 55%;
   width: min(500px, calc(100% - 28px), calc((78dvh - 8px) * 2 / 3), calc((100dvh - 187px) * 2 / 3));
@@ -6662,6 +6969,26 @@ h1 {
 
   .mini-game-panel.is-bonneteau-panel .mini-game-actions {
     bottom: 10px;
+  }
+
+  .mini-game-panel.is-chest-dodge-panel {
+    top: 53%;
+    width: min(calc(100% - 16px), calc((77dvh - 8px) * 1090 / 1365));
+    padding: 0;
+  }
+
+  .mini-game-panel.is-chest-dodge-panel #mini-game-text {
+    bottom: 76px;
+    padding: 5px 8px;
+    font-size: clamp(0.7rem, 3vw, 0.84rem);
+  }
+
+  .mini-game-panel.is-chest-dodge-panel .mini-game-actions {
+    bottom: 24px;
+  }
+
+  .chest-dodge-target {
+    width: clamp(82px, 33%, 138px);
   }
 
   .mini-game-panel.is-arm-wrestle-panel {
@@ -7265,6 +7592,30 @@ h1 {
   .scene.is-village .upgrade-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 6px;
+  }
+
+  .scene.is-village .upgrade-grid.is-sell-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sell-item-card {
+    min-height: 76px;
+    grid-template-columns: 42px minmax(0, 1fr);
+    gap: 7px;
+    padding: 8px;
+  }
+
+  .sell-item-card img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .sell-item-card strong {
+    font-size: 0.72rem;
+  }
+
+  .sell-actions {
+    grid-template-columns: 1fr;
   }
 
   .scene.is-village .upgrade-card {
