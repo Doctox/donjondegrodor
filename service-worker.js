@@ -1,4 +1,4 @@
-const CACHE_NAME = "grodor-v48-start-card-login-fix";
+const CACHE_NAME = "grodor-v49-start-card-login-polish";
 
 const CORE_ASSETS = [
   "/",
