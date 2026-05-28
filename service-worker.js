@@ -1,4 +1,4 @@
-const CACHE_NAME = "grodor-v44-door-hover-preview";
+const CACHE_NAME = "grodor-v48-start-card-login-fix";
 
 const CORE_ASSETS = [
   "/",
@@ -18,6 +18,9 @@ const CORE_ASSETS = [
   "/assets/icons/grodor-icon-maskable-512.png",
   "/assets/Logo-Grodor.png",
   "/assets/Banniere-Grodor.png",
+  "/assets/Background-Grodor.png",
+  "/assets/Accueil/Background-accueil.webp",
+  "/assets/Accueil/Background-accueil-logo.png",
   "/assets/Donjon/Donjon-accueil.webp",
   "/assets/Donjon/Donjon-interieur.webp",
   "/assets/Donjon/Donjon-interieur-porte-1.webp",

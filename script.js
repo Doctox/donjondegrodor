@@ -190,6 +190,7 @@ const VILLAGE_RETURN_DELAY_MS = 900;
 const VILLAGE_SERVICE_RETURN_DELAY_MS = 4000;
 const CELL_OPEN_DELAY_MS = 650;
 const DUNGEON_EFFECT_VISIBLE_MS = 3000;
+const START_INTRO_EXIT_MS = 520;
 const HODOR_WALK_FRAME_PATHS = [
   `${HODOR_BASE_PATH}/Corps/Marche/marche-1.png`,
   `${HODOR_BASE_PATH}/Corps/Marche/marche-2.png`,
@@ -249,6 +250,7 @@ let chestDodgeBurstTimer = null;
 let armWrestleInterval = null;
 let armWrestlePressTimer = null;
 let armWrestleResultTimer = null;
+let startIntroDone = false;
 
 document.addEventListener("click", (event) => {
   const miniGameAction = event.target.closest("[data-mini-game-action]");
@@ -277,6 +279,15 @@ document.addEventListener("click", (event) => {
 });
 
 document.addEventListener("click", dismissWinBannerOnFirstClick, true);
+
+addClick("start-intro-play", () => finishStartIntro());
+const startIntro = $("start-intro");
+if (startIntro) {
+  startIntro.addEventListener("click", (event) => {
+    if (event.target.closest("button")) return;
+    finishStartIntro();
+  });
+}
 
 document.querySelectorAll(".door").forEach((door) => {
   door.addEventListener("pointerenter", previewDungeonDoorOpen);
@@ -307,6 +318,7 @@ addClick("inventory-close", closeInventory);
 addClick("account-toggle", toggleAccountPopover);
 addClick("account-close", closeAccountPopover);
 addClick("account-open-login", openAccountPanel);
+addClick("account-panel-close", closeAccountPanel);
 addClick("account-settings-logout", signOutAccount);
 addClick("auth-login", signInAccount);
 addClick("auth-signup", openSignupPanel);
@@ -353,6 +365,7 @@ document.addEventListener("click", (event) => {
 
 setupCloudAuth();
 render();
+initStartIntro();
 
 function loadBankGold() {
   try {
@@ -510,6 +523,45 @@ function clearSignupFields() {
 function isAccountPanelOpen() {
   const panel = $("account-panel");
   return Boolean(panel && !panel.hidden);
+}
+
+function initStartIntro() {
+  const intro = $("start-intro");
+  if (!intro) return;
+
+  if (shouldBypassStartIntro()) {
+    finishStartIntro({ instant: true, revealCell: false });
+    return;
+  }
+
+  intro.hidden = false;
+}
+
+function shouldBypassStartIntro() {
+  return state.screen === "dungeon" || state.screen === "combat" || hasActiveRunToSave();
+}
+
+function finishStartIntro(options = {}) {
+  const intro = $("start-intro");
+  if (!intro || startIntroDone) return;
+
+  startIntroDone = true;
+
+  const revealCell = options.revealCell !== false && !shouldBypassStartIntro();
+  if (revealCell) {
+    closeAccountPanel();
+  }
+
+  if (options.instant || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    intro.hidden = true;
+    return;
+  }
+
+  intro.classList.add("is-leaving");
+  window.setTimeout(() => {
+    intro.hidden = true;
+    intro.classList.remove("is-leaving");
+  }, START_INTRO_EXIT_MS);
 }
 
 function authMessage(message) {
@@ -1136,7 +1188,12 @@ function restoreActiveRun(activeRun) {
     "Grodor ouvre les yeux. Quelque part, le donjon appuie sur Start. Tout reprend.",
     "Grodor se réveil. Une voix crie “Action !”. Le donjon reprend la scène.",
   ]));
+  dismissStartIntroForActiveRun();
   return true;
+}
+
+function dismissStartIntroForActiveRun() {
+  finishStartIntro({ instant: true, revealCell: false });
 }
 
 function sanitizeActiveRun(activeRun) {
@@ -4179,19 +4236,14 @@ function render() {
   }
 
   const showsFloor = state.screen === "dungeon" || state.screen === "combat";
-  if (isAccountPanelOpen()) {
-    $("place-label").textContent = "Lieu";
-    $("floor").textContent = "Donjon";
-  } else {
-    $("place-label").textContent = showsFloor ? "Étage" : "Lieu";
-    $("floor").textContent = state.screen === "village" || state.screen === "shop"
-      ? "Village"
-      : state.screen === "cell"
-        ? "Cellule"
-        : state.screen === "mort"
-          ? "Geôles"
-          : state.floor;
-  }
+  $("place-label").textContent = showsFloor ? "Étage" : "Lieu";
+  $("floor").textContent = state.screen === "village" || state.screen === "shop"
+    ? "Village"
+    : state.screen === "cell"
+      ? "Cellule"
+      : state.screen === "mort"
+        ? "Geôles"
+        : state.floor;
   $("carried-gold").textContent = state.carriedGold;
   $("bank-gold").textContent = state.bankGold;
   $("bank-building-gold").textContent = state.bankGold;

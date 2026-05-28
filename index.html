@@ -13,9 +13,14 @@
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/grodor-icon-192.png">
     <link rel="apple-touch-icon" href="assets/icons/grodor-icon-192.png">
-    <link rel="stylesheet" href="styles.css?v=20260528-selective-selling">
+    <link rel="stylesheet" href="styles.css?v=20260528-start-card-login-fix">
   </head>
   <body>
+    <div class="start-intro" id="start-intro" role="dialog" aria-label="Entrée dans Le Donjon de Grodor">
+      <div class="start-intro-vignette" aria-hidden="true"></div>
+      <button class="start-intro-logo" id="start-intro-play" type="button" aria-label="Entrer dans le donjon"></button>
+    </div>
+
     <main class="game-shell">
       <section class="topbar" aria-label="État de la partie">
         <div>
@@ -125,6 +130,7 @@
 
       <section class="scene" id="scene">
         <div class="account-panel" id="account-panel">
+          <button class="account-panel-close" id="account-panel-close" type="button" aria-label="Fermer la connexion">x</button>
           <div class="account-header">
             <p class="account-status" id="account-status">Sauvegarde locale</p>
             <button class="account-visitor" id="auth-visitor" type="button">Visiteur</button>
@@ -334,6 +340,6 @@
     <script src="upgrades.js"></script>
     <script src="supabase-config.js"></script>
     <script src="vendor/supabase-js-v2.js"></script>
-    <script src="script.js?v=20260528-inventory-real-items"></script>
+    <script src="script.js?v=20260528-start-card-login-fix"></script>
   </body>
 </html>
