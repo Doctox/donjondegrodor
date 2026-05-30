@@ -1,14 +1,29 @@
 const eventPool = [
   {
+    weight: 5,
+    run() {
+      if (state.activePact) {
+        return startGoldChestMiniGame("gain", randomInt(2, 5));
+      }
+      return startPactMiniGame();
+    },
+  },
+  {
     weight: 12,
     run() {
       const gold = randomInt(1, 3);
+      if (Math.random() < 0.45) {
+        return addGold(gold, `Tu ouvres un coffre poussiéreux. Pas de piège cette fois, juste de la monnaie. +${gold} PO.`);
+      }
       return startGoldChestMiniGame("gain", gold);
     },
   },
   {
     weight: 9,
     run() {
+      if (Math.random() < 0.40) {
+        return addGold(2, "Tu donnes un grand coup de pied dans un coffre en bois. Il s'ouvre sagement. +2 PO.");
+      }
       return startGoldChestMiniGame("gain", 2);
     },
   },
@@ -118,6 +133,9 @@ const eventPool = [
     weight: 5,
     run() {
       const gold = randomInt(1, 4);
+      if (Math.random() < 0.5) {
+        return addGold(gold, `Un coffre en fer blanc traîne là. Tu le secoues jusqu'a ce que l'or tombe. +${gold} PO.`);
+      }
       return startGoldChestMiniGame("gain", gold);
     },
   },
@@ -190,29 +208,32 @@ const eventPool = [
     weight: 4,
     run() {
       const gold = randomInt(1, 5);
+      if (Math.random() < 0.50) {
+        return addGold(gold, `Tu ouvres une boîte à bijoux abandonnée. +${gold} PO.`);
+      }
       return startGoldChestMiniGame("gain", gold);
     },
   },
   {
-    weight: 2,
+    weight: 7,
     run() {
       return startMiniGame("double");
     },
   },
   {
-    weight: 1,
+    weight: 6,
     run() {
       return startMiniGame("slots");
     },
   },
   {
-    weight: 1,
+    weight: 6,
     run() {
       return startMiniGame("cards");
     },
   },
   {
-    weight: 1,
+    weight: 5,
     run() {
       return startMiniGame("arm");
     },

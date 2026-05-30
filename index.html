@@ -13,15 +13,22 @@
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/grodor-icon-192.png">
     <link rel="apple-touch-icon" href="assets/icons/grodor-icon-192.png">
-    <link rel="stylesheet" href="styles.css?v=20260528-start-card-login-polish">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=20260530-facelift">
   </head>
   <body>
-    <div class="start-intro" id="start-intro" role="dialog" aria-label="Entrée dans Le Donjon de Grodor">
-      <div class="start-intro-vignette" aria-hidden="true"></div>
-      <button class="start-intro-logo" id="start-intro-play" type="button" aria-label="Entrer dans le donjon"></button>
-    </div>
-
     <main class="game-shell">
+      <div class="start-intro" id="start-intro" role="dialog" aria-label="Entrée dans Le Donjon de Grodor">
+        <div class="start-intro-vignette" aria-hidden="true"></div>
+        <div class="start-intro-door is-left"></div>
+        <div class="start-intro-door is-right"></div>
+        <button class="start-intro-logo" id="start-intro-play" type="button" aria-label="Entrer dans le donjon"></button>
+      </div>
+
+
+
       <section class="topbar" aria-label="État de la partie">
         <div>
           <div class="score-strip" aria-label="Progression permanente">
@@ -84,6 +91,21 @@
               <button class="inventory-close" id="account-close" type="button" aria-label="Fermer les paramètres">x</button>
             </div>
             <p class="account-line" id="account-line">Connecté : Visiteur</p>
+            
+            <div class="settings-audio-group" style="margin: 14px 0; padding: 10px 0; border-top: 1px solid rgba(244, 234, 214, 0.12); border-bottom: 1px solid rgba(244, 234, 214, 0.12); text-align: left;">
+              <h4 style="margin: 0 0 10px 0; color: var(--gold); font-family: var(--ui-font); font-size: 0.86rem; text-transform: uppercase; letter-spacing: 0.5px;">Volumes</h4>
+              <div style="margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                <span style="font-size: 0.84rem; color: var(--muted); min-width: 68px;">Musique</span>
+                <input type="range" id="volume-music" min="0" max="100" value="50" style="flex: 1; accent-color: var(--gold); cursor: pointer; height: 6px; border-radius: 3px; background: rgba(0,0,0,0.38);">
+                <span id="volume-music-val" style="font-size: 0.84rem; color: var(--ink); min-width: 32px; text-align: right; font-family: monospace;">50%</span>
+              </div>
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                <span style="font-size: 0.84rem; color: var(--muted); min-width: 68px;">Bruitages</span>
+                <input type="range" id="volume-sfx" min="0" max="100" value="50" style="flex: 1; accent-color: var(--gold); cursor: pointer; height: 6px; border-radius: 3px; background: rgba(0,0,0,0.38);">
+                <span id="volume-sfx-val" style="font-size: 0.84rem; color: var(--ink); min-width: 32px; text-align: right; font-family: monospace;">50%</span>
+              </div>
+            </div>
+
             <button class="account-open-login" id="account-open-login" type="button">Se connecter</button>
             <button class="account-open-login" id="account-settings-logout" type="button" hidden>Déconnexion</button>
           </div>
@@ -305,7 +327,6 @@
             <div class="stats-panel-header">
               <div>
                 <span>Panneau d'affichage</span>
-                <strong>Statistiques</strong>
               </div>
               <button id="close-stats" type="button" aria-label="Fermer les statistiques">x</button>
             </div>
@@ -336,10 +357,10 @@
 
     <script src="items.js"></script>
     <script src="monsters.js"></script>
-    <script src="events.js"></script>
+    <script src="events.js?v=20260529-pactes-maudits"></script>
     <script src="upgrades.js"></script>
     <script src="supabase-config.js"></script>
     <script src="vendor/supabase-js-v2.js"></script>
-    <script src="script.js?v=20260528-start-card-login-polish"></script>
+    <script src="script.js?v=20260529-pactes-maudits"></script>
   </body>
 </html>

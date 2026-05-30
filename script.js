@@ -108,6 +108,7 @@ const state = {
   upgrades: loadUpgrades(),
   doorHints: [],
   floorShift: 0,
+  activePact: null,
   storyTone: "neutral",
   eventToneOverride: null,
   villageLocation: "Village",
@@ -136,10 +137,25 @@ let shopPanelMode = "upgrades";
 let selectedSaleItems = new Set();
 let statsPanelOpen = false;
 let statsPanelView = "stats";
+let activeRankingCriterion = "gold"; // "gold", "wins", "losses"
+let cachedRankingData = null;
+let rankingLoading = false;
 let villageActionTimer = null;
 let villageReturnTimer = null;
 let rewardHideTimer = null;
 let rewardHideToken = 0;
+
+let audioCtx = null;
+let lastHodorLife = 0;
+let lastPlayedBgmScreen = "";
+let currentBgm = null;
+
+let musicVolume = parseInt(localStorage.getItem("grodor_music_volume") ?? "50", 10);
+let sfxVolume = parseInt(localStorage.getItem("grodor_sfx_volume") ?? "50", 10);
+
+function getBgmMaxVolume() {
+  return (musicVolume / 100) * 0.35;
+}
 
 const elementCache = new Map();
 const $ = (id) => {
@@ -190,7 +206,7 @@ const VILLAGE_RETURN_DELAY_MS = 900;
 const VILLAGE_SERVICE_RETURN_DELAY_MS = 4000;
 const CELL_OPEN_DELAY_MS = 650;
 const DUNGEON_EFFECT_VISIBLE_MS = 3000;
-const START_INTRO_EXIT_MS = 520;
+const START_INTRO_EXIT_MS = 2200;
 const HODOR_WALK_FRAME_PATHS = [
   `${HODOR_BASE_PATH}/Corps/Marche/marche-1.png`,
   `${HODOR_BASE_PATH}/Corps/Marche/marche-2.png`,
@@ -280,14 +296,35 @@ document.addEventListener("click", (event) => {
 
 document.addEventListener("click", dismissWinBannerOnFirstClick, true);
 
-addClick("start-intro-play", () => finishStartIntro());
+// Déclencheur sonore global pour tous les boutons du jeu (couvre statiques & dynamiques)
+document.addEventListener("click", (event) => {
+  const button = event.target.closest("button") || event.target.closest("[role='button']") || event.target.closest(".restart-card") || event.target.closest(".combat-choice") || event.target.closest(".building") || event.target.closest(".door");
+  if (button) {
+    playClickSound();
+  }
+}, true);
+
+let startIntroActivated = false;
+let logoChimePlayed = false;
+let introAudioStarted = false;
+
+function tryAutoplayIntroAudio() {
+  // Discard page-load autoplay to prevent immediate hides from autoplay policy rejections
+}
+
 const startIntro = $("start-intro");
 if (startIntro) {
-  startIntro.addEventListener("click", (event) => {
-    if (event.target.closest("button")) return;
+  startIntro.addEventListener("click", () => {
+    introAudioStarted = true;
+    startIntroActivated = true;
     finishStartIntro();
   });
 }
+
+
+
+
+
 
 document.querySelectorAll(".door").forEach((door) => {
   door.addEventListener("pointerenter", previewDungeonDoorOpen);
@@ -341,6 +378,7 @@ document.querySelectorAll("[data-debug-stuff]").forEach((button) => {
 });
 
 renderDebugEvents();
+initAudioSettings();
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
@@ -535,6 +573,7 @@ function initStartIntro() {
   }
 
   intro.hidden = false;
+  tryAutoplayIntroAudio();
 }
 
 function shouldBypassStartIntro() {
@@ -552,16 +591,28 @@ function finishStartIntro(options = {}) {
     closeAccountPanel();
   }
 
-  if (options.instant || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  if (options.instant) {
     intro.hidden = true;
     return;
   }
 
-  intro.classList.add("is-leaving");
-  window.setTimeout(() => {
-    intro.hidden = true;
-    intro.classList.remove("is-leaving");
-  }, START_INTRO_EXIT_MS);
+  playLogoIntroSound(
+    // onRumbleStart
+    () => {
+      if (intro) {
+        intro.classList.add("is-leaving");
+      }
+    },
+    // onEnded
+    () => {
+      if (intro) {
+        intro.hidden = true;
+        intro.classList.remove("is-leaving");
+      }
+      lastPlayedBgmScreen = "cell";
+      playBgm("cell");
+    }
+  );
 }
 
 function authMessage(message) {
@@ -1147,6 +1198,7 @@ function buildActiveRunPayload() {
     combatKey: combatKeyFor(state.combat),
     combatHp: state.screen === "combat" ? state.combatHp : 0,
     combatArenaKey: state.screen === "combat" ? combatArenaFor(state.combatArenaKey).key : "",
+    activePact: state.activePact,
     updated_at: new Date().toISOString(),
   };
 }
@@ -1169,6 +1221,7 @@ function restoreActiveRun(activeRun) {
   state.combatHp = state.combat ? snapshot.combatHp : 0;
   state.renderedCombatHp = null;
   state.combatArenaKey = snapshot.screen === "combat" ? snapshot.combatArenaKey : "";
+  state.activePact = snapshot.activePact || null;
   if (snapshot.screen === "combat" && !state.combat) {
     state.screen = "dungeon";
     state.combatHp = 0;
@@ -1230,6 +1283,7 @@ function sanitizeActiveRun(activeRun) {
     combatKey,
     combatHp,
     combatArenaKey,
+    activePact: typeof activeRun.activePact === "string" ? activeRun.activePact : null,
   };
 }
 
@@ -1765,18 +1819,59 @@ function delayVillageAction(target, action) {
   clearVillageActionTarget();
   $("scene")?.classList.add(`village-target-${target}`);
 
+  // Démarre l'animation de marche active lors du déplacement
+  state.hodorPose = "walk";
+  
+  // Oriente Grodor selon sa direction de marche
+  if (target === "bank" || target === "sell") {
+    state.hodorFlipped = false; // Marche vers la gauche
+  } else if (target === "shop" || target === "tavern") {
+    state.hodorFlipped = true; // Marche vers la droite
+  } else {
+    state.hodorFlipped = false;
+  }
+  
+  render();
+
   villageActionTimer = window.setTimeout(() => {
     villageActionTimer = null;
     action();
+    
+    // Grodor arrive au bâtiment et redevient immobile
+    state.hodorPose = "idle";
+    render();
+
     const returnDelay = target === "bank" || target === "sell"
       ? VILLAGE_SERVICE_RETURN_DELAY_MS
       : VILLAGE_RETURN_DELAY_MS;
+      
     villageReturnTimer = window.setTimeout(() => {
+      // Démarre l'animation de marche active lors du retour au centre
+      state.hodorPose = "walk";
+      
+      // Se retourne pour marcher dans l'autre sens
+      if (target === "bank" || target === "sell") {
+        state.hodorFlipped = true; // Retourne vers la droite
+      } else if (target === "shop" || target === "tavern") {
+        state.hodorFlipped = false; // Retourne vers la gauche
+      } else {
+        state.hodorFlipped = false;
+      }
+      
       clearVillageActionTarget();
       if (state.screen !== "village") return;
       state.villageLocation = "Village";
       setStory("Grodor revient au centre du village.");
       render();
+      
+      // S'arrête une fois arrivé au centre du village (après 450ms de déplacement)
+      window.setTimeout(() => {
+        if (state.screen === "village") {
+          state.hodorPose = "idle";
+          state.hodorFlipped = false; // Face vers la gauche par défaut au repos
+          render();
+        }
+      }, 450);
     }, returnDelay);
   }, VILLAGE_ACTION_DELAY_MS);
 }
@@ -1838,7 +1933,56 @@ function openStatsPanel() {
 function setStatsPanelView(view) {
   if (!statsPanelOpen) return;
   statsPanelView = view;
+  if (view === "ranking") {
+    cachedRankingData = null;
+    fetchRankingFromCloud();
+  } else {
+    renderStatsPanel();
+  }
+}
+
+async function fetchRankingFromCloud() {
+  if (!supabaseClient) {
+    cachedRankingData = null;
+    rankingLoading = false;
+    renderStatsPanel();
+    return;
+  }
+  
+  rankingLoading = true;
   renderStatsPanel();
+  
+  try {
+    const { data, error } = await supabaseClient
+      .from("player_saves")
+      .select("wins, detailed_stats, user_id, profiles(display_name)")
+      .limit(100);
+      
+    if (error) throw error;
+    
+    const scoredData = data.map(item => {
+      const ds = item.detailed_stats || {};
+      const sortiesReussies = Math.max(Number(item.wins || 0), Number(ds.sortiesReussies || 0));
+      const combatsGagnes = Number(ds.combatsGagnes || 0);
+      const miniJeuxReussis = Number(ds.miniJeuxReussis || 0);
+      
+      const score = sortiesReussies + combatsGagnes + miniJeuxReussis;
+      return {
+        user_id: item.user_id,
+        profiles: item.profiles,
+        score
+      };
+    });
+    
+    scoredData.sort((a, b) => b.score - a.score);
+    cachedRankingData = scoredData.slice(0, 10);
+  } catch (err) {
+    console.error("Failed to fetch ranking from Supabase:", err);
+    cachedRankingData = null; // Forces local fallback
+  } finally {
+    rankingLoading = false;
+    renderStatsPanel();
+  }
 }
 
 function closeStatsPanel() {
@@ -2005,6 +2149,9 @@ function startGoldChestMiniGame(mode, amount) {
   clearChestDodgeTimers();
   clearArmWrestle();
   state.miniGamesEncountered += 1;
+  
+  const totalRounds = randomInt(3, 6);
+  
   state.miniGame = {
     type: "chest",
     title: "",
@@ -2012,8 +2159,9 @@ function startGoldChestMiniGame(mode, amount) {
     mode,
     amount: safeAmount,
     round: 0,
-    totalRounds: CHEST_DODGE_ROUNDS,
+    totalRounds,
     activeSlot: null,
+    previousSlot: null,
     promptState: "ok",
     image: `${CHEST_DODGE_ASSET_PATH}/coffre_open.webp`,
     text: "",
@@ -2025,8 +2173,32 @@ function startGoldChestMiniGame(mode, amount) {
   return "Vous avez trouvé un coffre.";
 }
 
+function startPactMiniGame() {
+  clearChestDodgeTimers();
+  clearArmWrestle();
+  state.miniGamesEncountered += 1;
+  state.miniGame = {
+    type: "pact",
+    title: "Le Marchand d'Ombres",
+    text: "Une silhouette louche, enveloppée d'un drap troué, vous barre la route et siffle : 'Hé... psst ! Tu veux un marché honnête ? Enfin... presque honnête.'",
+    phase: "choice",
+    actions: [
+      { id: "pact-midas", label: "💰 Pacte de Midas (+100% Or, 0% Esquive)" },
+      { id: "pact-temerite", label: "⚡ Pacte de Témérité (Combat auto 80%, Mort subite 20%)" },
+      { id: "pact-sang", label: "🩸 Pacte de Sang (+3 Cœurs max, 35% saigner)" },
+      { id: "pact-refuse", label: "🏃 Fuir en hurlant (Refuser)" }
+    ]
+  };
+  return "Une silhouette suspecte surgit d'un recoin sombre de la tour.";
+}
+
 function resolveMiniGame(action) {
   if (!state.miniGame || state.screen !== "dungeon") return;
+
+  if (state.miniGame.type === "pact") {
+    resolvePactAction(action);
+    return;
+  }
 
   if (state.miniGame.type === "double") {
     resolveCoinFlipAction(action);
@@ -2051,6 +2223,32 @@ function resolveMiniGame(action) {
   if (state.miniGame.type === "arm") {
     resolveArmWrestleAction(action);
   }
+}
+
+function resolvePactAction(action) {
+  let outcome = "";
+  let tone = "good";
+
+  if (action === "pact-midas") {
+    state.activePact = "midas";
+    outcome = "Grodor accepte le Pacte de Midas. Ses mains brillent d'une avidité malsaine, mais ses jambes semblent lourdes de plomb. (+100% d'or trouvé, mais TOUTES les esquives de dégâts sont désactivées !)";
+    tone = "gold";
+  } else if (action === "pact-temerite") {
+    state.activePact = "temerite";
+    outcome = "Grodor signe le Pacte de Témérité. Il se sent incroyablement fort, mais le donjon chuchote des menaces de mort immédiate. (Combat : 80% auto-victoire instantanée, 20% mort subite sans aucun joker !)";
+    tone = "bad";
+  } else if (action === "pact-sang") {
+    state.activePact = "sang";
+    state.maxLife = Math.min(6, state.maxLife + 3);
+    state.life = Math.min(state.maxLife, state.life + 3);
+    outcome = "Grodor boit une fiole du Pacte de Sang. Sa vitalité explose (+3 cœurs max !), mais ses veines palpitent d'une douleur lancinante à chaque marche. (35% de saigner de -1 cœur à chaque changement d'étage)";
+    tone = "good";
+  } else {
+    outcome = "Grodor crie 'HODOR !' de toutes ses forces et s'enfuit en courant. La silhouette soupire de pitié devant tant de lâcheté.";
+    tone = "neutral";
+  }
+
+  completeMiniGame(outcome, tone);
 }
 
 function completeMiniGame(outcome, tone) {
@@ -2344,13 +2542,35 @@ function startChestDodgeRound(miniGame) {
   if (!state.miniGame || state.miniGame !== miniGame || miniGame.type !== "chest") return;
   miniGame.phase = "dodge";
   miniGame.image = `${CHEST_DODGE_ASSET_PATH}/coffre_esquive.webp`;
-  miniGame.activeSlot = randomInt(1, 6);
+  
+  let slot;
+  if (miniGame.previousSlot) {
+    const opposites = {
+      1: [5, 6],
+      2: [4, 6],
+      3: [4, 5],
+      4: [2, 3],
+      5: [1, 3],
+      6: [1, 2]
+    };
+    const candidates = opposites[miniGame.previousSlot] || [1, 2, 3, 4, 5, 6];
+    slot = candidates[Math.floor(Math.random() * candidates.length)];
+  } else {
+    slot = randomInt(1, 6);
+  }
+  
+  miniGame.activeSlot = slot;
+  miniGame.previousSlot = slot;
   miniGame.promptState = "ok";
-  miniGame.text = `${miniGame.round + 1}/${miniGame.totalRounds}`;
+  miniGame.text = "";
+  
+  const roundFactor = miniGame.round * 40;
+  const currentWindow = Math.max(480, 700 - roundFactor);
+  
   chestDodgeTimer = window.setTimeout(() => {
     if (!state.miniGame || state.miniGame !== miniGame || miniGame.phase !== "dodge") return;
     settleChestDodge(miniGame, false);
-  }, CHEST_DODGE_WINDOW_MS);
+  }, currentWindow);
   render();
 }
 
@@ -2592,29 +2812,6 @@ function clearArmWrestle() {
   armWrestleResultTimer = null;
 }
 
-function miniGameOutcome(action) {
-  if (/^card-[0-2]$/.test(action)) {
-    const picked = Number(action.slice(-1));
-    const jackpot = randomInt(0, 2);
-    const skull = (jackpot + randomInt(1, 2)) % 3;
-
-    if (picked === jackpot) {
-      addStat("miniJeuxReussis");
-      return addGold(25, "Grodor retourne la bonne carte. Le marchand accuse le destin de tricher. +25 PO.");
-    }
-    if (picked === skull) {
-      return takeDamage(1, "Grodor retourne une carte avec un crâne qui avait manifestement des bras. -1 cœur.");
-    }
-
-    const loss = Math.min(state.carriedGold, randomInt(4, 10));
-    state.carriedGold -= loss;
-    return loss
-      ? `Grodor retourne une carte vide. Le marchand appelle ça une leçon premium. -${loss} PO.`
-      : "Grodor retourne une carte vide. Le marchand facture le silence, mais ta bourse est déjà un désert.";
-  }
-
-  return "Grodor hésite si fort que le mini-jeu abandonne.";
-}
 
 function clearDungeonEffectPoseTimer() {
   if (dungeonEffectPoseTimer) {
@@ -2744,6 +2941,17 @@ function doorHintPool(level) {
 }
 
 function startCombat(monster) {
+  if (state.activePact === "temerite") {
+    if (Math.random() < 0.80) {
+      const gold = randomInt(monster.reward[0], monster.reward[1]);
+      addStat("combatsGagnes");
+      return addGold(gold, `(Pacte de Témérité) Grodor fronce les sourcils. Une aura de pure violence émane de lui. ${monster.name} s'autodétruit de terreur pure ! Le hasard fait semblant d'être ton ami. +${gold} PO.`);
+    } else {
+      endRun("mort");
+      return `(Pacte de Témérité) Grodor tente un regard intimidant. C'est un échec cuisant. ${monster.name} ne sourit pas et élimine Grodor d'une simple claque cosmique.`;
+    }
+  }
+
   state.screen = "combat";
   state.combat = monster;
   state.combatHp = monster.life;
@@ -2965,14 +3173,31 @@ function descendFloor() {
   }
   addStat("etagesVisites", Math.max(1, previousFloor - state.floor));
   saveStats();
+
+  let bloodText = "";
+  if (state.activePact === "sang" && state.floor > 0 && previousFloor !== state.floor) {
+    if (Math.random() < 0.35) {
+      state.life -= 1;
+      addStat("degatsSubis", 1);
+      saveStats();
+      if (state.life <= 0) {
+        state.life = 0;
+        endRun("mort");
+        bloodText = " (Pacte de Sang : Tes veines se déchirent à la marche. Tu succombes au saignement !)";
+      } else {
+        bloodText = " (Pacte de Sang : Tes veines se déchirent. Tu perds 1 cœur !)";
+      }
+    }
+  }
+
   if (state.floor <= 0) {
     state.screen = "village";
     state.runEnded = true;
     state.life = state.maxLife;
     recordWin();
-    return " Grodor voit enfin la sortie. Il a survécu, ce qui surprend tout le monde, surtout lui.";
+    return " Grodor voit enfin la sortie. Il a survécu, ce qui surprend tout le monde, surtout lui." + bloodText;
   }
-  return "";
+  return bloodText;
 }
 
 function shiftFloors(amount) {
@@ -2981,6 +3206,7 @@ function shiftFloors(amount) {
 
 function recordWin() {
   if (state.winRecorded) return;
+  playVictorySound();
   void clearActiveRunNow();
   state.winRecorded = true;
   state.showWinBanner = true;
@@ -3025,20 +3251,6 @@ function winTaunt() {
   return state.winBannerText;
 }
 
-function villageShameText() {
-  const wins = state.stats.wins || 0;
-  const losses = state.stats.losses || 0;
-  const balance = wins - losses;
-
-  if (wins === 0 && losses === 0) return "Dignité : pas encore abîmée";
-  if (balance >= 8) return "Dignité : suspectement haute";
-  if (balance >= 5) return "Dignité : presque reconnue";
-  if (balance >= 2) return "Dignité : tient avec une ficelle";
-  if (balance >= 0) return "Dignité : fragile mais comptable";
-  if (balance >= -2) return "Dignité : cabossée";
-  if (balance >= -5) return "Dignité : vendue en lot";
-  return "Dignité : vue pour la dernière fois près d'une trappe";
-}
 
 function flashDoor(door) {
   $("doors").classList.add("resolving");
@@ -3082,11 +3294,18 @@ function setDungeonDoorPreviewTarget(doorIndex) {
 
 function addGold(amount, text) {
   const stickyGlovesBonus = hasItem("Gants Collants") && Math.random() < 0.35 ? 1 : 0;
-  const gained = amount + stickyGlovesBonus;
+  let gained = amount + stickyGlovesBonus;
   let suffix = "";
 
-  if (stickyGlovesBonus) {
+  if (state.activePact === "midas") {
+    gained *= 2;
+    suffix = " (Pacte de Midas : Or doublé !)";
+  } else if (stickyGlovesBonus) {
     suffix = " Les gants collants ramassent 1 PO de plus, et probablement autre chose.";
+  }
+
+  if (gained > 0) {
+    playCoinSound();
   }
 
   state.carriedGold += gained;
@@ -3102,6 +3321,17 @@ function withoutPreventedDamageEffect(text) {
 function takeDamage(amount, text) {
   if (state.godMode) {
     return `${text} God mode absorbe le dégât. Grodor ne comprend pas, mais il approuve.`;
+  }
+
+  if (state.activePact === "midas") {
+    state.life -= amount;
+    addStat("degatsSubis", amount);
+    saveStats();
+    if (state.life <= 0) {
+      state.life = 0;
+      endRun("mort");
+    }
+    return `${text} (Pacte de Midas : Le plomb t'empêche d'esquiver !)`;
   }
 
   if (hasItem("Boulet au Pied") && Math.random() < 0.18) {
@@ -3196,6 +3426,7 @@ function endRun(screen) {
 
 function recordLoss() {
   if (state.lossRecorded || state.winRecorded) return;
+  playDefeatSound();
   state.lossRecorded = true;
   state.runLosses += 1;
   addStat("humiliations");
@@ -3326,6 +3557,7 @@ function startRun() {
   state.winRecorded = false;
   state.koBannerText = "";
   state.winBannerText = "";
+  state.activePact = null;
   addStat("runsTotal");
   saveStats();
   applyRunUpgrades();
@@ -3470,6 +3702,7 @@ function renderDebugEvents() {
     { type: "cards", label: "Bonneteau" },
     { type: "arm", label: "Bras de fer" },
     { type: "slots", label: "Machine à sous" },
+    { type: "pact", label: "Marchand d'Ombres (Pactes)" },
   ];
 
   list.textContent = "";
@@ -3502,7 +3735,8 @@ function debugRunMiniGame(type) {
   state.life = Math.max(1, Math.min(state.life || state.maxLife, state.maxLife));
   state.hodorPose = "question";
 
-  setStory(startMiniGame(type), "neutral");
+  const msg = type === "pact" ? startPactMiniGame() : startMiniGame(type);
+  setStory(msg, "neutral");
   $("debug-panel").hidden = true;
   $("debug-toggle").setAttribute("aria-expanded", "false");
   render();
@@ -3773,6 +4007,28 @@ function renderUpgradeSummary() {
   const summary = $("upgrade-summary");
   summary.textContent = "";
 
+  if (state.activePact) {
+    const pactNames = {
+      midas: "Pacte de Midas",
+      temerite: "Pacte de Témérité",
+      sang: "Pacte de Sang",
+    };
+    const pactDescs = {
+      midas: "Or doublé, mais toutes les esquives de dégâts sont impossibles !",
+      temerite: "Combat : 80% de chance d'auto-victoire instantanée, 20% de mort subite sans aucun joker !",
+      sang: "Vitalité accrue (+3 cœurs max), mais 35% de chance de saigner de -1 cœur par étage.",
+    };
+    const chip = document.createElement("span");
+    chip.className = "upgrade-chip pact-chip";
+    chip.style.borderColor = "var(--bad)";
+    chip.style.color = "var(--bad)";
+    chip.style.fontWeight = "bold";
+    chip.tabIndex = 0;
+    chip.textContent = `💀 ${pactNames[state.activePact] || state.activePact}`;
+    chip.dataset.tooltip = pactDescs[state.activePact] || "";
+    summary.appendChild(chip);
+  }
+
   Object.entries(upgradeDefinitions).forEach(([id, upgrade]) => {
     const level = upgradeLevel(id);
     if (!level) return;
@@ -3796,14 +4052,96 @@ function renderStatsPanel() {
   grid.textContent = "";
 
   if (statsPanelView === "ranking") {
-    const empty = document.createElement("article");
-    empty.className = "stats-ranking-empty";
-    const label = document.createElement("span");
-    const title = document.createElement("strong");
-    label.textContent = "Classement";
-    title.textContent = "Bientôt";
-    empty.append(label, title);
-    grid.appendChild(empty);
+    // 1. Gérer l'état de chargement
+    if (rankingLoading) {
+      const loader = document.createElement("div");
+      loader.className = "ranking-loader";
+      const spinner = document.createElement("div");
+      spinner.className = "ranking-spinner";
+      const text = document.createElement("span");
+      text.textContent = "Interrogation de la taverne...";
+      loader.append(spinner, text);
+      grid.appendChild(loader);
+      return;
+    }
+
+    // 2. Récupérer les données (Cloud ou Local)
+    const listContainer = document.createElement("div");
+    listContainer.className = "ranking-list";
+
+    let rowsData = [];
+
+    if (cachedRankingData && cachedRankingData.length > 0) {
+      // Données Supabase disponibles
+      rowsData = cachedRankingData.map((item, idx) => {
+        const profilesObj = Array.isArray(item.profiles) ? item.profiles[0] : item.profiles;
+        const displayName = profilesObj?.display_name || "Grodor anonyme";
+        const isPlayer = item.user_id === cloudState.user?.id;
+        return {
+          name: isPlayer ? `${displayName} (Toi)` : displayName,
+          score: item.score,
+          isPlayer
+        };
+      });
+    } else {
+      // Fallback local avec des rivaux drôles triés par leur Gloire Grodorienne
+      const rivals = [
+        { name: "Brador le Poivrot", score: 184 },
+        { name: "Hodor (Le vrai)", score: 942 },
+        { name: "Kro le gobelin foiré", score: 42 },
+        { name: "Gros-Jean", score: 320 },
+        { name: "Princesse Pouffiasse", score: 2500 }
+      ];
+      
+      const playerStats = hodorianStats();
+      const allProfiles = [
+        ...rivals,
+        {
+          name: `${cloudState.profile?.alias || cloudState.profile?.display_name || "Grodor"} (Toi)`,
+          score: playerStats.gloire || 0,
+          isPlayer: true
+        }
+      ];
+
+      // Trier par score desc
+      allProfiles.sort((a, b) => b.score - a.score);
+
+      rowsData = allProfiles.map(p => {
+        return {
+          name: p.name,
+          score: p.score,
+          isPlayer: p.isPlayer
+        };
+      });
+    }
+
+    // 3. Rendre le classement
+    rowsData.forEach((row, idx) => {
+      const rankingRow = document.createElement("div");
+      rankingRow.className = `ranking-row ${row.isPlayer ? "is-player" : ""}`.trim();
+      
+      const rankSpan = document.createElement("span");
+      rankSpan.className = `ranking-rank rank-${idx + 1}`;
+      
+      // Petites médailles emojis pour le top 3
+      if (idx === 0) rankSpan.textContent = "🥇";
+      else if (idx === 1) rankSpan.textContent = "🥈";
+      else if (idx === 2) rankSpan.textContent = "🥉";
+      else rankSpan.textContent = `${idx + 1}`;
+      
+      const nameSpan = document.createElement("span");
+      nameSpan.className = "ranking-name";
+      nameSpan.textContent = row.name;
+      
+      const scoreSpan = document.createElement("span");
+      scoreSpan.className = "ranking-score score-gold"; // Utiliser la classe or pour l'effet pulsant
+      scoreSpan.textContent = `${row.score} Gloire Grodorienne`;
+      
+      rankingRow.append(rankSpan, nameSpan, scoreSpan);
+      listContainer.appendChild(rankingRow);
+    });
+
+    grid.appendChild(listContainer);
     return;
   }
 
@@ -4235,6 +4573,21 @@ function render() {
     state.life = state.maxLife;
   }
 
+  // Déclencheurs de sons et musiques dynamiques sur changement d'état !
+  if (lastHodorLife > 0) {
+    if (state.life > lastHodorLife && state.screen !== "village" && state.screen !== "shop") {
+      playHealSound();
+    } else if (state.life < lastHodorLife && state.life > 0) {
+      playDamageSound();
+    }
+  }
+  lastHodorLife = state.life;
+
+  if (state.screen !== lastPlayedBgmScreen) {
+    lastPlayedBgmScreen = state.screen;
+    playBgm(state.screen);
+  }
+
   const showsFloor = state.screen === "dungeon" || state.screen === "combat";
   $("place-label").textContent = showsFloor ? "Étage" : "Lieu";
   $("floor").textContent = state.screen === "village" || state.screen === "shop"
@@ -4278,6 +4631,7 @@ function render() {
   $("scene").classList.toggle("is-dungeon", isDungeon || isCombat);
   $("scene").classList.toggle("is-cell", isCell);
   $("scene").classList.toggle("is-locked", state.inputLocked);
+  $("scene").classList.toggle("has-mini-game", Boolean(state.miniGame));
   const combatArena = combatArenaFor(state.combatArenaKey);
   $("scene").dataset.combatArena = isCombat ? combatArena.key : "";
   $("scene").style.setProperty("--combat-arena-image", `url("${combatArena.image}")`);
@@ -4309,7 +4663,7 @@ function render() {
             : "Couloirs du donjon";
 
   $("doors").hidden = !isDungeon || Boolean(state.miniGame);
-  $("dungeon-stage").hidden = !isDungeon;
+  $("dungeon-stage").hidden = !isDungeon || Boolean(state.miniGame);
   renderMiniGame();
   $("village-stage").hidden = !isVillage;
   $("village-tip-card").hidden = !isVillage || isShop || isStatsPanel;
@@ -4533,6 +4887,10 @@ function renderHodor() {
     hodor.classList.remove("pose-idle", "pose-walk", "pose-fuite", "pose-folie", "pose-question", "pose-releve", "pose-victory", "pose-hurt", "pose-ko", "pose-combat", "pose-combat-2", "pose-combat-3", "pose-dead");
     hodor.classList.add(poseClass);
   }
+
+  // Applique le retournement horizontal (classe CSS)
+  hodor.classList.toggle("is-flipped", !!state.hodorFlipped);
+
   hodor.style.backgroundImage = assets.map(cssAssetUrl).join(", ");
   syncHodorWalkAnimation(pose);
 }
@@ -4541,7 +4899,10 @@ function hodorPoseForScreen() {
   if (state.screen === "mort") return "dead";
   if (state.screen === "combat") return ["idle", "combat", "combat-2", "combat-3"].includes(state.hodorPose) ? state.hodorPose : "idle";
   if (state.screen === "shop") return "walk";
-  if (state.screen === "village") return state.showWinBanner ? "victory" : "question";
+  if (state.screen === "village") {
+    if (state.hodorPose === "walk") return "walk";
+    return state.showWinBanner ? "victory" : "question";
+  }
   if (state.screen === "dungeon") {
     if (state.inputLocked || state.hodorPose === "walk") return "walk";
     return state.hodorPose && state.hodorPose !== "idle" ? state.hodorPose : "question";
@@ -4631,6 +4992,493 @@ function hodorV01PoseName(pose) {
   }[pose] || "idle";
 }
 
+// ==========================================================================
+// SYSTÈME DE SYNTHÈSE AUDIO COMIC-RETRO & GESTIONNAIRE DE MUSIQUE D'AMBIANCE
+// Conçu de manière 100% légale, sans droit d'auteur, et ultra-léger (0 octet d'asset)
+// ==========================================================================
+
+function initAudio() {
+  if (audioCtx) return;
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+}
+
+// Initialisation des curseurs de paramètres volume et enregistrement localStorage
+function initAudioSettings() {
+  const musicSlider = document.getElementById("volume-music");
+  const sfxSlider = document.getElementById("volume-sfx");
+  const musicVal = document.getElementById("volume-music-val");
+  const sfxVal = document.getElementById("volume-sfx-val");
+
+  if (musicSlider && sfxSlider && musicVal && sfxVal) {
+    musicSlider.value = musicVolume;
+    sfxSlider.value = sfxVolume;
+    musicVal.textContent = `${musicVolume}%`;
+    sfxVal.textContent = `${sfxVolume}%`;
+
+    musicSlider.addEventListener("input", (e) => {
+      const val = parseInt(e.target.value, 10);
+      musicVolume = val;
+      localStorage.setItem("grodor_music_volume", val);
+      musicVal.textContent = `${val}%`;
+      if (currentBgm) {
+        currentBgm.volume = getBgmMaxVolume();
+      }
+    });
+
+    sfxSlider.addEventListener("input", (e) => {
+      const val = parseInt(e.target.value, 10);
+      sfxVolume = val;
+      localStorage.setItem("grodor_sfx_volume", val);
+      sfxVal.textContent = `${val}%`;
+    });
+    
+    sfxSlider.addEventListener("change", () => {
+      // Joue un clic pour tester le volume des bruitages
+      playClickSound();
+    });
+  }
+}
+
+
+// Signature sonore style Netflix / YouTube medieval joué au clic d'entrée de jeu
+function playLogoIntroSound(onRumbleStart, onEnded) {
+  if (logoChimePlayed) return;
+  logoChimePlayed = true;
+  initAudio();
+
+  const handleRumbleStart = typeof onRumbleStart === "function" ? onRumbleStart : () => {};
+  const handleEnded = typeof onEnded === "function" ? onEnded : () => {};
+  
+  // Tente d'abord de charger le fichier final logo-intro.mp3 s'il a été fourni
+  const introAudio = new Audio("assets/Audio/logo-intro.mp3");
+  introAudio.volume = (sfxVolume / 100) * 0.5;
+
+  let endedTriggered = false;
+  const triggerEnded = () => {
+    if (endedTriggered) return;
+    endedTriggered = true;
+    handleEnded();
+  };
+
+  // Sécurité générale (Watchdog) pour garantir le démarrage du BGM s'il y a un blocage
+  const watchdog = window.setTimeout(triggerEnded, 4500);
+  
+  introAudio.play()
+    .then(() => {
+      // Démarrage du glissement de porte 1 seconde après le début du son
+      window.setTimeout(handleRumbleStart, 1000);
+      
+      introAudio.addEventListener("ended", () => {
+        window.clearTimeout(watchdog);
+        triggerEnded();
+      });
+      introAudio.addEventListener("error", () => {
+        window.clearTimeout(watchdog);
+        triggerEnded();
+      });
+    })
+    .catch(() => {
+      window.clearTimeout(watchdog);
+      
+      // Fallback : Synthétiseur Web Audio API medieval boom & chime
+      if (!audioCtx || audioCtx.state === "suspended") {
+        logoChimePlayed = false;
+        triggerEnded();
+        return;
+      }
+
+      const now = audioCtx.currentTime;
+      
+      // 1. Castle drum boom (Netflix "ta-dum" style, but fantasy medieval)
+      const osc1 = audioCtx.createOscillator();
+      const gain1 = audioCtx.createGain();
+      osc1.connect(gain1);
+      gain1.connect(audioCtx.destination);
+      osc1.type = "sine";
+      osc1.frequency.setValueAtTime(80, now);
+      osc1.frequency.exponentialRampToValueAtTime(30, now + 0.6);
+      
+      gain1.gain.setValueAtTime(0.35 * (sfxVolume / 100), now);
+      gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+      
+      osc1.start(now);
+      osc1.stop(now + 0.6);
+      
+      // 2. Magical crystal chord (comical-epic resolve chord)
+      const notes = [293.66, 349.23, 440.00, 587.33]; // Ré4 -> Fa4 -> La4 -> Ré5 (D minor)
+      notes.forEach((freq, i) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = "sine";
+        
+        const delay = 0.12 + i * 0.08;
+        osc.frequency.setValueAtTime(freq, now + delay);
+        gain.gain.setValueAtTime(0.12 * (sfxVolume / 100), now + delay);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + delay + 2.2);
+        
+        osc.start(now + delay);
+        osc.stop(now + delay + 2.2);
+      });
+      
+      // 3. Heavy stone gate opening rumble (bandpass filtered white noise) - Retardé de 1s pour s'aligner
+      try {
+        const rumbleDuration = 2.2;
+        const bufferSize = audioCtx.sampleRate * rumbleDuration;
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = Math.random() * 2 - 1;
+        }
+        
+        const noise = audioCtx.createBufferSource();
+        noise.buffer = buffer;
+        
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = "bandpass";
+        filter.frequency.setValueAtTime(65, now + 1.0);
+        filter.frequency.linearRampToValueAtTime(32, now + 1.0 + rumbleDuration);
+        filter.Q.setValueAtTime(4.5, now + 1.0);
+        
+        const noiseGain = audioCtx.createGain();
+        noiseGain.gain.setValueAtTime(0.0, now + 1.0);
+        noiseGain.gain.linearRampToValueAtTime(0.16 * (sfxVolume / 100), now + 1.0 + 0.1);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 1.0 + rumbleDuration);
+        
+        noise.connect(filter);
+        filter.connect(noiseGain);
+        noiseGain.connect(audioCtx.destination);
+        
+        noise.start(now + 1.0);
+        noise.stop(now + 1.0 + rumbleDuration);
+      } catch (err) {
+        // Ignorer en cas d'incompatibilité de buffer sur les vieux navigateurs
+      }
+
+      // Déclencheurs de callbacks pour la synthèse
+      window.setTimeout(handleRumbleStart, 1000);
+      window.setTimeout(triggerEnded, 3200);
+    });
+}
+
+// Bruit de pièce d'or (PO) rétro et comique
+function playCoinSound() {
+  initAudio();
+  if (!audioCtx || sfxVolume <= 0) return;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  osc.type = "sine";
+  const now = audioCtx.currentTime;
+  
+  // Note montante de cartoon
+  osc.frequency.setValueAtTime(587.33, now); // Ré5
+  osc.frequency.setValueAtTime(880, now + 0.07); // La5
+  
+  gain.gain.setValueAtTime(0.12 * (sfxVolume / 100), now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
+  
+  osc.start(now);
+  osc.stop(now + 0.32);
+}
+
+// Bruit de baffe / dégât (bonk comique)
+function playDamageSound() {
+  initAudio();
+  if (!audioCtx || sfxVolume <= 0) return;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  osc.type = "triangle";
+  const now = audioCtx.currentTime;
+  
+  // Fréquence glissante vers le bas (bonk étouffé)
+  osc.frequency.setValueAtTime(180, now);
+  osc.frequency.exponentialRampToValueAtTime(60, now + 0.25);
+  
+  gain.gain.setValueAtTime(0.28 * (sfxVolume / 100), now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+  
+  osc.start(now);
+  osc.stop(now + 0.25);
+}
+
+// Arpège de soin joyeux
+function playHealSound() {
+  initAudio();
+  if (!audioCtx || sfxVolume <= 0) return;
+  const now = audioCtx.currentTime;
+  const notes = [523.25, 659.25, 783.99, 1046.50]; // Do5 -> Mi5 -> Sol5 -> Do6
+  notes.forEach((freq, i) => {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(freq, now + i * 0.06);
+    gain.gain.setValueAtTime(0.1 * (sfxVolume / 100), now + i * 0.06);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.22);
+    osc.start(now + i * 0.06);
+    osc.stop(now + i * 0.06 + 0.22);
+  });
+}
+
+// Fanfare de victoire triomphale et ridicule
+function playVictorySound() {
+  initAudio();
+  if (!audioCtx || sfxVolume <= 0) return;
+  const now = audioCtx.currentTime;
+  const notes = [261.63, 329.63, 392.00, 523.25, 392.00, 523.25, 659.25];
+  notes.forEach((freq, i) => {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(freq, now + i * 0.1);
+    gain.gain.setValueAtTime(0.12 * (sfxVolume / 100), now + i * 0.1);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.3);
+    osc.start(now + i * 0.1);
+    osc.stop(now + i * 0.1 + 0.3);
+  });
+}
+
+// Descente comique triste de défaite
+function playDefeatSound() {
+  initAudio();
+  if (!audioCtx || sfxVolume <= 0) return;
+  const now = audioCtx.currentTime;
+  const notes = [349.23, 329.63, 293.66, 220.00]; // Fa4 -> Mi4 -> Ré4 -> La3
+  notes.forEach((freq, i) => {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.type = "sawtooth";
+    osc.frequency.setValueAtTime(freq, now + i * 0.18);
+    gain.gain.setValueAtTime(0.14 * (sfxVolume / 100), now + i * 0.18);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.18 + 0.4);
+    osc.start(now + i * 0.18);
+    osc.stop(now + i * 0.18 + 0.4);
+  });
+}
+
+// Micro-clic comique pour les boutons
+function playClickSound() {
+  initAudio();
+  if (!audioCtx || sfxVolume <= 0) return;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  osc.type = "sine";
+  const now = audioCtx.currentTime;
+  osc.frequency.setValueAtTime(1200, now);
+  osc.frequency.exponentialRampToValueAtTime(300, now + 0.04);
+  
+  gain.gain.setValueAtTime(0.04 * (sfxVolume / 100), now);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
+  
+  osc.start(now);
+  osc.stop(now + 0.04);
+}
+
+function playBgm(sceneName) {
+  initAudio();
+  const fileMap = {
+    cell: "assets/Audio/ambient-dungeon.mp3",
+    dungeon: "assets/Audio/ambient-dungeon.mp3",
+    combat: "assets/Audio/ambient-combat.mp3",
+    village: "assets/Audio/ambient-village.mp3",
+    shop: "assets/Audio/ambient-village.mp3",
+    stats: "assets/Audio/ambient-village.mp3",
+    mort: "assets/Audio/ambient-dungeon.mp3"
+  };
+
+  const file = fileMap[sceneName];
+  if (!file) return;
+
+  if (currentBgm) {
+    if (currentBgm.src.endsWith(encodeURI(file))) {
+      if (currentBgm.paused) {
+        const targetVol = getBgmMaxVolume();
+        currentBgm.play()
+          .then(() => {
+            let vol = currentBgm.volume;
+            const step = targetVol / 50;
+            const fadeIn = setInterval(() => {
+              vol = Math.min(targetVol, vol + step);
+              currentBgm.volume = vol;
+              if (vol >= targetVol) {
+                clearInterval(fadeIn);
+              }
+            }, 30);
+          })
+          .catch(() => {});
+      }
+      return;
+    }
+    const oldBgm = currentBgm;
+    let vol = oldBgm.volume;
+    const fadeOut = setInterval(() => {
+      vol = Math.max(0, vol - 0.03);
+      oldBgm.volume = vol;
+      if (vol <= 0) {
+        clearInterval(fadeOut);
+        oldBgm.pause();
+      }
+    }, 30);
+  }
+
+  const audio = new Audio(file);
+  audio.loop = true;
+  audio.volume = 0;
+  currentBgm = audio;
+
+  const targetVol = getBgmMaxVolume();
+  if (targetVol <= 0) {
+    audio.volume = 0;
+    return;
+  }
+
+  audio.play()
+    .then(() => {
+      let vol = 0;
+      const step = targetVol / 50; // 50 étapes de fondu
+      const fadeIn = setInterval(() => {
+        vol = Math.min(targetVol, vol + step);
+        audio.volume = vol;
+        if (vol >= targetVol) {
+          clearInterval(fadeIn);
+        }
+      }, 30); // 30ms * 50 = 1,5 seconde de fondu d'entrée très doux
+    })
+    .catch(() => {
+      // Ignorer si les fichiers MusicFX n'ont pas encore été déposés par l'utilisateur
+    });
+}
+
+function preloadAndDecodeAssets() {
+  const assetsToPreload = [
+    "assets/Accueil/Background-accueil.webp",
+    "assets/Accueil/Background-accueil-logo.png",
+    "assets/Donjon/Donjon-accueil.webp",
+    "assets/Donjon/Donjon-interieur.webp",
+    "assets/Donjon/Donjon-interieur-porte-1.webp",
+    "assets/Donjon/Donjon-interieur-porte-2.webp",
+    "assets/Donjon/Donjon-interieur-porte-3.webp",
+    "assets/Donjon/geole-ferme.webp",
+    "assets/Donjon/geole-ouvert.webp",
+    "assets/Donjon/porte geole fermé.png",
+    "assets/Donjon/porte geole ouverte.png",
+    "assets/Village/village v0.2.webp",
+    "assets/Arene/arene-1.webp",
+    "assets/Arene/arene-2.webp",
+    "assets/Arene/arene-3.webp",
+    "assets/Ui/Bourse vide.png",
+    "assets/Ui/Bourse pleine.png",
+    "assets/Ui/inventaire vide.png",
+    "assets/Ui/inventaire plein.png",
+    "assets/Ui/coeur vide.png",
+    "assets/Ui/coeur plein.png",
+    "assets/Ui/po.png",
+    "assets/Ui/po-effet.png",
+    "assets/Monstres/Rat/tete.png",
+    "assets/Monstres/Rat/corps.png",
+    "assets/Monstres/Rat/jambes.png",
+    "assets/Monstres/Squelette fatigue/tete.png",
+    "assets/Monstres/Squelette fatigue/corps.png",
+    "assets/Monstres/Squelette fatigue/jambes.png",
+    "assets/Monstres/Guard/Tete.png",
+    "assets/Monstres/Guard/corps.png",
+    "assets/Monstres/Guard/jambe.png",
+    // Mini-jeux lourds (Pile ou Face)
+    "assets/Mini-jeu/pile-ou-face/pile-face-1.webp",
+    "assets/Mini-jeu/pile-ou-face/pile-face-2.webp",
+    "assets/Mini-jeu/pile-ou-face/pile-face-3.webp",
+    "assets/Mini-jeu/pile-ou-face/pile-face-4.webp",
+    "assets/Mini-jeu/pile-ou-face/pile-face-face.webp",
+    "assets/Mini-jeu/pile-ou-face/pile-face-pile.webp",
+    // Machine à sous
+    "assets/Mini-jeu/machine-a-sous/Machine-a-sous.webp",
+    "assets/Mini-jeu/machine-a-sous/Slot-1/Bourse-vide-slot-1.png",
+    "assets/Mini-jeu/machine-a-sous/Slot-1/Crane-slot-1.png",
+    "assets/Mini-jeu/machine-a-sous/Slot-1/Grodor-slot-1.png",
+    "assets/Mini-jeu/machine-a-sous/Slot-1/Po-slot-1.png",
+    "assets/Mini-jeu/machine-a-sous/Slot-2/Bourse-vide-slot-2.png",
+    "assets/Mini-jeu/machine-a-sous/Slot-2/Crane-slot-2.png",
+    "assets/Mini-jeu/machine-a-sous/Slot-2/Grodor-slot-2.png",
+    "assets/Mini-jeu/machine-a-sous/Slot-2/Po-slot-2.png",
+    "assets/Mini-jeu/machine-a-sous/Slot-3/Bourse-vide-slot-3.png",
+    "assets/Mini-jeu/machine-a-sous/Slot-3/Crane-slot-3.png",
+    "assets/Mini-jeu/machine-a-sous/Slot-3/Grodor-slot-3.png",
+    "assets/Mini-jeu/machine-a-sous/Slot-3/Po-slot-3.png",
+    // Bonneteau
+    "assets/Mini-jeu/Bonneteau/bonneteau-face-cache.webp",
+    "assets/Mini-jeu/Bonneteau/Slot-1/bonneteau-slot-1-bourse.png",
+    "assets/Mini-jeu/Bonneteau/Slot-1/bonneteau-slot-1-carte.png",
+    "assets/Mini-jeu/Bonneteau/Slot-1/bonneteau-slot-1-crane.png",
+    "assets/Mini-jeu/Bonneteau/Slot-1/bonneteau-slot-1-grodor.png",
+    "assets/Mini-jeu/Bonneteau/Slot-1/bonneteau-slot-1-po.png",
+    "assets/Mini-jeu/Bonneteau/Slot-2/bonneteau-slot-2-bourse.png",
+    "assets/Mini-jeu/Bonneteau/Slot-2/bonneteau-slot-2-carte.png",
+    "assets/Mini-jeu/Bonneteau/Slot-2/bonneteau-slot-2-crane.png",
+    "assets/Mini-jeu/Bonneteau/Slot-2/bonneteau-slot-2-grodor.png",
+    "assets/Mini-jeu/Bonneteau/Slot-2/bonneteau-slot-2-po.png",
+    "assets/Mini-jeu/Bonneteau/Slot-3/bonneteau-slot-3-bourse.png",
+    "assets/Mini-jeu/Bonneteau/Slot-3/bonneteau-slot-3-carte.png",
+    "assets/Mini-jeu/Bonneteau/Slot-3/bonneteau-slot-3-crane.png",
+    "assets/Mini-jeu/Bonneteau/Slot-3/bonneteau-slot-3-grodor.png",
+    "assets/Mini-jeu/Bonneteau/Slot-3/bonneteau-slot-3-po.png"
+  ];
+
+  // 1. Ajouter les poses de Grodor
+  Object.values(HODOR_POSE_FILES).forEach(file => {
+    assetsToPreload.push(`${HODOR_BASE_PATH}/Corps/${file}.png`);
+  });
+  assetsToPreload.push(`${HODOR_BASE_PATH}/Corps/mort-mort.png`);
+
+  // 2. Ajouter les frames de marche de Grodor
+  HODOR_WALK_FRAME_PATHS.forEach(url => assetsToPreload.push(url));
+
+  // 3. Ajouter les couches d'objets (Stuff layers) pour chaque pose
+  HODOR_STUFF_LAYERS.forEach(layer => {
+    const poses = ["idle", "marche", "fuite", "folie", "question", "degats", "attaque-1", "attaque-2", "attaque-3", "victoire", "ko", "mort"];
+    poses.forEach(pose => {
+      const cleanPose = hodorV01PoseName(pose);
+      const poseFile = layer.poseFiles && layer.poseFiles[cleanPose] ? layer.poseFiles[cleanPose] : `${cleanPose}-${layer.suffix}`;
+      assetsToPreload.push(`${HODOR_BASE_PATH}/Stuff/${layer.folder}/${poseFile}.png`);
+    });
+  });
+
+  // 4. Ajouter les frames de marche pour chaque objet
+  Object.values(HODOR_WALK_STUFF_FRAME_PATHS).forEach(frames => {
+    frames.forEach(url => assetsToPreload.push(url));
+  });
+
+  // Filtrer les doublons et URL invalides
+  const uniqueUrls = [...new Set(assetsToPreload)];
+
+  // Charger et décoder asynchronement lors de l'inactivité du navigateur
+  const idleCallback = window.requestIdleCallback || ((cb) => setTimeout(cb, 300));
+  
+  idleCallback(() => {
+    uniqueUrls.forEach((url) => {
+      const img = new Image();
+      img.src = encodeURI(url);
+      if (typeof img.decode === "function") {
+        img.decode().catch(() => {});
+      }
+    });
+  });
+}
+
 function registerServiceWorker() {
   if (!("serviceWorker" in navigator)) return;
   if (!window.isSecureContext && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") return;
@@ -4668,3 +5516,4 @@ function registerServiceWorker() {
 }
 
 registerServiceWorker();
+preloadAndDecodeAssets();
