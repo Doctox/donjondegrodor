@@ -9950,3 +9950,512 @@ button:active, .combat-choice:active {
     font-size: clamp(0.74rem, 1.7dvh, 0.86rem) !important;
   }
 }
+
+/* Final HUD/storyboard polish: village/cell keep the playfield clean, and text panels use the illustrated frames. */
+.game-shell:has(.scene.is-village) > .stats-grid .stat-life,
+.game-shell:has(.scene.is-village) > .stats-grid .stat-place,
+.game-shell:has(.scene.is-cell) > .stats-grid .stat-place,
+.game-shell:has(#village-stage:not([hidden])) > .stats-grid .stat-life,
+.game-shell:has(#village-stage:not([hidden])) > .stats-grid .stat-place {
+  display: none !important;
+}
+
+.scene.is-village .story-panel {
+  width: min(640px, calc(100vw - 32px)) !important;
+  height: auto !important;
+  aspect-ratio: 870 / 270 !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  padding: clamp(34px, 4.8vw, 48px) clamp(26px, 4vw, 42px) clamp(20px, 3vw, 30px) clamp(94px, 13vw, 130px) !important;
+  background: url("assets/Ui/cadre-story-board-2.png") center / 100% 100% no-repeat !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.46) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  overflow: hidden !important;
+}
+
+.scene.is-dungeon:not(.is-combat) .story-panel,
+.scene.is-cell .story-panel,
+.scene.is-dead .story-panel {
+  width: min(370px, calc(100vw - 24px)) !important;
+  height: auto !important;
+  aspect-ratio: 750 / 950 !important;
+  max-height: min(470px, calc(100dvh - 150px)) !important;
+  padding: clamp(58px, 7dvh, 76px) clamp(34px, 4.4dvh, 48px) clamp(38px, 5dvh, 56px) !important;
+  background: url("assets/Ui/cadre-storyboard-1.png") center / 100% 100% no-repeat !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.48) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  overflow: hidden !important;
+}
+
+.scene.is-village .story-panel .location,
+.scene.is-dungeon:not(.is-combat) .story-panel .location,
+.scene.is-cell .story-panel .location,
+.scene.is-dead .story-panel .location {
+  margin: 0 0 5px !important;
+  padding: 0 0 4px !important;
+  border-bottom: 1px solid rgba(93, 53, 27, 0.22) !important;
+  color: #5a341d !important;
+  text-shadow: none !important;
+  text-align: left !important;
+}
+
+.scene.is-village .story-panel .location {
+  font-size: clamp(0.9rem, 2.1vw, 1.2rem) !important;
+}
+
+.scene.is-dungeon:not(.is-combat) .story-panel .location,
+.scene.is-cell .story-panel .location,
+.scene.is-dead .story-panel .location {
+  font-size: clamp(1rem, 2dvh, 1.25rem) !important;
+}
+
+.scene.is-village .story-panel .story,
+.scene.is-dungeon:not(.is-combat) .story-panel .story,
+.scene.is-cell .story-panel .story,
+.scene.is-dead .story-panel .story {
+  color: #3d281b !important;
+  text-shadow: none !important;
+  font-weight: 800 !important;
+  overflow: hidden !important;
+}
+
+.scene.is-village .story-panel .story {
+  font-size: clamp(0.76rem, 1.75vw, 0.98rem) !important;
+  line-height: 1.22 !important;
+  max-height: calc(100% - 30px) !important;
+}
+
+.scene.is-dungeon:not(.is-combat) .story-panel .story,
+.scene.is-cell .story-panel .story,
+.scene.is-dead .story-panel .story {
+  font-size: clamp(0.8rem, 1.65dvh, 0.96rem) !important;
+  line-height: 1.35 !important;
+  max-height: calc(100% - 36px) !important;
+}
+
+.scene.is-dungeon:not(.is-combat) .reward-panel {
+  width: min(520px, calc(100vw - 24px)) !important;
+  min-width: 230px !important;
+  min-height: 150px !important;
+  padding: 28px 34px 30px 42px !important;
+  background: url("assets/Ui/cadre-effet.png") center / 100% 100% no-repeat !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.48) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  display: grid !important;
+  align-content: center !important;
+  animation: rewardCenterPulse 950ms ease-out both !important;
+}
+
+.scene.is-dungeon:not(.is-combat) .reward-panel[hidden] {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+.scene.is-dungeon:not(.is-combat) .reward-label {
+  margin: 0 0 5px !important;
+  color: #d0b083 !important;
+  font-size: 0.82rem !important;
+  line-height: 1 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9) !important;
+}
+
+.scene.is-dungeon:not(.is-combat) .reward-text {
+  margin: 0 !important;
+  color: #fff1cf !important;
+  font-size: clamp(1.35rem, 2.7vw, 1.8rem) !important;
+  line-height: 1.18 !important;
+  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.9) !important;
+}
+
+@keyframes rewardCenterPulse {
+  0% {
+    opacity: 0.72;
+    transform: translate(-50%, -50%) scale(0.96);
+    filter: brightness(1.35);
+  }
+
+  42% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.04);
+    filter: brightness(1.18);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    filter: brightness(1);
+  }
+}
+
+@media (max-width: 760px) {
+  .scene.is-village .story-panel {
+    width: min(390px, calc(100vw - 18px)) !important;
+    padding: 30px 22px 18px 74px !important;
+  }
+
+  .scene.is-dungeon:not(.is-combat) .story-panel,
+  .scene.is-cell .story-panel,
+  .scene.is-dead .story-panel {
+    width: min(330px, calc(100vw - 16px)) !important;
+    max-height: min(390px, calc(100dvh - 130px)) !important;
+    padding: 56px 34px 42px !important;
+  }
+
+  .scene.is-dungeon:not(.is-combat) .reward-panel {
+    width: min(430px, calc(100vw - 18px)) !important;
+    min-width: 0 !important;
+    min-height: 126px !important;
+    padding: 24px 28px 26px 34px !important;
+  }
+
+  .scene.is-dungeon:not(.is-combat) .reward-text {
+    font-size: clamp(1rem, 4.4vw, 1.25rem) !important;
+  }
+}
+
+/* Final alignment pass: dungeon HUD, effect bubble, cell stage, calmer Grodor movement, and centered panels. */
+.game-shell {
+  --hud-edge: max(12px, calc((100vw - min(100vw, calc(100dvh * 1672 / 941))) / 2 + 18px));
+}
+
+.game-shell > .stats-grid .stat-life {
+  left: var(--hud-edge) !important;
+  top: 16px !important;
+  width: clamp(280px, 26vw, 430px) !important;
+  height: calc(clamp(280px, 26vw, 430px) * 260 / 1070) !important;
+  background: url("assets/Ui/barre-de-vie/barre-de-vie-4-6.png") center / 100% 100% no-repeat !important;
+}
+
+.stat-life[data-max-life="1"],
+.stat-life[data-max-life="2"],
+.stat-life[data-max-life="3"] {
+  --life-bar-frame: url("assets/Ui/barre-de-vie/barre-de-vie-1-3.png");
+  --life-heart-1: url("assets/Ui/barre-de-vie/coeur-1-3.png");
+  --life-heart-2: url("assets/Ui/barre-de-vie/coeur-2-3.png");
+  --life-heart-3: url("assets/Ui/barre-de-vie/coeur-3-3.png");
+}
+
+.stat-life[data-max-life="4"] {
+  --life-bar-frame: url("assets/Ui/barre-de-vie/barre-de-vie-2-4.png");
+  --life-heart-1: url("assets/Ui/barre-de-vie/coeur-1-4.png");
+  --life-heart-2: url("assets/Ui/barre-de-vie/coeur-2-4.png");
+  --life-heart-3: url("assets/Ui/barre-de-vie/coeur-3-4.png");
+  --life-heart-4: url("assets/Ui/barre-de-vie/coeur-4-4.png");
+}
+
+.stat-life[data-max-life="5"] {
+  --life-bar-frame: url("assets/Ui/barre-de-vie/barre-de-vie-3-5.png");
+  --life-heart-1: url("assets/Ui/barre-de-vie/coeur-1-5.png");
+  --life-heart-2: url("assets/Ui/barre-de-vie/coeur-2-5.png");
+  --life-heart-3: url("assets/Ui/barre-de-vie/coeur-3-5.png");
+  --life-heart-4: url("assets/Ui/barre-de-vie/coeur-4-5.png");
+  --life-heart-5: url("assets/Ui/barre-de-vie/coeur-5-5.png");
+}
+
+.stat-life[data-max-life="6"] {
+  --life-bar-frame: url("assets/Ui/barre-de-vie/barre-de-vie-4-6.png");
+  --life-heart-1: url("assets/Ui/barre-de-vie/coeur-1-6.png");
+  --life-heart-2: url("assets/Ui/barre-de-vie/coeur-2-6.png");
+  --life-heart-3: url("assets/Ui/barre-de-vie/coeur-3-6.png");
+  --life-heart-4: url("assets/Ui/barre-de-vie/coeur-4-6.png");
+  --life-heart-5: url("assets/Ui/barre-de-vie/coeur-5-6.png");
+  --life-heart-6: url("assets/Ui/barre-de-vie/coeur-6-6.png");
+}
+
+.game-shell > .stats-grid .stat-life[data-life="0"] { background-image: var(--life-bar-frame) !important; }
+.game-shell > .stats-grid .stat-life[data-life="1"] { background-image: var(--life-heart-1), var(--life-bar-frame) !important; }
+.game-shell > .stats-grid .stat-life[data-life="2"] { background-image: var(--life-heart-2), var(--life-heart-1), var(--life-bar-frame) !important; }
+.game-shell > .stats-grid .stat-life[data-life="3"] { background-image: var(--life-heart-3), var(--life-heart-2), var(--life-heart-1), var(--life-bar-frame) !important; }
+.game-shell > .stats-grid .stat-life[data-life="4"] { background-image: var(--life-heart-4), var(--life-heart-3), var(--life-heart-2), var(--life-heart-1), var(--life-bar-frame) !important; }
+.game-shell > .stats-grid .stat-life[data-life="5"] { background-image: var(--life-heart-5), var(--life-heart-4), var(--life-heart-3), var(--life-heart-2), var(--life-heart-1), var(--life-bar-frame) !important; }
+.game-shell > .stats-grid .stat-life[data-life="6"] { background-image: var(--life-heart-6), var(--life-heart-5), var(--life-heart-4), var(--life-heart-3), var(--life-heart-2), var(--life-heart-1), var(--life-bar-frame) !important; }
+
+.stat-life {
+  background-position: center !important;
+  background-size: 100% 100% !important;
+  background-repeat: no-repeat !important;
+}
+
+.game-shell > .stats-grid .stat-life .pv-bar {
+  display: none !important;
+}
+
+.game-shell > .stats-grid .stat-loss {
+  left: 50% !important;
+  top: 16px !important;
+  bottom: auto !important;
+  width: clamp(200px, 18vw, 260px) !important;
+  height: calc(clamp(200px, 18vw, 260px) * 834 / 1885) !important;
+  transform: translateX(-50%) !important;
+}
+
+.game-shell > .stats-grid .stat-place {
+  right: var(--hud-edge) !important;
+  top: 16px !important;
+  width: clamp(200px, 18vw, 260px) !important;
+  height: calc(clamp(200px, 18vw, 260px) * 835 / 1883) !important;
+}
+
+.game-shell > .stats-grid .stat-loss strong,
+.game-shell > .stats-grid .stat-place strong {
+  left: 28% !important;
+  top: 50% !important;
+  width: 30% !important;
+  height: 62% !important;
+  font-size: clamp(2rem, 3.6vw, 3rem) !important;
+}
+
+.game-shell > .stats-grid .stat-inventory {
+  left: var(--hud-edge) !important;
+  top: calc(16px + clamp(280px, 26vw, 430px) * 260 / 1070 + 16px) !important;
+  width: 84px !important;
+  height: 84px !important;
+}
+
+.game-shell > .stats-grid .stat-purse {
+  left: calc(var(--hud-edge) + 94px) !important;
+  top: calc(16px + clamp(280px, 26vw, 430px) * 260 / 1070 + 16px) !important;
+  width: 84px !important;
+  height: 84px !important;
+}
+
+.stat-purse .purse-count {
+  left: 50% !important;
+  top: calc(100% + 4px) !important;
+  min-width: 56px !important;
+  height: 34px !important;
+  transform: translateX(-50%) scale(0.9) !important;
+  padding: 0 10px !important;
+}
+
+.stat-purse .purse-count::before {
+  left: 50% !important;
+  top: -6px !important;
+  transform: translateX(-50%) rotate(45deg) !important;
+  border-left: 2px solid rgba(223, 178, 76, 0.88) !important;
+  border-top: 2px solid rgba(223, 178, 76, 0.88) !important;
+  border-bottom: 0 !important;
+}
+
+.stat-purse:hover .purse-count,
+.stat-purse:active .purse-count,
+.stat-purse:focus-within .purse-count,
+.stat-purse.is-open .purse-count {
+  transform: translateX(-50%) scale(1) !important;
+}
+
+.stat-purse .purse-count strong {
+  min-width: 0 !important;
+  font-size: 1.6rem !important;
+}
+
+.scene.is-dungeon:not(.is-combat) .story-panel {
+  left: 50% !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: 18px !important;
+  transform: translateX(-50%) !important;
+  width: min(520px, calc(100vw - 24px)) !important;
+  height: auto !important;
+  aspect-ratio: 870 / 270 !important;
+  max-height: min(162px, calc(100dvh - 158px)) !important;
+  padding: clamp(24px, 3.4vw, 32px) clamp(20px, 2.8vw, 28px) clamp(14px, 2.1vw, 20px) clamp(68px, 9vw, 90px) !important;
+  background: url("assets/Ui/cadre-story-board-2.png") center / 100% 100% no-repeat !important;
+}
+
+.scene.has-mini-game .story-panel,
+.scene.is-dungeon.has-mini-game:not(.is-combat) .story-panel,
+.scene.is-combat .story-panel {
+  left: 50% !important;
+  right: auto !important;
+  top: 12px !important;
+  bottom: auto !important;
+  width: min(720px, calc(100vw - 20px)) !important;
+  height: auto !important;
+  aspect-ratio: 870 / 270 !important;
+  max-height: 210px !important;
+  transform: translateX(-50%) !important;
+  padding: clamp(34px, 4.8vw, 48px) clamp(26px, 4vw, 42px) clamp(20px, 3vw, 30px) clamp(94px, 13vw, 130px) !important;
+  background: url("assets/Ui/cadre-story-board-2.png") center / 100% 100% no-repeat !important;
+}
+
+.scene.is-dungeon:not(.is-combat) .reward-panel {
+  position: fixed !important;
+  left: 50vw !important;
+  top: 50dvh !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: min(560px, calc(100vw - 24px)) !important;
+  min-height: 168px !important;
+  padding: 32px 38px 34px 46px !important;
+  transform: translate(-50%, -50%) !important;
+  z-index: 1300 !important;
+}
+
+.scene.is-cell {
+  position: absolute !important;
+  inset: 0 !important;
+  display: block !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  background: url("assets/Donjon/geole-ferme.webp") center / cover no-repeat #17110d !important;
+}
+
+.scene.is-cell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: url("assets/Donjon/geole-ferme.webp") center / cover no-repeat;
+  filter: blur(10px) brightness(0.55);
+  transform: scale(1.035);
+  pointer-events: none;
+}
+
+.scene.is-cell .action-zone {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 3 !important;
+  display: block !important;
+  padding: 0 !important;
+  border: 0 !important;
+  pointer-events: none !important;
+}
+
+.scene.is-cell .death-choices {
+  position: absolute !important;
+  inset: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  pointer-events: none !important;
+}
+
+.scene.is-cell .cell-stage {
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  width: min(100vw, calc(100dvh * 1448 / 1086)) !important;
+  height: min(100dvh, calc(100vw * 1086 / 1448)) !important;
+  max-width: none !important;
+  aspect-ratio: 1448 / 1086 !important;
+  transform: translate(-50%, -50%) !important;
+  background: url("assets/Donjon/geole-ferme.webp") center / 100% 100% no-repeat !important;
+  filter: drop-shadow(0 20px 42px rgba(0, 0, 0, 0.52)) !important;
+  pointer-events: auto !important;
+}
+
+.scene.is-cell.is-cell-opening .cell-stage {
+  background: url("assets/Donjon/geole-ouvert.webp") center / 100% 100% no-repeat !important;
+}
+
+.scene.is-cell .story-panel {
+  left: var(--hud-edge) !important;
+  top: 16px !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: none !important;
+  z-index: 20 !important;
+}
+
+.scene.is-village .hodor-sprite,
+.scene.is-dungeon:not(.is-combat) .hodor-sprite {
+  transition:
+    left 980ms linear,
+    top 980ms linear,
+    filter 180ms ease !important;
+}
+
+.scene.is-village .hodor-sprite.pose-walk,
+.scene.is-dungeon:not(.is-combat) .hodor-sprite.pose-walk,
+.scene.is-dungeon:not(.is-combat).is-door-walking.door-target-0 .hodor-sprite,
+.scene.is-dungeon:not(.is-combat).is-door-walking.door-target-1 .hodor-sprite,
+.scene.is-dungeon:not(.is-combat).is-door-walking.door-target-2 .hodor-sprite {
+  animation: none !important;
+}
+
+.scene.is-village .shop-panel,
+.scene.is-village .stats-panel {
+  left: 50% !important;
+  top: 50% !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: translate(-50%, -50%) !important;
+  border-color: rgba(223, 178, 76, 0.48) !important;
+  background:
+    linear-gradient(180deg, rgba(34, 27, 19, 0.97), rgba(15, 12, 9, 0.98)) !important;
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.72), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+.inventory-card {
+  border-color: rgba(223, 178, 76, 0.48) !important;
+  background:
+    linear-gradient(180deg, rgba(34, 27, 19, 0.97), rgba(15, 12, 9, 0.98)) !important;
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.72), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+.scene.is-village .shop-panel {
+  width: min(880px, calc(100vw - 28px)) !important;
+  max-height: min(82dvh, 680px) !important;
+}
+
+.scene.is-village .upgrade-grid,
+.scene.is-village .upgrade-grid.is-sell-grid {
+  grid-template-columns: repeat(auto-fit, minmax(185px, 1fr)) !important;
+  align-items: stretch !important;
+}
+
+.inventory-card {
+  width: min(760px, calc(100vw - 28px)) !important;
+  max-height: min(82dvh, 640px) !important;
+}
+
+@media (max-width: 760px) {
+  .game-shell > .stats-grid .stat-life {
+    width: 186px !important;
+    height: calc(186px * 260 / 1070) !important;
+  }
+
+  .game-shell > .stats-grid .stat-loss,
+  .game-shell > .stats-grid .stat-place {
+    width: 164px !important;
+  }
+
+  .game-shell > .stats-grid .stat-loss {
+    top: 58px !important;
+  }
+
+  .game-shell > .stats-grid .stat-inventory {
+    top: 64px !important;
+    left: 8px !important;
+    transform: scale(0.72) !important;
+    transform-origin: top left !important;
+  }
+
+  .game-shell > .stats-grid .stat-purse {
+    top: 64px !important;
+    left: 76px !important;
+    transform: scale(0.72) !important;
+    transform-origin: top left !important;
+  }
+
+  .scene.is-dungeon:not(.is-combat) .story-panel {
+    left: 50% !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: 8px !important;
+    transform: translateX(-50%) !important;
+  }
+}

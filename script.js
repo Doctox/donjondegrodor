@@ -205,7 +205,7 @@ const VILLAGE_ACTION_DELAY_MS = 650;
 const VILLAGE_RETURN_DELAY_MS = 900;
 const VILLAGE_SERVICE_RETURN_DELAY_MS = 4000;
 const CELL_OPEN_DELAY_MS = 650;
-const DUNGEON_EFFECT_VISIBLE_MS = 3000;
+const DUNGEON_EFFECT_VISIBLE_MS = 4500;
 const START_INTRO_EXIT_MS = 2200;
 const HODOR_WALK_FRAME_PATHS = [
   `${HODOR_BASE_PATH}/Corps/Marche/marche-1.png`,
@@ -1136,6 +1136,7 @@ function sendReturningPlayerToVillage() {
 function resetRunCarryover() {
   clearDungeonEffectPoseTimer();
   state.carriedGold = 0;
+  applyInventoryLossEffects(state.inventory);
   state.inventory = [];
   state.combat = null;
   state.combatHp = 0;
@@ -1231,6 +1232,7 @@ function restoreActiveRun(activeRun) {
   state.maxLife = snapshot.maxLife;
   state.carriedGold = snapshot.carriedGold;
   state.inventory = snapshot.inventory;
+  repairLegacyInventoryEffects();
   state.runLosses = snapshot.runLosses;
   state.floorShift = snapshot.floorShift;
   state.miniGamesEncountered = snapshot.miniGamesEncountered;
@@ -1773,6 +1775,38 @@ function gainMaxLife() {
   state.maxLife += 1;
   state.life = Math.min(state.maxLife, state.life + 1);
   return true;
+}
+
+function applyItemGainEffect(item) {
+  if (item !== "Slip de Guerre") return;
+  if (state.maxLife >= MAX_LIFE) {
+    state.maxLife = MAX_LIFE;
+    state.life = Math.min(state.life, state.maxLife);
+    return;
+  }
+  state.maxLife += 1;
+  state.life = Math.min(state.maxLife, state.life + 1);
+}
+
+function applyItemLossEffect(item) {
+  if (item !== "Slip de Guerre") return;
+  state.maxLife = Math.max(START_LIFE, state.maxLife - 1);
+  state.life = Math.min(state.life, state.maxLife);
+}
+
+function applyInventoryLossEffects(items) {
+  items.forEach((item) => applyItemLossEffect(item));
+}
+
+function repairLegacyInventoryEffects() {
+  if (!hasItem("Slip de Guerre")) return;
+  const expectedSlipMaxLife = Math.min(MAX_LIFE, START_LIFE + 1);
+  if (state.maxLife >= expectedSlipMaxLife) return;
+  const previousMaxLife = state.maxLife;
+  state.maxLife = expectedSlipMaxLife;
+  if (state.life >= previousMaxLife) {
+    state.life = state.maxLife;
+  }
 }
 
 function toneFromSnapshot(before) {
@@ -3118,10 +3152,6 @@ function useCombatItems(text, items, strike) {
     if (Math.random() < itemBreakChance(item)) {
       removeItem(item);
       consumed.push(item);
-      if (item === "Slip de Guerre") {
-        state.maxLife = Math.max(START_LIFE, state.maxLife - 1);
-        state.life = Math.min(state.life, state.maxLife);
-      }
     } else if (strike === "torso") {
       return `${text} L’objet cogne, grince, puis tient bon. Grodor le regarde avec un respect nouveau. Effet : Objet intact.`;
     } else if (strike === "legs") {
@@ -3428,6 +3458,7 @@ function endRun(screen) {
   if (screen === "mort") {
     state.life = 0;
     state.carriedGold = 0;
+    applyInventoryLossEffects(state.inventory);
     state.inventory = [];
     addStat("mortsRidicules");
     recordLoss();
@@ -3490,9 +3521,7 @@ function sellSelectedInventory() {
 }
 
 function applySoldItemEffect(item) {
-  if (item !== "Slip de Guerre") return;
-  state.maxLife = Math.max(START_LIFE, state.maxLife - 1);
-  state.life = Math.min(state.life, state.maxLife);
+  applyItemLossEffect(item);
 }
 
 function bankDepositText(deposited) {
@@ -3621,6 +3650,7 @@ function applyRunUpgrades() {
   if (Math.random() < upgradeChance("colis", [0.36, 0.52, 0.7])) {
     const item = randomStartingItem();
     state.inventory.push(item);
+    applyItemGainEffect(item);
   }
 }
 
@@ -3779,6 +3809,7 @@ function debugAddStuff(item) {
   const alreadyEquipped = hasItem(item);
   if (!alreadyEquipped) {
     state.inventory.push(item);
+    applyItemGainEffect(item);
   }
 
   state.hodorPose = "victory";
@@ -3792,6 +3823,7 @@ function debugAddStuff(item) {
 }
 
 function debugClearStuff() {
+  applyInventoryLossEffects(state.inventory);
   state.inventory = [];
   state.hodorPose = "question";
   setStory("Debug : stuff vide. Grodor regarde ses mains comme si c'était un plan.");
@@ -3927,6 +3959,7 @@ function toggleSaleItem(item) {
 function addItem(item, text) {
   if (!hasItem(item)) {
     state.inventory.push(item);
+    applyItemGainEffect(item);
     state.eventToneOverride = "good";
     addStat("objetsRamasses");
     saveStats();
@@ -3937,13 +3970,18 @@ function addItem(item, text) {
 }
 
 function removeItem(item) {
+  const hadItem = hasItem(item);
   state.inventory = state.inventory.filter((owned) => owned !== item);
+  if (hadItem) {
+    applyItemLossEffect(item);
+  }
 }
 
 function removeRandomItem() {
   const index = randomInt(0, state.inventory.length - 1);
   const item = state.inventory[index];
   state.inventory.splice(index, 1);
+  applyItemLossEffect(item);
   return item;
 }
 
@@ -4815,6 +4853,11 @@ function playPendingPurseLossAnimation() {
 }
 
 function renderHearts() {
+  const lifeHud = document.querySelector(".stat-life");
+  if (lifeHud) {
+    lifeHud.dataset.life = String(state.life);
+    lifeHud.dataset.maxLife = String(state.maxLife);
+  }
   const pvFill = $("pv-fill");
   if (pvFill) {
     const percentage = Math.max(0, Math.min(100, (state.life / state.maxLife) * 100));
