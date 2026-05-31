@@ -15,8 +15,8 @@
     <link rel="apple-touch-icon" href="assets/icons/grodor-icon-192.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=20260530-facelift">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=20260531-village-panel-close">
   </head>
   <body>
     <main class="game-shell">
@@ -91,7 +91,7 @@
               <button class="inventory-close" id="account-close" type="button" aria-label="Fermer les paramètres">x</button>
             </div>
             <p class="account-line" id="account-line">Connecté : Visiteur</p>
-            
+
             <div class="settings-audio-group" style="margin: 14px 0; padding: 10px 0; border-top: 1px solid rgba(244, 234, 214, 0.12); border-bottom: 1px solid rgba(244, 234, 214, 0.12); text-align: left;">
               <h4 style="margin: 0 0 10px 0; color: var(--gold); font-family: var(--ui-font); font-size: 0.86rem; text-transform: uppercase; letter-spacing: 0.5px;">Volumes</h4>
               <div style="margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
@@ -113,14 +113,17 @@
       </div>
 
       <section class="stats-grid">
-        <article class="stat stat-purse">
+        <article class="stat stat-purse" tabindex="0" aria-label="Bourse de Grodor">
           <div class="purse-visual" id="purse-visual" aria-hidden="true"></div>
-          <div>
+          <div class="purse-count">
             <strong><span id="carried-gold">0</span> PO</strong>
           </div>
         </article>
-        <article class="stat stat-life">
-          <div class="heart-row" id="heart-row" aria-label="Vie"></div>
+        <article class="stat stat-life" aria-label="Points de Vie">
+          <span class="pv-label">PV</span>
+          <div class="pv-bar">
+            <div class="pv-fill" id="pv-fill"></div>
+          </div>
         </article>
         <article class="stat-inventory" aria-label="Inventaire">
           <button class="inventory-toggle" id="inventory-toggle" type="button" aria-expanded="false" aria-controls="inventory-popover">
@@ -361,6 +364,6 @@
     <script src="upgrades.js"></script>
     <script src="supabase-config.js"></script>
     <script src="vendor/supabase-js-v2.js"></script>
-    <script src="script.js?v=20260529-pactes-maudits"></script>
+    <script src="script.js?v=20260531-village-panel-close"></script>
   </body>
 </html>

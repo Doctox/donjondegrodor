@@ -369,6 +369,14 @@ addEnterSubmit("signup-alias", signUpAccount);
 addEnterSubmit("signup-email", signUpAccount);
 addEnterSubmit("signup-password", signUpAccount);
 
+const purseHud = document.querySelector(".stat-purse");
+if (purseHud) {
+  purseHud.addEventListener("click", (event) => {
+    event.stopPropagation();
+    purseHud.classList.toggle("is-open");
+  });
+}
+
 document.querySelectorAll("[data-debug-combat]").forEach((button) => {
   button.addEventListener("click", () => debugStartCombat(button.dataset.debugCombat));
 });
@@ -384,6 +392,12 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     closeInventory();
     closeAccountPopover();
+  }
+});
+
+document.addEventListener("click", (event) => {
+  if (!event.target.closest(".stat-purse")) {
+    document.querySelector(".stat-purse")?.classList.remove("is-open");
   }
 });
 
@@ -493,13 +507,15 @@ function hodorianStats() {
   const souffrance = stats.humiliations + stats.degatsSubis + stats.mortsRidicules;
   const avidite = stats.poGagnes + stats.objetsRamasses;
   const obstination = stats.runsTotal + stats.etagesVisites;
+  const scoreGrodorienTotal = gloire + souffrance + avidite + obstination;
   return {
     ...stats,
     gloire,
     souffrance,
     avidite,
     obstination,
-    scoreHodorienTotal: gloire + souffrance + avidite + obstination,
+    scoreGrodorienTotal,
+    scoreHodorienTotal: scoreGrodorienTotal,
   };
 }
 
@@ -609,8 +625,9 @@ function finishStartIntro(options = {}) {
         intro.hidden = true;
         intro.classList.remove("is-leaving");
       }
-      lastPlayedBgmScreen = "cell";
-      playBgm("cell");
+      const targetBgm = state.screen || "cell";
+      lastPlayedBgmScreen = targetBgm;
+      playBgm(targetBgm);
     }
   );
 }
@@ -1821,7 +1838,7 @@ function delayVillageAction(target, action) {
 
   // Démarre l'animation de marche active lors du déplacement
   state.hodorPose = "walk";
-  
+
   // Oriente Grodor selon sa direction de marche
   if (target === "bank" || target === "sell") {
     state.hodorFlipped = false; // Marche vers la gauche
@@ -1830,13 +1847,13 @@ function delayVillageAction(target, action) {
   } else {
     state.hodorFlipped = false;
   }
-  
+
   render();
 
   villageActionTimer = window.setTimeout(() => {
     villageActionTimer = null;
     action();
-    
+
     // Grodor arrive au bâtiment et redevient immobile
     state.hodorPose = "idle";
     render();
@@ -1844,11 +1861,11 @@ function delayVillageAction(target, action) {
     const returnDelay = target === "bank" || target === "sell"
       ? VILLAGE_SERVICE_RETURN_DELAY_MS
       : VILLAGE_RETURN_DELAY_MS;
-      
+
     villageReturnTimer = window.setTimeout(() => {
       // Démarre l'animation de marche active lors du retour au centre
       state.hodorPose = "walk";
-      
+
       // Se retourne pour marcher dans l'autre sens
       if (target === "bank" || target === "sell") {
         state.hodorFlipped = true; // Retourne vers la droite
@@ -1857,13 +1874,13 @@ function delayVillageAction(target, action) {
       } else {
         state.hodorFlipped = false;
       }
-      
+
       clearVillageActionTarget();
       if (state.screen !== "village") return;
       state.villageLocation = "Village";
       setStory("Grodor revient au centre du village.");
       render();
-      
+
       // S'arrête une fois arrivé au centre du village (après 450ms de déplacement)
       window.setTimeout(() => {
         if (state.screen === "village") {
@@ -1948,37 +1965,25 @@ async function fetchRankingFromCloud() {
     renderStatsPanel();
     return;
   }
-  
+
   rankingLoading = true;
   renderStatsPanel();
-  
+
   try {
-    const { data, error } = await supabaseClient
-      .from("player_saves")
-      .select("wins, detailed_stats, user_id, profiles(display_name)")
-      .limit(100);
-      
-    if (error) throw error;
-    
-    const scoredData = data.map(item => {
-      const ds = item.detailed_stats || {};
-      const sortiesReussies = Math.max(Number(item.wins || 0), Number(ds.sortiesReussies || 0));
-      const combatsGagnes = Number(ds.combatsGagnes || 0);
-      const miniJeuxReussis = Number(ds.miniJeuxReussis || 0);
-      
-      const score = sortiesReussies + combatsGagnes + miniJeuxReussis;
-      return {
-        user_id: item.user_id,
-        profiles: item.profiles,
-        score
-      };
+    const { data, error } = await supabaseClient.rpc("get_grodor_leaderboard", {
+      p_limit: 20,
     });
-    
-    scoredData.sort((a, b) => b.score - a.score);
-    cachedRankingData = scoredData.slice(0, 10);
+
+    if (error) throw error;
+
+    cachedRankingData = (data || []).map((item) => ({
+      user_id: item.user_id,
+      displayName: item.display_name || "Grodor anonyme",
+      score: Number(item.score_grodorien_total || 0),
+    }));
   } catch (err) {
     console.error("Failed to fetch ranking from Supabase:", err);
-    cachedRankingData = null; // Forces local fallback
+    cachedRankingData = [];
   } finally {
     rankingLoading = false;
     renderStatsPanel();
@@ -2028,7 +2033,8 @@ function chooseDoor(door) {
   clearDungeonEffectPoseTimer();
   stopDungeonDoorPreview();
   $("scene")?.classList.add("is-door-walking");
-  setDungeonDoorTarget(door.dataset.door);
+  const doorIndex = door.dataset.door;
+  setDungeonDoorTarget(doorIndex);
   door.blur();
   flashDoor(door);
   state.inputLocked = true;
@@ -2041,7 +2047,11 @@ function chooseDoor(door) {
   ]));
   render();
 
-  window.setTimeout(() => resolveDoorChoice(), 2450);
+  let delay = 3450;
+  if (doorIndex === "1") delay = 3850;
+  if (doorIndex === "2") delay = 4450;
+
+  window.setTimeout(() => resolveDoorChoice(), delay);
 }
 
 function previewDungeonDoorOpen(event) {
@@ -2149,9 +2159,9 @@ function startGoldChestMiniGame(mode, amount) {
   clearChestDodgeTimers();
   clearArmWrestle();
   state.miniGamesEncountered += 1;
-  
+
   const totalRounds = randomInt(3, 6);
-  
+
   state.miniGame = {
     type: "chest",
     title: "",
@@ -2542,7 +2552,7 @@ function startChestDodgeRound(miniGame) {
   if (!state.miniGame || state.miniGame !== miniGame || miniGame.type !== "chest") return;
   miniGame.phase = "dodge";
   miniGame.image = `${CHEST_DODGE_ASSET_PATH}/coffre_esquive.webp`;
-  
+
   let slot;
   if (miniGame.previousSlot) {
     const opposites = {
@@ -2558,15 +2568,15 @@ function startChestDodgeRound(miniGame) {
   } else {
     slot = randomInt(1, 6);
   }
-  
+
   miniGame.activeSlot = slot;
   miniGame.previousSlot = slot;
   miniGame.promptState = "ok";
   miniGame.text = "";
-  
+
   const roundFactor = miniGame.round * 40;
   const currentWindow = Math.max(480, 700 - roundFactor);
-  
+
   chestDodgeTimer = window.setTimeout(() => {
     if (!state.miniGame || state.miniGame !== miniGame || miniGame.phase !== "dodge") return;
     settleChestDodge(miniGame, false);
@@ -4065,17 +4075,15 @@ function renderStatsPanel() {
       return;
     }
 
-    // 2. Récupérer les données (Cloud ou Local)
+    // 2. Récupérer les données cloud
     const listContainer = document.createElement("div");
     listContainer.className = "ranking-list";
 
     let rowsData = [];
 
     if (cachedRankingData && cachedRankingData.length > 0) {
-      // Données Supabase disponibles
-      rowsData = cachedRankingData.map((item, idx) => {
-        const profilesObj = Array.isArray(item.profiles) ? item.profiles[0] : item.profiles;
-        const displayName = profilesObj?.display_name || "Grodor anonyme";
+      rowsData = cachedRankingData.map((item) => {
+        const displayName = item.displayName || "Grodor anonyme";
         const isPlayer = item.user_id === cloudState.user?.id;
         return {
           name: isPlayer ? `${displayName} (Toi)` : displayName,
@@ -4084,59 +4092,36 @@ function renderStatsPanel() {
         };
       });
     } else {
-      // Fallback local avec des rivaux drôles triés par leur Gloire Grodorienne
-      const rivals = [
-        { name: "Brador le Poivrot", score: 184 },
-        { name: "Hodor (Le vrai)", score: 942 },
-        { name: "Kro le gobelin foiré", score: 42 },
-        { name: "Gros-Jean", score: 320 },
-        { name: "Princesse Pouffiasse", score: 2500 }
-      ];
-      
-      const playerStats = hodorianStats();
-      const allProfiles = [
-        ...rivals,
-        {
-          name: `${cloudState.profile?.alias || cloudState.profile?.display_name || "Grodor"} (Toi)`,
-          score: playerStats.gloire || 0,
-          isPlayer: true
-        }
-      ];
-
-      // Trier par score desc
-      allProfiles.sort((a, b) => b.score - a.score);
-
-      rowsData = allProfiles.map(p => {
-        return {
-          name: p.name,
-          score: p.score,
-          isPlayer: p.isPlayer
-        };
-      });
+      const emptyMessage = document.createElement("p");
+      emptyMessage.className = "ranking-empty";
+      emptyMessage.textContent = "Aucun compte inscrit dans le classement pour le moment.";
+      listContainer.appendChild(emptyMessage);
+      grid.appendChild(listContainer);
+      return;
     }
 
     // 3. Rendre le classement
     rowsData.forEach((row, idx) => {
       const rankingRow = document.createElement("div");
       rankingRow.className = `ranking-row ${row.isPlayer ? "is-player" : ""}`.trim();
-      
+
       const rankSpan = document.createElement("span");
       rankSpan.className = `ranking-rank rank-${idx + 1}`;
-      
+
       // Petites médailles emojis pour le top 3
       if (idx === 0) rankSpan.textContent = "🥇";
       else if (idx === 1) rankSpan.textContent = "🥈";
       else if (idx === 2) rankSpan.textContent = "🥉";
       else rankSpan.textContent = `${idx + 1}`;
-      
+
       const nameSpan = document.createElement("span");
       nameSpan.className = "ranking-name";
       nameSpan.textContent = row.name;
-      
+
       const scoreSpan = document.createElement("span");
       scoreSpan.className = "ranking-score score-gold"; // Utiliser la classe or pour l'effet pulsant
-      scoreSpan.textContent = `${row.score} Gloire Grodorienne`;
-      
+      scoreSpan.textContent = `${row.score} Score Grodorien`;
+
       rankingRow.append(rankSpan, nameSpan, scoreSpan);
       listContainer.appendChild(rankingRow);
     });
@@ -4597,10 +4582,14 @@ function render() {
       : state.screen === "mort"
         ? "Geôles"
         : state.floor;
-  $("carried-gold").textContent = state.carriedGold;
+  const carriedGoldText = String(state.carriedGold);
+  $("carried-gold").textContent = carriedGoldText;
+  $("carried-gold").dataset.digits = String(carriedGoldText.length);
   $("bank-gold").textContent = state.bankGold;
   $("bank-building-gold").textContent = state.bankGold;
-  $("loss-count").textContent = state.runLosses;
+  const lossCountText = String(state.runLosses);
+  $("loss-count").textContent = lossCountText;
+  $("loss-count").dataset.digits = String(lossCountText.length);
   const statsSummary = hodorianStats();
   $("village-loss-count").textContent = statsSummary.souffrance;
   $("village-win-count").textContent = statsSummary.gloire;
@@ -4826,17 +4815,10 @@ function playPendingPurseLossAnimation() {
 }
 
 function renderHearts() {
-  const heartRow = $("heart-row");
-  const previousLife = state.renderedLife;
-  heartRow.textContent = "";
-  for (let index = 0; index < state.maxLife; index += 1) {
-    const heart = document.createElement("span");
-    heart.className = `heart-icon${index < state.life ? " is-full" : ""}`;
-    if (previousLife !== null) {
-      if (index >= state.life && index < previousLife) heart.classList.add("is-lost");
-      if (index < state.life && index >= previousLife) heart.classList.add("is-gained");
-    }
-    heartRow.appendChild(heart);
+  const pvFill = $("pv-fill");
+  if (pvFill) {
+    const percentage = Math.max(0, Math.min(100, (state.life / state.maxLife) * 100));
+    pvFill.style.width = `${percentage}%`;
   }
   state.renderedLife = state.life;
 }
@@ -5031,7 +5013,7 @@ function initAudioSettings() {
       localStorage.setItem("grodor_sfx_volume", val);
       sfxVal.textContent = `${val}%`;
     });
-    
+
     sfxSlider.addEventListener("change", () => {
       // Joue un clic pour tester le volume des bruitages
       playClickSound();
@@ -5048,7 +5030,7 @@ function playLogoIntroSound(onRumbleStart, onEnded) {
 
   const handleRumbleStart = typeof onRumbleStart === "function" ? onRumbleStart : () => {};
   const handleEnded = typeof onEnded === "function" ? onEnded : () => {};
-  
+
   // Tente d'abord de charger le fichier final logo-intro.mp3 s'il a été fourni
   const introAudio = new Audio("assets/Audio/logo-intro.mp3");
   introAudio.volume = (sfxVolume / 100) * 0.5;
@@ -5062,12 +5044,12 @@ function playLogoIntroSound(onRumbleStart, onEnded) {
 
   // Sécurité générale (Watchdog) pour garantir le démarrage du BGM s'il y a un blocage
   const watchdog = window.setTimeout(triggerEnded, 4500);
-  
+
   introAudio.play()
     .then(() => {
       // Démarrage du glissement de porte 1 seconde après le début du son
       window.setTimeout(handleRumbleStart, 1000);
-      
+
       introAudio.addEventListener("ended", () => {
         window.clearTimeout(watchdog);
         triggerEnded();
@@ -5079,7 +5061,7 @@ function playLogoIntroSound(onRumbleStart, onEnded) {
     })
     .catch(() => {
       window.clearTimeout(watchdog);
-      
+
       // Fallback : Synthétiseur Web Audio API medieval boom & chime
       if (!audioCtx || audioCtx.state === "suspended") {
         logoChimePlayed = false;
@@ -5088,7 +5070,7 @@ function playLogoIntroSound(onRumbleStart, onEnded) {
       }
 
       const now = audioCtx.currentTime;
-      
+
       // 1. Castle drum boom (Netflix "ta-dum" style, but fantasy medieval)
       const osc1 = audioCtx.createOscillator();
       const gain1 = audioCtx.createGain();
@@ -5097,13 +5079,13 @@ function playLogoIntroSound(onRumbleStart, onEnded) {
       osc1.type = "sine";
       osc1.frequency.setValueAtTime(80, now);
       osc1.frequency.exponentialRampToValueAtTime(30, now + 0.6);
-      
+
       gain1.gain.setValueAtTime(0.35 * (sfxVolume / 100), now);
       gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
-      
+
       osc1.start(now);
       osc1.stop(now + 0.6);
-      
+
       // 2. Magical crystal chord (comical-epic resolve chord)
       const notes = [293.66, 349.23, 440.00, 587.33]; // Ré4 -> Fa4 -> La4 -> Ré5 (D minor)
       notes.forEach((freq, i) => {
@@ -5112,16 +5094,16 @@ function playLogoIntroSound(onRumbleStart, onEnded) {
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         osc.type = "sine";
-        
+
         const delay = 0.12 + i * 0.08;
         osc.frequency.setValueAtTime(freq, now + delay);
         gain.gain.setValueAtTime(0.12 * (sfxVolume / 100), now + delay);
         gain.gain.exponentialRampToValueAtTime(0.001, now + delay + 2.2);
-        
+
         osc.start(now + delay);
         osc.stop(now + delay + 2.2);
       });
-      
+
       // 3. Heavy stone gate opening rumble (bandpass filtered white noise) - Retardé de 1s pour s'aligner
       try {
         const rumbleDuration = 2.2;
@@ -5131,25 +5113,25 @@ function playLogoIntroSound(onRumbleStart, onEnded) {
         for (let i = 0; i < bufferSize; i++) {
           data[i] = Math.random() * 2 - 1;
         }
-        
+
         const noise = audioCtx.createBufferSource();
         noise.buffer = buffer;
-        
+
         const filter = audioCtx.createBiquadFilter();
         filter.type = "bandpass";
         filter.frequency.setValueAtTime(65, now + 1.0);
         filter.frequency.linearRampToValueAtTime(32, now + 1.0 + rumbleDuration);
         filter.Q.setValueAtTime(4.5, now + 1.0);
-        
+
         const noiseGain = audioCtx.createGain();
         noiseGain.gain.setValueAtTime(0.0, now + 1.0);
         noiseGain.gain.linearRampToValueAtTime(0.16 * (sfxVolume / 100), now + 1.0 + 0.1);
         noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 1.0 + rumbleDuration);
-        
+
         noise.connect(filter);
         filter.connect(noiseGain);
         noiseGain.connect(audioCtx.destination);
-        
+
         noise.start(now + 1.0);
         noise.stop(now + 1.0 + rumbleDuration);
       } catch (err) {
@@ -5173,14 +5155,14 @@ function playCoinSound() {
 
   osc.type = "sine";
   const now = audioCtx.currentTime;
-  
+
   // Note montante de cartoon
   osc.frequency.setValueAtTime(587.33, now); // Ré5
   osc.frequency.setValueAtTime(880, now + 0.07); // La5
-  
+
   gain.gain.setValueAtTime(0.12 * (sfxVolume / 100), now);
   gain.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
-  
+
   osc.start(now);
   osc.stop(now + 0.32);
 }
@@ -5196,14 +5178,14 @@ function playDamageSound() {
 
   osc.type = "triangle";
   const now = audioCtx.currentTime;
-  
+
   // Fréquence glissante vers le bas (bonk étouffé)
   osc.frequency.setValueAtTime(180, now);
   osc.frequency.exponentialRampToValueAtTime(60, now + 0.25);
-  
+
   gain.gain.setValueAtTime(0.28 * (sfxVolume / 100), now);
   gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
-  
+
   osc.start(now);
   osc.stop(now + 0.25);
 }
@@ -5281,10 +5263,10 @@ function playClickSound() {
   const now = audioCtx.currentTime;
   osc.frequency.setValueAtTime(1200, now);
   osc.frequency.exponentialRampToValueAtTime(300, now + 0.04);
-  
+
   gain.gain.setValueAtTime(0.04 * (sfxVolume / 100), now);
   gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
-  
+
   osc.start(now);
   osc.stop(now + 0.04);
 }
@@ -5370,14 +5352,14 @@ function preloadAndDecodeAssets() {
     "assets/Accueil/Background-accueil-logo.png",
     "assets/Donjon/Donjon-accueil.webp",
     "assets/Donjon/Donjon-interieur.webp",
-    "assets/Donjon/Donjon-interieur-porte-1.webp",
-    "assets/Donjon/Donjon-interieur-porte-2.webp",
-    "assets/Donjon/Donjon-interieur-porte-3.webp",
+    "assets/Donjon/Donjon-interieur-porte-1.png",
+    "assets/Donjon/Donjon-interieur-porte-2.png",
+    "assets/Donjon/Donjon-interieur-porte-3.png",
     "assets/Donjon/geole-ferme.webp",
     "assets/Donjon/geole-ouvert.webp",
     "assets/Donjon/porte geole fermé.png",
     "assets/Donjon/porte geole ouverte.png",
-    "assets/Village/village v0.2.webp",
+    "assets/Village/village.webp",
     "assets/Arene/arene-1.webp",
     "assets/Arene/arene-2.webp",
     "assets/Arene/arene-3.webp",
@@ -5467,7 +5449,7 @@ function preloadAndDecodeAssets() {
 
   // Charger et décoder asynchronement lors de l'inactivité du navigateur
   const idleCallback = window.requestIdleCallback || ((cb) => setTimeout(cb, 300));
-  
+
   idleCallback(() => {
     uniqueUrls.forEach((url) => {
       const img = new Image();

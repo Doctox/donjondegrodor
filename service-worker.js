@@ -1,4 +1,4 @@
-const CACHE_NAME = "grodor-v75-facelift-intro";
+const CACHE_NAME = "grodor-v110-village-panel-close";
 
 const CORE_ASSETS = [
   "/",
@@ -23,14 +23,14 @@ const CORE_ASSETS = [
   "/assets/Accueil/Background-accueil-logo.png",
   "/assets/Donjon/Donjon-accueil.webp",
   "/assets/Donjon/Donjon-interieur.webp",
-  "/assets/Donjon/Donjon-interieur-porte-1.webp",
-  "/assets/Donjon/Donjon-interieur-porte-2.webp",
-  "/assets/Donjon/Donjon-interieur-porte-3.webp",
+  "/assets/Donjon/Donjon-interieur-porte-1.png",
+  "/assets/Donjon/Donjon-interieur-porte-2.png",
+  "/assets/Donjon/Donjon-interieur-porte-3.png",
   "/assets/Donjon/geole-ferme.webp",
   "/assets/Donjon/geole-ouvert.webp",
   "/assets/Donjon/porte%20geole%20ferm%C3%A9.png",
   "/assets/Donjon/porte%20geole%20ouverte.png",
-  "/assets/Village/village%20v0.2.webp",
+  "/assets/Village/village.webp",
   "/assets/Arene/arene-1.webp",
   "/assets/Arene/arene-2.webp",
   "/assets/Arene/arene-3.webp",
@@ -88,6 +88,10 @@ const CORE_ASSETS = [
   "/assets/Mini-jeu/coffre-esquive/esquive-6-eclate.png",
   "/assets/Ui/Bourse%20vide.png",
   "/assets/Ui/Bourse%20pleine.png",
+  "/assets/Ui/cadre-etage.png",
+  "/assets/Ui/cadre-tentative.png",
+  "/assets/Ui/cadre-vie.png",
+  "/assets/Ui/cadre-storyboard.png",
   "/assets/Ui/inventaire%20vide.png",
   "/assets/Ui/inventaire%20plein.png",
   "/assets/Ui/coeur%20vide.png",

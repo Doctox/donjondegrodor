@@ -5445,7 +5445,7 @@ h1 {
   --village-hodor-y: calc(50% - 18px);
   background:
     linear-gradient(180deg, rgba(10, 9, 6, 0.08), rgba(10, 9, 6, 0.12)),
-    url("assets/Village/village v0.2.webp") center / 100% 100% no-repeat,
+    url("assets/Village/village.webp") center / 100% 100% no-repeat,
     #6f8f35;
 }
 
@@ -5776,16 +5776,12 @@ h1 {
   background: linear-gradient(90deg, rgba(18, 15, 12, 0.9), rgba(18, 15, 12, 0.66));
 }
 
-.scene.is-dungeon:not(.is-combat) .reward-row,
-.scene.is-dungeon:not(.is-combat) .action-zone {
+.scene.is-dungeon:not(.is-combat) .reward-row {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   margin: 0;
-}
-
-.scene.is-dungeon:not(.is-combat) .reward-row {
   z-index: 8;
   pointer-events: none;
 }
@@ -5800,38 +5796,45 @@ h1 {
 }
 
 .scene.is-dungeon:not(.is-combat) .action-zone {
+  position: relative;
   z-index: 6;
+  flex: 1 1 auto;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  padding: clamp(68px, 11dvh, 92px) 8px 8px;
+  padding: 12px 8px;
   border-top: 0;
   background: transparent;
+  width: 100%;
+  min-height: 0;
+}
+
+.scene.is-dungeon:not(.is-combat) {
+  --dungeon-hodor-base-x: 48.0%;
+  --dungeon-hodor-base-y: 20.5%;
+  --dungeon-hodor-door-0-x: 38.0%;
+  --dungeon-hodor-door-0-y: 20.5%;
+  --dungeon-hodor-door-1-x: 38.0%;
+  --dungeon-hodor-door-1-y: 50.5%;
+  --dungeon-hodor-door-2-x: 38.0%;
+  --dungeon-hodor-door-2-y: 82.5%;
+  --dungeon-hodor-x: var(--dungeon-hodor-base-x);
+  --dungeon-hodor-y: var(--dungeon-hodor-base-y);
+  --dungeon-door-0-x: 31.0%;
+  --dungeon-door-0-y: 19.0%;
+  --dungeon-door-1-x: 30.7%;
+  --dungeon-door-1-y: 49.0%;
+  --dungeon-door-2-x: 30.5%;
+  --dungeon-door-2-y: 80.7%;
 }
 
 .scene.is-dungeon:not(.is-combat) .dungeon-stage {
-  --dungeon-hodor-base-x: 51.5%;
-  --dungeon-hodor-base-y: 10.9%;
-  --dungeon-hodor-door-0-x: 69.5%;
-  --dungeon-hodor-door-0-y: 30.1%;
-  --dungeon-hodor-door-1-x: 69%;
-  --dungeon-hodor-door-1-y: 51.1%;
-  --dungeon-hodor-door-2-x: 69%;
-  --dungeon-hodor-door-2-y: 77.8%;
-  --dungeon-hodor-x: var(--dungeon-hodor-base-x);
-  --dungeon-hodor-y: var(--dungeon-hodor-base-y);
-  --dungeon-door-0-x: 78.5%;
-  --dungeon-door-0-y: 33%;
-  --dungeon-door-1-x: 77.5%;
-  --dungeon-door-1-y: 54%;
-  --dungeon-door-2-x: 78.8%;
-  --dungeon-door-2-y: 82%;
   display: block;
   position: relative;
   flex: 0 0 auto;
-  width: min(100%, calc((100dvh - 280px) * 1024 / 1535));
+  width: min(100%, calc((100dvh - 280px) * 1672 / 941));
   height: auto;
-  aspect-ratio: 1024 / 1535;
+  aspect-ratio: 1672 / 941;
   overflow: visible;
   background:
     linear-gradient(180deg, rgba(5, 4, 4, 0.04), rgba(5, 4, 4, 0.1)),
@@ -5957,19 +5960,22 @@ h1 {
 .scene.is-dungeon:not(.is-combat).door-preview-target-0 .dungeon-stage {
   background:
     linear-gradient(180deg, rgba(5, 4, 4, 0.04), rgba(5, 4, 4, 0.1)),
-    url("assets/Donjon/Donjon-interieur-porte-1.webp") center / 100% 100% no-repeat;
+    url("assets/Donjon/Donjon-interieur-porte-1.png") center / 100% 100% no-repeat,
+    url("assets/Donjon/Donjon-interieur.webp") center / 100% 100% no-repeat;
 }
 
 .scene.is-dungeon:not(.is-combat).door-preview-target-1 .dungeon-stage {
   background:
     linear-gradient(180deg, rgba(5, 4, 4, 0.04), rgba(5, 4, 4, 0.1)),
-    url("assets/Donjon/Donjon-interieur-porte-2.webp") center / 100% 100% no-repeat;
+    url("assets/Donjon/Donjon-interieur-porte-2.png") center / 100% 100% no-repeat,
+    url("assets/Donjon/Donjon-interieur.webp") center / 100% 100% no-repeat;
 }
 
 .scene.is-dungeon:not(.is-combat).door-preview-target-2 .dungeon-stage {
   background:
     linear-gradient(180deg, rgba(5, 4, 4, 0.04), rgba(5, 4, 4, 0.1)),
-    url("assets/Donjon/Donjon-interieur-porte-3.webp") center / 100% 100% no-repeat;
+    url("assets/Donjon/Donjon-interieur-porte-3.png") center / 100% 100% no-repeat,
+    url("assets/Donjon/Donjon-interieur.webp") center / 100% 100% no-repeat;
 }
 
 .scene.is-dungeon:not(.is-combat).is-door-walking.door-target-0 .dungeon-stage {
@@ -5977,7 +5983,8 @@ h1 {
   --dungeon-hodor-y: var(--dungeon-hodor-door-0-y);
   background:
     linear-gradient(180deg, rgba(5, 4, 4, 0.04), rgba(5, 4, 4, 0.1)),
-    url("assets/Donjon/Donjon-interieur-porte-1.webp") center / 100% 100% no-repeat;
+    url("assets/Donjon/Donjon-interieur-porte-1.png") center / 100% 100% no-repeat,
+    url("assets/Donjon/Donjon-interieur.webp") center / 100% 100% no-repeat;
 }
 
 .scene.is-dungeon:not(.is-combat).is-door-walking.door-target-1 .dungeon-stage {
@@ -5985,15 +5992,223 @@ h1 {
   --dungeon-hodor-y: var(--dungeon-hodor-door-1-y);
   background:
     linear-gradient(180deg, rgba(5, 4, 4, 0.04), rgba(5, 4, 4, 0.1)),
-    url("assets/Donjon/Donjon-interieur-porte-2.webp") center / 100% 100% no-repeat;
+    url("assets/Donjon/Donjon-interieur-porte-2.png") center / 100% 100% no-repeat,
+    url("assets/Donjon/Donjon-interieur.webp") center / 100% 100% no-repeat;
 }
 
 .scene.is-dungeon:not(.is-combat).is-door-walking.door-target-2 .dungeon-stage {
   --dungeon-hodor-x: var(--dungeon-hodor-door-2-x);
   --dungeon-hodor-y: var(--dungeon-hodor-door-2-y);
+  background: transparent;
+  width: 100%;
+  min-height: 0;
+}
+
+.scene.is-dungeon:not(.is-combat) {
+  --dungeon-hodor-base-x: 48.0%;
+  --dungeon-hodor-base-y: 20.5%;
+  --dungeon-hodor-door-0-x: 38.0%;
+  --dungeon-hodor-door-0-y: 20.5%;
+  --dungeon-hodor-door-1-x: 38.0%;
+  --dungeon-hodor-door-1-y: 50.5%;
+  --dungeon-hodor-door-2-x: 38.0%;
+  --dungeon-hodor-door-2-y: 82.5%;
+  --dungeon-hodor-x: var(--dungeon-hodor-base-x);
+  --dungeon-hodor-y: var(--dungeon-hodor-base-y);
+  --dungeon-door-0-x: 31.0%;
+  --dungeon-door-0-y: 19.0%;
+  --dungeon-door-1-x: 30.7%;
+  --dungeon-door-1-y: 49.0%;
+  --dungeon-door-2-x: 30.5%;
+  --dungeon-door-2-y: 80.7%;
+}
+
+.scene.is-dungeon:not(.is-combat) .dungeon-stage {
+  display: block;
+  position: relative;
+  flex: 0 0 auto;
+  width: min(100%, calc((100dvh - 280px) * 1672 / 941));
+  height: auto;
+  aspect-ratio: 1672 / 941;
+  overflow: visible;
   background:
     linear-gradient(180deg, rgba(5, 4, 4, 0.04), rgba(5, 4, 4, 0.1)),
-    url("assets/Donjon/Donjon-interieur-porte-3.webp") center / 100% 100% no-repeat;
+    url("assets/Donjon/Donjon-interieur.webp") center / 100% 100% no-repeat;
+  filter: drop-shadow(0 22px 34px rgba(0, 0, 0, 0.42));
+}
+
+.scene.is-dungeon:not(.is-combat) .hodor-sprite {
+  position: absolute;
+  left: var(--dungeon-hodor-x);
+  top: var(--dungeon-hodor-y);
+  z-index: 3;
+  width: clamp(68px, 15%, 152px);
+  max-width: 18%;
+  max-height: none;
+  background-image: url("assets/Hodor%20V0.1/Corps/question.png");
+  transform: translate(-50%, -50%);
+  transform-origin: center bottom;
+  transition:
+    left 380ms cubic-bezier(0.22, 0.72, 0.24, 1),
+    top 380ms cubic-bezier(0.22, 0.72, 0.24, 1),
+    filter 180ms ease;
+}
+
+.scene.is-dungeon:not(.is-combat) .hodor-sprite.pose-idle,
+.scene.is-dungeon:not(.is-combat) .hodor-sprite.pose-folie,
+.scene.is-dungeon:not(.is-combat) .hodor-sprite.pose-question,
+.scene.is-dungeon:not(.is-combat) .hodor-sprite.pose-fuite,
+.scene.is-dungeon:not(.is-combat) .hodor-sprite.pose-releve,
+.scene.is-dungeon:not(.is-combat) .hodor-sprite.pose-victory,
+.scene.is-dungeon:not(.is-combat) .hodor-sprite.pose-hurt,
+.scene.is-dungeon:not(.is-combat) .hodor-sprite.pose-ko {
+  animation: none;
+}
+
+.scene.is-dungeon:not(.is-combat) .hodor-sprite.pose-walk {
+  animation: hodorDungeonWalk 520ms ease-in-out infinite alternate;
+}
+
+@keyframes hodorDungeonWalk {
+  from {
+    transform: translate(-50%, -50%) translateY(0);
+  }
+
+  to {
+    transform: translate(-50%, -50%) translateY(-5px);
+  }
+}
+
+.scene.is-dungeon:not(.is-combat) .doors {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  margin: 0;
+}
+
+.scene.is-dungeon:not(.is-combat) .door {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 12%;
+  max-width: none;
+  height: auto;
+  aspect-ratio: 0.75;
+  border: 1px solid rgba(216, 170, 61, 0.08);
+  border-radius: 50% 50% 12px 12px;
+  background: rgba(216, 170, 61, 0.015);
+  background-image: none;
+  box-shadow: none;
+  transform: translate(-50%, -50%);
+  transform-origin: center bottom;
+  transition:
+    opacity 420ms ease,
+    transform 360ms cubic-bezier(0.22, 0.72, 0.24, 1),
+    filter 220ms ease;
+}
+
+.scene.is-dungeon:not(.is-combat) .door[data-door="0"] {
+  left: var(--dungeon-door-0-x);
+  top: var(--dungeon-door-0-y);
+}
+
+.scene.is-dungeon:not(.is-combat) .door[data-door="1"] {
+  left: var(--dungeon-door-1-x);
+  top: var(--dungeon-door-1-y);
+  width: 12%;
+}
+
+.scene.is-dungeon:not(.is-combat) .door[data-door="2"] {
+  left: var(--dungeon-door-2-x);
+  top: var(--dungeon-door-2-y);
+}
+
+.scene.is-dungeon:not(.is-combat) .door:hover:not(:disabled) {
+  border-color: rgba(216, 170, 61, 0.32);
+  background: rgba(216, 170, 61, 0.08);
+  transform: translate(-50%, -50%) scale(1.04);
+}
+
+.scene.is-dungeon:not(.is-combat) .door-number {
+  display: none;
+  place-items: center;
+  width: clamp(18px, 30%, 30px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(216, 170, 61, 0.46);
+  border-radius: 50%;
+  background: rgba(27, 21, 13, 0.78);
+  color: #f2d36b;
+  font-family: Arial, sans-serif;
+  font-size: clamp(0.72rem, 2.7vw, 0.95rem);
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 0 1px 2px #000;
+}
+
+.scene.is-dungeon:not(.is-combat) .door-knob {
+  display: none;
+}
+
+.scene.is-dungeon:not(.is-combat).door-preview-target-0 .dungeon-stage {
+  background:
+    linear-gradient(180deg, rgba(5, 4, 4, 0.04), rgba(5, 4, 4, 0.1)),
+    url("assets/Donjon/Donjon-interieur-porte-1.png") center / 100% 100% no-repeat,
+    url("assets/Donjon/Donjon-interieur.webp") center / 100% 100% no-repeat;
+}
+
+.scene.is-dungeon:not(.is-combat).door-preview-target-1 .dungeon-stage {
+  background:
+    linear-gradient(180deg, rgba(5, 4, 4, 0.04), rgba(5, 4, 4, 0.1)),
+    url("assets/Donjon/Donjon-interieur-porte-2.png") center / 100% 100% no-repeat,
+    url("assets/Donjon/Donjon-interieur.webp") center / 100% 100% no-repeat;
+}
+
+.scene.is-dungeon:not(.is-combat).door-preview-target-2 .dungeon-stage {
+  background:
+    linear-gradient(180deg, rgba(5, 4, 4, 0.04), rgba(5, 4, 4, 0.1)),
+    url("assets/Donjon/Donjon-interieur-porte-3.png") center / 100% 100% no-repeat,
+    url("assets/Donjon/Donjon-interieur.webp") center / 100% 100% no-repeat;
+}
+
+.scene.is-dungeon:not(.is-combat).is-door-walking.door-target-0 {
+  --dungeon-hodor-x: var(--dungeon-hodor-door-0-x);
+  --dungeon-hodor-y: var(--dungeon-hodor-door-0-y);
+}
+.scene.is-dungeon:not(.is-combat).is-door-walking.door-target-0 .dungeon-stage {
+  background:
+    linear-gradient(180deg, rgba(5, 4, 4, 0.04), rgba(5, 4, 4, 0.1)),
+    url("assets/Donjon/Donjon-interieur-porte-1.png") center / 100% 100% no-repeat,
+    url("assets/Donjon/Donjon-interieur.webp") center / 100% 100% no-repeat;
+}
+
+.scene.is-dungeon:not(.is-combat).is-door-walking.door-target-1 {
+  --dungeon-hodor-x: var(--dungeon-hodor-door-1-x);
+  --dungeon-hodor-y: var(--dungeon-hodor-door-1-y);
+}
+.scene.is-dungeon:not(.is-combat).is-door-walking.door-target-1 .dungeon-stage {
+  background:
+    linear-gradient(180deg, rgba(5, 4, 4, 0.04), rgba(5, 4, 4, 0.1)),
+    url("assets/Donjon/Donjon-interieur-porte-2.png") center / 100% 100% no-repeat,
+    url("assets/Donjon/Donjon-interieur.webp") center / 100% 100% no-repeat;
+}
+
+.scene.is-dungeon:not(.is-combat).is-door-walking.door-target-2 {
+  --dungeon-hodor-x: var(--dungeon-hodor-door-2-x);
+  --dungeon-hodor-y: var(--dungeon-hodor-door-2-y);
+}
+.scene.is-dungeon:not(.is-combat).is-door-walking.door-target-2 .dungeon-stage {
+  background:
+    linear-gradient(180deg, rgba(5, 4, 4, 0.04), rgba(5, 4, 4, 0.1)),
+    url("assets/Donjon/Donjon-interieur-porte-3.png") center / 100% 100% no-repeat,
+    url("assets/Donjon/Donjon-interieur.webp") center / 100% 100% no-repeat;
+}
+
+.scene.is-dungeon:not(.is-combat).is-effect-pose {
+  --dungeon-hodor-x: var(--dungeon-hodor-base-x);
+  --dungeon-hodor-y: var(--dungeon-hodor-base-y);
 }
 
 .scene.is-dungeon:not(.is-combat).is-effect-pose .dungeon-stage {
@@ -6008,78 +6223,48 @@ h1 {
 }
 
 .scene.is-dungeon:not(.is-combat).is-effect-pose .hodor-sprite {
-  left: var(--dungeon-hodor-base-x) !important;
-  top: var(--dungeon-hodor-base-y) !important;
-  animation: none !important;
-  transform: translate(-50%, -50%) !important;
+  left: var(--dungeon-hodor-base-x);
+  top: var(--dungeon-hodor-base-y);
+  animation: none;
+  transform: translate(-50%, -50%);
   filter: drop-shadow(0 28px 22px rgba(0, 0, 0, 0.5));
 }
 
 .scene.is-dungeon:not(.is-combat).is-door-walking.door-target-0 .hodor-sprite {
-  animation: hodorPathDoorOne 2050ms linear both;
+  animation: hodorPathDoorOne 3050ms linear both;
 }
 
 .scene.is-dungeon:not(.is-combat).is-door-walking.door-target-1 .hodor-sprite {
-  animation: hodorPathDoorTwo 2250ms linear both;
+  animation: hodorPathDoorTwo 3500ms linear both;
 }
 
 .scene.is-dungeon:not(.is-combat).is-door-walking.door-target-2 .hodor-sprite {
-  animation: hodorPathDoorThree 2400ms linear both;
+  animation: hodorPathDoorThree 4000ms linear both;
 }
 
 @keyframes hodorPathDoorOne {
   0% {
     left: var(--dungeon-hodor-base-x);
     top: var(--dungeon-hodor-base-y);
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scaleX(-1);
   }
 
-  12% {
-    left: 44.5%;
-    top: 10.9%;
-    transform: translate(-50%, -50%) translateY(-3px);
+  33% {
+    left: 44.6%;
+    top: 20.0%;
+    transform: translate(-50%, -50%) scaleX(-1) translateY(-2px);
   }
 
-  24% {
-    left: 34.5%;
-    top: 11.7%;
-    transform: translate(-50%, -50%);
-  }
-
-  38% {
-    left: 33.2%;
-    top: 18.8%;
-    transform: translate(-50%, -50%) translateY(-3px);
-  }
-
-  52% {
-    left: 35.7%;
-    top: 26.2%;
-    transform: translate(-50%, -50%);
-  }
-
-  64% {
-    left: 43.8%;
-    top: 30.2%;
-    transform: translate(-50%, -50%) translateY(-3px);
-  }
-
-  78% {
-    left: 56.5%;
-    top: 30.1%;
-    transform: translate(-50%, -50%);
-  }
-
-  90% {
-    left: 65.2%;
-    top: 30%;
-    transform: translate(-50%, -50%) translateY(-2px);
+  66% {
+    left: 41.3%;
+    top: 20.5%;
+    transform: translate(-50%, -50%) scaleX(-1);
   }
 
   100% {
     left: var(--dungeon-hodor-door-0-x);
     top: var(--dungeon-hodor-door-0-y);
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scaleX(-1);
   }
 }
 
@@ -6087,55 +6272,50 @@ h1 {
   0% {
     left: var(--dungeon-hodor-base-x);
     top: var(--dungeon-hodor-base-y);
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scaleX(1);
   }
 
-  10% {
-    left: 44.5%;
-    top: 10.9%;
-    transform: translate(-50%, -50%) translateY(-3px);
+  40% {
+    left: 65.0%;
+    top: 20.5%;
+    transform: translate(-50%, -50%) scaleX(1) translateY(-2px);
   }
 
-  20% {
-    left: 34.5%;
-    top: 11.7%;
-    transform: translate(-50%, -50%);
+  43% {
+    left: 65.0%;
+    top: 20.5%;
+    transform: translate(-50%, -50%) scaleX(-1);
+    background-image: url("assets/Hodor%20V0.1/Corps/Idle.png");
   }
 
-  34% {
-    left: 33.2%;
-    top: 23.8%;
-    transform: translate(-50%, -50%) translateY(-3px);
+  50% {
+    left: 62.5%;
+    top: 30.5%;
+    transform: translate(-50%, -50%) scaleX(-1);
   }
 
-  48% {
-    left: 30.8%;
-    top: 38.6%;
-    transform: translate(-50%, -50%);
+  60% {
+    left: 60.0%;
+    top: 40.5%;
+    transform: translate(-50%, -50%) scaleX(-1) translateY(-2px);
   }
 
-  62% {
-    left: 34.8%;
-    top: 50.6%;
-    transform: translate(-50%, -50%) translateY(-3px);
+  70% {
+    left: 57.0%;
+    top: 50.5%;
+    transform: translate(-50%, -50%) scaleX(-1);
   }
 
-  76% {
-    left: 48.5%;
-    top: 52.1%;
-    transform: translate(-50%, -50%);
-  }
-
-  90% {
-    left: 62%;
-    top: 51.4%;
-    transform: translate(-50%, -50%) translateY(-2px);
+  85% {
+    left: 47.5%;
+    top: 50.5%;
+    transform: translate(-50%, -50%) scaleX(-1) translateY(-2px);
   }
 
   100% {
-    left: var(--dungeon-hodor-door-1-x);
-    top: var(--dungeon-hodor-door-1-y);
-    transform: translate(-50%, -50%);
+    left: var(--dungeon-door-1-x);
+    top: var(--dungeon-door-1-y);
+    transform: translate(-50%, -50%) scaleX(-1);
   }
 }
 
@@ -6143,61 +6323,76 @@ h1 {
   0% {
     left: var(--dungeon-hodor-base-x);
     top: var(--dungeon-hodor-base-y);
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scaleX(1);
   }
 
-  8% {
-    left: 44.5%;
-    top: 10.9%;
-    transform: translate(-50%, -50%) translateY(-3px);
+  20% {
+    left: 65.0%;
+    top: 20.5%;
+    transform: translate(-50%, -50%) scaleX(1) translateY(-2px);
   }
 
-  18% {
-    left: 34.5%;
-    top: 11.7%;
-    transform: translate(-50%, -50%);
+  23% {
+    left: 65.0%;
+    top: 20.5%;
+    transform: translate(-50%, -50%) scaleX(-1);
+    background-image: url("assets/Hodor%20V0.1/Corps/Idle.png");
   }
 
-  31% {
-    left: 32.7%;
-    top: 27.8%;
-    transform: translate(-50%, -50%) translateY(-3px);
+  33% {
+    left: 60.0%;
+    top: 40.5%;
+    transform: translate(-50%, -50%) scaleX(-1);
   }
 
-  44% {
-    left: 30.5%;
-    top: 43.5%;
-    transform: translate(-50%, -50%);
+  43% {
+    left: 57.0%;
+    top: 50.5%;
+    transform: translate(-50%, -50%) scaleX(-1) translateY(-2px);
   }
 
-  58% {
-    left: 30.2%;
-    top: 58.8%;
-    transform: translate(-50%, -50%) translateY(-3px);
+  46% {
+    left: 57.0%;
+    top: 50.5%;
+    transform: translate(-50%, -50%) scaleX(1);
+    background-image: url("assets/Hodor%20V0.1/Corps/Idle.png");
   }
 
-  70% {
-    left: 31.8%;
-    top: 72.8%;
-    transform: translate(-50%, -50%);
+  56% {
+    left: 65.0%;
+    top: 50.5%;
+    transform: translate(-50%, -50%) scaleX(1);
   }
 
-  84% {
-    left: 49.5%;
-    top: 80.7%;
-    transform: translate(-50%, -50%) translateY(-3px);
+  59% {
+    left: 65.0%;
+    top: 50.5%;
+    transform: translate(-50%, -50%) scaleX(-1);
+    background-image: url("assets/Hodor%20V0.1/Corps/Idle.png");
   }
 
-  93% {
+  69% {
     left: 62.5%;
-    top: 78.9%;
-    transform: translate(-50%, -50%);
+    top: 66.5%;
+    transform: translate(-50%, -50%) scaleX(-1) translateY(-2px);
+  }
+
+  78% {
+    left: 57.0%;
+    top: 82.5%;
+    transform: translate(-50%, -50%) scaleX(-1);
+  }
+
+  89% {
+    left: 47.5%;
+    top: 82.5%;
+    transform: translate(-50%, -50%) scaleX(-1) translateY(-2px);
   }
 
   100% {
     left: var(--dungeon-hodor-door-2-x);
     top: var(--dungeon-hodor-door-2-y);
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scaleX(-1);
   }
 }
 
@@ -6257,8 +6452,8 @@ h1 {
 }
 
 .scene.is-dungeon:not(.is-combat) .hodor-sprite {
-  width: clamp(136px, 28%, 280px);
-  max-width: 31%;
+  width: clamp(68px, 14%, 138px);
+  max-width: 15%;
 }
 
 .scene.is-village {
@@ -6310,7 +6505,7 @@ h1 {
   overflow: visible;
   background:
     linear-gradient(180deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.08)),
-    url("assets/Village/village v0.2.webp") center / 100% 100% no-repeat;
+    url("assets/Village/village.webp") center / 100% 100% no-repeat;
   filter: drop-shadow(0 22px 34px rgba(0, 0, 0, 0.42));
 }
 
@@ -8069,10 +8264,10 @@ h1 {
    ========================================================================== */
 
 :root {
-  --font-title: 'Cinzel', Georgia, serif;
-  --font-body: 'Outfit', sans-serif;
-  --ui-font: 'Outfit', sans-serif;
-  
+  --font-title: 'Bangers', cursive, sans-serif;
+  --font-body: 'Comic Neue', sans-serif;
+  --ui-font: 'Comic Neue', sans-serif;
+
   /* Palette chromatique premium Mobile RPG 2026 */
   --bg: #070605;
   --panel: linear-gradient(135deg, rgba(26, 20, 16, 0.94) 0%, rgba(13, 10, 8, 0.98) 100%);
@@ -8086,7 +8281,7 @@ h1 {
   --purple: #9b4de2;
   --line: rgba(226, 179, 74, 0.22);
   --line-light: rgba(255, 255, 255, 0.08);
-  
+
   /* Halos de lumière satinés / Glows */
   --glow-gold: 0 0 16px rgba(226, 179, 74, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.08);
   --glow-red: 0 0 18px rgba(217, 74, 56, 0.48);
@@ -8095,47 +8290,99 @@ h1 {
 }
 
 /* 🔤 TYPOGRAPHIE & LISIBILITÉ GLOBALE */
-body, button, input, select, textarea, 
+body, button, input, select, textarea,
 .story, .action-zone, .mini-game-panel, .combat-stage, .village-stage,
 .account-panel, .account-signup-modal, .account-signup-modal strong,
 .score-strip, .score-strip span, .score-strip strong {
-  font-family: var(--font-body) !important;
+  font-family: var(--font-body);
 }
 
-h1, h2, h3, h4, .location, .building strong, .door-number, 
-#mini-game-title, .ko-banner strong, .win-banner strong,
+/* Titres cinématographiques BD / Comic */
+h1, h2, h3, h4, #mini-game-title, .ko-banner strong, .win-banner strong {
+  font-family: var(--font-title);
+  text-transform: uppercase;
+  display: inline-block;
+  transform: rotate(-2deg);
+  text-shadow:
+    2px 2px 0 #000,
+    -2px -2px 0 #000,
+    2px -2px 0 #000,
+    -2px 2px 0 #000,
+    0 2px 0 #000,
+    0 -2px 0 #000,
+    2px 0 0 #000,
+    -2px 0 0 #000,
+    3px 3px 6px rgba(0, 0, 0, 0.6);
+  letter-spacing: 1px;
+}
+
+/* Textes UI intégrés (propres, lisibles, non-rotatifs pour éviter les débordements) */
+.location, .building strong, .door-number,
 .inventory-card-head strong, .account-card-head strong,
-.account-signup-head strong, .village-stat-title {
-  font-family: var(--font-title) !important;
-  letter-spacing: 0.8px;
+.account-signup-head strong, .village-stat-title,
+.stat strong, .bank-score strong, .village-stat-card strong {
+  font-family: var(--font-body);
+  font-weight: 700;
+  text-transform: uppercase;
+  text-shadow:
+    1px 1px 0 #000,
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000;
+  letter-spacing: 0.5px;
+}
+
+/* Correction du positionnement et de l'animation de la bannière village */
+.scene.is-village .win-banner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 40;
+  width: min(620px, calc(100% - 32px));
+  margin: 0;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  box-shadow: 0 28px 55px rgba(0, 0, 0, 0.5);
+  animation: villageBannerEntrance 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+@keyframes villageBannerEntrance {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
 }
 
 /* 💎 PANNEAUX DE VERRE SOMBRE HIGH-END (GLASSMORPHISME) */
-.story-panel, .mini-game-panel, .reward-panel, 
+.story-panel, .mini-game-panel, .reward-panel,
 .inventory-card, .account-card, .account-panel, .account-signup-modal,
 .shop-panel, .stats-panel, .village-tip-card {
-  background: var(--panel) !important;
-  backdrop-filter: blur(18px) !important;
-  -webkit-backdrop-filter: blur(18px) !important;
-  border: 1px solid var(--line) !important;
-  border-radius: 14px !important;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  background: var(--panel);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* 📖 JOURNAL DE NARRATION ÉLÉGANT & IMMERSIF */
 .story-panel {
-  border-left: 4px solid var(--gold) !important;
-  padding: 18px 22px !important;
-  margin-bottom: 8px !important;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+  border-left: 4px solid var(--gold);
+  padding: 18px 22px;
+  margin-bottom: 8px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .story-panel p.story {
-  line-height: 1.62 !important;
-  font-size: 1.06rem !important;
-  color: #fff6e4 !important;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) !important;
+  line-height: 1.62;
+  font-size: 1.06rem;
+  color: #fff6e4;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 /* 🏡 BÂTIMENTS DU VILLAGE (DOIVENT RESTER TRANSPARENTS) */
@@ -8145,360 +8392,413 @@ h1, h2, h3, h4, .location, .building strong, .door-number,
 .scene.is-village .building-roof,
 .scene.is-village .building > strong,
 .scene.is-village .building > small {
-  background-color: transparent !important;
-  background: transparent !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  filter: none !important;
+  background-color: transparent;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  filter: none;
 }
 
 .scene.is-village .building:hover {
-  transform: translateY(-5px) scale(1.03) !important;
-  filter: brightness(1.15) drop-shadow(0 4px 20px rgba(226, 179, 74, 0.32)) !important;
+  transform: translate(-50%, -50%) translateY(-5px) scale(1.03);
+  filter: brightness(1.15) drop-shadow(0 4px 20px rgba(226, 179, 74, 0.32));
 }
 
 .scene.is-village .building:active {
-  transform: translateY(-2px) scale(0.98) !important;
+  transform: translate(-50%, -50%) translateY(-2px) scale(0.98);
 }
 
 /* ⚡ EFFETS ET MICRO-INTERACTIONS TACTILES SUR LES BOUTONS */
 button, .combat-choice, .monster-part {
-  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  border-radius: 10px !important;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 10px;
 }
 
 button:hover {
-  filter: brightness(1.12) !important;
+  filter: brightness(1.12);
 }
 
 button:active, .combat-choice:active {
-  transform: scale(0.95) !important;
+  transform: scale(0.95);
 }
 
 /* 🛡️ BANNIÈRE D'INTRO EXCLUE DES BORDURES */
 .start-intro-logo {
-  border: 0 !important;
-  background: transparent !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  filter: none !important;
+  border: 0;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  filter: none;
 }
 .start-intro-logo::before {
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  filter: none !important;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  filter: none;
 }
 .start-intro-logo:hover {
-  filter: saturate(1.18) brightness(1.1) !important;
-  transform: scale(1.018) !important;
+  filter: saturate(1.18) brightness(1.1);
+  transform: scale(1.018);
 }
 
 /* ⚔️ CARDS DE COMBAT TAROT STYLE */
 .combat-choices {
-  gap: 12px !important;
+  gap: 12px;
 }
 
 .combat-choice {
-  border: 1px solid rgba(226, 179, 74, 0.2) !important;
-  background: linear-gradient(180deg, rgba(38, 22, 16, 0.85) 0%, rgba(20, 12, 9, 0.96) 100%) !important;
-  padding: 16px !important;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(226, 179, 74, 0.2);
+  background: linear-gradient(180deg, rgba(38, 22, 16, 0.85) 0%, rgba(20, 12, 9, 0.96) 100%);
+  padding: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .combat-choice:hover {
-  border-color: var(--gold) !important;
-  background: linear-gradient(180deg, rgba(46, 28, 20, 0.9) 0%, rgba(24, 14, 11, 0.98) 100%) !important;
-  box-shadow: var(--glow-gold) !important;
-  transform: translateY(-4px) scale(1.02) !important;
+  border-color: var(--gold);
+  background: linear-gradient(180deg, rgba(46, 28, 20, 0.9) 0%, rgba(24, 14, 11, 0.98) 100%);
+  box-shadow: var(--glow-gold);
+  transform: translateY(-4px) scale(1.02);
 }
 
 /* 🚪 PORTES DU DONJON (Sauf portes interactives du donjon qui utilisent data-door) */
 .door:not([data-door]) {
-  border: 1px solid var(--line) !important;
-  background: rgba(28, 22, 16, 0.65) !important;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4) !important;
+  border: 1px solid var(--line);
+  background: rgba(28, 22, 16, 0.65);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
 }
 
 .door:not([data-door]):hover {
-  border-color: var(--gold) !important;
-  box-shadow: var(--glow-gold) !important;
-  transform: translateY(-4px) !important;
+  border-color: var(--gold);
+  box-shadow: var(--glow-gold);
+  transform: translateY(-4px);
 }
 
 /* 🚪 PORTES DU DONJON INTERACTIVES SUR LA CARTE */
 .scene.is-dungeon:not(.is-combat) .door[data-door] {
-  border: 1px solid rgba(226, 179, 74, 0.08) !important;
-  background: rgba(226, 179, 74, 0.01) !important;
-  box-shadow: none !important;
+  border: 1px solid rgba(226, 179, 74, 0.08);
+  background: rgba(226, 179, 74, 0.01);
+  box-shadow: none;
 }
 
 .scene.is-dungeon:not(.is-combat) .door[data-door]:hover:not(:disabled) {
-  border-color: var(--gold) !important;
-  background: rgba(226, 179, 74, 0.1) !important;
-  box-shadow: var(--glow-gold) !important;
-  transform: translate(-50%, -50%) scale(1.05) !important;
+  border-color: var(--gold);
+  background: rgba(226, 179, 74, 0.1);
+  box-shadow: var(--glow-gold);
+  transform: translate(-50%, -50%) scale(1.05);
 }
 
 /* 🚪 GEÔLES - BOUTON DE REDÉMARRAGE & HITBOX */
 .restart-card:not(.cell-door-hitbox) {
-  background: linear-gradient(180deg, #dfb24c 0%, #b8860b 100%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  border-radius: 12px !important;
-  color: #0c0907 !important;
-  font-weight: 700 !important;
-  box-shadow: 0 10px 30px rgba(226, 179, 74, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
-  transition: all 0.25s ease !important;
+  background: linear-gradient(180deg, #dfb24c 0%, #b8860b 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  color: #0c0907;
+  font-weight: 700;
+  box-shadow: 0 10px 30px rgba(226, 179, 74, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: all 0.25s ease;
 }
 
 .restart-card:not(.cell-door-hitbox):hover {
-  background: linear-gradient(180deg, #f7ebd3 0%, #dfb24c 100%) !important;
-  transform: scale(1.03) translateY(-2px) !important;
-  box-shadow: 0 12px 36px rgba(226, 179, 74, 0.44), var(--glow-gold) !important;
+  background: linear-gradient(180deg, #f7ebd3 0%, #dfb24c 100%);
+  transform: scale(1.03) translateY(-2px);
+  box-shadow: 0 12px 36px rgba(226, 179, 74, 0.44), var(--glow-gold);
 }
 
 .restart-card:not(.cell-door-hitbox):active {
-  transform: scale(0.96) !important;
+  transform: scale(0.96);
 }
 
 /* Hitbox de porte de cellule */
 .scene.is-cell .cell-door-hitbox {
-  background: transparent !important;
-  border: 0 !important;
-  border-radius: 8px !important;
-  box-shadow: none !important;
-  transform: translate(-50%, -50%) !important;
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  box-shadow: none;
+  transform: translate(-50%, -50%);
 }
 
 .scene.is-cell .cell-door-hitbox:hover:not(:disabled) {
-  background: rgba(226, 179, 74, 0.04) !important;
-  border: 1px solid rgba(226, 179, 74, 0.2) !important;
-  box-shadow: var(--glow-gold) !important;
-  transform: translate(-50%, -50%) scale(1.03) !important;
+  background: rgba(226, 179, 74, 0.04);
+  border: 1px solid rgba(226, 179, 74, 0.2);
+  box-shadow: var(--glow-gold);
+  transform: translate(-50%, -50%) scale(1.03);
 }
 
 /* 📊 STATS GRID & SLEEK HUD CAPSULES */
 .game-shell > .start-intro {
-  grid-row: 1 / -1 !important;
-  grid-column: 1 / -1 !important;
-  position: absolute !important;
-  inset: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  z-index: 5000 !important;
+  grid-row: 1 / -1;
+  grid-column: 1 / -1;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5000;
 }
 .game-shell > .stats-grid {
-  grid-row: 1 !important;
+  grid-row: 1;
 }
 .game-shell > .scene {
-  grid-row: 2 !important;
+  grid-row: 2;
 }
 .game-shell > .site-footer {
-  grid-row: 3 !important;
+  grid-row: 3;
 }
 
 .stats-grid {
-  margin-bottom: 12px !important;
+  margin-bottom: 12px;
 }
 
-/* Capsules de statut sleek & modernes */
-.stat:not(.stat-life):not(.stat-purse):not(.stat-inventory) {
-  border-radius: 12px !important;
-  border: 1px solid var(--line) !important;
-  background: rgba(20, 16, 13, 0.82) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255, 255, 255, 0.03) !important;
-  font-family: var(--font-body) !important;
-  padding: 10px 14px !important;
+.stat:not(.stat-life):not(.stat-purse):not(.stat-inventory):not(.stat-loss):not(.stat-place) {
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: rgba(20, 16, 13, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  font-family: var(--font-body);
+  padding: 10px 14px;
 }
 
 /* Capsule Or transporté */
 .stat-purse {
-  border-radius: 12px !important;
-  border: 1px solid rgba(226, 179, 74, 0.32) !important;
-  background: linear-gradient(135deg, rgba(32, 26, 18, 0.94) 0%, rgba(18, 14, 10, 0.96) 100%) !important;
-  box-shadow: 0 6px 18px rgba(226, 179, 74, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
-  padding: 8px 12px !important;
+  border-radius: 12px;
+  border: 1px solid rgba(226, 179, 74, 0.32);
+  background: linear-gradient(135deg, rgba(32, 26, 18, 0.94) 0%, rgba(18, 14, 10, 0.96) 100%);
+  box-shadow: 0 6px 18px rgba(226, 179, 74, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  padding: 8px 12px;
 }
 
 .stat-purse strong {
-  color: var(--gold) !important;
-  text-shadow: 0 0 8px rgba(226, 179, 74, 0.35) !important;
+  color: var(--gold);
+  text-shadow: 0 0 8px rgba(226, 179, 74, 0.35);
 }
 
 /* Capsule Vie (Cœurs) */
 .stat-life {
-  border-radius: 12px !important;
-  border: 1px solid rgba(217, 74, 56, 0.28) !important;
-  background: rgba(22, 14, 14, 0.85) !important;
-  box-shadow: 0 6px 16px rgba(217, 74, 56, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.03) !important;
-  padding: 8px 14px !important;
+  border-radius: 12px;
+  border: 2px solid #000;
+  background: rgba(30, 15, 15, 0.9);
+  box-shadow: 4px 4px 0 #000, inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  padding: 8px 14px;
+  transform: rotate(1deg);
+}
+
+/* Animation de pulsation douce pour les cœurs pleins */
+.heart-icon.is-full {
+  animation: heartPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes heartPulse {
+  0% {
+    transform: scale(1);
+    filter: drop-shadow(0 2px 4px rgba(217, 74, 56, 0.3));
+  }
+  50% {
+    transform: scale(1.08);
+    filter: drop-shadow(0 4px 10px rgba(217, 74, 56, 0.6)) brightness(1.1);
+  }
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 2px 4px rgba(217, 74, 56, 0.3));
+  }
+}
+
+/* Effet de saut vers le haut et fondu pour le cœur perdu */
+.heart-icon.is-lost {
+  position: relative;
+  background-image: url("assets/Ui/coeur%20vide.png");
+  animation: none;
+}
+
+.heart-icon.is-lost::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("assets/Ui/coeur%20plein.png") center / contain no-repeat;
+  animation: heartLostComic 800ms cubic-bezier(0.25, 1, 0.5, 1) both;
+}
+
+@keyframes heartLostComic {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(0deg);
+    filter: brightness(1.2) drop-shadow(0 0 12px var(--danger));
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-16px) scale(1.3) rotate(-15deg);
+    filter: brightness(1.5) drop-shadow(0 0 18px var(--danger));
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.6) rotate(25deg);
+    filter: brightness(0.5) grayscale(1);
+  }
 }
 
 /* Inventaire Sac interactif */
 .stat-inventory {
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
 }
 
 .inventory-toggle {
-  background-color: transparent !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  transition: transform 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.2s ease !important;
+  background-color: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  transition: transform 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.2s ease;
 }
 
 .inventory-toggle:hover {
-  filter: drop-shadow(0 0 12px rgba(226, 179, 74, 0.45)) brightness(1.12) !important;
-  transform: translateY(-2px) scale(1.05) !important;
+  filter: drop-shadow(0 0 12px rgba(226, 179, 74, 0.45)) brightness(1.12);
+  transform: translateY(-2px) scale(1.05);
 }
 
 .inventory-toggle:active {
-  transform: translateY(1px) scale(0.95) !important;
+  transform: translateY(1px) scale(0.95);
 }
 
 .topbar .bank-score {
-  border-radius: 12px !important;
-  border: 1px solid var(--line) !important;
-  background: rgba(20, 16, 13, 0.86) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255, 255, 255, 0.03) !important;
-  padding: 8px 14px !important;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: rgba(20, 16, 13, 0.86);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  padding: 8px 14px;
 }
 
 /* 🛒 SHOP & CARDS D'AMÉLIORATIONS */
 .scene.is-village .upgrade-card, .sell-item-card {
-  background: rgba(24, 20, 16, 0.8) !important;
-  border: 1px solid var(--line) !important;
-  border-radius: 12px !important;
-  padding: 15px !important;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255, 255, 255, 0.02) !important;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  background: rgba(24, 20, 16, 0.8);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .scene.is-village .upgrade-card:hover, .sell-item-card:hover, .sell-item-card.is-selected {
-  border-color: var(--gold) !important;
-  background: linear-gradient(180deg, rgba(36, 29, 21, 0.9) 0%, rgba(22, 18, 14, 0.98) 100%) !important;
-  box-shadow: var(--glow-gold) !important;
-  transform: translateY(-4px) scale(1.02) !important;
+  border-color: var(--gold);
+  background: linear-gradient(180deg, rgba(36, 29, 21, 0.9) 0%, rgba(22, 18, 14, 0.98) 100%);
+  box-shadow: var(--glow-gold);
+  transform: translateY(-4px) scale(1.02);
 }
 
 /* 🌟 BOUTONS D'ACTION OR (UPGRADES & MINI-JEUX) */
-.upgrade-card button, .shop-header button, 
+.upgrade-card button, .shop-header button,
 #close-shop, #close-stats, .stats-panel-tabs button,
 .mini-game-actions button, .mini-game-actions a {
-  background: linear-gradient(180deg, #dfb24c 0%, #b8860b 100%) !important;
-  color: #0d0c0a !important;
-  font-family: var(--font-body) !important;
-  font-weight: 700 !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  border-radius: 10px !important;
-  box-shadow: 0 4px 12px rgba(226, 179, 74, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) !important;
-  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  background: linear-gradient(180deg, #dfb24c 0%, #b8860b 100%);
+  color: #0d0c0a;
+  font-family: var(--font-body);
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(226, 179, 74, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.upgrade-card button:hover:not(:disabled), .shop-header button:hover, 
+.upgrade-card button:hover:not(:disabled), .shop-header button:hover,
 #close-shop:hover, #close-stats:hover, .stats-panel-tabs button:hover,
 .mini-game-actions button:hover, .mini-game-actions a:hover {
-  background: linear-gradient(180deg, #f7ebd3 0%, #dfb24c 100%) !important;
-  box-shadow: 0 6px 18px rgba(226, 179, 74, 0.36), var(--glow-gold) !important;
-  transform: translateY(-2px) !important;
-  color: #0d0c0a !important;
+  background: linear-gradient(180deg, #f7ebd3 0%, #dfb24c 100%);
+  box-shadow: 0 6px 18px rgba(226, 179, 74, 0.36), var(--glow-gold);
+  transform: translateY(-2px);
+  color: #0d0c0a;
 }
 
 .upgrade-card button:active:not(:disabled), .shop-header button:active,
 #close-shop:active, #close-stats:active,
 .mini-game-actions button:active {
-  transform: translateY(1px) scale(0.96) !important;
-  box-shadow: 0 2px 6px rgba(226, 179, 74, 0.1) !important;
+  transform: translateY(1px) scale(0.96);
+  box-shadow: 0 2px 6px rgba(226, 179, 74, 0.1);
 }
 
 .upgrade-card button:disabled {
-  background: rgba(244, 234, 214, 0.05) !important;
-  color: rgba(244, 234, 214, 0.25) !important;
-  border: 1px solid rgba(244, 234, 214, 0.08) !important;
-  box-shadow: none !important;
-  cursor: not-allowed !important;
-  transform: none !important;
+  background: rgba(244, 234, 214, 0.05);
+  color: rgba(244, 234, 214, 0.25);
+  border: 1px solid rgba(244, 234, 214, 0.08);
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* 📑 STATS PANEL TABS */
 .stats-panel-tabs button {
-  background: rgba(244, 234, 214, 0.03) !important;
-  border: 1px solid rgba(244, 234, 214, 0.08) !important;
-  color: var(--muted) !important;
-  padding: 8px 16px !important;
-  box-shadow: none !important;
+  background: rgba(244, 234, 214, 0.03);
+  border: 1px solid rgba(244, 234, 214, 0.08);
+  color: var(--muted);
+  padding: 8px 16px;
+  box-shadow: none;
 }
 
 .stats-panel-tabs button[aria-selected="true"] {
-  background: rgba(226, 179, 74, 0.22) !important;
-  border-color: var(--gold) !important;
-  color: #fff !important;
-  box-shadow: var(--glow-gold) !important;
+  background: rgba(226, 179, 74, 0.22);
+  border-color: var(--gold);
+  color: #fff;
+  box-shadow: var(--glow-gold);
 }
 
 /* 🪙 JETONS & CHIPS INVENTAIRE */
 .item-chip, .upgrade-chip {
-  font-family: var(--font-body) !important;
-  border-radius: 8px !important;
-  border: 1px solid rgba(244, 234, 214, 0.1) !important;
-  background: rgba(244, 234, 214, 0.03) !important;
-  padding: 4px 8px !important;
-  transition: all 0.2s ease !important;
+  font-family: var(--font-body);
+  border-radius: 8px;
+  border: 1px solid rgba(244, 234, 214, 0.1);
+  background: rgba(244, 234, 214, 0.03);
+  padding: 4px 8px;
+  transition: all 0.2s ease;
 }
 
 .item-chip:hover, .upgrade-chip:hover {
-  border-color: var(--gold) !important;
-  background: rgba(226, 179, 74, 0.15) !important;
-  box-shadow: 0 2px 8px rgba(226, 179, 74, 0.1) !important;
+  border-color: var(--gold);
+  background: rgba(226, 179, 74, 0.15);
+  box-shadow: 0 2px 8px rgba(226, 179, 74, 0.1);
 }
 
 /* PACTES MAUDITS */
 .pact-chip {
-  border-color: var(--danger) !important;
-  background: rgba(217, 74, 56, 0.08) !important;
+  border-color: var(--danger);
+  background: rgba(217, 74, 56, 0.08);
 }
 
 .pact-chip:hover {
-  box-shadow: var(--glow-red) !important;
+  box-shadow: var(--glow-red);
 }
 
 .merchant-pact-card {
-  border-color: var(--purple) !important;
-  background: rgba(155, 77, 226, 0.06) !important;
+  border-color: var(--purple);
+  background: rgba(155, 77, 226, 0.06);
 }
 
 .merchant-pact-card:hover {
-  box-shadow: var(--glow-purple) !important;
+  box-shadow: var(--glow-purple);
 }
 
 /* 🏆 BANNIÈRES DE FIN CINÉMATIQUES (VICTOIRE & DÉFAITE) */
 .ko-banner, .win-banner {
-  border-radius: 14px !important;
-  backdrop-filter: blur(14px) !important;
-  -webkit-backdrop-filter: blur(14px) !important;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85) !important;
-  padding: 24px !important;
-  animation: bannerEntrance 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both !important;
+  border-radius: 14px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
+  padding: 24px;
+  animation: bannerEntrance 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
 }
 
 .ko-banner {
-  border: 1px solid var(--danger) !important;
-  background: linear-gradient(180deg, rgba(36, 12, 12, 0.94) 0%, rgba(18, 6, 6, 0.98) 100%) !important;
-  box-shadow: var(--glow-red) !important;
+  border: 1px solid var(--danger);
+  background: linear-gradient(180deg, rgba(36, 12, 12, 0.94) 0%, rgba(18, 6, 6, 0.98) 100%);
+  box-shadow: var(--glow-red);
 }
 
 .win-banner {
-  border: 1px solid var(--good) !important;
-  background: linear-gradient(180deg, rgba(12, 36, 16, 0.94) 0%, rgba(6, 18, 8, 0.98) 100%) !important;
-  box-shadow: var(--glow-green) !important;
+  border: 1px solid var(--good);
+  background: linear-gradient(180deg, rgba(12, 36, 16, 0.94) 0%, rgba(6, 18, 8, 0.98) 100%);
+  box-shadow: var(--glow-green);
 }
 
 @keyframes bannerEntrance {
@@ -8512,4 +8812,1141 @@ button:active, .combat-choice:active {
   }
 }
 
+/* 🎬 TRANSITIONS DE SCÈNES ET POPUPS FLUIDES (CROSS-FADE 2026) */
+.page-fade {
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
+}
 
+.page-active {
+  opacity: 1;
+}
+
+/* Fondu automatique des pièces lors du changement de classe de scène */
+.scene.is-cell,
+.scene.is-dungeon,
+.scene.is-village,
+.scene.is-dead {
+  animation: sceneCrossFade 0.22s ease-out both;
+}
+
+@keyframes sceneCrossFade {
+  from {
+    opacity: 0.82;
+    filter: brightness(0.92);
+  }
+  to {
+    opacity: 1;
+    filter: brightness(1);
+  }
+}
+
+/* Fondu et élévation fluide pour les Popups et Modales */
+/* Fondu et élévation fluide pour les Popups et Modales standard */
+.inventory-popover:not([hidden]) .inventory-card,
+.account-popover:not([hidden]) .account-card,
+.account-panel:not([hidden])::before,
+.account-signup-overlay:not([hidden]) .account-signup-modal {
+  animation: modalSlideFadeIn 0.24s cubic-bezier(0.215, 0.610, 0.355, 1) both;
+}
+
+@keyframes modalSlideFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Positionnement en "Bottom-Sheet" premium pour les panneaux Boutique et Stats (s'intègre parfaitement au cadre portrait sans couvrir Grodor) */
+.scene.is-village .shop-panel,
+.scene.is-village .stats-panel {
+  left: 50%;
+  right: auto;
+  top: auto;
+  bottom: clamp(12px, 2.5dvh, 28px);
+  width: calc(100% - 24px);
+  max-width: 500px;
+  max-height: min(64dvh, 540px);
+  transform: translateX(-50%);
+}
+
+.scene.is-village .shop-panel:not([hidden]),
+.scene.is-village .stats-panel:not([hidden]) {
+  animation: shopStatsSlideUpIn 0.26s cubic-bezier(0.175, 0.885, 0.32, 1.1) both;
+}
+
+@keyframes shopStatsSlideUpIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(32px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
+
+/* Empêcher le mot "VILLAGE" d'excéder du cadre du HUD */
+.stat-place strong {
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+/* ==========================================================================
+   🖥️ BRAND NEW PREMIUM WIDESCREEN & MOBILE OVERHAUL 2026
+   ========================================================================== */
+
+.game-shell {
+  width: 100vw;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  height: 100vh;
+  height: 100dvh;
+  display: block;
+  overflow: hidden;
+}
+
+.scene {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+/* Widescreen Dungeon Stage Landscape Background */
+.scene.is-dungeon:not(.is-combat) {
+  background: url("assets/Donjon/Donjon-interieur.webp") center / cover no-repeat;
+}
+
+/* Immersive blurred background depth-of-field effect on ultra-widescreen monitors */
+.scene.is-dungeon:not(.is-combat)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("assets/Donjon/Donjon-interieur.webp") center / cover no-repeat;
+  filter: blur(10px) brightness(0.48);
+  z-index: 1;
+  pointer-events: none;
+  display: block;
+}
+
+/* Centered & Fluid Dungeon Stage scaling perfectly with window resizing */
+.scene.is-dungeon:not(.is-combat) .dungeon-stage {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(100vw, calc(100vh * 1672 / 941));
+  height: min(100vh, calc(100vw * 941 / 1672));
+  aspect-ratio: 1672 / 941;
+  box-shadow: 0 10px 45px rgba(0, 0, 0, 0.72);
+  filter: none;
+  flex: none;
+  z-index: 2;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image: url("assets/Donjon/Donjon-interieur.webp");
+}
+
+/* Door preview and door walking widescreen background texture overrides */
+.scene.is-dungeon:not(.is-combat).door-preview-target-0 .dungeon-stage,
+.scene.is-dungeon:not(.is-combat).is-door-walking.door-target-0 .dungeon-stage {
+  background-image: url("assets/Donjon/Donjon-interieur-porte-1.png"), url("assets/Donjon/Donjon-interieur.webp");
+}
+
+.scene.is-dungeon:not(.is-combat).door-preview-target-1 .dungeon-stage,
+.scene.is-dungeon:not(.is-combat).is-door-walking.door-target-1 .dungeon-stage {
+  background-image: url("assets/Donjon/Donjon-interieur-porte-2.png"), url("assets/Donjon/Donjon-interieur.webp");
+}
+
+.scene.is-dungeon:not(.is-combat).door-preview-target-2 .dungeon-stage,
+.scene.is-dungeon:not(.is-combat).is-door-walking.door-target-2 .dungeon-stage {
+  background-image: url("assets/Donjon/Donjon-interieur-porte-3.png"), url("assets/Donjon/Donjon-interieur.webp");
+}
+
+/* Sync Grodor's walking path coordinate container with the centered aspect-ratio tower stage */
+.scene.is-dungeon:not(.is-combat) .reward-row {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(100vw, calc(100vh * 1672 / 941));
+  height: min(100vh, calc(100vw * 941 / 1672));
+  aspect-ratio: 1672 / 941;
+  pointer-events: none;
+  margin: 0;
+  z-index: 3;
+  display: block;
+}
+
+/* Rescaled Grodor (looks robust and proportionate inside the tower floors) */
+.scene.is-dungeon:not(.is-combat) .hodor-sprite {
+  position: absolute;
+  left: var(--dungeon-hodor-x);
+  top: var(--dungeon-hodor-y);
+  z-index: 3;
+  width: clamp(124px, 23.5%, 210px);
+  max-width: 25%;
+  max-height: none;
+  filter: drop-shadow(0 28px 22px rgba(0, 0, 0, 0.45));
+}
+
+/* Absolute Floating HUD overlays */
+.stats-grid {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1000;
+  display: block;
+  margin: 0;
+  gap: 0;
+  overflow: visible;
+  background: transparent;
+}
+
+.stats-grid > * {
+  pointer-events: auto;
+}
+
+/* 🩺 Player PV Health Bar (cadre-vie.png - Ratio 3.25) */
+.stat-life {
+  position: absolute;
+  top: 20px;
+  left: calc(50% - min(50vw, calc(100vh * 1672 / 941 / 2)) + 24px);
+  width: 260px;
+  height: 80px;
+  background: url("assets/Ui/cadre-vie.png") no-repeat center / contain;
+  border: 0;
+  box-shadow: none;
+  margin: 0;
+  transform: none;
+  padding: 0;
+  z-index: 1100;
+}
+
+/* Heart icon removed completely to let native illustration of the frame render cleanly */
+.stat-life::before {
+  display: none;
+}
+
+/* PV Label hidden as per user request */
+.stat-life .pv-label {
+  display: none !important;
+}
+
+/* PV Progress Bar Fente (positioned perfectly inside cadre-vie.png slot) */
+.stat-life .pv-bar {
+  position: absolute;
+  left: 82px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 154px;
+  height: 16px;
+  background: rgba(30, 16, 12, 0.85);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.85), 0 1px 0 rgba(255,255,255,0.05);
+  margin: 0;
+}
+
+/* PV Progress Bar Fill */
+.stat-life .pv-fill {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #c62828 0%, #ef5350 50%, #e53935 100%);
+  box-shadow: inset 0 1px 2px rgba(255,255,255,0.3);
+  border-radius: 4px;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 🪙 Gold Display Bourse (Large interactive floating pouch with tooltip) */
+.stat-purse {
+  position: absolute;
+  top: 110px;
+  left: calc(50% - min(50vw, calc(100vh * 1672 / 941 / 2)) + 24px);
+  width: 64px;
+  height: 64px;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  z-index: 1100;
+  display: block;
+}
+
+#purse-visual {
+  width: 100%;
+  height: 100%;
+  background: url("assets/Ui/Bourse%20vide.png") no-repeat center / contain;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.8));
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.stat-purse:hover #purse-visual {
+  transform: scale(1.08);
+  filter: drop-shadow(0 6px 12px rgba(226, 179, 74, 0.4)) brightness(1.08);
+}
+
+.stat-purse.has-gold #purse-visual {
+  background-image: url("assets/Ui/Bourse%20pleine.png");
+}
+
+/* Beautiful RPG Tooltip Bubble containing the PO count on hover or click */
+.stat-purse > div {
+  position: absolute;
+  left: 76px;
+  top: 50%;
+  transform: translateY(-50%) scale(0.85);
+  background: rgba(22, 18, 14, 0.96);
+  border: 2px solid #dfb24c;
+  border-radius: 8px;
+  padding: 8px 14px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.9);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.18s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+/* Tooltip triangular pointer */
+.stat-purse > div::before {
+  content: "";
+  position: absolute;
+  left: -7px;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  width: 10px;
+  height: 10px;
+  background: rgba(22, 18, 14, 0.96);
+  border-left: 2px solid #dfb24c;
+  border-bottom: 2px solid #dfb24c;
+}
+
+.stat-purse:hover > div,
+.stat-purse:active > div,
+.stat-purse:focus-within > div {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(-50%) scale(1);
+}
+
+.stat-purse strong {
+  font-family: Bangers, sans-serif;
+  font-size: 1.65rem;
+  color: #dfb24c;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.95);
+  white-space: nowrap;
+}
+
+/* 🎒 Inventory Toggle (Backpack Button - Large and aligned perfectly) */
+.stat-inventory {
+  position: absolute;
+  top: 184px;
+  left: calc(50% - min(50vw, calc(100vh * 1672 / 941 / 2)) + 24px);
+  width: 84px;
+  height: 84px;
+  margin: 0;
+  padding: 0;
+  z-index: 1100;
+  display: block;
+  background: transparent;
+  border: 0;
+  min-height: auto;
+}
+
+.inventory-toggle {
+  width: 100%;
+  height: 100%;
+  background: url("assets/Ui/inventaire%20vide.png") no-repeat center / contain;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  cursor: pointer;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.8));
+  transition: transform 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.2s ease;
+}
+
+.inventory-toggle.has-items {
+  background-image: url("assets/Ui/inventaire%20plein.png");
+}
+
+.inventory-toggle span {
+  display: none;
+}
+
+.inventory-toggle:hover {
+  transform: translateY(-3px) scale(1.06);
+  filter: drop-shadow(0 6px 12px rgba(226, 179, 74, 0.45)) brightness(1.12);
+}
+
+.inventory-toggle:active {
+  transform: translateY(1px) scale(0.95);
+}
+
+/* 💀 Attempts Counter (cadre-tentative.png - Ratio 2.26) */
+.stat-loss {
+  position: absolute;
+  bottom: 74px;
+  left: calc(50% - min(50vw, calc(100vh * 1672 / 941 / 2)) + 24px);
+  width: 240px;
+  height: 106px;
+  background: url("assets/Ui/cadre-tentative.png") no-repeat center / 100% 100%;
+  border: 0;
+  box-shadow: none;
+  margin: 0;
+  padding: 0;
+  display: block;
+  z-index: 1100;
+}
+
+.stat-loss span {
+  display: none;
+}
+
+.stat-loss strong {
+  position: absolute;
+  left: 53px;
+  top: 53px;
+  transform: translate(-50%, -50%);
+  font-family: Bangers, sans-serif;
+  font-size: 2.8rem;
+  color: #e53935;
+  margin: 0;
+  line-height: 1;
+  text-shadow: 0 1.5px 3px rgba(0,0,0,0.9);
+  text-align: center;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 🏰 Floor Level Indicator (cadre-etage.png - Ratio 2.255) */
+.stat-place {
+  position: absolute;
+  top: 20px;
+  right: calc(50% - min(50vw, calc(100vh * 1672 / 941 / 2)) + 24px);
+  width: 240px;
+  height: 106px;
+  background: url("assets/Ui/cadre-etage.png") no-repeat center / 100% 100%;
+  border: 0;
+  box-shadow: none;
+  margin: 0;
+  padding: 0;
+  display: block;
+  z-index: 1100;
+}
+
+.stat-place span {
+  display: none;
+}
+
+.stat-place strong {
+  position: absolute;
+  left: 53px;
+  top: 53px;
+  transform: translate(-50%, -50%);
+  font-family: Bangers, sans-serif;
+  font-size: 2.8rem;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1;
+  text-shadow: 0 1.5px 3px rgba(0,0,0,0.9);
+  text-align: center;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 📜 Story Panel storyboard card (Custom premium dark RPG border & background instead of frame asset) */
+.story-panel {
+  position: absolute !important;
+  top: 140px !important;
+  right: calc(50% - min(50vw, calc(100vh * 1672 / 941 / 2)) + 24px) !important;
+  --story-w: clamp(270px, 19vw, 340px);
+  width: var(--story-w) !important;
+  height: auto !important;
+  max-height: calc(100vh - 200px) !important;
+  background: var(--panel) !important;
+  backdrop-filter: blur(18px) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
+  border: 1px solid var(--line) !important;
+  border-left: 4px solid var(--gold) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+  z-index: 90 !important;
+  padding: 16px 20px !important;
+  margin: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: start !important;
+  overflow-y: auto !important;
+}
+
+.story-panel .location {
+  font-family: Bangers, sans-serif !important;
+  font-size: 1.35rem !important;
+  color: var(--gold) !important;
+  margin: 0 0 6px 0 !important;
+  text-transform: uppercase !important;
+  border-bottom: 1.5px solid rgba(226, 179, 74, 0.2) !important;
+  padding-bottom: 3px !important;
+  text-align: center !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
+}
+
+.story-panel .story {
+  font-family: var(--font-body) !important;
+  font-size: clamp(0.85rem, 1.7dvh, 0.96rem) !important;
+  font-weight: 700 !important;
+  color: #fff6e4 !important;
+  line-height: 1.5 !important;
+  margin: 0 !important;
+  text-align: left !important;
+  text-shadow: 0 1.5px 3px rgba(0, 0, 0, 0.8) !important;
+}
+
+.site-footer {
+  display: none !important;
+}
+
+/* 🎒 Centered Inventory Popover (Modal-style) */
+.inventory-popover {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 2000 !important;
+  pointer-events: auto !important;
+}
+
+.inventory-popover[hidden] {
+  display: none !important;
+}
+
+.inventory-card {
+  position: relative !important;
+  width: min(340px, calc(100vw - 32px)) !important;
+  max-height: 80vh !important;
+  background: rgba(22, 18, 14, 0.94) !important;
+  border: 2px solid #dfb24c !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.85) !important;
+  backdrop-filter: blur(12px) !important;
+  padding: 16px !important;
+  overflow-y: auto !important;
+}
+
+/* ==========================================================================
+   📱 MOBILE & TABLET PORTRAIT RESPONSIVENESS OVERRIDES
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  /* Scale HUD items on mobile to prevent overlaps */
+  .stat-life {
+    left: 8px !important;
+    top: 8px !important;
+    transform: scale(0.8) !important;
+    transform-origin: top left !important;
+  }
+
+  .stat-purse {
+    left: 8px !important;
+    top: 56px !important;
+    transform: scale(0.8) !important;
+    transform-origin: top left !important;
+  }
+
+  .stat-inventory {
+    left: 8px !important;
+    top: 96px !important;
+    transform: scale(0.8) !important;
+    transform-origin: top left !important;
+  }
+
+  .stat-place {
+    right: 8px !important;
+    top: 8px !important;
+    transform: scale(0.8) !important;
+    transform-origin: top right !important;
+  }
+
+  .stat-loss {
+    left: 8px !important;
+    bottom: calc(clamp(150px, 22dvh, 200px) + 8px) !important;
+    transform: scale(0.8) !important;
+    transform-origin: bottom left !important;
+  }
+
+  /* Place the Story Panel as a premium bottom sheet on mobile to prevent overlapping Grodor/doors */
+  .story-panel {
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    top: auto !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: auto !important;
+    height: clamp(150px, 22dvh, 200px) !important;
+    background: #eddcc4 !important;
+    border-top: 3.5px solid #5a3c28 !important;
+    box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.6) !important;
+    padding: 14px 18px !important;
+    border-radius: 0 !important;
+    transform: none !important;
+    height: clamp(150px, 22dvh, 200px) !important;
+  }
+
+  .story-panel .location {
+    font-size: 1.15rem !important;
+    margin: 0 0 4px 0 !important;
+    color: #5d4037 !important;
+    border-bottom: 1.5px solid rgba(93, 64, 55, 0.15) !important;
+    text-shadow: none !important;
+  }
+
+  .story-panel .story {
+    font-size: 0.85rem !important;
+    line-height: 1.35 !important;
+    overflow-y: auto !important;
+    max-height: calc(100% - 30px) !important;
+    color: #3e2723 !important;
+    text-shadow: none !important;
+  }
+
+  /* Shift dungeon stage slightly higher on mobile to make it clear of the bottom sheet */
+  .scene.is-dungeon:not(.is-combat) .dungeon-stage {
+    top: 40% !important;
+  }
+
+  .scene.is-dungeon:not(.is-combat) .reward-row {
+    top: 40% !important;
+  }
+}
+
+/* HUD + dungeon calibration pass: keep every interactive layer locked to the illustrated stage. */
+.scene.is-dungeon:not(.is-combat) .dungeon-stage,
+.scene.is-dungeon:not(.is-combat) .reward-row {
+  width: min(100vw, calc(100dvh * 1672 / 941)) !important;
+  height: min(100dvh, calc(100vw * 941 / 1672)) !important;
+  aspect-ratio: 1672 / 941 !important;
+}
+
+.scene.is-dungeon:not(.is-combat) .dungeon-stage {
+  background-size: 100% 100% !important;
+  background-position: 50% 50% !important;
+  background-repeat: no-repeat !important;
+}
+
+.scene.is-dungeon:not(.is-combat).door-preview-target-0 .dungeon-stage,
+.scene.is-dungeon:not(.is-combat).is-door-walking.door-target-0 .dungeon-stage,
+.scene.is-dungeon:not(.is-combat).door-preview-target-1 .dungeon-stage,
+.scene.is-dungeon:not(.is-combat).is-door-walking.door-target-1 .dungeon-stage,
+.scene.is-dungeon:not(.is-combat).door-preview-target-2 .dungeon-stage,
+.scene.is-dungeon:not(.is-combat).is-door-walking.door-target-2 .dungeon-stage {
+  background-size: 100% 100%, 100% 100% !important;
+  background-position: 50% 50%, 50% 50% !important;
+  background-repeat: no-repeat, no-repeat !important;
+}
+
+.scene.is-dungeon:not(.is-combat) .hodor-sprite {
+  width: clamp(96px, 13.5%, 182px) !important;
+}
+
+.stat-life {
+  width: 260px !important;
+  height: 80px !important;
+}
+
+.stat-life .pv-bar {
+  left: 77px !important;
+  top: 36px !important;
+  width: 160px !important;
+  height: 15px !important;
+  transform: none !important;
+}
+
+.stat-life .pv-fill {
+  min-width: 0 !important;
+}
+
+.stat-purse {
+  width: 84px !important;
+  height: 84px !important;
+  display: block !important;
+  overflow: visible !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.stat-purse #purse-visual {
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  width: 84px !important;
+  height: 84px !important;
+  transform: none !important;
+  opacity: 1 !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  pointer-events: none !important;
+}
+
+.stat-purse #purse-visual::before {
+  content: none !important;
+}
+
+/* Village fullscreen illustrated stage: one image coordinate system, like the dungeon. */
+.game-shell.is-village-layout {
+  --village-stage-w: min(100vw, calc(100dvh * 1672 / 941));
+  --village-stage-h: min(100dvh, calc(100vw * 941 / 1672));
+  width: 100vw !important;
+  max-width: 100vw !important;
+  height: 100dvh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.scene.is-village {
+  --village-hodor-x: 50%;
+  --village-hodor-y: 74%;
+  --village-hero-w: clamp(92px, 9.5%, 156px);
+  position: absolute !important;
+  inset: 0 !important;
+  display: block !important;
+  width: 100vw !important;
+  height: 100dvh !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  background:
+    url("assets/Village/village.webp") center / cover no-repeat,
+    #17210f !important;
+}
+
+.scene.is-village::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: url("assets/Village/village.webp") center / cover no-repeat;
+  filter: blur(10px) brightness(0.58);
+  transform: scale(1.035);
+  pointer-events: none;
+}
+
+.scene.is-village .action-zone {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 8 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  pointer-events: none !important;
+}
+
+.scene.is-village .village-stage {
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  z-index: 1 !important;
+  width: var(--village-stage-w) !important;
+  height: var(--village-stage-h) !important;
+  max-width: none !important;
+  aspect-ratio: 1672 / 941 !important;
+  transform: translate(-50%, -50%) !important;
+  overflow: visible !important;
+  background: url("assets/Village/village.webp") 50% 50% / 100% 100% no-repeat !important;
+  filter: drop-shadow(0 20px 42px rgba(0, 0, 0, 0.52)) !important;
+  pointer-events: none !important;
+}
+
+.scene.is-village .village-choices {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 5 !important;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none !important;
+}
+
+.scene.is-village .action-zone:has(.village-modal-backdrop:not([hidden])),
+.scene.is-village .action-zone:has(.shop-panel:not([hidden])),
+.scene.is-village .action-zone:has(.stats-panel:not([hidden])) {
+  pointer-events: auto !important;
+}
+
+.scene.is-village .building {
+  position: absolute !important;
+  z-index: 6 !important;
+  display: block !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  filter: none !important;
+  opacity: 1 !important;
+  transform: translate(-50%, -50%) !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+.scene.is-village .village-modal-backdrop,
+.scene.is-village .shop-panel,
+.scene.is-village .stats-panel {
+  pointer-events: auto !important;
+}
+
+.scene.is-village .shop-panel,
+.scene.is-village .stats-panel {
+  z-index: 110 !important;
+}
+
+.scene.is-village .village-modal-backdrop {
+  z-index: 100 !important;
+}
+
+.scene.is-village .building:hover {
+  transform: translate(-50%, -50%) !important;
+  background: transparent !important;
+  outline: 0 !important;
+}
+
+.scene.is-village .building::after,
+.scene.is-village .building-roof,
+.scene.is-village .building > strong,
+.scene.is-village .building > small,
+.scene.is-village .notice-building .village-stat-title,
+.scene.is-village .notice-building strong,
+.scene.is-village .notice-building small {
+  display: none !important;
+}
+
+.scene.is-village .bank-building {
+  left: 30.2% !important;
+  top: 35.2% !important;
+  width: 19.5% !important;
+  aspect-ratio: 1.28 !important;
+}
+
+.scene.is-village .sell-building {
+  left: 27.7% !important;
+  top: 72.2% !important;
+  width: 24.8% !important;
+  aspect-ratio: 1.28 !important;
+}
+
+.scene.is-village .notice-building {
+  left: 50.3% !important;
+  top: 66.2% !important;
+  width: 13.5% !important;
+  aspect-ratio: 1.08 !important;
+}
+
+.scene.is-village .shop-building {
+  left: 72.2% !important;
+  top: 75.8% !important;
+  width: 23.2% !important;
+  aspect-ratio: 1.58 !important;
+}
+
+.scene.is-village .tavern-building {
+  left: 77.2% !important;
+  top: 45.4% !important;
+  width: 24.2% !important;
+  aspect-ratio: 1.42 !important;
+}
+
+.scene.is-village .building-bank-total {
+  left: 69% !important;
+  right: auto !important;
+  bottom: 12% !important;
+  transform: translateX(-50%) !important;
+}
+
+.scene.is-village .hodor-sprite {
+  position: absolute !important;
+  left: var(--village-hodor-x) !important;
+  top: var(--village-hodor-y) !important;
+  z-index: 4 !important;
+  width: var(--village-hero-w) !important;
+  max-width: 12% !important;
+  transform: translate(-50%, -100%) scaleX(var(--hodor-scale-x, 1)) !important;
+  transform-origin: center bottom !important;
+}
+
+.scene.is-village.village-target-bank {
+  --village-hodor-x: 34.4%;
+  --village-hodor-y: 48.2%;
+}
+
+.scene.is-village.village-target-sell {
+  --village-hodor-x: 33.5%;
+  --village-hodor-y: 86.2%;
+}
+
+.scene.is-village.village-target-stats {
+  --village-hodor-x: 50.2%;
+  --village-hodor-y: 77.3%;
+}
+
+.scene.is-village.village-target-shop {
+  --village-hodor-x: 70.2%;
+  --village-hodor-y: 87.4%;
+}
+
+.scene.is-village.village-target-tavern {
+  --village-hodor-x: 75.2%;
+  --village-hodor-y: 60.8%;
+}
+
+.scene.is-village .story-panel {
+  position: absolute !important;
+  left: 18px !important;
+  top: 18px !important;
+  z-index: 22 !important;
+  width: min(420px, calc(100vw - 36px)) !important;
+  max-height: 120px !important;
+  margin: 0 !important;
+}
+
+.scene.is-village .village-tip-card {
+  position: absolute !important;
+  left: 18px !important;
+  bottom: 18px !important;
+  z-index: 22 !important;
+  width: min(420px, calc(100vw - 36px)) !important;
+  margin: 0 !important;
+}
+
+@media (max-width: 760px) {
+  .game-shell.is-village-layout {
+    --village-stage-w: min(100vw, calc(100dvh * 1672 / 941)) !important;
+    --village-stage-h: min(100dvh, calc(100vw * 941 / 1672)) !important;
+  }
+
+  .scene.is-village {
+    --village-hero-w: clamp(62px, 10%, 104px);
+  }
+
+  .scene.is-village .story-panel {
+    left: 10px !important;
+    top: 10px !important;
+    width: min(360px, calc(100vw - 20px)) !important;
+    max-height: 96px !important;
+  }
+
+  .scene.is-village .village-tip-card {
+    left: 10px !important;
+    bottom: 10px !important;
+    width: min(360px, calc(100vw - 20px)) !important;
+  }
+}
+
+.stat-purse .purse-count {
+  position: absolute !important;
+  left: 76px !important;
+  top: 44% !important;
+  width: auto !important;
+  min-width: 98px !important;
+  height: 42px !important;
+  transform: translateY(-50%) scale(0.9) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  display: grid !important;
+  place-items: center !important;
+  padding: 0 14px !important;
+  border: 2px solid rgba(223, 178, 76, 0.88) !important;
+  border-radius: 10px !important;
+  background:
+    linear-gradient(180deg, rgba(45, 31, 16, 0.95), rgba(16, 12, 9, 0.96)),
+    rgba(22, 18, 14, 0.96) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.76), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  white-space: nowrap !important;
+}
+
+.stat-purse .purse-count::before {
+  content: "" !important;
+  position: absolute !important;
+  left: -7px !important;
+  top: 50% !important;
+  width: 10px !important;
+  height: 10px !important;
+  transform: translateY(-50%) rotate(45deg) !important;
+  border-left: 2px solid rgba(223, 178, 76, 0.88) !important;
+  border-bottom: 2px solid rgba(223, 178, 76, 0.88) !important;
+  background: rgba(24, 16, 10, 0.98) !important;
+}
+
+.stat-purse .purse-count strong {
+  display: inline-flex !important;
+  align-items: baseline !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  min-width: 74px !important;
+  color: #dfb24c !important;
+  font-size: 1.58rem !important;
+  line-height: 1 !important;
+  text-align: center !important;
+}
+
+.stat-purse:hover .purse-count,
+.stat-purse:active .purse-count,
+.stat-purse:focus-within .purse-count,
+.stat-purse.is-open .purse-count {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  transform: translateY(-50%) scale(1) !important;
+}
+
+#carried-gold {
+  display: inline-grid !important;
+  place-items: center !important;
+  min-width: 1.35em !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+#carried-gold[data-digits="2"] {
+  font-size: 0.9em !important;
+}
+
+#carried-gold[data-digits="3"] {
+  font-size: 0.78em !important;
+}
+
+.stat-loss strong,
+.stat-place strong {
+  display: grid !important;
+  place-items: center !important;
+  font-variant-numeric: tabular-nums !important;
+  letter-spacing: 0 !important;
+}
+
+.stat-loss strong {
+  left: 28% !important;
+  top: 50% !important;
+  width: 74px !important;
+  height: 68px !important;
+  font-size: 2.7rem !important;
+}
+
+#loss-count[data-digits="2"] {
+  font-size: 2.45rem !important;
+}
+
+#loss-count[data-digits="3"] {
+  font-size: 2.12rem !important;
+}
+
+.scene.is-dungeon:not(.is-combat) .story-panel,
+.scene.is-cell .story-panel,
+.scene.is-dead .story-panel {
+  width: min(350px, calc(100vw - 24px)) !important;
+  height: 360px !important;
+  max-height: min(360px, calc(100dvh - 170px)) !important;
+  background: url("assets/Ui/cadre-storyboard.png") center / 100% 100% no-repeat !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.46) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  padding: 58px 36px 38px !important;
+  overflow: hidden !important;
+}
+
+.scene.is-dungeon:not(.is-combat) .story-panel .location,
+.scene.is-cell .story-panel .location,
+.scene.is-dead .story-panel .location {
+  color: #5a341d !important;
+  border-bottom: 1px solid rgba(93, 53, 27, 0.22) !important;
+  text-shadow: none !important;
+}
+
+.scene.is-dungeon:not(.is-combat) .story-panel .story,
+.scene.is-cell .story-panel .story,
+.scene.is-dead .story-panel .story {
+  color: #3e2719 !important;
+  text-shadow: none !important;
+  font-size: clamp(0.78rem, 1.55dvh, 0.94rem) !important;
+  line-height: 1.34 !important;
+  max-height: 248px !important;
+  overflow: hidden !important;
+}
+
+@media (max-width: 1024px) {
+  .stat-purse {
+    width: 84px !important;
+    height: 84px !important;
+  }
+
+  .stat-purse .purse-count {
+    left: 76px !important;
+    min-width: 92px !important;
+    height: 40px !important;
+  }
+
+  .stat-purse .purse-count strong {
+    font-size: 1.45rem !important;
+  }
+
+  .scene.is-dungeon:not(.is-combat) .story-panel,
+  .scene.is-cell .story-panel,
+  .scene.is-dead .story-panel {
+    left: 50% !important;
+    right: auto !important;
+    bottom: 8px !important;
+    top: auto !important;
+    width: min(350px, calc(100vw - 16px)) !important;
+    height: clamp(210px, 28dvh, 300px) !important;
+    max-height: 300px !important;
+    transform: translateX(-50%) !important;
+    padding: clamp(42px, 6dvh, 54px) 30px 30px !important;
+  }
+
+  .scene.is-dungeon:not(.is-combat) .story-panel .story,
+  .scene.is-cell .story-panel .story,
+  .scene.is-dead .story-panel .story {
+    max-height: calc(100% - 42px) !important;
+    font-size: clamp(0.74rem, 1.7dvh, 0.86rem) !important;
+  }
+}
