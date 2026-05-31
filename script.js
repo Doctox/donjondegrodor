@@ -5391,7 +5391,7 @@ function playBgm(sceneName) {
 
 function preloadAndDecodeAssets() {
   const assetsToPreload = [
-    "assets/Accueil/Background-accueil.webp",
+    "assets/Accueil/Background-Grodor.webp",
     "assets/Accueil/Background-accueil-logo.png",
     "assets/Donjon/Donjon-accueil.webp",
     "assets/Donjon/Donjon-interieur.webp",
@@ -5406,10 +5406,10 @@ function preloadAndDecodeAssets() {
     "assets/Arene/arene-1.webp",
     "assets/Arene/arene-2.webp",
     "assets/Arene/arene-3.webp",
-    "assets/Ui/Bourse vide.png",
-    "assets/Ui/Bourse pleine.png",
-    "assets/Ui/inventaire vide.png",
-    "assets/Ui/inventaire plein.png",
+    "assets/Ui/bourse-vide.png",
+    "assets/Ui/bourse-pleine.png",
+    "assets/Ui/inventaire-vide.png",
+    "assets/Ui/inventaire-plein.png",
     "assets/Ui/coeur vide.png",
     "assets/Ui/coeur plein.png",
     "assets/Ui/po.png",
