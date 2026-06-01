@@ -113,16 +113,18 @@ const state = {
   eventToneOverride: null,
   villageLocation: "Village",
   stats: loadStats(),
+  runStatsStart: null,
   runLosses: 0,
   showWinBanner: false,
   lossRecorded: false,
   winRecorded: false,
   koBannerText: "",
   winBannerText: "",
+  winRankSymbol: "?",
   inputLocked: false,
   miniGame: null,
   miniGamesEncountered: 0,
-  hodorPose: "idle",
+  grodorPose: "idle",
   combatStrike: "",
   combatImpact: "",
   pendingCoinGain: 0,
@@ -130,6 +132,7 @@ const state = {
   pendingPurseLoss: false,
   renderedLife: null,
   renderedCombatHp: null,
+  renderedCarriedGold: null,
 };
 
 let shopPanelOpen = false;
@@ -146,7 +149,7 @@ let rewardHideTimer = null;
 let rewardHideToken = 0;
 
 let audioCtx = null;
-let lastHodorLife = 0;
+let lastGrodorLife = 0;
 let lastPlayedBgmScreen = "";
 let currentBgm = null;
 
@@ -185,8 +188,8 @@ const COMBAT_ARENAS = [
 ];
 const DEFAULT_COMBAT_ARENA_KEY = COMBAT_ARENAS[0].key;
 
-const HODOR_BASE_PATH = "assets/Hodor V0.1";
-const HODOR_POSE_FILES = {
+const GRODOR_BASE_PATH = "assets/Hodor V0.1";
+const GRODOR_POSE_FILES = {
   idle: "Idle",
   marche: "marche",
   fuite: "fuite",
@@ -200,20 +203,20 @@ const HODOR_POSE_FILES = {
   ko: "ko",
   mort: "mort",
 };
-const HODOR_WALK_FRAME_MS = 170;
+const GRODOR_WALK_FRAME_MS = 170;
 const VILLAGE_ACTION_DELAY_MS = 650;
 const VILLAGE_RETURN_DELAY_MS = 900;
 const VILLAGE_SERVICE_RETURN_DELAY_MS = 4000;
 const CELL_OPEN_DELAY_MS = 650;
 const DUNGEON_EFFECT_VISIBLE_MS = 4500;
 const START_INTRO_EXIT_MS = 2200;
-const HODOR_WALK_FRAME_PATHS = [
-  `${HODOR_BASE_PATH}/Corps/Marche/marche-1.png`,
-  `${HODOR_BASE_PATH}/Corps/Marche/marche-2.png`,
-  `${HODOR_BASE_PATH}/Corps/Marche/marche-3.png`,
-  `${HODOR_BASE_PATH}/Corps/Marche/marche-4.png`,
+const GRODOR_WALK_FRAME_PATHS = [
+  `${GRODOR_BASE_PATH}/Corps/Marche/marche-1.png`,
+  `${GRODOR_BASE_PATH}/Corps/Marche/marche-2.png`,
+  `${GRODOR_BASE_PATH}/Corps/Marche/marche-3.png`,
+  `${GRODOR_BASE_PATH}/Corps/Marche/marche-4.png`,
 ];
-const HODOR_STUFF_LAYERS = [
+const GRODOR_STUFF_LAYERS = [
   { item: "Slip de Guerre", folder: "Slip de guerre", suffix: "slip-de-guerre" },
   { item: "Sandales de Panique", folder: "Sandales de Panique", suffix: "sandale" },
   { item: "Boulet au Pied", folder: "Boulet", suffix: "boulet" },
@@ -224,39 +227,39 @@ const HODOR_STUFF_LAYERS = [
   { item: "Hache Emoussee", folder: "Hache", suffix: "hache" },
   { item: "Cape Trop Longue", folder: "Cape", suffix: "cape" },
 ];
-const HODOR_WALK_STUFF_FRAME_PATHS = {
+const GRODOR_WALK_STUFF_FRAME_PATHS = {
   "Slip de Guerre": [
-    `${HODOR_BASE_PATH}/Stuff/Slip de guerre/Marche-Slip-de-guerre/marche-slip-de-guerre-1.png`,
-    `${HODOR_BASE_PATH}/Stuff/Slip de guerre/Marche-Slip-de-guerre/marche-slip-de-guerre-2.png`,
-    `${HODOR_BASE_PATH}/Stuff/Slip de guerre/Marche-Slip-de-guerre/marche-slip-de-guerre-3.png`,
-    `${HODOR_BASE_PATH}/Stuff/Slip de guerre/Marche-Slip-de-guerre/marche-slip-de-guerre-4.png`,
+    `${GRODOR_BASE_PATH}/Stuff/Slip de guerre/Marche-Slip-de-guerre/marche-slip-de-guerre-1.png`,
+    `${GRODOR_BASE_PATH}/Stuff/Slip de guerre/Marche-Slip-de-guerre/marche-slip-de-guerre-2.png`,
+    `${GRODOR_BASE_PATH}/Stuff/Slip de guerre/Marche-Slip-de-guerre/marche-slip-de-guerre-3.png`,
+    `${GRODOR_BASE_PATH}/Stuff/Slip de guerre/Marche-Slip-de-guerre/marche-slip-de-guerre-4.png`,
   ],
   "Sandales de Panique": [
-    `${HODOR_BASE_PATH}/Stuff/Sandales de Panique/Marche-sandale/marche-sandale-1.png`,
-    `${HODOR_BASE_PATH}/Stuff/Sandales de Panique/Marche-sandale/marche-sandale-2.png`,
-    `${HODOR_BASE_PATH}/Stuff/Sandales de Panique/Marche-sandale/marche-sandale-3.png`,
-    `${HODOR_BASE_PATH}/Stuff/Sandales de Panique/Marche-sandale/marche-sandale-4.png`,
+    `${GRODOR_BASE_PATH}/Stuff/Sandales de Panique/Marche-sandale/marche-sandale-1.png`,
+    `${GRODOR_BASE_PATH}/Stuff/Sandales de Panique/Marche-sandale/marche-sandale-2.png`,
+    `${GRODOR_BASE_PATH}/Stuff/Sandales de Panique/Marche-sandale/marche-sandale-3.png`,
+    `${GRODOR_BASE_PATH}/Stuff/Sandales de Panique/Marche-sandale/marche-sandale-4.png`,
   ],
   "Hache Emoussee": [
-    `${HODOR_BASE_PATH}/Stuff/Hache/Marche-Hache/marche-hache-1.png`,
-    `${HODOR_BASE_PATH}/Stuff/Hache/Marche-Hache/marche-hache-2.png`,
-    `${HODOR_BASE_PATH}/Stuff/Hache/Marche-Hache/marche-hache-3.png`,
-    `${HODOR_BASE_PATH}/Stuff/Hache/Marche-Hache/marche-hache-4.png`,
+    `${GRODOR_BASE_PATH}/Stuff/Hache/Marche-Hache/marche-hache-1.png`,
+    `${GRODOR_BASE_PATH}/Stuff/Hache/Marche-Hache/marche-hache-2.png`,
+    `${GRODOR_BASE_PATH}/Stuff/Hache/Marche-Hache/marche-hache-3.png`,
+    `${GRODOR_BASE_PATH}/Stuff/Hache/Marche-Hache/marche-hache-4.png`,
   ],
   "Boulet au Pied": [
-    `${HODOR_BASE_PATH}/Stuff/Boulet/Marche-Boulet/marche-boulet-1.png`,
-    `${HODOR_BASE_PATH}/Stuff/Boulet/Marche-Boulet/marche-boulet-2.png`,
-    `${HODOR_BASE_PATH}/Stuff/Boulet/Marche-Boulet/marche-boulet-3.png`,
-    `${HODOR_BASE_PATH}/Stuff/Boulet/Marche-Boulet/marche-boulet-4.png`,
+    `${GRODOR_BASE_PATH}/Stuff/Boulet/Marche-Boulet/marche-boulet-1.png`,
+    `${GRODOR_BASE_PATH}/Stuff/Boulet/Marche-Boulet/marche-boulet-2.png`,
+    `${GRODOR_BASE_PATH}/Stuff/Boulet/Marche-Boulet/marche-boulet-3.png`,
+    `${GRODOR_BASE_PATH}/Stuff/Boulet/Marche-Boulet/marche-boulet-4.png`,
   ],
   "Gants Collants": [
-    `${HODOR_BASE_PATH}/Stuff/Gant/marche-gant/marche-gant-1.png`,
-    `${HODOR_BASE_PATH}/Stuff/Gant/marche-gant/marche-gant-2.png`,
-    `${HODOR_BASE_PATH}/Stuff/Gant/marche-gant/marche-gant-3.png`,
-    `${HODOR_BASE_PATH}/Stuff/Gant/marche-gant/marche-gant-4.png`,
+    `${GRODOR_BASE_PATH}/Stuff/Gant/marche-gant/marche-gant-1.png`,
+    `${GRODOR_BASE_PATH}/Stuff/Gant/marche-gant/marche-gant-2.png`,
+    `${GRODOR_BASE_PATH}/Stuff/Gant/marche-gant/marche-gant-3.png`,
+    `${GRODOR_BASE_PATH}/Stuff/Gant/marche-gant/marche-gant-4.png`,
   ],
 };
-let hodorWalkAnimationTimer = null;
+let grodorWalkAnimationTimer = null;
 let dungeonEffectPoseTimer = null;
 let cellOpenTimer = null;
 let coinFlipAnimationTimers = [];
@@ -272,12 +275,6 @@ document.addEventListener("click", (event) => {
   const miniGameAction = event.target.closest("[data-mini-game-action]");
   if (miniGameAction) {
     resolveMiniGame(miniGameAction.dataset.miniGameAction);
-    return;
-  }
-
-  const deadHodor = event.target.closest(".scene.is-dead .hodor-sprite");
-  if (deadHodor) {
-    returnToCellFromDeath();
     return;
   }
 
@@ -308,9 +305,6 @@ let startIntroActivated = false;
 let logoChimePlayed = false;
 let introAudioStarted = false;
 
-function tryAutoplayIntroAudio() {
-  // Discard page-load autoplay to prevent immediate hides from autoplay policy rejections
-}
 
 const startIntro = $("start-intro");
 if (startIntro) {
@@ -344,6 +338,8 @@ addClick("stats-tab-stats", () => setStatsPanelView("stats"));
 addClick("stats-tab-ranking", () => setStatsPanelView("ranking"));
 addClick("village-modal-backdrop", closeVillagePanels);
 addClick("restart-action", openCellDoor);
+addClick("death-go-cell", returnToCellFromDeath);
+addClick("death-go-village", returnToVillageFromDeath);
 addClick("reset-save", resetBank);
 addClick("debug-toggle", toggleDebug);
 addClick("god-mode", toggleGodMode);
@@ -399,20 +395,20 @@ document.addEventListener("click", (event) => {
   if (!event.target.closest(".stat-purse")) {
     document.querySelector(".stat-purse")?.classList.remove("is-open");
   }
-});
 
-document.addEventListener("click", (event) => {
-  const popover = $("inventory-popover");
-  if (!popover || popover.hidden) return;
-  if (event.target.closest("#inventory-popover .inventory-card") || event.target.closest("#inventory-toggle")) return;
-  closeInventory();
-});
+  const invPopover = $("inventory-popover");
+  if (invPopover && !invPopover.hidden) {
+    if (!event.target.closest("#inventory-popover .inventory-card") && !event.target.closest("#inventory-toggle")) {
+      closeInventory();
+    }
+  }
 
-document.addEventListener("click", (event) => {
-  const popover = $("account-popover");
-  if (!popover || popover.hidden) return;
-  if (event.target.closest("#account-popover .account-card") || event.target.closest("#account-toggle")) return;
-  closeAccountPopover();
+  const accPopover = $("account-popover");
+  if (accPopover && !accPopover.hidden) {
+    if (!event.target.closest("#account-popover .account-card") && !event.target.closest("#account-toggle")) {
+      closeAccountPopover();
+    }
+  }
 });
 
 setupCloudAuth();
@@ -501,7 +497,7 @@ function detailedStatsPayload(stats = state.stats) {
   }, {});
 }
 
-function hodorianStats() {
+function grodorianStats() {
   const stats = normalizeStats(state.stats);
   const gloire = stats.sortiesReussies + stats.combatsGagnes + stats.miniJeuxReussis;
   const souffrance = stats.humiliations + stats.degatsSubis + stats.mortsRidicules;
@@ -515,8 +511,42 @@ function hodorianStats() {
     avidite,
     obstination,
     scoreGrodorienTotal,
-    scoreHodorienTotal: scoreGrodorienTotal,
   };
+}
+
+function statSnapshot(stats = state.stats) {
+  const source = { ...DEFAULT_STATS, ...(stats || {}) };
+  return Object.keys(DEFAULT_STATS).reduce((snapshot, key) => {
+    snapshot[key] = Math.max(0, Math.floor(Number(source[key] || 0)));
+    return snapshot;
+  }, {});
+}
+
+function runStatsDelta() {
+  const start = statSnapshot(state.runStatsStart || {});
+  const current = statSnapshot(state.stats);
+  const delta = Object.keys(DEFAULT_STATS).reduce((result, key) => {
+    result[key] = Math.max(0, Math.floor(Number(current[key] || 0) - Number(start[key] || 0)));
+    return result;
+  }, {});
+  const scoreGrodorienTotal = delta.sortiesReussies
+    + delta.combatsGagnes
+    + delta.miniJeuxReussis
+    + delta.humiliations
+    + delta.degatsSubis
+    + delta.mortsRidicules
+    + delta.poGagnes
+    + delta.objetsRamasses
+    + delta.runsTotal
+    + delta.etagesVisites;
+  return { ...delta, scoreGrodorienTotal };
+}
+
+function rankingSymbol(rank) {
+  if (rank === 1) return "🥇";
+  if (rank === 2) return "🥈";
+  if (rank === 3) return "🥉";
+  return rank ? String(rank) : "?";
 }
 
 function toggleAccountPopover() {
@@ -589,7 +619,6 @@ function initStartIntro() {
   }
 
   intro.hidden = false;
-  tryAutoplayIntroAudio();
 }
 
 function shouldBypassStartIntro() {
@@ -1108,7 +1137,7 @@ function progressScore(save) {
     + Number(state.stats.goldBankedTotal || 0)
     + Number(state.stats.wins || 0)
     + Number(state.stats.losses || 0)
-    + hodorianStats().scoreHodorienTotal
+    + grodorianStats().scoreGrodorienTotal
     + Object.values(state.upgrades || {}).reduce((sum, level) => sum + Number(level || 0), 0);
 }
 
@@ -1129,7 +1158,7 @@ function sendReturningPlayerToVillage() {
   state.doorHints = [];
   state.floor = 0;
   state.life = state.maxLife;
-  state.hodorPose = "walk";
+  state.grodorPose = "walk";
   setStory("Grodor retrouve le village. Le garde à l'entrée prétend que c'était prévu.");
 }
 
@@ -1167,7 +1196,7 @@ function resetGuestProgress() {
   state.koBannerText = "";
   state.winBannerText = "";
   state.miniGame = null;
-  state.hodorPose = "idle";
+  state.grodorPose = "idle";
   state.villageLocation = "Village";
   fallbackBankGold = 0;
   fallbackUpgrades = {};
@@ -1211,6 +1240,7 @@ function buildActiveRunPayload() {
     carriedGold: state.carriedGold,
     inventory: [...state.inventory],
     runLosses: state.runLosses,
+    runStatsStart: statSnapshot(state.runStatsStart || state.stats),
     floorShift: state.floorShift,
     miniGamesEncountered: state.miniGamesEncountered,
     combatKey: combatKeyFor(state.combat),
@@ -1234,6 +1264,7 @@ function restoreActiveRun(activeRun) {
   state.inventory = snapshot.inventory;
   repairLegacyInventoryEffects();
   state.runLosses = snapshot.runLosses;
+  state.runStatsStart = snapshot.runStatsStart;
   state.floorShift = snapshot.floorShift;
   state.miniGamesEncountered = snapshot.miniGamesEncountered;
   state.combat = snapshot.screen === "combat" ? monsters[snapshot.combatKey] || null : null;
@@ -1253,7 +1284,7 @@ function restoreActiveRun(activeRun) {
   state.showWinBanner = false;
   state.villageLocation = "Village";
   state.doorHints = [];
-  state.hodorPose = state.screen === "combat" ? "idle" : "question";
+  state.grodorPose = state.screen === "combat" ? "idle" : "question";
   prepareDoorHints();
   setStory(randomFrom([
     "Grodor cligne des yeux. Le Lapin Blanc hurle qu’il est encore en retard. Tout reprend.",
@@ -1297,6 +1328,7 @@ function sanitizeActiveRun(activeRun) {
     carriedGold: Math.max(0, Math.floor(Number(activeRun.carriedGold || 0))),
     inventory,
     runLosses: Math.max(0, Math.floor(Number(activeRun.runLosses || 0))),
+    runStatsStart: statSnapshot(activeRun.runStatsStart || state.stats),
     floorShift: Math.floor(Number(activeRun.floorShift || 0)),
     miniGamesEncountered: Math.max(0, Math.floor(Number(activeRun.miniGamesEncountered || 0))),
     combatKey,
@@ -1372,7 +1404,7 @@ function setStory(text, tone = "neutral") {
   const split = splitStoryReward(storyText);
   $("story").innerHTML = formatStory(split.story || "Grodor contemple le résultat avec une compréhension limitée.");
   setReward(split.reward);
-  state.hodorPose = hodorPoseFromStory(storyText, tone);
+  state.grodorPose = grodorPoseFromStory(storyText, tone);
 }
 
 function deathStoryText(text) {
@@ -1448,7 +1480,7 @@ function renderCellInfo() {
   ].join("");
 }
 
-function hodorPoseFromStory(text, tone) {
+function grodorPoseFromStory(text, tone) {
   const content = normalizeText(text);
   const effectText = normalizeText(splitStoryReward(text).reward);
   const hasEffectItem = Boolean(knownItemInText(effectText));
@@ -1871,7 +1903,7 @@ function delayVillageAction(target, action) {
   $("scene")?.classList.add(`village-target-${target}`);
 
   // Démarre l'animation de marche active lors du déplacement
-  state.hodorPose = "walk";
+  state.grodorPose = "walk";
 
   // Oriente Grodor selon sa direction de marche
   if (target === "bank" || target === "sell") {
@@ -1889,7 +1921,7 @@ function delayVillageAction(target, action) {
     action();
 
     // Grodor arrive au bâtiment et redevient immobile
-    state.hodorPose = "idle";
+    state.grodorPose = "idle";
     render();
 
     const returnDelay = target === "bank" || target === "sell"
@@ -1898,7 +1930,7 @@ function delayVillageAction(target, action) {
 
     villageReturnTimer = window.setTimeout(() => {
       // Démarre l'animation de marche active lors du retour au centre
-      state.hodorPose = "walk";
+      state.grodorPose = "walk";
 
       // Se retourne pour marcher dans l'autre sens
       if (target === "bank" || target === "sell") {
@@ -1918,7 +1950,7 @@ function delayVillageAction(target, action) {
       // S'arrête une fois arrivé au centre du village (après 450ms de déplacement)
       window.setTimeout(() => {
         if (state.screen === "village") {
-          state.hodorPose = "idle";
+          state.grodorPose = "idle";
           state.hodorFlipped = false; // Face vers la gauche par défaut au repos
           render();
         }
@@ -1935,7 +1967,7 @@ function openShop() {
   shopPanelMode = "upgrades";
   selectedSaleItems.clear();
   statsPanelOpen = false;
-  state.hodorPose = "walk";
+  state.grodorPose = "walk";
   state.showWinBanner = false;
   state.villageLocation = "Échoppe";
   setStory("Le vendeur sourit comme quelqu'un qui a déjà compté ton argent deux fois, gros pigeon médiéval.");
@@ -1951,7 +1983,7 @@ function openSellPanel() {
   shopPanelMode = "sell";
   selectedSaleItems.clear();
   statsPanelOpen = false;
-  state.hodorPose = "walk";
+  state.grodorPose = "walk";
   state.showWinBanner = false;
   state.villageLocation = "Comptoir de revente";
   setStory("Le revendeur sort une balance, deux sacs et une morale très flexible. Choisis ce que Grodor abandonne.");
@@ -2022,6 +2054,28 @@ async function fetchRankingFromCloud() {
     rankingLoading = false;
     renderStatsPanel();
   }
+}
+
+async function refreshWinRankFromCloud() {
+  state.winRankSymbol = "?";
+  if (!supabaseClient || !cloudState.user) {
+    renderWinScorePanel();
+    return;
+  }
+
+  try {
+    await saveCloudNow({ force: true });
+    const { data, error } = await supabaseClient.rpc("get_grodor_leaderboard", {
+      p_limit: 100,
+    });
+    if (error) throw error;
+    const rankIndex = (data || []).findIndex((item) => item.user_id === cloudState.user.id);
+    state.winRankSymbol = rankingSymbol(rankIndex >= 0 ? rankIndex + 1 : 0);
+  } catch (err) {
+    console.error("Failed to fetch win ranking from Supabase:", err);
+    state.winRankSymbol = "?";
+  }
+  renderWinScorePanel();
 }
 
 function closeStatsPanel() {
@@ -2871,16 +2925,16 @@ function holdDungeonEffectPoseBriefly() {
   clearDungeonEffectPoseTimer();
   if (state.screen !== "dungeon" || state.inputLocked) return;
 
-  const effectPose = state.hodorPose || "question";
+  const effectPose = state.grodorPose || "question";
   setDungeonDoorTarget(null);
   setDungeonDoorPreviewTarget(null);
   $("scene")?.classList.add("is-effect-pose");
   dungeonEffectPoseTimer = window.setTimeout(() => {
     dungeonEffectPoseTimer = null;
     $("scene")?.classList.remove("is-effect-pose");
-    if (state.screen !== "dungeon" || state.inputLocked || state.hodorPose !== effectPose) return;
-    state.hodorPose = "question";
-    renderHodor();
+    if (state.screen !== "dungeon" || state.inputLocked || state.grodorPose !== effectPose) return;
+    state.grodorPose = "question";
+    renderGrodor();
   }, 3000);
 }
 
@@ -3000,7 +3054,7 @@ function startCombat(monster) {
   state.combat = monster;
   state.combatHp = monster.life;
   state.combatArenaKey = randomCombatArenaKey();
-  state.hodorPose = "idle";
+  state.grodorPose = "idle";
   state.combatStrike = "";
   state.combatImpact = "";
   state.renderedCombatHp = null;
@@ -3013,21 +3067,21 @@ function resolveCombat(strike) {
   const monster = state.combat;
   const before = snapshotRun();
   state.inputLocked = true;
-  state.hodorPose = "combat";
+  state.grodorPose = "combat";
   state.combatStrike = strike;
   state.combatImpact = "windup";
   render();
 
   window.setTimeout(() => {
     if (state.screen !== "combat" || state.combat !== monster) return;
-    state.hodorPose = "combat-2";
+    state.grodorPose = "combat-2";
     state.combatImpact = "hit";
     render();
   }, 720);
 
   window.setTimeout(() => {
     if (state.screen !== "combat" || state.combat !== monster) return;
-    state.hodorPose = "combat-3";
+    state.grodorPose = "combat-3";
     state.combatImpact = "aftermath";
     render();
   }, 1280);
@@ -3039,7 +3093,7 @@ function resolveCombat(strike) {
     state.combatImpact = "";
 
     if (!state.runEnded && !outcome.defeated) {
-      state.hodorPose = "idle";
+      state.grodorPose = "idle";
       setStory(outcome.text, outcome.hit ? "good" : toneFromSnapshot(before));
     } else if (!state.runEnded) {
       state.combat = null;
@@ -3254,7 +3308,9 @@ function recordWin() {
   addStat("sortiesReussies");
   state.stats.wins = state.stats.sortiesReussies;
   state.winBannerText = winTaunt();
+  state.winRankSymbol = "?";
   saveStats();
+  void refreshWinRankFromCloud();
 }
 
 function koTaunt() {
@@ -3566,14 +3622,33 @@ function returnToCellFromDeath() {
   state.inputLocked = false;
   state.floorShift = 0;
   state.miniGamesEncountered = 0;
-  state.hodorPose = "idle";
+  state.grodorPose = "idle";
   setStory("Grodor se réveille dans sa geôle. Le sol refuse de commenter ce qu'il vient de voir.");
+  render();
+}
+
+function returnToVillageFromDeath() {
+  if (state.screen !== "mort") return;
+  state.screen = "village";
+  state.runEnded = true;
+  state.showWinBanner = false;
+  state.villageLocation = "Village";
+  state.combat = null;
+  state.combatHp = 0;
+  state.combatArenaKey = "";
+  state.doorHints = [];
+  state.inputLocked = false;
+  state.floorShift = 0;
+  state.miniGamesEncountered = 0;
+  state.grodorPose = "idle";
+  setStory("Grodor revient au village sans triomphe, mais avec une occasion de faire semblant.");
   render();
 }
 
 function startRun() {
   const resetLossStreak = state.screen === "village" || state.screen === "shop";
   const floorRange = runFloorRange();
+  state.runStatsStart = statSnapshot(state.stats);
   state.showWinBanner = false;
   state.villageLocation = "Village";
   state.screen = "dungeon";
@@ -3602,7 +3677,7 @@ function startRun() {
   applyRunUpgrades();
   prepareDoorHints();
   setStory("Grodor force la porte de sa cellule. Devant lui : trois portes, trois choix, et l’illusion d’une bonne idée.");
-  state.hodorPose = "question";
+  state.grodorPose = "question";
   render();
 }
 
@@ -3619,7 +3694,7 @@ function goToCellFromTavern() {
   state.doorHints = [];
   state.inputLocked = false;
   state.floorShift = 0;
-  state.hodorPose = "idle";
+  state.grodorPose = "idle";
   closeShop();
   closeStatsPanel();
   closeInventory();
@@ -3773,7 +3848,7 @@ function debugRunMiniGame(type) {
   state.floor = Math.max(2, Math.min(state.floor || state.totalFloors, state.totalFloors));
   state.maxLife = Math.min(MAX_LIFE, Math.max(state.maxLife || START_LIFE, START_LIFE));
   state.life = Math.max(1, Math.min(state.life || state.maxLife, state.maxLife));
-  state.hodorPose = "question";
+  state.grodorPose = "question";
 
   const msg = type === "pact" ? startPactMiniGame() : startMiniGame(type);
   setStory(msg, "neutral");
@@ -3812,7 +3887,7 @@ function debugAddStuff(item) {
     applyItemGainEffect(item);
   }
 
-  state.hodorPose = "victory";
+  state.grodorPose = "victory";
   setStory(
     alreadyEquipped
       ? `Debug : ${item} est déjà dans les poches. Grodor insiste quand même pour avoir l'air équipé.`
@@ -3825,7 +3900,7 @@ function debugAddStuff(item) {
 function debugClearStuff() {
   applyInventoryLossEffects(state.inventory);
   state.inventory = [];
-  state.hodorPose = "question";
+  state.grodorPose = "question";
   setStory("Debug : stuff vide. Grodor regarde ses mains comme si c'était un plan.");
   render();
 }
@@ -4168,7 +4243,7 @@ function renderStatsPanel() {
     return;
   }
 
-  const stats = hodorianStats();
+  const stats = grodorianStats();
   const families = [
     {
       label: "Gloire",
@@ -4251,14 +4326,57 @@ function renderStatsPanel() {
   const totalLabel = document.createElement("span");
   const totalValue = document.createElement("strong");
   totalLabel.textContent = "Score grodorien total";
-  totalValue.textContent = stats.scoreHodorienTotal;
+  totalValue.textContent = stats.scoreGrodorienTotal;
   total.append(totalLabel, totalValue);
   grid.appendChild(total);
 }
 
+function renderWinScorePanel() {
+  const panel = $("win-score-panel");
+  const grid = $("win-score-grid");
+  const total = $("win-score-total");
+  const rank = $("win-score-rank");
+  if (!panel || !grid || !total || !rank) return;
+
+  const show = state.screen === "village" && state.showWinBanner;
+  panel.hidden = !show;
+  if (!show) return;
+
+  const stats = runStatsDelta();
+  const rows = [
+    ["Sorties réussies", stats.sortiesReussies],
+    ["Combats gagnés", stats.combatsGagnes],
+    ["Mini-jeux réussis", stats.miniJeuxReussis],
+    ["Humiliations", stats.humiliations],
+    ["Dégâts subis", stats.degatsSubis],
+    ["Morts ridicules", stats.mortsRidicules],
+    ["PO gagnées", stats.poGagnes],
+    ["Objets ramassés", stats.objetsRamasses],
+    ["Runs total", stats.runsTotal],
+    ["Étages visités", stats.etagesVisites],
+  ];
+
+  rank.textContent = state.winRankSymbol || "?";
+  grid.textContent = "";
+  rows.forEach(([label, value]) => {
+    const item = document.createElement("article");
+    const itemLabel = document.createElement("span");
+    const itemValue = document.createElement("strong");
+    itemLabel.textContent = label;
+    itemValue.textContent = value;
+    item.append(itemLabel, itemValue);
+    grid.appendChild(item);
+  });
+  total.textContent = stats.scoreGrodorienTotal;
+}
+
+let totalEventWeight = null;
+
 function weightedEvent() {
-  const total = eventPool.reduce((sum, event) => sum + event.weight, 0);
-  let roll = Math.random() * total;
+  if (totalEventWeight === null) {
+    totalEventWeight = eventPool.reduce((sum, event) => sum + event.weight, 0);
+  }
+  let roll = Math.random() * totalEventWeight;
   for (const event of eventPool) {
     roll -= event.weight;
     if (roll <= 0) return event;
@@ -4597,14 +4715,14 @@ function render() {
   }
 
   // Déclencheurs de sons et musiques dynamiques sur changement d'état !
-  if (lastHodorLife > 0) {
-    if (state.life > lastHodorLife && state.screen !== "village" && state.screen !== "shop") {
+  if (lastGrodorLife > 0) {
+    if (state.life > lastGrodorLife && state.screen !== "village" && state.screen !== "shop") {
       playHealSound();
-    } else if (state.life < lastHodorLife && state.life > 0) {
+    } else if (state.life < lastGrodorLife && state.life > 0) {
       playDamageSound();
     }
   }
-  lastHodorLife = state.life;
+  lastGrodorLife = state.life;
 
   if (state.screen !== lastPlayedBgmScreen) {
     lastPlayedBgmScreen = state.screen;
@@ -4612,14 +4730,8 @@ function render() {
   }
 
   const showsFloor = state.screen === "dungeon" || state.screen === "combat";
-  $("place-label").textContent = showsFloor ? "Étage" : "Lieu";
-  $("floor").textContent = state.screen === "village" || state.screen === "shop"
-    ? "Village"
-    : state.screen === "cell"
-      ? "Cellule"
-      : state.screen === "mort"
-        ? "Geôles"
-        : state.floor;
+  $("place-label").textContent = "\u00c9tage";
+  $("floor").textContent = showsFloor ? state.floor : 0;
   const carriedGoldText = String(state.carriedGold);
   $("carried-gold").textContent = carriedGoldText;
   $("carried-gold").dataset.digits = String(carriedGoldText.length);
@@ -4628,10 +4740,10 @@ function render() {
   const lossCountText = String(state.runLosses);
   $("loss-count").textContent = lossCountText;
   $("loss-count").dataset.digits = String(lossCountText.length);
-  const statsSummary = hodorianStats();
+  const statsSummary = grodorianStats();
   $("village-loss-count").textContent = statsSummary.souffrance;
   $("village-win-count").textContent = statsSummary.gloire;
-  $("village-bank-count").textContent = statsSummary.scoreHodorienTotal;
+  $("village-bank-count").textContent = statsSummary.scoreGrodorienTotal;
   $("village-shame").textContent = `Avidité ${statsSummary.avidite} / Obstination ${statsSummary.obstination}`;
   renderHearts();
   renderPurse();
@@ -4644,6 +4756,7 @@ function render() {
   const isVillage = state.screen === "village" || state.screen === "shop";
   const isDead = state.screen === "mort";
   const isCell = state.screen === "cell";
+  const isWin = isVillage && state.showWinBanner;
   if (!isVillage) {
     shopPanelOpen = false;
     statsPanelOpen = false;
@@ -4668,14 +4781,14 @@ function render() {
   ["head", "torso", "legs"].forEach((strike) => {
     $("scene").classList.toggle(`combat-strike-${strike}`, isCombat && state.combatStrike === strike);
   });
-  $("scene").classList.toggle("has-win-banner", isVillage && state.showWinBanner);
+  $("scene").classList.toggle("has-win-banner", isWin);
   $("scene").classList.toggle("story-good", state.storyTone === "good" && !isDead);
   $("scene").classList.toggle("story-bad", state.storyTone === "bad" && !isDead);
   $("scene").classList.toggle("story-neutral", state.storyTone === "neutral" && !isDead);
   $("bank-score").hidden = true;
-  $("loss-score").hidden = isVillage || isShop;
-  placeHodorForScreen(isDungeon, isCombat);
-  renderHodor();
+  $("loss-score").hidden = (isVillage && !isWin) || isShop;
+  placeGrodorForScreen(isDungeon, isCombat);
+  renderGrodor();
 
   $("location").textContent = isVillage
     ? state.villageLocation
@@ -4709,12 +4822,13 @@ function render() {
   $("shop-panel").hidden = !isShop;
   $("stats-panel").hidden = !isStatsPanel;
   $("village-modal-backdrop").hidden = !(isShop || isStatsPanel);
-  $("death-choices").hidden = !isCell;
+  $("death-choices").hidden = !(isCell || isDead);
   renderCellInfo();
   $("ko-banner").hidden = !isDead;
-  $("win-banner").hidden = !(isVillage && state.showWinBanner);
+  $("win-banner").hidden = !isWin;
+  renderWinScorePanel();
   if (isDead) $("ko-taunt").textContent = koTaunt();
-  if (isVillage && state.showWinBanner) $("win-taunt").textContent = winTaunt();
+  if (isWin) $("win-taunt").textContent = winTaunt();
 
   document.querySelectorAll(".door").forEach((door) => {
     door.disabled = !isDungeon || state.inputLocked || Boolean(state.miniGame);
@@ -4750,7 +4864,7 @@ function isInstalledApp() {
     || window.navigator.standalone === true;
 }
 
-function placeHodorForScreen(isDungeon, isCombat) {
+function placeGrodorForScreen(isDungeon, isCombat) {
   const hodor = document.querySelector(".hodor-sprite");
   const dungeonStage = $("dungeon-stage");
   const combatStage = $("combat-stage");
@@ -4852,6 +4966,95 @@ function playPendingPurseLossAnimation() {
   state.pendingPurseLoss = false;
 }
 
+function triggerDamageJuice() {
+  if (navigator.vibrate) {
+    navigator.vibrate([100, 50, 100]);
+  }
+
+  const shell = document.querySelector(".game-shell");
+  if (shell) {
+    shell.classList.remove("shake-active");
+    void shell.offsetWidth;
+    shell.classList.add("shake-active");
+    setTimeout(() => {
+      shell.classList.remove("shake-active");
+    }, 500);
+  }
+
+  const scene = $("scene");
+  if (scene) {
+    scene.classList.remove("flash-red-active");
+    void scene.offsetWidth;
+    scene.classList.add("flash-red-active");
+    setTimeout(() => {
+      scene.classList.remove("flash-red-active");
+    }, 500);
+  }
+}
+
+function triggerCoinJuice(amount) {
+  if (navigator.vibrate) {
+    navigator.vibrate(30);
+  }
+
+  const purse = document.querySelector(".stat-purse");
+  if (purse) {
+    purse.classList.remove("pop-active");
+    void purse.offsetWidth;
+    purse.classList.add("pop-active");
+    setTimeout(() => {
+      purse.classList.remove("pop-active");
+    }, 300);
+  }
+
+  const numCoins = Math.min(8, Math.max(2, amount));
+  const shell = document.querySelector(".game-shell");
+  if (!shell) return;
+
+  const target = document.querySelector(".stat-purse .purse-visual") || purse;
+  const targetRect = target ? target.getBoundingClientRect() : null;
+  const shellRect = shell.getBoundingClientRect();
+
+  for (let i = 0; i < numCoins; i++) {
+    const coin = document.createElement("div");
+    coin.className = "flying-coin-particle";
+
+    const startX = shellRect.width / 2 + (Math.random() - 0.5) * 60;
+    const startY = shellRect.height * 0.45 + (Math.random() - 0.5) * 60;
+
+    coin.style.left = `${startX}px`;
+    coin.style.top = `${startY}px`;
+
+    shell.appendChild(coin);
+
+    if (targetRect) {
+      const destX = targetRect.left - shellRect.left + targetRect.width / 2 - 11;
+      const destY = targetRect.top - shellRect.top + targetRect.height / 2 - 11;
+
+      setTimeout(() => {
+        coin.style.transform = `translate(${destX - startX}px, ${destY - startY}px) scale(0.6)`;
+        coin.style.opacity = "0";
+      }, 50 + i * 40);
+    }
+
+    setTimeout(() => {
+      coin.remove();
+    }, 1000);
+  }
+}
+
+function triggerLifeJuice() {
+  const bar = document.querySelector(".stat-life");
+  if (bar) {
+    bar.classList.remove("life-change-active");
+    void bar.offsetWidth;
+    bar.classList.add("life-change-active");
+    setTimeout(() => {
+      bar.classList.remove("life-change-active");
+    }, 400);
+  }
+}
+
 function renderHearts() {
   const lifeHud = document.querySelector(".stat-life");
   if (lifeHud) {
@@ -4863,6 +5066,14 @@ function renderHearts() {
     const percentage = Math.max(0, Math.min(100, (state.life / state.maxLife) * 100));
     pvFill.style.width = `${percentage}%`;
   }
+
+  if (state.renderedLife !== null && state.renderedLife !== state.life) {
+    triggerLifeJuice();
+    if (state.life < state.renderedLife) {
+      triggerDamageJuice();
+    }
+  }
+
   state.renderedLife = state.life;
 }
 
@@ -4899,13 +5110,21 @@ function renderPurse() {
   if (purse) {
     purse.classList.toggle("has-gold", state.carriedGold > 0);
   }
+
+  if (state.renderedCarriedGold !== null && state.renderedCarriedGold !== state.carriedGold) {
+    const diff = state.carriedGold - state.renderedCarriedGold;
+    if (diff > 0) {
+      triggerCoinJuice(diff);
+    }
+  }
+  state.renderedCarriedGold = state.carriedGold;
 }
 
-function renderHodor() {
+function renderGrodor() {
   const hodor = document.querySelector(".hodor-sprite");
   if (!hodor) return;
 
-  const pose = hodorPoseForScreen();
+  const pose = grodorPoseForScreen();
   const assets = hodorLayerUrlsForInventory(pose);
   const poseClass = `pose-${pose}`;
   if (!hodor.classList.contains(poseClass)) {
@@ -4917,23 +5136,23 @@ function renderHodor() {
   hodor.classList.toggle("is-flipped", !!state.hodorFlipped);
 
   hodor.style.backgroundImage = assets.map(cssAssetUrl).join(", ");
-  syncHodorWalkAnimation(pose);
+  syncGrodorWalkAnimation(pose);
 }
 
-function hodorPoseForScreen() {
+function grodorPoseForScreen() {
   if (state.screen === "mort") return "dead";
-  if (state.screen === "combat") return ["idle", "combat", "combat-2", "combat-3"].includes(state.hodorPose) ? state.hodorPose : "idle";
+  if (state.screen === "combat") return ["idle", "combat", "combat-2", "combat-3"].includes(state.grodorPose) ? state.grodorPose : "idle";
   if (state.screen === "shop") return "walk";
   if (state.screen === "village") {
-    if (state.hodorPose === "walk") return "walk";
+    if (state.grodorPose === "walk") return "walk";
     return state.showWinBanner ? "victory" : "question";
   }
   if (state.screen === "dungeon") {
-    if (state.inputLocked || state.hodorPose === "walk") return "walk";
-    return state.hodorPose && state.hodorPose !== "idle" ? state.hodorPose : "question";
+    if (state.inputLocked || state.grodorPose === "walk") return "walk";
+    return state.grodorPose && state.grodorPose !== "idle" ? state.grodorPose : "question";
   }
   if (state.screen === "cell") return "idle";
-  return state.hodorPose || "idle";
+  return state.grodorPose || "idle";
 }
 
 function cssAssetUrl(asset) {
@@ -4944,12 +5163,12 @@ function hodorLayerUrlsForInventory(pose) {
   const owned = new Set(state.inventory);
   const cleanPose = hodorV01PoseName(pose);
   if (cleanPose === "mort") {
-    return [`${HODOR_BASE_PATH}/Corps/mort-mort.png`];
+    return [`${GRODOR_BASE_PATH}/Corps/mort-mort.png`];
   }
   const walkFrameIndex = cleanPose === "marche" ? hodorWalkFrameIndex() : 0;
   const layersBottomToTop = [hodorBaseLayerUrl(cleanPose, walkFrameIndex)];
 
-  HODOR_STUFF_LAYERS.forEach((layer) => {
+  GRODOR_STUFF_LAYERS.forEach((layer) => {
     if (owned.has(layer.item)) {
       layersBottomToTop.push(hodorStuffLayerUrl(layer, cleanPose, walkFrameIndex));
     }
@@ -4960,42 +5179,42 @@ function hodorLayerUrlsForInventory(pose) {
 
 function hodorBaseLayerUrl(cleanPose, walkFrameIndex) {
   if (cleanPose === "marche") {
-    return HODOR_WALK_FRAME_PATHS[walkFrameIndex];
+    return GRODOR_WALK_FRAME_PATHS[walkFrameIndex];
   }
 
   if (cleanPose === "folie") {
-    return `${HODOR_BASE_PATH}/Corps/folie.png`;
+    return `${GRODOR_BASE_PATH}/Corps/folie.png`;
   }
 
-  const poseFile = HODOR_POSE_FILES[cleanPose] || HODOR_POSE_FILES.idle;
-  return `${HODOR_BASE_PATH}/Corps/${poseFile}.png`;
+  const poseFile = GRODOR_POSE_FILES[cleanPose] || GRODOR_POSE_FILES.idle;
+  return `${GRODOR_BASE_PATH}/Corps/${poseFile}.png`;
 }
 
 function hodorStuffLayerUrl(layer, cleanPose, walkFrameIndex) {
-  const walkFramePaths = HODOR_WALK_STUFF_FRAME_PATHS[layer.item];
+  const walkFramePaths = GRODOR_WALK_STUFF_FRAME_PATHS[layer.item];
   if (cleanPose === "marche" && walkFramePaths) {
     return walkFramePaths[walkFrameIndex];
   }
 
   const poseFile = layer.poseFiles && layer.poseFiles[cleanPose] ? layer.poseFiles[cleanPose] : `${cleanPose}-${layer.suffix}`;
-  return `${HODOR_BASE_PATH}/Stuff/${layer.folder}/${poseFile}.png`;
+  return `${GRODOR_BASE_PATH}/Stuff/${layer.folder}/${poseFile}.png`;
 }
 
 function hodorWalkFrameIndex() {
-  return Math.floor(performance.now() / HODOR_WALK_FRAME_MS) % HODOR_WALK_FRAME_PATHS.length;
+  return Math.floor(performance.now() / GRODOR_WALK_FRAME_MS) % GRODOR_WALK_FRAME_PATHS.length;
 }
 
-function syncHodorWalkAnimation(pose) {
+function syncGrodorWalkAnimation(pose) {
   if (pose === "walk") {
-    if (!hodorWalkAnimationTimer) {
-      hodorWalkAnimationTimer = setInterval(renderHodor, HODOR_WALK_FRAME_MS);
+    if (!grodorWalkAnimationTimer) {
+      grodorWalkAnimationTimer = setInterval(renderGrodor, GRODOR_WALK_FRAME_MS);
     }
     return;
   }
 
-  if (hodorWalkAnimationTimer) {
-    clearInterval(hodorWalkAnimationTimer);
-    hodorWalkAnimationTimer = null;
+  if (grodorWalkAnimationTimer) {
+    clearInterval(grodorWalkAnimationTimer);
+    grodorWalkAnimationTimer = null;
   }
 }
 
@@ -5464,26 +5683,26 @@ function preloadAndDecodeAssets() {
   ];
 
   // 1. Ajouter les poses de Grodor
-  Object.values(HODOR_POSE_FILES).forEach(file => {
-    assetsToPreload.push(`${HODOR_BASE_PATH}/Corps/${file}.png`);
+  Object.values(GRODOR_POSE_FILES).forEach(file => {
+    assetsToPreload.push(`${GRODOR_BASE_PATH}/Corps/${file}.png`);
   });
-  assetsToPreload.push(`${HODOR_BASE_PATH}/Corps/mort-mort.png`);
+  assetsToPreload.push(`${GRODOR_BASE_PATH}/Corps/mort-mort.png`);
 
   // 2. Ajouter les frames de marche de Grodor
-  HODOR_WALK_FRAME_PATHS.forEach(url => assetsToPreload.push(url));
+  GRODOR_WALK_FRAME_PATHS.forEach(url => assetsToPreload.push(url));
 
   // 3. Ajouter les couches d'objets (Stuff layers) pour chaque pose
-  HODOR_STUFF_LAYERS.forEach(layer => {
+  GRODOR_STUFF_LAYERS.forEach(layer => {
     const poses = ["idle", "marche", "fuite", "folie", "question", "degats", "attaque-1", "attaque-2", "attaque-3", "victoire", "ko", "mort"];
     poses.forEach(pose => {
       const cleanPose = hodorV01PoseName(pose);
       const poseFile = layer.poseFiles && layer.poseFiles[cleanPose] ? layer.poseFiles[cleanPose] : `${cleanPose}-${layer.suffix}`;
-      assetsToPreload.push(`${HODOR_BASE_PATH}/Stuff/${layer.folder}/${poseFile}.png`);
+      assetsToPreload.push(`${GRODOR_BASE_PATH}/Stuff/${layer.folder}/${poseFile}.png`);
     });
   });
 
   // 4. Ajouter les frames de marche pour chaque objet
-  Object.values(HODOR_WALK_STUFF_FRAME_PATHS).forEach(frames => {
+  Object.values(GRODOR_WALK_STUFF_FRAME_PATHS).forEach(frames => {
     frames.forEach(url => assetsToPreload.push(url));
   });
 

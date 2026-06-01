@@ -1,4 +1,4 @@
-const CACHE_NAME = "grodor-v123-home-blur-stage";
+const CACHE_NAME = "grodor-v181-village-sprite-ui2";
 
 const CORE_ASSETS = [
   "/",
@@ -28,6 +28,11 @@ const CORE_ASSETS = [
   "/assets/Donjon/geole-ferme.webp",
   "/assets/Donjon/geole-ouvert.webp",
   "/assets/Village/village.webp",
+  "/assets/Village/cadre-village.png",
+  "/assets/Village/bourse-vide-village.png",
+  "/assets/Village/bourse-plein-village.png",
+  "/assets/Village/inventaire-vide-village.png",
+  "/assets/Village/inventaire-plein-village.png",
   "/assets/Arene/arene-1.webp",
   "/assets/Arene/arene-2.webp",
   "/assets/Arene/arene-3.webp",
@@ -87,8 +92,12 @@ const CORE_ASSETS = [
   "/assets/Ui/bourse-pleine.png",
   "/assets/Ui/cadre-etage.png",
   "/assets/Ui/cadre-effet.png",
+  "/assets/Ui/cadre-gagner.png",
+  "/assets/Ui/cadre-perdu.png",
+  "/assets/Ui/cadre-score.png",
   "/assets/Ui/cadre-tentative.png",
   "/assets/Ui/cadre-storyboard.png",
+  "/assets/Ui/cadre-storyboard-geole.png",
   "/assets/Ui/barre-de-vie/barre-de-vie-1-3.png",
   "/assets/Ui/barre-de-vie/barre-de-vie-2-4.png",
   "/assets/Ui/barre-de-vie/barre-de-vie-3-5.png",
@@ -116,6 +125,8 @@ const CORE_ASSETS = [
   "/assets/Ui/bon-effet.png",
   "/assets/Ui/mauvais-effet.png",
   "/assets/Ui/neutre-effet.png",
+  "/assets/Ui/panneau-geole.png",
+  "/assets/Ui/panneau-village.png",
   "/assets/Ui/po.png",
   "/assets/Ui/po-effet.png",
   "/assets/Hodor%20V0.1/Corps/Idle.png",

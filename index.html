@@ -16,7 +16,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=20260531-home-blur-stage">
+    <link rel="stylesheet" href="styles.css?v=20260601-village-sprite-ui2">
   </head>
   <body>
     <main class="game-shell">
@@ -206,6 +206,15 @@
           <span id="win-taunt">Grodor sort vivant. Le village envisage une statue minuscule, par politesse.</span>
         </div>
 
+        <div class="win-score-panel" id="win-score-panel" hidden aria-label="Score de la run">
+          <div class="win-score-rank" id="win-score-rank">?</div>
+          <div class="win-score-grid" id="win-score-grid"></div>
+          <div class="win-score-total">
+            <span>Score grodorien</span>
+            <strong id="win-score-total">0</strong>
+          </div>
+        </div>
+
         <div class="story-panel">
           <p class="location" id="location">Dans les geôles</p>
           <p class="story" id="story">
@@ -216,7 +225,6 @@
 
         <div class="reward-row" id="reward-row">
           <div class="reward-panel" id="reward-panel" hidden>
-            <p class="reward-label">Effet</p>
             <p class="reward-text" id="reward-text"></p>
           </div>
           <div class="hodor-sprite" aria-hidden="true"></div>
@@ -348,6 +356,8 @@
             </button>
             </div>
             <aside class="cell-info-card" id="cell-info-card" aria-live="polite"></aside>
+            <button class="death-panel-link death-panel-geole" id="death-go-cell" type="button" aria-label="Retourner aux geÃ´les"></button>
+            <button class="death-panel-link death-panel-village" id="death-go-village" type="button" aria-label="Retourner au village"></button>
           </div>
         </div>
 
@@ -364,6 +374,6 @@
     <script src="upgrades.js"></script>
     <script src="supabase-config.js"></script>
     <script src="vendor/supabase-js-v2.js"></script>
-    <script src="script.js?v=20260531-life-slip-fix"></script>
+    <script src="script.js?v=20260601-village-sprite-ui2"></script>
   </body>
 </html>

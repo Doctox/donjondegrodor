@@ -64,6 +64,14 @@
 
 .start-intro.is-leaving {
   pointer-events: none;
+  background: transparent !important;
+}
+
+.start-intro.is-leaving::before,
+.start-intro.is-leaving::after,
+.start-intro.is-leaving .start-intro-vignette {
+  opacity: 0 !important;
+  transition: opacity 600ms ease !important;
 }
 
 .start-intro.is-leaving .start-intro-logo {
@@ -97,8 +105,8 @@
 .start-intro-logo {
   position: relative;
   z-index: 10;
-  width: min(520px, calc(100vw - 22px), calc((100dvh - 28px) * 941 / 1672));
-  aspect-ratio: 941 / 1672;
+  width: min(720px, calc(100vw - 32px), calc((100dvh - 32px) * 1672 / 941));
+  aspect-ratio: 1672 / 941;
   border: 0;
   border-radius: 0;
   background: transparent;
@@ -127,7 +135,7 @@
 
 @media (min-width: 900px) and (min-height: 620px) {
   .start-intro-logo {
-    width: min(600px, calc(100vw - 56px), calc((100dvh - 56px) * 941 / 1672));
+    width: min(840px, calc(100vw - 64px), calc((100dvh - 64px) * 1672 / 941));
   }
 }
 
@@ -1727,11 +1735,6 @@ h1 {
   overflow-wrap: anywhere;
 }
 
-.scene.is-dead .story {
-  font-size: clamp(0.72rem, 1.28dvh, 0.92rem);
-  line-height: 1.14;
-}
-
 .story .po-text {
   color: var(--gold);
   font-family: Arial, sans-serif;
@@ -1936,8 +1939,7 @@ h1 {
   background: linear-gradient(90deg, rgba(111, 172, 114, 0.16), rgba(24, 22, 17, 0.78));
 }
 
-.scene.story-bad .reward-panel,
-.scene.is-dead .reward-panel {
+.scene.story-bad .reward-panel {
   border-left-color: var(--danger);
   background: linear-gradient(90deg, rgba(191, 76, 59, 0.17), rgba(24, 22, 17, 0.78));
 }
@@ -1945,14 +1947,6 @@ h1 {
 .reward-panel[hidden] {
   display: block;
   visibility: hidden;
-}
-
-.reward-label {
-  margin: 0;
-  color: var(--muted);
-  font-family: Arial, sans-serif;
-  font-size: 0.78rem;
-  text-transform: uppercase;
 }
 
 .reward-text {
@@ -2093,28 +2087,6 @@ h1 {
   font-family: Arial, sans-serif;
   color: var(--ink);
   line-height: 1.25;
-}
-
-.scene.is-dead .story-panel {
-  border-left-color: var(--danger);
-}
-
-.scene.is-dead .reward-row {
-  align-items: start;
-  margin-top: clamp(4px, 1dvh, 10px);
-}
-
-.scene.is-dead .hodor-sprite {
-  align-self: center;
-  width: var(--dead-hodor-size);
-  margin-top: clamp(-18px, -2dvh, 0px);
-  cursor: pointer;
-  pointer-events: auto;
-  transition: filter 160ms ease, transform 160ms ease;
-}
-
-.scene.is-dead .hodor-sprite:hover {
-  filter: brightness(1.06) drop-shadow(0 18px 18px rgba(0, 0, 0, 0.38));
 }
 
 .doors {
@@ -2498,34 +2470,59 @@ h1 {
 }
 
 .scene.is-cell .cell-door-hitbox {
-  position: absolute;
-  left: 47%;
-  top: 42%;
-  width: 32%;
-  min-height: 0;
-  height: auto;
-  aspect-ratio: 0.9;
-  padding: 0;
-  border: 0;
-  border-radius: 8px;
-  background: transparent;
-  box-shadow: none;
-  transform: translate(-50%, -50%);
-  cursor: pointer;
+  position: absolute !important;
+  left: 54.2% !important;
+  top: 39.5% !important;
+  width: 6.5% !important;
+  height: auto !important;
+  aspect-ratio: 1 !important;
+  border-radius: 50% !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: translate(-50%, -50%) !important;
+  cursor: pointer !important;
+  min-height: 0 !important;
 }
 
-.scene.is-cell .cell-door-hitbox:hover,
-.scene.is-cell .cell-door-hitbox:disabled {
-  background: transparent;
-  box-shadow: none;
-  filter: none;
-  transform: translate(-50%, -50%);
+.scene.is-cell .cell-door-hitbox #restart-label,
+.scene.is-cell .cell-door-hitbox #restart-help {
+  display: none !important;
+}
+
+.scene.is-cell .cell-door-hitbox:hover:not(:disabled) {
+  background: rgba(226, 179, 74, 0.12) !important;
+  border: 1.5px dashed rgba(226, 179, 74, 0.5) !important;
+  box-shadow: 0 0 10px rgba(226, 179, 74, 0.4) !important;
+  transform: translate(-50%, -50%) scale(1.05) !important;
 }
 
 .scene.is-cell .cell-door-hitbox:focus-visible {
-  outline: 2px solid rgba(244, 234, 214, 0.84);
-  outline-offset: 2px;
+  outline: 2px solid rgba(244, 234, 214, 0.84) !important;
+  outline-offset: 2px !important;
 }
+
+/* Formatage de la geôle en format 16:9 plein écran avec floutage en arrière-plan */
+.game-shell .scene.is-cell .cell-stage {
+  left: 50% !important;
+  top: 50% !important;
+  width: min(100vw, calc(100dvh * 1920 / 1080)) !important;
+  height: min(100dvh, calc(100vw * 1080 / 1920)) !important;
+  aspect-ratio: 1920 / 1080 !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+.scene.is-cell.is-cell-opening::before {
+  background: url("assets/Donjon/geole-ouvert.webp") center / cover no-repeat !important;
+}
+
+/* Dissimulation complète du HUD et du Storyboard sur la scène Geôle */
+.game-shell:has(.scene.is-cell) > .stats-grid {
+  display: none !important;
+}
+
+/* Les styles du storyboard de geole ont été déplacés en fin de fichier pour écraser toutes les surcharges !important */
 
 .village-choices {
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3768,10 +3765,6 @@ h1 {
 
   .hodor-sprite {
     width: var(--hodor-size);
-  }
-
-  .scene.is-dead .hodor-sprite {
-    width: var(--dead-hodor-size);
   }
 
   .story-panel {
@@ -6231,15 +6224,15 @@ h1 {
 }
 
 .scene.is-dungeon:not(.is-combat).is-door-walking.door-target-0 .hodor-sprite {
-  animation: hodorPathDoorOne 3050ms linear both;
+  animation: hodorPathDoorOne 3050ms linear both !important;
 }
 
 .scene.is-dungeon:not(.is-combat).is-door-walking.door-target-1 .hodor-sprite {
-  animation: hodorPathDoorTwo 3500ms linear both;
+  animation: hodorPathDoorTwo 3500ms linear both !important;
 }
 
 .scene.is-dungeon:not(.is-combat).is-door-walking.door-target-2 .hodor-sprite {
-  animation: hodorPathDoorThree 4000ms linear both;
+  animation: hodorPathDoorThree 4000ms linear both !important;
 }
 
 @keyframes hodorPathDoorOne {
@@ -6285,7 +6278,6 @@ h1 {
     left: 65.0%;
     top: 20.5%;
     transform: translate(-50%, -50%) scaleX(-1);
-    background-image: url("assets/Hodor%20V0.1/Corps/Idle.png");
   }
 
   50% {
@@ -6313,8 +6305,8 @@ h1 {
   }
 
   100% {
-    left: var(--dungeon-door-1-x);
-    top: var(--dungeon-door-1-y);
+    left: var(--dungeon-hodor-door-1-x);
+    top: var(--dungeon-hodor-door-1-y);
     transform: translate(-50%, -50%) scaleX(-1);
   }
 }
@@ -6336,7 +6328,6 @@ h1 {
     left: 65.0%;
     top: 20.5%;
     transform: translate(-50%, -50%) scaleX(-1);
-    background-image: url("assets/Hodor%20V0.1/Corps/Idle.png");
   }
 
   33% {
@@ -6355,7 +6346,6 @@ h1 {
     left: 57.0%;
     top: 50.5%;
     transform: translate(-50%, -50%) scaleX(1);
-    background-image: url("assets/Hodor%20V0.1/Corps/Idle.png");
   }
 
   56% {
@@ -6368,7 +6358,6 @@ h1 {
     left: 65.0%;
     top: 50.5%;
     transform: translate(-50%, -50%) scaleX(-1);
-    background-image: url("assets/Hodor%20V0.1/Corps/Idle.png");
   }
 
   69% {
@@ -7468,78 +7457,7 @@ h1 {
   }
 }
 
-/* UI polish: cell, death, dungeon effect, village framing */
-.scene.is-dead .reward-panel {
-  display: none !important;
-}
-
-.scene.is-dead {
-  align-items: center;
-  gap: clamp(8px, 1.2dvh, 14px);
-  background:
-    radial-gradient(circle at 50% 64%, rgba(191, 76, 59, 0.16), transparent 38%),
-    linear-gradient(180deg, #2b2420 0%, #17120f 62%, #0e0b09 100%);
-}
-
-.scene.is-dead::after {
-  height: 58%;
-  background:
-    radial-gradient(ellipse at 50% 52%, transparent 0 34%, rgba(0, 0, 0, 0.3) 68%),
-    linear-gradient(transparent, rgba(0, 0, 0, 0.62));
-}
-
-.scene.is-dead .ko-banner {
-  flex: 0 0 auto;
-  width: min(860px, 100%);
-  margin-bottom: 0;
-  padding: clamp(8px, 1.2dvh, 12px) clamp(14px, 2.2vw, 22px);
-}
-
-.scene.is-dead .ko-banner strong {
-  font-size: clamp(1.55rem, 4.2vw, 2.8rem);
-}
-
-.scene.is-dead .story-panel {
-  flex: 0 0 auto;
-  width: min(860px, 100%);
-  max-width: none;
-  border-left-color: var(--danger);
-  background: rgba(15, 12, 10, 0.76);
-}
-
-.scene.is-dead .reward-row {
-  flex: 1 1 auto;
-  display: grid;
-  grid-template-columns: 1fr;
-  width: min(960px, 100%);
-  min-height: 0;
-  margin: 0;
-  padding: 0;
-  place-items: center;
-}
-
-.scene.is-dead .reward-row .hodor-sprite {
-  width: min(760px, calc(100% - 18px), 78dvh);
-  max-width: calc(100% - 18px);
-  max-height: 100%;
-  justify-self: center;
-  align-self: center;
-  aspect-ratio: 315 / 165;
-  margin: 0;
-  background-size: contain;
-  background-position: center;
-  filter: drop-shadow(0 38px 34px rgba(0, 0, 0, 0.62));
-  transform: none;
-}
-
-.scene.is-dead .death-choices {
-  display: none !important;
-}
-
-.scene.is-dead .action-zone {
-  display: none;
-}
-
+/* UI polish: cell, dungeon effect, village framing */
 .scene.is-cell .action-zone {
   gap: 10px;
 }
@@ -7623,10 +7541,6 @@ h1 {
     0 0 0 1px rgba(216, 170, 61, 0.2);
 }
 
-.scene.is-dungeon:not(.is-combat) .reward-label {
-  font-size: 0.86rem;
-}
-
 .scene.is-dungeon:not(.is-combat) .reward-text {
   margin-top: 8px;
   font-size: clamp(1.25rem, 2.4vw, 1.55rem);
@@ -7665,14 +7579,6 @@ h1 {
 }
 
 @media (max-width: 760px) {
-  .scene.is-dead .reward-row {
-    min-height: 0;
-  }
-
-  .scene.is-dead .reward-row .hodor-sprite {
-    width: min(90vw, 560px, 68dvh);
-  }
-
   .scene.is-cell .death-choices {
     gap: 16px;
   }
@@ -8289,11 +8195,8 @@ h1 {
   --glow-purple: 0 0 18px rgba(155, 77, 226, 0.48);
 }
 
-/* 🔤 TYPOGRAPHIE & LISIBILITÉ GLOBALE */
-body, button, input, select, textarea,
-.story, .action-zone, .mini-game-panel, .combat-stage, .village-stage,
-.account-panel, .account-signup-modal, .account-signup-modal strong,
-.score-strip, .score-strip span, .score-strip strong {
+/* Typographie storyboard uniquement : le reste du jeu garde sa police locale. */
+.story-panel .story {
   font-family: var(--font-body);
 }
 
@@ -8825,8 +8728,7 @@ button:active, .combat-choice:active {
 /* Fondu automatique des pièces lors du changement de classe de scène */
 .scene.is-cell,
 .scene.is-dungeon,
-.scene.is-village,
-.scene.is-dead {
+.scene.is-village {
   animation: sceneCrossFade 0.22s ease-out both;
 }
 
@@ -9879,8 +9781,7 @@ button:active, .combat-choice:active {
 }
 
 .scene.is-dungeon:not(.is-combat) .story-panel,
-.scene.is-cell .story-panel,
-.scene.is-dead .story-panel {
+.scene.is-cell .story-panel {
   width: min(350px, calc(100vw - 24px)) !important;
   height: 360px !important;
   max-height: min(360px, calc(100dvh - 170px)) !important;
@@ -9895,16 +9796,14 @@ button:active, .combat-choice:active {
 }
 
 .scene.is-dungeon:not(.is-combat) .story-panel .location,
-.scene.is-cell .story-panel .location,
-.scene.is-dead .story-panel .location {
+.scene.is-cell .story-panel .location {
   color: #5a341d !important;
   border-bottom: 1px solid rgba(93, 53, 27, 0.22) !important;
   text-shadow: none !important;
 }
 
 .scene.is-dungeon:not(.is-combat) .story-panel .story,
-.scene.is-cell .story-panel .story,
-.scene.is-dead .story-panel .story {
+.scene.is-cell .story-panel .story {
   color: #3e2719 !important;
   text-shadow: none !important;
   font-size: clamp(0.78rem, 1.55dvh, 0.94rem) !important;
@@ -9930,8 +9829,7 @@ button:active, .combat-choice:active {
   }
 
   .scene.is-dungeon:not(.is-combat) .story-panel,
-  .scene.is-cell .story-panel,
-  .scene.is-dead .story-panel {
+  .scene.is-cell .story-panel {
     left: 50% !important;
     right: auto !important;
     bottom: 8px !important;
@@ -9944,8 +9842,7 @@ button:active, .combat-choice:active {
   }
 
   .scene.is-dungeon:not(.is-combat) .story-panel .story,
-  .scene.is-cell .story-panel .story,
-  .scene.is-dead .story-panel .story {
+  .scene.is-cell .story-panel .story {
     max-height: calc(100% - 42px) !important;
     font-size: clamp(0.74rem, 1.7dvh, 0.86rem) !important;
   }
@@ -9977,8 +9874,7 @@ button:active, .combat-choice:active {
 }
 
 .scene.is-dungeon:not(.is-combat) .story-panel,
-.scene.is-cell .story-panel,
-.scene.is-dead .story-panel {
+.scene.is-cell .story-panel {
   width: min(370px, calc(100vw - 24px)) !important;
   height: auto !important;
   aspect-ratio: 750 / 950 !important;
@@ -9995,8 +9891,7 @@ button:active, .combat-choice:active {
 
 .scene.is-village .story-panel .location,
 .scene.is-dungeon:not(.is-combat) .story-panel .location,
-.scene.is-cell .story-panel .location,
-.scene.is-dead .story-panel .location {
+.scene.is-cell .story-panel .location {
   margin: 0 0 5px !important;
   padding: 0 0 4px !important;
   border-bottom: 1px solid rgba(93, 53, 27, 0.22) !important;
@@ -10010,15 +9905,13 @@ button:active, .combat-choice:active {
 }
 
 .scene.is-dungeon:not(.is-combat) .story-panel .location,
-.scene.is-cell .story-panel .location,
-.scene.is-dead .story-panel .location {
+.scene.is-cell .story-panel .location {
   font-size: clamp(1rem, 2dvh, 1.25rem) !important;
 }
 
 .scene.is-village .story-panel .story,
 .scene.is-dungeon:not(.is-combat) .story-panel .story,
-.scene.is-cell .story-panel .story,
-.scene.is-dead .story-panel .story {
+.scene.is-cell .story-panel .story {
   color: #3d281b !important;
   text-shadow: none !important;
   font-weight: 800 !important;
@@ -10032,8 +9925,7 @@ button:active, .combat-choice:active {
 }
 
 .scene.is-dungeon:not(.is-combat) .story-panel .story,
-.scene.is-cell .story-panel .story,
-.scene.is-dead .story-panel .story {
+.scene.is-cell .story-panel .story {
   font-size: clamp(0.8rem, 1.65dvh, 0.96rem) !important;
   line-height: 1.35 !important;
   max-height: calc(100% - 36px) !important;
@@ -10058,14 +9950,6 @@ button:active, .combat-choice:active {
 .scene.is-dungeon:not(.is-combat) .reward-panel[hidden] {
   display: none !important;
   visibility: hidden !important;
-}
-
-.scene.is-dungeon:not(.is-combat) .reward-label {
-  margin: 0 0 5px !important;
-  color: #d0b083 !important;
-  font-size: 0.82rem !important;
-  line-height: 1 !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9) !important;
 }
 
 .scene.is-dungeon:not(.is-combat) .reward-text {
@@ -10103,8 +9987,7 @@ button:active, .combat-choice:active {
   }
 
   .scene.is-dungeon:not(.is-combat) .story-panel,
-  .scene.is-cell .story-panel,
-  .scene.is-dead .story-panel {
+  .scene.is-cell .story-panel {
     width: min(330px, calc(100vw - 16px)) !important;
     max-height: min(390px, calc(100dvh - 130px)) !important;
     padding: 56px 34px 42px !important;
@@ -10272,8 +10155,6 @@ button:active, .combat-choice:active {
   background: url("assets/Ui/cadre-storyboard.png") center / 100% 100% no-repeat !important;
 }
 
-.scene.has-mini-game .story-panel,
-.scene.is-dungeon.has-mini-game:not(.is-combat) .story-panel,
 .scene.is-combat .story-panel {
   left: 50% !important;
   right: auto !important;
@@ -10378,11 +10259,12 @@ button:active, .combat-choice:active {
     filter 180ms ease !important;
 }
 
+.scene.is-dungeon:not(.is-combat).is-door-walking .hodor-sprite {
+  transition: filter 180ms ease !important;
+}
+
 .scene.is-village .hodor-sprite.pose-walk,
-.scene.is-dungeon:not(.is-combat) .hodor-sprite.pose-walk,
-.scene.is-dungeon:not(.is-combat).is-door-walking.door-target-0 .hodor-sprite,
-.scene.is-dungeon:not(.is-combat).is-door-walking.door-target-1 .hodor-sprite,
-.scene.is-dungeon:not(.is-combat).is-door-walking.door-target-2 .hodor-sprite {
+.scene.is-dungeon:not(.is-combat) .hodor-sprite.pose-walk {
   animation: none !important;
 }
 
@@ -10523,7 +10405,7 @@ button:active, .combat-choice:active {
   z-index: 1;
   width: var(--intro-stage-w);
   height: var(--intro-stage-h);
-  background: url("assets/Accueil/Background-Grodor.webp") center / 100% 100% no-repeat;
+  background: url("assets/Accueil/Background-Grodor.webp") center / contain no-repeat;
   box-shadow: 0 20px 58px rgba(0, 0, 0, 0.55);
   pointer-events: none;
 }
@@ -10559,8 +10441,15 @@ button:active, .combat-choice:active {
 
 .start-intro-logo {
   z-index: 3 !important;
-  width: min(38dvh, 360px, calc(var(--intro-stage-w) * 0.28)) !important;
-  max-width: calc(var(--intro-stage-w) - 32px) !important;
+  width: var(--intro-stage-w) !important;
+  height: var(--intro-stage-h) !important;
+  max-width: none !important;
+  aspect-ratio: auto !important;
+}
+
+.start-intro-logo::before {
+  background-size: contain !important;
+  background-position: center !important;
 }
 
 .scene.is-dungeon:not(.is-combat) {
@@ -10736,13 +10625,13 @@ button:active, .combat-choice:active {
 
 .scene.is-dungeon:not(.is-combat) .hodor-sprite {
   position: absolute !important;
-  left: var(--dungeon-hodor-x) !important;
-  top: var(--dungeon-hodor-y) !important;
+  left: var(--dungeon-hodor-x);
+  top: var(--dungeon-hodor-y);
   z-index: 5 !important;
   width: clamp(82px, 13.5%, 182px) !important;
   max-width: 15% !important;
   max-height: none !important;
-  transform: translate(-50%, -50%) scaleX(var(--hodor-scale-x, 1)) !important;
+  transform: translate(-50%, -50%) scaleX(var(--hodor-scale-x, 1));
   transform-origin: center bottom !important;
 }
 
@@ -11429,42 +11318,56 @@ button:active, .combat-choice:active {
 
 .game-shell:has(.scene.is-dungeon:not(.is-combat)) > .stats-grid .stat-purse .purse-count {
   position: absolute !important;
-  left: 82.25% !important;
-  top: 27.3% !important;
-  width: 4.6% !important;
-  height: 3.6% !important;
-  display: grid !important;
-  place-items: center !important;
-  color: #f8df8b !important;
-  font-family: var(--ui-font) !important;
-  font-size: clamp(0.78rem, calc(var(--dungeon-ui-h) * 0.028), 1.25rem) !important;
-  line-height: 1 !important;
-  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.9) !important;
+  left: 84.55% !important;
+  top: 28.2% !important;
+  width: auto !important;
+  min-width: 29px !important;
+  height: auto !important;
+  padding: 3px 5px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 220ms ease !important;
+}
+
+.game-shell:has(.scene.is-dungeon:not(.is-combat)) > .stats-grid .stat-purse .purse-count::before {
+  content: none !important;
+  display: none !important;
+}
+
+.game-shell:has(.scene.is-dungeon:not(.is-combat)) > .stats-grid .stat-purse.has-gold .purse-count {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  border: 1px solid rgba(216, 170, 61, 0.42) !important;
+  border-radius: 999px !important;
+  background: rgba(22, 17, 10, 0.92) !important;
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.32) !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+.game-shell:has(.scene.is-dungeon:not(.is-combat)) > .stats-grid .stat-purse.has-gold .purse-count strong {
+  color: var(--gold) !important;
+  font-family: Arial, sans-serif !important;
+  font-size: clamp(0.72rem, calc(var(--dungeon-ui-h) * 0.024), 1.15rem) !important;
+  font-weight: 800 !important;
+  text-shadow: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+.game-shell:has(.scene.is-dungeon:not(.is-combat)) > .stats-grid .stat-purse.has-gold .purse-count strong::after {
+  content: " PO" !important;
+  font-size: 0.85em !important;
+  color: var(--gold) !important;
+  margin-left: 3px !important;
+  font-weight: 800 !important;
 }
 
 .game-shell:has(.scene.is-dungeon:not(.is-combat)) > .stats-grid .stat-loss span,
 .game-shell:has(.scene.is-dungeon:not(.is-combat)) > .stats-grid .stat-place span {
-  position: absolute !important;
-  left: 9.3% !important;
-  width: 10.2% !important;
-  display: grid !important;
-  place-items: center !important;
-  color: #f3d477 !important;
-  font-family: var(--ui-font) !important;
-  font-size: clamp(0.82rem, calc(var(--dungeon-ui-h) * 0.036), 1.65rem) !important;
-  line-height: 1 !important;
-  letter-spacing: 0 !important;
-  text-shadow: 0 3px 4px rgba(0, 0, 0, 0.95) !important;
-  text-transform: none !important;
-  transform: none !important;
-}
-
-.game-shell:has(.scene.is-dungeon:not(.is-combat)) > .stats-grid .stat-loss span {
-  top: 7.1% !important;
-}
-
-.game-shell:has(.scene.is-dungeon:not(.is-combat)) > .stats-grid .stat-place span {
-  top: 23.2% !important;
+  display: none !important;
 }
 
 .game-shell:has(.scene.is-dungeon:not(.is-combat)) > .stats-grid .stat-loss strong,
@@ -11473,11 +11376,13 @@ button:active, .combat-choice:active {
   left: 2.1% !important;
   width: 5.9% !important;
   height: 10.4% !important;
-  display: grid !important;
-  place-items: center !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 1px !important;
   color: #f7d783 !important;
   font-family: var(--ui-font) !important;
-  font-size: clamp(1rem, calc(var(--dungeon-ui-h) * 0.06), 2.55rem) !important;
+  font-size: clamp(1.2rem, calc(var(--dungeon-ui-h) * 0.05), 2.55rem) !important;
   line-height: 1 !important;
   letter-spacing: 0 !important;
   text-shadow: 0 3px 5px rgba(0, 0, 0, 0.95) !important;
@@ -11563,19 +11468,6 @@ button:active, .combat-choice:active {
   content: none !important;
 }
 
-.scene.is-dungeon:not(.is-combat) .reward-label {
-  position: absolute !important;
-  left: 40% !important;
-  top: 43.1% !important;
-  width: 22% !important;
-  margin: 0 !important;
-  color: #f4d381 !important;
-  font-size: clamp(0.64rem, calc(var(--dungeon-ui-h) * 0.024), 1.05rem) !important;
-  line-height: 1 !important;
-  text-align: center !important;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9) !important;
-}
-
 .scene.is-dungeon:not(.is-combat) .reward-text {
   position: absolute !important;
   left: 38.9% !important;
@@ -11598,4 +11490,1990 @@ button:active, .combat-choice:active {
   .game-shell:has(.scene.is-dungeon:not(.is-combat)) > .stats-grid .stat-place strong {
     text-shadow: 0 2px 3px rgba(0, 0, 0, 0.95) !important;
   }
+}
+
+/* Centrage vertical absolu et parfait de la boîte de mini-jeu dans la zone active */
+.scene.has-mini-game .action-zone,
+.scene.is-dungeon:not(.is-combat).has-mini-game .action-zone {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* ==========================================================================
+   🚨 SECTION DE SURCHARGE FINALE : Storyboard de la Geôle (cadre-storyboard-geole.png)
+   ========================================================================== */
+
+/* 1. Configuration des dimensions scéniques en 16:9 centré pour la Geôle */
+.game-shell:has(.scene.is-cell) {
+  --cell-ui-w: min(100vw, calc(100dvh * 16 / 9));
+  --cell-ui-h: min(100dvh, calc(100vw * 9 / 16));
+  --cell-ui-left: calc((100vw - var(--cell-ui-w)) * 0.5);
+  --cell-ui-top: calc((100dvh - var(--cell-ui-h)) * 0.5);
+}
+
+.scene.is-cell .cell-stage {
+  position: absolute !important;
+  left: calc(var(--cell-ui-left) + var(--cell-ui-w) * 0.5) !important;
+  top: calc(var(--cell-ui-top) + var(--cell-ui-h) * 0.5) !important;
+  width: var(--cell-ui-w) !important;
+  height: var(--cell-ui-h) !important;
+  max-width: none !important;
+  aspect-ratio: 16 / 9 !important;
+  transform: translate(-50%, -50%) !important;
+  background: url("assets/Donjon/geole-ferme.webp") center / 100% 100% no-repeat !important;
+  filter: drop-shadow(0 20px 42px rgba(0, 0, 0, 0.52)) !important;
+  pointer-events: auto !important;
+  z-index: 1 !important;
+}
+
+.scene.is-cell.is-cell-opening .cell-stage {
+  background: url("assets/Donjon/geole-ouvert.webp") center / 100% 100% no-repeat !important;
+}
+
+/* 2. Positionnement plein écran (1920x1080) "sprite" du cadre storyboard geôle en landscape */
+.scene.is-cell .story-panel {
+  display: block !important;
+  position: fixed !important;
+  left: var(--cell-ui-left) !important;
+  top: var(--cell-ui-top) !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: var(--cell-ui-w) !important;
+  height: var(--cell-ui-h) !important;
+  max-height: none !important;
+  aspect-ratio: auto !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: url("assets/Ui/cadre-storyboard-geole.png") 0 0 / 100% 100% no-repeat !important;
+  transform: none !important;
+  pointer-events: none !important;
+  z-index: 1310 !important;
+}
+
+.scene.is-cell .story-panel .location {
+  position: absolute !important;
+  left: 82.6% !important;
+  top: 38.5% !important;
+  width: 14.4% !important;
+  margin: 0 !important;
+  color: var(--gold) !important;
+  font-family: Bangers, Impact, sans-serif !important;
+  font-size: clamp(0.72rem, calc(var(--cell-ui-h) * 0.022), 1.25rem) !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.95) !important;
+  text-transform: uppercase !important;
+}
+
+.scene.is-cell .story-panel .story {
+  position: absolute !important;
+  left: 81.8% !important;
+  top: 43.6% !important;
+  width: 15.6% !important;
+  height: 42.5% !important;
+  margin: 0 !important;
+  color: #f3eacf !important;
+  font-family: "Comic Neue", cursive, sans-serif !important;
+  font-size: clamp(0.54rem, calc(var(--cell-ui-h) * 0.018), 0.92rem) !important;
+  line-height: 1.22 !important;
+  text-align: left !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9) !important;
+  overflow-y: auto !important;
+  pointer-events: auto !important; /* Permet le défilement */
+}
+
+.scene.is-cell .story-panel .story p {
+  margin: 0 0 8px 0 !important;
+}
+
+.scene.is-cell .story-panel .geole-divider {
+  border: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, rgba(216, 170, 61, 0.5), transparent) !important;
+  margin: 8px 0 !important;
+}
+
+.scene.is-cell .story-panel .geole-tip-wrapper {
+  margin-top: 4px !important;
+}
+
+.scene.is-cell .story-panel .geole-tip-wrapper strong {
+  display: block !important;
+  color: var(--gold) !important;
+  font-size: clamp(0.6rem, calc(var(--cell-ui-h) * 0.019), 0.95rem) !important;
+  font-weight: 800 !important;
+  margin-bottom: 2px !important;
+}
+
+.scene.is-cell .story-panel .geole-tip-wrapper p {
+  margin: 0 0 4px 0 !important;
+  font-size: 0.95em !important;
+}
+
+.scene.is-cell .story-panel .geole-tip-wrapper small {
+  display: block !important;
+  color: #c9bca0 !important;
+  font-size: 0.85em !important;
+  line-height: 1.25 !important;
+  font-style: italic !important;
+}
+
+/* Geole storyboard text fit: keep all copy inside the sprite frame without scroll. */
+.scene.is-cell .story-panel .story {
+  top: 42.7% !important;
+  height: 44.2% !important;
+  max-height: none !important;
+  box-sizing: border-box !important;
+  font-size: clamp(0.44rem, calc(var(--cell-ui-h) * 0.016), 0.86rem) !important;
+  line-height: 1.14 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+}
+
+.scene.is-cell .story-panel .story p {
+  margin: 0 0 4px 0 !important;
+}
+
+.scene.is-cell .story-panel .geole-divider {
+  margin: 4px 0 !important;
+}
+
+.scene.is-cell .story-panel .geole-tip-wrapper {
+  margin-top: 2px !important;
+}
+
+.scene.is-cell .story-panel .geole-tip-wrapper strong {
+  font-size: clamp(0.5rem, calc(var(--cell-ui-h) * 0.017), 0.9rem) !important;
+  margin-bottom: 1px !important;
+}
+
+.scene.is-cell .story-panel .geole-tip-wrapper p {
+  margin: 0 0 3px 0 !important;
+  font-size: 0.92em !important;
+}
+
+.scene.is-cell .story-panel .geole-tip-wrapper small {
+  font-size: 0.78em !important;
+  line-height: 1.12 !important;
+}
+
+/* Final geole override: must stay after previous geole passes. */
+.scene.is-cell .story-panel .location {
+  display: none !important;
+}
+
+.scene.is-cell .story-panel .story {
+  left: 60.8% !important;
+  top: 64.8% !important;
+  width: 32.5% !important;
+  height: 29.2% !important;
+  font-size: clamp(0.68rem, calc(var(--cell-ui-h) * 0.0215), 1.12rem) !important;
+  line-height: 1.16 !important;
+  overflow: hidden !important;
+}
+
+.scene.is-cell .story-panel .geole-tip-wrapper strong {
+  font-size: clamp(0.76rem, calc(var(--cell-ui-h) * 0.024), 1.22rem) !important;
+}
+
+.scene.is-cell .story-panel .geole-tip-wrapper small {
+  font-size: 0.82em !important;
+  line-height: 1.14 !important;
+}
+
+/* Donjon storyboard readability: much larger text inside the side frame. */
+.scene.is-dungeon:not(.is-combat) .story-panel .location,
+.scene.is-combat .story-panel .location {
+  font-size: clamp(0.98rem, calc(var(--dungeon-ui-h) * 0.03), 1.42rem) !important;
+  line-height: 1 !important;
+}
+
+.scene.is-dungeon:not(.is-combat) .story-panel .story,
+.scene.is-combat .story-panel .story {
+  left: 81.2% !important;
+  top: 43.2% !important;
+  width: 16.8% !important;
+  height: 43.4% !important;
+  font-size: clamp(0.78rem, calc(var(--dungeon-ui-h) * 0.025), 1.12rem) !important;
+  line-height: 1.12 !important;
+  overflow: hidden !important;
+}
+
+/* Combat landscape UI: same HUD composition as dungeon mini-game scenes. */
+.game-shell:has(.scene.is-combat) {
+  --dungeon-ui-w: min(100vw, calc(100dvh * 16 / 9));
+  --dungeon-ui-h: min(100dvh, calc(100vw * 9 / 16));
+  --dungeon-ui-left: calc((100vw - var(--dungeon-ui-w)) * 0.5);
+  --dungeon-ui-top: calc((100dvh - var(--dungeon-ui-h)) * 0.5);
+}
+
+.scene.is-combat {
+  position: absolute !important;
+  inset: 0 !important;
+  display: block !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  background:
+    linear-gradient(180deg, rgba(7, 6, 5, 0.38), rgba(7, 6, 5, 0.66)),
+    url("assets/Donjon/Donjon-interieur.webp") center / cover no-repeat,
+    linear-gradient(180deg, #30291f, #12100e) !important;
+}
+
+.scene.is-combat .action-zone {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 4 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  pointer-events: none !important;
+}
+
+.scene.is-combat .combat-stage {
+  --combat-ground-offset: clamp(76px, 21%, 138px);
+  position: relative !important;
+  flex: 0 0 auto !important;
+  width: min(900px, calc(var(--dungeon-ui-w) * 0.76), calc(var(--dungeon-ui-h) * 1.3)) !important;
+  height: auto !important;
+  max-width: none !important;
+  aspect-ratio: 4 / 3 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(216, 170, 61, 0.55) !important;
+  border-radius: 8px !important;
+  background:
+    linear-gradient(180deg, rgba(14, 10, 8, 0.1), rgba(14, 10, 8, 0.38)),
+    var(--combat-arena-image, url("assets/Arene/arene-1.webp")),
+    #17110c !important;
+  background-position: center, center, center !important;
+  background-repeat: no-repeat, no-repeat, no-repeat !important;
+  background-size: 100% 100%, cover, 100% 100% !important;
+  box-shadow:
+    0 26px 66px rgba(0, 0, 0, 0.58),
+    inset 0 0 0 1px rgba(191, 76, 59, 0.2) !important;
+  animation: none !important;
+  pointer-events: auto !important;
+}
+
+.scene.is-combat .story-panel {
+  display: block !important;
+  position: fixed !important;
+  left: var(--dungeon-ui-left) !important;
+  top: var(--dungeon-ui-top) !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: var(--dungeon-ui-w) !important;
+  height: var(--dungeon-ui-h) !important;
+  max-height: none !important;
+  aspect-ratio: auto !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: url("assets/Ui/cadre-storyboard.png") 0 0 / 100% 100% no-repeat !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  transform: none !important;
+  pointer-events: none !important;
+  z-index: 1350 !important;
+}
+
+.scene.is-combat .story-panel .location {
+  position: absolute !important;
+  left: 82.6% !important;
+  top: 38.5% !important;
+  width: 14.4% !important;
+  margin: 0 !important;
+  color: #e5bd66 !important;
+  font-size: clamp(0.72rem, calc(var(--dungeon-ui-h) * 0.022), 1.25rem) !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.92) !important;
+}
+
+.scene.is-combat .story-panel .story {
+  position: absolute !important;
+  left: 81.8% !important;
+  top: 43.6% !important;
+  width: 15.6% !important;
+  height: 42.5% !important;
+  margin: 0 !important;
+  color: #f1dfb8 !important;
+  font-size: clamp(0.54rem, calc(var(--dungeon-ui-h) * 0.018), 0.92rem) !important;
+  line-height: 1.2 !important;
+  text-align: left !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9) !important;
+  overflow: hidden !important;
+}
+
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-life,
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-loss,
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-place,
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-inventory,
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-purse {
+  position: fixed !important;
+  left: var(--dungeon-ui-left) !important;
+  top: var(--dungeon-ui-top) !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: var(--dungeon-ui-w) !important;
+  height: var(--dungeon-ui-h) !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+  background-position: 0 0 !important;
+  background-size: 100% 100% !important;
+  background-repeat: no-repeat !important;
+  transform: none !important;
+  pointer-events: none !important;
+}
+
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-life {
+  z-index: 1410 !important;
+}
+
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-purse,
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-inventory,
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-loss,
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-place {
+  z-index: 1420 !important;
+}
+
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-life .pv-label,
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-life .pv-bar {
+  display: none !important;
+}
+
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-loss {
+  background-image: url("assets/Ui/cadre-tentative.png") !important;
+}
+
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-place {
+  background-image: url("assets/Ui/cadre-etage.png") !important;
+}
+
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-inventory {
+  background-image: url("assets/Ui/inventaire-vide.png") !important;
+}
+
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-inventory:has(.inventory-toggle.has-items) {
+  background-image: url("assets/Ui/inventaire-plein.png") !important;
+}
+
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-purse {
+  background-image: url("assets/Ui/bourse-vide.png") !important;
+}
+
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-purse.has-gold {
+  background-image: url("assets/Ui/bourse-pleine.png") !important;
+}
+
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-purse .purse-visual,
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-inventory .inventory-toggle {
+  position: absolute !important;
+  left: 80.9% !important;
+  top: 16.5% !important;
+  width: 7.3% !important;
+  height: 12% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  pointer-events: auto !important;
+}
+
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-inventory .inventory-toggle {
+  left: 91.2% !important;
+}
+
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-inventory .inventory-toggle span {
+  display: none !important;
+}
+
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-purse .purse-count {
+  position: absolute !important;
+  left: 84.55% !important;
+  top: 28.2% !important;
+  width: auto !important;
+  min-width: 29px !important;
+  height: auto !important;
+  padding: 3px 5px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 220ms ease !important;
+}
+
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-purse .purse-count::before {
+  content: none !important;
+  display: none !important;
+}
+
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-purse.has-gold .purse-count {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  border: 1px solid rgba(216, 170, 61, 0.42) !important;
+  border-radius: 999px !important;
+  background: rgba(22, 17, 10, 0.92) !important;
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.32) !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-purse.has-gold .purse-count strong {
+  color: var(--gold) !important;
+  font-family: Arial, sans-serif !important;
+  font-size: clamp(0.72rem, calc(var(--dungeon-ui-h) * 0.024), 1.15rem) !important;
+  font-weight: 800 !important;
+  text-shadow: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-purse.has-gold .purse-count strong::after {
+  content: " PO" !important;
+  font-size: 0.85em !important;
+  color: var(--gold) !important;
+  margin-left: 3px !important;
+  font-weight: 800 !important;
+}
+
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-loss span,
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-place span {
+  display: none !important;
+}
+
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-loss strong,
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-place strong {
+  position: absolute !important;
+  left: 2.1% !important;
+  width: 5.9% !important;
+  height: 10.4% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 1px !important;
+  color: #f7d783 !important;
+  font-family: var(--ui-font) !important;
+  font-size: clamp(1.2rem, calc(var(--dungeon-ui-h) * 0.05), 2.55rem) !important;
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+  text-shadow: 0 3px 5px rgba(0, 0, 0, 0.95) !important;
+  transform: none !important;
+}
+
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-loss strong {
+  top: 3.4% !important;
+}
+
+.game-shell:has(.scene.is-combat) > .stats-grid .stat-place strong {
+  top: 19.7% !important;
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  .scene.is-combat .combat-stage {
+    width: min(calc(var(--dungeon-ui-w) * 0.76), calc(var(--dungeon-ui-h) * 1.24)) !important;
+  }
+
+  .scene.is-combat .story-panel .story {
+    font-size: clamp(0.44rem, 1.45dvh, 0.62rem) !important;
+    line-height: 1.18 !important;
+  }
+}
+
+/* Login modal cleanup: keep the connection frame alone on screen. */
+.game-shell:has(#account-panel:not([hidden])) > .stats-grid,
+.scene:has(#account-panel:not([hidden])) > .story-panel {
+  display: none !important;
+}
+
+.game-shell:has(#account-panel:not([hidden])) #account-panel::before {
+  display: none !important;
+  animation: none !important;
+}
+
+/* Final geole override: must stay after previous geole passes. */
+.scene.is-cell .story-panel .location {
+  display: none !important;
+}
+
+.scene.is-cell .story-panel .story {
+  left: 60.8% !important;
+  top: 64.8% !important;
+  width: 32.5% !important;
+  height: 29.2% !important;
+  font-size: clamp(0.68rem, calc(var(--cell-ui-h) * 0.0215), 1.12rem) !important;
+  line-height: 1.16 !important;
+  overflow: hidden !important;
+}
+
+.scene.is-cell .story-panel .geole-tip-wrapper strong {
+  font-size: clamp(0.76rem, calc(var(--cell-ui-h) * 0.024), 1.22rem) !important;
+}
+
+.scene.is-cell .story-panel .geole-tip-wrapper small {
+  font-size: 0.82em !important;
+  line-height: 1.14 !important;
+}
+
+
+/* Geole compact title pass: hide scene title, keep only "Astuce" in the text box. */
+.scene.is-cell .story-panel .location {
+  display: none !important;
+}
+
+.scene.is-cell .story-panel .story {
+  top: 64.8% !important;
+  height: 29.2% !important;
+  font-size: clamp(0.68rem, calc(var(--cell-ui-h) * 0.0215), 1.12rem) !important;
+  line-height: 1.16 !important;
+}
+
+.scene.is-cell .story-panel .geole-tip-wrapper strong {
+  font-size: clamp(0.76rem, calc(var(--cell-ui-h) * 0.024), 1.22rem) !important;
+}
+
+.scene.is-cell .story-panel .geole-tip-wrapper small {
+  font-size: 0.82em !important;
+  line-height: 1.14 !important;
+}
+
+/* Geole storyboard placement: the frame sits low-right inside the 1920x1080 sprite. */
+.scene.is-cell .story-panel .location {
+  left: 63.2% !important;
+  top: 64.6% !important;
+  width: 27.4% !important;
+  font-size: clamp(0.66rem, calc(var(--cell-ui-h) * 0.021), 1.18rem) !important;
+  text-align: center !important;
+}
+
+.scene.is-cell .story-panel .story {
+  left: 62.1% !important;
+  top: 69.2% !important;
+  width: 29.3% !important;
+  height: 22.6% !important;
+  max-height: none !important;
+  font-size: clamp(0.42rem, calc(var(--cell-ui-h) * 0.0145), 0.8rem) !important;
+  line-height: 1.12 !important;
+  overflow: hidden !important;
+}
+
+.scene.is-cell .story-panel .story p {
+  margin: 0 0 3px 0 !important;
+}
+
+.scene.is-cell .story-panel .geole-divider {
+  margin: 3px 0 !important;
+}
+
+.scene.is-cell .story-panel .geole-tip-wrapper strong {
+  font-size: clamp(0.48rem, calc(var(--cell-ui-h) * 0.0155), 0.82rem) !important;
+}
+
+.scene.is-cell .story-panel .geole-tip-wrapper p {
+  margin: 0 0 2px 0 !important;
+  font-size: 0.88em !important;
+}
+
+.scene.is-cell .story-panel .geole-tip-wrapper small {
+  font-size: 0.72em !important;
+  line-height: 1.08 !important;
+}
+
+/* Geole readability pass: same typography, larger text, more of the storyboard used. */
+.scene.is-cell .story-panel .location {
+  left: 61.4% !important;
+  top: 63.9% !important;
+  width: 31.2% !important;
+  font-size: clamp(0.82rem, calc(var(--cell-ui-h) * 0.026), 1.45rem) !important;
+}
+
+.scene.is-cell .story-panel .story {
+  left: 60.8% !important;
+  top: 68.1% !important;
+  width: 32.5% !important;
+  height: 25.3% !important;
+  font-size: clamp(0.58rem, calc(var(--cell-ui-h) * 0.0185), 1rem) !important;
+  line-height: 1.15 !important;
+}
+
+.scene.is-cell .story-panel .geole-tip-wrapper strong {
+  font-size: clamp(0.64rem, calc(var(--cell-ui-h) * 0.0205), 1.08rem) !important;
+}
+
+.scene.is-cell .story-panel .geole-tip-wrapper small {
+  font-size: 0.78em !important;
+  line-height: 1.12 !important;
+}
+
+/* Final geole override: must stay after previous geole passes. */
+.scene.is-cell .story-panel .location {
+  display: none !important;
+}
+
+.scene.is-cell .story-panel .story {
+  left: 60.8% !important;
+  top: 64.8% !important;
+  width: 32.5% !important;
+  height: 29.2% !important;
+  font-size: clamp(0.68rem, calc(var(--cell-ui-h) * 0.0215), 1.12rem) !important;
+  line-height: 1.16 !important;
+  overflow: hidden !important;
+}
+
+.scene.is-cell .story-panel .geole-tip-wrapper strong {
+  font-size: clamp(0.76rem, calc(var(--cell-ui-h) * 0.024), 1.22rem) !important;
+}
+
+.scene.is-cell .story-panel .geole-tip-wrapper small {
+  font-size: 0.82em !important;
+  line-height: 1.14 !important;
+}
+
+/* Final dungeon storyboard/effect sprite pass: must stay after all readability overrides. */
+.scene.is-dungeon:not(.is-combat) .story-panel .location {
+  display: none !important;
+}
+
+.scene.is-dungeon:not(.is-combat) .story-panel .story {
+  left: calc(81.9% + 2px) !important;
+  top: 40.7% !important;
+  width: 15.9% !important;
+  height: 47.2% !important;
+  font-size: clamp(0.9rem, calc(var(--dungeon-ui-h) * 0.0285), 1.22rem) !important;
+  line-height: 1.08 !important;
+  overflow: hidden !important;
+}
+
+.scene.is-dungeon:not(.is-combat) .reward-row {
+  display: block !important;
+  position: fixed !important;
+  left: var(--dungeon-ui-left, 0px) !important;
+  top: var(--dungeon-ui-top, 0px) !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: var(--dungeon-ui-w, min(100vw, calc(100dvh * 16 / 9))) !important;
+  height: var(--dungeon-ui-h, min(100dvh, calc(100vw * 9 / 16))) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background:
+    url("assets/Ui/neutre-effet.png") 0 0 / 100% 100% no-repeat,
+    url("assets/Ui/cadre-effet.png") 0 0 / 100% 100% no-repeat !important;
+  transform: none !important;
+  translate: none !important;
+  scale: none !important;
+  rotate: none !important;
+  animation: none !important;
+  filter: none !important;
+  pointer-events: none !important;
+  z-index: 1290 !important;
+}
+
+.scene.is-dungeon:not(.is-combat).no-reward .reward-row {
+  display: none !important;
+}
+
+.scene.is-dungeon:not(.is-combat).story-good .reward-row {
+  background-image: url("assets/Ui/bon-effet.png"), url("assets/Ui/cadre-effet.png") !important;
+}
+
+.scene.is-dungeon:not(.is-combat).story-bad .reward-row,
+.scene.is-dungeon:not(.is-combat).is-dead .reward-row {
+  background-image: url("assets/Ui/mauvais-effet.png"), url("assets/Ui/cadre-effet.png") !important;
+}
+
+.scene.is-dungeon:not(.is-combat).story-neutral .reward-row {
+  background-image: url("assets/Ui/neutre-effet.png"), url("assets/Ui/cadre-effet.png") !important;
+}
+
+.scene.is-dungeon:not(.is-combat) .reward-panel {
+  display: block !important;
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  transform: none !important;
+  translate: none !important;
+  scale: none !important;
+  rotate: none !important;
+  animation: none !important;
+  filter: none !important;
+  pointer-events: none !important;
+  z-index: 1300 !important;
+}
+
+.scene.is-dungeon:not(.is-combat) .reward-panel[hidden] {
+  display: none !important;
+}
+
+.scene.is-dungeon:not(.is-combat) .reward-panel:not([hidden]) {
+  display: block !important;
+}
+
+.scene.is-dungeon:not(.is-combat) .reward-panel::after {
+  content: none !important;
+  display: none !important;
+}
+
+.scene.is-dungeon:not(.is-combat) .reward-text {
+  position: absolute !important;
+  left: 37.7% !important;
+  top: 42.9% !important;
+  width: 24.8% !important;
+  height: 13.8% !important;
+  max-height: none !important;
+  margin: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: calc(var(--dungeon-ui-h) * 0.006) !important;
+  color: #f1e3c5 !important;
+  font-size: clamp(0.82rem, calc(var(--dungeon-ui-h) * 0.027), 1.2rem) !important;
+  line-height: 1.1 !important;
+  text-align: center !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.95) !important;
+  overflow: hidden !important;
+}
+
+.scene.is-dungeon:not(.is-combat) .reward-effect-line {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.26em !important;
+  min-height: 1.25em !important;
+  max-width: 100% !important;
+  color: inherit !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+}
+
+.scene.is-dungeon:not(.is-combat) .reward-effect-icon {
+  display: inline-block !important;
+  width: 1.35em !important;
+  height: 1.35em !important;
+  object-fit: contain !important;
+  vertical-align: middle !important;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.75)) !important;
+}
+
+.scene.is-dungeon:not(.is-combat) .reward-effect-icon-po {
+  width: 1.25em !important;
+  height: 1.25em !important;
+}
+
+.game-shell:has(.scene.is-dungeon:not(.is-combat)) > .stats-grid .stat-purse #purse-visual {
+  position: absolute !important;
+  left: 80.9% !important;
+  top: 16.5% !important;
+  width: 7.3% !important;
+  height: 12% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+  pointer-events: auto !important;
+}
+
+.scene.is-dead {
+  --death-window-w: min(64vw, 720px);
+  --death-window-h: min(66dvh, 560px);
+  display: block !important;
+  overflow: hidden !important;
+  background:
+    linear-gradient(180deg, rgba(12, 8, 6, 0.7), rgba(3, 2, 2, 0.92)),
+    url("assets/Donjon/Donjon-interieur.webp") center / cover no-repeat !important;
+}
+
+.scene.is-dead::after,
+.scene.is-dead .reward-panel {
+  display: none !important;
+}
+
+.scene.is-dead .action-zone {
+  position: fixed !important;
+  left: 50% !important;
+  top: 52% !important;
+  width: var(--death-window-w) !important;
+  height: var(--death-window-h) !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 1px solid rgba(216, 170, 61, 0.28) !important;
+  border-radius: 10px !important;
+  background:
+    linear-gradient(180deg, rgba(32, 22, 16, 0.74), rgba(5, 3, 3, 0.94)),
+    radial-gradient(ellipse at 48% 64%, rgba(216, 170, 61, 0.1), transparent 48%) !important;
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.62) !important;
+  transform: translate(-50%, -50%) !important;
+  pointer-events: none !important;
+  z-index: 1500 !important;
+}
+
+.scene.is-dead .ko-banner {
+  position: fixed !important;
+  left: 50% !important;
+  top: calc(52% - var(--death-window-h) * 0.5 + 2.5%) !important;
+  width: min(calc(var(--death-window-w) * 0.84), 900px) !important;
+  aspect-ratio: 2508 / 627 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: clamp(12px, 2dvh, 24px) clamp(30px, 5vw, 80px) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: clamp(2px, 0.6dvh, 8px) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: url("assets/Ui/cadre-perdu.png") center / 100% 100% no-repeat !important;
+  box-shadow: none !important;
+  transform: translateX(-50%) !important;
+  z-index: 1520 !important;
+}
+
+.scene.is-dead .ko-banner strong {
+  display: none !important;
+}
+
+.scene.is-dead .ko-banner span {
+  max-width: 70% !important;
+  color: #f8e8d1 !important;
+  font-size: clamp(0.88rem, 1.55vw, 1.1rem) !important;
+  line-height: 1.16 !important;
+  text-align: center !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.85) !important;
+}
+
+.scene.is-dead .reward-row {
+  position: fixed !important;
+  left: 50% !important;
+  top: calc(52% + var(--death-window-h) * 0.2) !important;
+  width: calc(var(--death-window-w) * 0.52) !important;
+  height: calc(var(--death-window-h) * 0.4) !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: translate(-50%, -50%) !important;
+  pointer-events: none !important;
+  z-index: 1510 !important;
+}
+
+.scene.is-dead .reward-row .hodor-sprite {
+  position: absolute !important;
+  left: 50% !important;
+  bottom: 0 !important;
+  width: min(100%, 430px) !important;
+  max-width: none !important;
+  max-height: 100% !important;
+  margin: 0 !important;
+  aspect-ratio: 315 / 165 !important;
+  background-size: contain !important;
+  background-position: center bottom !important;
+  filter: drop-shadow(0 34px 34px rgba(0, 0, 0, 0.74)) !important;
+  transform: translateX(-50%) !important;
+  cursor: default !important;
+  pointer-events: none !important;
+}
+
+.scene.is-dead .death-choices {
+  position: fixed !important;
+  left: 50% !important;
+  top: 52% !important;
+  width: var(--death-window-w) !important;
+  height: var(--death-window-h) !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: translate(-50%, -50%) !important;
+  pointer-events: none !important;
+  z-index: 1530 !important;
+}
+
+.scene.is-dead .death-choices .cell-stage,
+.scene.is-dead .death-choices .cell-info-card {
+  display: none !important;
+}
+
+.death-panel-link {
+  display: none;
+}
+
+.scene.is-dead .death-panel-link {
+  position: absolute !important;
+  display: block !important;
+  width: clamp(100px, 11vw, 145px) !important;
+  aspect-ratio: 1 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background-color: transparent !important;
+  background-position: center !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  box-shadow: none !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  filter: drop-shadow(0 16px 20px rgba(0, 0, 0, 0.52)) !important;
+  transition: transform 140ms ease, filter 140ms ease !important;
+}
+
+.scene.is-dead .death-panel-link:hover,
+.scene.is-dead .death-panel-link:focus-visible {
+  transform: translateY(-4px) scale(1.035) !important;
+  filter: drop-shadow(0 20px 22px rgba(0, 0, 0, 0.58)) brightness(1.08) !important;
+  outline: none !important;
+}
+
+.scene.is-dead .death-panel-geole {
+  left: 5% !important;
+  top: 50% !important;
+  background-image: url("assets/Ui/panneau-geole.png") !important;
+}
+
+.scene.is-dead .death-panel-village {
+  right: 5% !important;
+  top: 50% !important;
+  background-image: url("assets/Ui/panneau-village.png") !important;
+}
+
+.game-shell:has(.scene.is-dead) {
+  --dungeon-ui-w: min(100vw, calc(100dvh * 16 / 9));
+  --dungeon-ui-h: min(100dvh, calc(100vw * 9 / 16));
+  --dungeon-ui-left: calc((100vw - var(--dungeon-ui-w)) * 0.5);
+  --dungeon-ui-top: calc((100dvh - var(--dungeon-ui-h)) * 0.5);
+}
+
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-life,
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-loss,
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-place,
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-inventory,
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-purse {
+  position: fixed !important;
+  left: var(--dungeon-ui-left) !important;
+  top: var(--dungeon-ui-top) !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: var(--dungeon-ui-w) !important;
+  height: var(--dungeon-ui-h) !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+  background-position: 0 0 !important;
+  background-size: 100% 100% !important;
+  background-repeat: no-repeat !important;
+  transform: none !important;
+  pointer-events: none !important;
+  z-index: 1540 !important;
+}
+
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-life .pv-label,
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-life .pv-bar {
+  display: none !important;
+}
+
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-loss {
+  background-image: url("assets/Ui/cadre-tentative.png") !important;
+}
+
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-place {
+  background-image: url("assets/Ui/cadre-etage.png") !important;
+}
+
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-inventory {
+  background-image: url("assets/Ui/inventaire-vide.png") !important;
+}
+
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-inventory:has(.inventory-toggle.has-items) {
+  background-image: url("assets/Ui/inventaire-plein.png") !important;
+}
+
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-purse {
+  background-image: url("assets/Ui/bourse-vide.png") !important;
+}
+
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-purse.has-gold {
+  background-image: url("assets/Ui/bourse-pleine.png") !important;
+}
+
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-purse .purse-visual,
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-inventory .inventory-toggle {
+  position: absolute !important;
+  left: 80.9% !important;
+  top: 16.5% !important;
+  width: 7.3% !important;
+  height: 12% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  pointer-events: auto !important;
+}
+
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-inventory .inventory-toggle {
+  left: 91.2% !important;
+}
+
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-inventory .inventory-toggle span {
+  display: none !important;
+}
+
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-purse .purse-count {
+  position: absolute !important;
+  left: 84.55% !important;
+  top: 28.2% !important;
+  width: auto !important;
+  min-width: 29px !important;
+  height: auto !important;
+  padding: 3px 5px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 220ms ease !important;
+}
+
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-purse .purse-count::before {
+  content: none !important;
+  display: none !important;
+}
+
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-purse.has-gold .purse-count {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  border: 1px solid rgba(216, 170, 61, 0.42) !important;
+  border-radius: 999px !important;
+  background: rgba(22, 17, 10, 0.92) !important;
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.32) !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-purse.has-gold .purse-count strong {
+  color: var(--gold) !important;
+  font-family: Arial, sans-serif !important;
+  font-size: clamp(0.72rem, calc(var(--dungeon-ui-h) * 0.024), 1.15rem) !important;
+  font-weight: 800 !important;
+  text-shadow: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-purse.has-gold .purse-count strong::after {
+  content: " PO" !important;
+  font-size: 0.85em !important;
+  color: var(--gold) !important;
+  margin-left: 3px !important;
+  font-weight: 800 !important;
+}
+
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-loss span,
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-place span {
+  display: none !important;
+}
+
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-loss strong,
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-place strong {
+  position: absolute !important;
+  left: 2.1% !important;
+  width: 5.9% !important;
+  height: 10.4% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #f7d783 !important;
+  font-family: var(--ui-font) !important;
+  font-size: clamp(1.2rem, calc(var(--dungeon-ui-h) * 0.05), 2.55rem) !important;
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+  text-shadow: 0 3px 5px rgba(0, 0, 0, 0.95) !important;
+  transform: none !important;
+}
+
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-loss strong {
+  top: 3.4% !important;
+}
+
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-place strong {
+  top: 19.7% !important;
+}
+
+.scene.is-dead .story-panel {
+  position: fixed !important;
+  display: block !important;
+  left: var(--dungeon-ui-left) !important;
+  top: var(--dungeon-ui-top) !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: var(--dungeon-ui-w) !important;
+  height: var(--dungeon-ui-h) !important;
+  max-height: none !important;
+  aspect-ratio: auto !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: url("assets/Ui/cadre-storyboard.png") 0 0 / 100% 100% no-repeat !important;
+  transform: none !important;
+  pointer-events: none !important;
+  z-index: 1560 !important;
+}
+
+.scene.is-dead .story-panel .location {
+  display: none !important;
+}
+
+.scene.is-dead .story-panel .story {
+  position: absolute !important;
+  left: calc(81.9% + 2px) !important;
+  top: 40.7% !important;
+  width: 15.9% !important;
+  height: 47.2% !important;
+  margin: 0 !important;
+  color: #f1dfb8 !important;
+  font-family: var(--font-body) !important;
+  font-size: clamp(0.9rem, calc(var(--dungeon-ui-h) * 0.0285), 1.22rem) !important;
+  line-height: 1.08 !important;
+  text-align: left !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9) !important;
+  overflow: hidden !important;
+}
+
+.scene.is-cell .story-panel .story,
+.scene.is-dead .story-panel .story,
+.scene.is-village.has-win-banner .story-panel .story,
+.scene.is-dungeon:not(.is-combat) .story-panel .story {
+  font-family: var(--font-body) !important;
+  font-size: clamp(0.9rem, calc(var(--dungeon-ui-h, var(--cell-ui-h, 56.25vw)) * 0.0285), 1.22rem) !important;
+  line-height: 1.08 !important;
+}
+
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-place,
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-purse,
+.game-shell:has(.scene.is-dead) > .stats-grid .stat-inventory {
+  display: none !important;
+}
+
+.scene.is-dead .death-panel-village {
+  right: calc(5% + 20px) !important;
+}
+
+.game-shell:has(.scene.is-village.has-win-banner) {
+  --dungeon-ui-w: min(100vw, calc(100dvh * 16 / 9));
+  --dungeon-ui-h: min(100dvh, calc(100vw * 9 / 16));
+  --dungeon-ui-left: calc((100vw - var(--dungeon-ui-w)) * 0.5);
+  --dungeon-ui-top: calc((100dvh - var(--dungeon-ui-h)) * 0.5);
+  --win-window-w: min(58vw, 660px);
+  --win-window-h: min(78dvh, 650px);
+}
+
+.scene.is-village.has-win-banner {
+  display: block !important;
+  overflow: hidden !important;
+  background:
+    linear-gradient(180deg, rgba(12, 8, 6, 0.52), rgba(3, 2, 2, 0.86)),
+    url("assets/Village/village.webp") center / cover no-repeat !important;
+}
+
+.scene.is-village.has-win-banner .village-stage,
+.scene.is-village.has-win-banner .village-tip-card,
+.scene.is-village.has-win-banner .shop-panel,
+.scene.is-village.has-win-banner .stats-panel,
+.scene.is-village.has-win-banner .village-modal-backdrop,
+.scene.is-village.has-win-banner .reward-row {
+  display: none !important;
+}
+
+.scene.is-village.has-win-banner .action-zone {
+  position: fixed !important;
+  left: 50% !important;
+  top: 53% !important;
+  width: var(--win-window-w) !important;
+  height: var(--win-window-h) !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 1px solid rgba(216, 170, 61, 0.28) !important;
+  border-radius: 10px !important;
+  background:
+    linear-gradient(180deg, rgba(32, 22, 16, 0.74), rgba(5, 3, 3, 0.94)),
+    radial-gradient(ellipse at 50% 58%, rgba(216, 170, 61, 0.12), transparent 50%) !important;
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.62) !important;
+  transform: translate(-50%, -50%) !important;
+  pointer-events: none !important;
+  z-index: 1500 !important;
+}
+
+.scene.is-village.has-win-banner .win-banner {
+  position: fixed !important;
+  left: 50% !important;
+  top: calc(53% - var(--win-window-h) * 0.5 + 4%) !important;
+  width: min(calc(var(--win-window-w) * 0.92), 620px) !important;
+  aspect-ratio: 2508 / 627 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: clamp(12px, 2dvh, 24px) clamp(30px, 5vw, 80px) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: url("assets/Ui/cadre-gagner.png") center / 100% 100% no-repeat !important;
+  box-shadow: none !important;
+  transform: translateX(-50%) !important;
+  z-index: 1520 !important;
+}
+
+.scene.is-village.has-win-banner .win-banner strong {
+  display: none !important;
+}
+
+.scene.is-village.has-win-banner .win-banner span {
+  max-width: 70% !important;
+  color: #f8e8d1 !important;
+  font-size: clamp(0.88rem, 1.55vw, 1.1rem) !important;
+  line-height: 1.16 !important;
+  text-align: center !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.85) !important;
+}
+
+.scene.is-village.has-win-banner .win-score-panel {
+  position: fixed !important;
+  left: 50% !important;
+  top: calc(53% + var(--win-window-h) * 0.12) !important;
+  width: min(calc(var(--win-window-w) * 0.58), calc(var(--win-window-h) * 0.58), 390px) !important;
+  aspect-ratio: 1086 / 1448 !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: url("assets/Ui/cadre-score.png") center / 100% 100% no-repeat !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  transform: translate(-50%, -50%) !important;
+  pointer-events: none !important;
+  z-index: 1530 !important;
+}
+
+.scene.is-village.has-win-banner .win-score-rank {
+  position: absolute !important;
+  left: 50% !important;
+  top: 5.3% !important;
+  width: 14% !important;
+  height: 7.5% !important;
+  display: grid !important;
+  place-items: center !important;
+  color: #f4c84f !important;
+  font-family: var(--font-title) !important;
+  font-size: clamp(1rem, calc(var(--dungeon-ui-h) * 0.04), 2.1rem) !important;
+  line-height: 1 !important;
+  text-shadow: 0 3px 4px rgba(0, 0, 0, 0.82) !important;
+  transform: translateX(-50%) !important;
+}
+
+.scene.is-village.has-win-banner .win-score-grid {
+  position: absolute !important;
+  left: 13.2% !important;
+  top: 15.1% !important;
+  width: 73.6% !important;
+  height: 61.1% !important;
+  display: grid !important;
+  grid-template-columns: repeat(6, 1fr) !important;
+  grid-auto-rows: 1fr !important;
+  gap: 4.8% 2.4% !important;
+}
+
+.scene.is-village.has-win-banner .win-score-grid article {
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  padding: 0 6% !important;
+  overflow: hidden !important;
+  grid-column: span 2 !important;
+}
+
+.scene.is-village.has-win-banner .win-score-grid article:nth-child(7),
+.scene.is-village.has-win-banner .win-score-grid article:nth-child(8),
+.scene.is-village.has-win-banner .win-score-grid article:nth-child(9),
+.scene.is-village.has-win-banner .win-score-grid article:nth-child(10) {
+  grid-column: span 3 !important;
+}
+
+.scene.is-village.has-win-banner .win-score-grid span,
+.scene.is-village.has-win-banner .win-score-total span {
+  color: #b9aa90 !important;
+  font-family: var(--font-body) !important;
+  font-size: clamp(0.42rem, calc(var(--dungeon-ui-h) * 0.0125), 0.68rem) !important;
+  font-weight: 900 !important;
+  line-height: 0.95 !important;
+  text-transform: uppercase !important;
+  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.82) !important;
+}
+
+.scene.is-village.has-win-banner .win-score-grid strong {
+  color: #e4b64a !important;
+  font-family: var(--font-title) !important;
+  font-size: clamp(0.68rem, calc(var(--dungeon-ui-h) * 0.02), 1.08rem) !important;
+  line-height: 1 !important;
+  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.82) !important;
+}
+
+.scene.is-village.has-win-banner .win-score-total {
+  position: absolute !important;
+  left: 15.4% !important;
+  top: 80.7% !important;
+  width: 69.2% !important;
+  height: 9.5% !important;
+  display: grid !important;
+  grid-template-columns: 1fr auto !important;
+  align-items: center !important;
+  gap: 4% !important;
+}
+
+.scene.is-village.has-win-banner .win-score-total strong {
+  color: #f0bd3f !important;
+  font-family: var(--font-title) !important;
+  font-size: clamp(1.35rem, calc(var(--dungeon-ui-h) * 0.064), 3.2rem) !important;
+  line-height: 1 !important;
+  text-shadow: 0 4px 5px rgba(0, 0, 0, 0.82) !important;
+}
+
+.scene.is-village.has-win-banner .story-panel {
+  position: fixed !important;
+  display: block !important;
+  left: var(--dungeon-ui-left) !important;
+  top: var(--dungeon-ui-top) !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: var(--dungeon-ui-w) !important;
+  height: var(--dungeon-ui-h) !important;
+  max-height: none !important;
+  aspect-ratio: auto !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: url("assets/Ui/cadre-storyboard.png") 0 0 / 100% 100% no-repeat !important;
+  transform: none !important;
+  pointer-events: none !important;
+  z-index: 1560 !important;
+}
+
+.scene.is-village.has-win-banner .story-panel .location {
+  display: none !important;
+}
+
+.scene.is-village.has-win-banner .story-panel .story {
+  position: absolute !important;
+  left: calc(81.9% + 2px) !important;
+  top: 40.7% !important;
+  width: 15.9% !important;
+  height: 47.2% !important;
+  margin: 0 !important;
+  color: #f1dfb8 !important;
+  font-family: var(--font-body) !important;
+  font-size: clamp(0.9rem, calc(var(--dungeon-ui-h) * 0.0285), 1.22rem) !important;
+  line-height: 1.08 !important;
+  text-align: left !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9) !important;
+  overflow: hidden !important;
+}
+
+.game-shell:has(.scene.is-village.has-win-banner) > .stats-grid .stat-life,
+.game-shell:has(.scene.is-village.has-win-banner) > .stats-grid .stat-loss {
+  position: fixed !important;
+  left: var(--dungeon-ui-left) !important;
+  top: var(--dungeon-ui-top) !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: var(--dungeon-ui-w) !important;
+  height: var(--dungeon-ui-h) !important;
+  display: block !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+  background-position: 0 0 !important;
+  background-size: 100% 100% !important;
+  background-repeat: no-repeat !important;
+  transform: none !important;
+  pointer-events: none !important;
+  z-index: 1540 !important;
+}
+
+.game-shell:has(.scene.is-village.has-win-banner) > .stats-grid .stat-life .pv-label,
+.game-shell:has(.scene.is-village.has-win-banner) > .stats-grid .stat-life .pv-bar {
+  display: none !important;
+}
+
+.game-shell:has(.scene.is-village.has-win-banner) > .stats-grid .stat-loss {
+  background-image: url("assets/Ui/cadre-tentative.png") !important;
+}
+
+.game-shell:has(.scene.is-village.has-win-banner) > .stats-grid .stat-life {
+  z-index: 1540 !important;
+}
+
+.game-shell:has(.scene.is-village.has-win-banner) > .stats-grid .stat-place,
+.game-shell:has(.scene.is-village.has-win-banner) > .stats-grid .stat-purse,
+.game-shell:has(.scene.is-village.has-win-banner) > .stats-grid .stat-inventory {
+  display: none !important;
+}
+
+.game-shell:has(.scene.is-village.has-win-banner) > .stats-grid .stat-loss span {
+  display: none !important;
+}
+
+.game-shell:has(.scene.is-village.has-win-banner) > .stats-grid .stat-loss strong {
+  position: absolute !important;
+  left: 2.1% !important;
+  top: 3.4% !important;
+  width: 5.9% !important;
+  height: 10.4% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #f7d783 !important;
+  font-family: var(--ui-font) !important;
+  font-size: clamp(1.2rem, calc(var(--dungeon-ui-h) * 0.05), 2.55rem) !important;
+  line-height: 1 !important;
+  text-shadow: 0 3px 5px rgba(0, 0, 0, 0.95) !important;
+}
+
+/* Final cleanup for end screens: no global blur, no old debug/account layers. */
+.scene.is-dead::before,
+.scene.is-village.has-win-banner::before,
+.scene.is-village.has-win-banner::after {
+  content: none !important;
+  display: none !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.scene.is-dead,
+.scene.is-dead .action-zone,
+.scene.is-dead .death-choices,
+.scene.is-dead .reward-row,
+.scene.is-dead .hodor-sprite,
+.scene.is-village.has-win-banner,
+.scene.is-village.has-win-banner .action-zone,
+.scene.is-village.has-win-banner .win-banner,
+.scene.is-village.has-win-banner .win-score-panel {
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.game-shell:has(.scene.is-dead) .debug-menu,
+.game-shell:has(.scene.is-dead) .account-menu,
+.game-shell:has(.scene.is-village.has-win-banner) .debug-menu,
+.game-shell:has(.scene.is-village.has-win-banner) .account-menu {
+  display: none !important;
+}
+
+/* Final win composition: banner + score only, no village storyboard or dark action slab. */
+.scene.is-village.has-win-banner .action-zone,
+.scene.is-village.has-win-banner .story-panel {
+  display: none !important;
+}
+
+.scene.is-village.has-win-banner .win-banner {
+  top: 19% !important;
+  width: min(58vw, 560px) !important;
+  z-index: 1540 !important;
+}
+
+.scene.is-village.has-win-banner .win-banner span {
+  display: block !important;
+  max-width: 43% !important;
+  max-height: 45% !important;
+  color: #fff2d7 !important;
+  font-size: clamp(0.72rem, 1.55vw, 1.04rem) !important;
+  line-height: 1.02 !important;
+  overflow: hidden !important;
+}
+
+.scene.is-village.has-win-banner .win-score-panel {
+  top: 58% !important;
+  width: min(31vw, 350px, 55dvh) !important;
+  z-index: 1530 !important;
+}
+
+.scene.is-village.has-win-banner .win-score-grid {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+}
+
+.scene.is-village.has-win-banner .win-score-grid article {
+  position: absolute !important;
+  width: 20.5% !important;
+  height: 7.7% !important;
+  padding: 0 !important;
+  display: block !important;
+  overflow: hidden !important;
+  transform: none !important;
+}
+
+.scene.is-village.has-win-banner .win-score-grid span,
+.scene.is-village.has-win-banner .win-score-total span {
+  display: block !important;
+  color: #b9aa90 !important;
+  font-family: var(--font-body) !important;
+  font-size: clamp(0.38rem, 0.88vw, 0.62rem) !important;
+  font-weight: 900 !important;
+  line-height: 0.92 !important;
+  text-transform: uppercase !important;
+  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.82) !important;
+}
+
+.scene.is-village.has-win-banner .win-score-grid strong {
+  display: block !important;
+  margin-top: 0.1em !important;
+  color: #e4b64a !important;
+  font-family: var(--font-title) !important;
+  font-size: clamp(0.72rem, 1.48vw, 1.08rem) !important;
+  line-height: 0.92 !important;
+  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.82) !important;
+}
+
+.scene.is-village.has-win-banner .win-score-grid article:nth-child(1) { left: 13.6% !important; top: 17.4% !important; }
+.scene.is-village.has-win-banner .win-score-grid article:nth-child(2) { left: 39.6% !important; top: 17.4% !important; }
+.scene.is-village.has-win-banner .win-score-grid article:nth-child(3) { left: 65.6% !important; top: 17.4% !important; }
+.scene.is-village.has-win-banner .win-score-grid article:nth-child(4) { left: 13.6% !important; top: 33.1% !important; }
+.scene.is-village.has-win-banner .win-score-grid article:nth-child(5) { left: 39.6% !important; top: 33.1% !important; }
+.scene.is-village.has-win-banner .win-score-grid article:nth-child(6) { left: 65.6% !important; top: 33.1% !important; }
+.scene.is-village.has-win-banner .win-score-grid article:nth-child(7) { left: 22.6% !important; top: 49.7% !important; width: 25.5% !important; }
+.scene.is-village.has-win-banner .win-score-grid article:nth-child(8) { left: 52.2% !important; top: 49.7% !important; width: 25.5% !important; }
+.scene.is-village.has-win-banner .win-score-grid article:nth-child(9) { left: 20.0% !important; top: 65.7% !important; width: 27.5% !important; }
+.scene.is-village.has-win-banner .win-score-grid article:nth-child(10) { left: 52.2% !important; top: 65.7% !important; width: 27.5% !important; }
+
+.scene.is-village.has-win-banner .win-score-grid article:nth-child(7) span,
+.scene.is-village.has-win-banner .win-score-grid article:nth-child(8) span,
+.scene.is-village.has-win-banner .win-score-grid article:nth-child(9) span,
+.scene.is-village.has-win-banner .win-score-grid article:nth-child(10) span {
+  font-size: clamp(0.4rem, 0.98vw, 0.66rem) !important;
+}
+
+.scene.is-village.has-win-banner .win-score-total {
+  left: 15.3% !important;
+  top: 80.3% !important;
+  width: 70.2% !important;
+  height: 9.7% !important;
+  grid-template-columns: 1fr 42% !important;
+  gap: 1% !important;
+}
+
+.scene.is-village.has-win-banner .win-score-total strong {
+  display: block !important;
+  text-align: right !important;
+  font-size: clamp(1.5rem, 4.15vw, 2.85rem) !important;
+  transform: translateY(-2%) !important;
+}
+
+/* Temporary win layout guide: CSS boxes first, assets will be redrawn to these sizes. */
+.scene.is-village.has-win-banner .win-banner {
+  top: 18% !important;
+  width: min(62vw, 620px) !important;
+  height: min(13.2vw, 124px) !important;
+  min-height: 86px !important;
+  aspect-ratio: auto !important;
+  padding: 0 90px !important;
+  border: 2px solid rgba(226, 179, 74, 0.9) !important;
+  border-radius: 8px !important;
+  background:
+    linear-gradient(180deg, rgba(47, 35, 22, 0.96), rgba(12, 9, 7, 0.98)) !important;
+  box-shadow:
+    inset 0 0 0 2px rgba(0, 0, 0, 0.65),
+    inset 0 0 24px rgba(226, 179, 74, 0.18),
+    0 18px 34px rgba(0, 0, 0, 0.5) !important;
+}
+
+.scene.is-village.has-win-banner .win-banner::before,
+.scene.is-village.has-win-banner .win-banner::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 50% !important;
+  width: 74px !important;
+  height: 74px !important;
+  border: 2px solid rgba(226, 179, 74, 0.95) !important;
+  border-radius: 50% !important;
+  background: radial-gradient(circle, rgba(226, 179, 74, 0.32), rgba(24, 16, 10, 0.96) 58%) !important;
+  transform: translateY(-50%) !important;
+}
+
+.scene.is-village.has-win-banner .win-banner::before {
+  left: 10px !important;
+}
+
+.scene.is-village.has-win-banner .win-banner::after {
+  right: 10px !important;
+}
+
+.scene.is-village.has-win-banner .win-banner span {
+  max-width: 100% !important;
+  max-height: 72px !important;
+  display: grid !important;
+  place-items: center !important;
+  font-size: clamp(0.82rem, 1.45vw, 1.08rem) !important;
+  line-height: 1.08 !important;
+  overflow: hidden !important;
+}
+
+.scene.is-village.has-win-banner .win-score-panel {
+  top: 59% !important;
+  width: min(36vw, 380px, 56dvh) !important;
+  height: min(51vw, 540px, 76dvh) !important;
+  aspect-ratio: auto !important;
+  border: 2px solid rgba(226, 179, 74, 0.88) !important;
+  border-radius: 8px !important;
+  background:
+    linear-gradient(180deg, rgba(42, 30, 18, 0.98), rgba(11, 8, 6, 0.98)) !important;
+  box-shadow:
+    inset 0 0 0 2px rgba(0, 0, 0, 0.7),
+    inset 0 0 32px rgba(226, 179, 74, 0.14),
+    0 22px 38px rgba(0, 0, 0, 0.5) !important;
+}
+
+.scene.is-village.has-win-banner .win-score-panel::before {
+  content: "CADRE SCORE 380x540" !important;
+  position: absolute !important;
+  left: 50% !important;
+  top: 2.2% !important;
+  color: rgba(226, 179, 74, 0.65) !important;
+  font-family: Arial, sans-serif !important;
+  font-size: clamp(0.48rem, 0.95vw, 0.72rem) !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  transform: translateX(-50%) !important;
+}
+
+.scene.is-village.has-win-banner .win-score-rank {
+  top: 5.3% !important;
+}
+
+.scene.is-village.has-win-banner .win-score-grid article {
+  border: 1px solid rgba(226, 179, 74, 0.3) !important;
+  border-radius: 4px !important;
+  background: rgba(0, 0, 0, 0.22) !important;
+  padding: 3px 5px !important;
+}
+
+/* Village sprite UI pass: full 1920x1080 UI overlays, text only inside the drawn frame. */
+.scene.is-village:not(.has-win-banner)::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 20 !important;
+  display: block !important;
+  background: url("assets/Village/cadre-village.png") center / 100% 100% no-repeat !important;
+  pointer-events: none !important;
+}
+
+.scene.is-village:not(.has-win-banner) .story-panel {
+  position: absolute !important;
+  left: 67.4% !important;
+  top: 6.3% !important;
+  z-index: 23 !important;
+  width: 28.8% !important;
+  height: 14.8% !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  pointer-events: none !important;
+}
+
+.scene.is-village:not(.has-win-banner) .story-panel .location {
+  display: none !important;
+}
+
+.scene.is-village:not(.has-win-banner) .story-panel .story {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  color: #f1dfb8 !important;
+  font-family: var(--font-body) !important;
+  font-size: clamp(0.78rem, 1.35vw, 1.08rem) !important;
+  font-weight: 800 !important;
+  line-height: 1.08 !important;
+  text-align: left !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.92) !important;
+  overflow: hidden !important;
+}
+
+.scene.is-village:not(.has-win-banner) .village-tip-card {
+  position: absolute !important;
+  left: 67.4% !important;
+  top: 22.1% !important;
+  bottom: auto !important;
+  z-index: 23 !important;
+  width: 28.8% !important;
+  height: 8.8% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #f1dfb8 !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+}
+
+.scene.is-village:not(.has-win-banner) .village-tip-card strong {
+  display: block !important;
+  margin: 0 0 0.16em !important;
+  color: #e2b34a !important;
+  font-family: var(--font-title) !important;
+  font-size: clamp(0.86rem, 1.35vw, 1.18rem) !important;
+  line-height: 1 !important;
+  text-transform: uppercase !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.92) !important;
+}
+
+.scene.is-village:not(.has-win-banner) .village-tip-card p,
+.scene.is-village:not(.has-win-banner) .village-tip-card small {
+  display: block !important;
+  margin: 0 !important;
+  color: #f1dfb8 !important;
+  font-family: var(--font-body) !important;
+  font-size: clamp(0.54rem, 0.92vw, 0.76rem) !important;
+  font-weight: 800 !important;
+  line-height: 1.04 !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.92) !important;
+}
+
+.scene.is-village:not(.has-win-banner) .village-tip-card p + p,
+.scene.is-village:not(.has-win-banner) .village-tip-card small {
+  display: none !important;
+}
+
+.scene.is-village:not(.has-win-banner) .building-bank-total {
+  left: 69% !important;
+  right: auto !important;
+  bottom: 10.8% !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: #f5d06a !important;
+  font-family: var(--ui-font) !important;
+  font-size: clamp(1.35rem, 2.8vw, 2.1rem) !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+  text-shadow:
+    0 3px 4px rgba(0, 0, 0, 0.95),
+    1px 1px 0 rgba(0, 0, 0, 0.8) !important;
+  transform: translateX(-50%) !important;
+}
+
+.game-shell:has(.scene.is-village:not(.has-win-banner)) > .stats-grid .stat-purse,
+.game-shell:has(.scene.is-village:not(.has-win-banner)) > .stats-grid .stat-inventory {
+  position: fixed !important;
+  left: 0 !important;
+  top: 0 !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: 100vw !important;
+  height: 100dvh !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+  background-position: center !important;
+  background-size: 100% 100% !important;
+  background-repeat: no-repeat !important;
+  transform: none !important;
+  pointer-events: none !important;
+  z-index: 24 !important;
+}
+
+.game-shell:has(.scene.is-village:not(.has-win-banner)) > .stats-grid .stat-purse {
+  background-image: url("assets/Village/bourse-vide-village.png") !important;
+}
+
+.game-shell:has(.scene.is-village:not(.has-win-banner)) > .stats-grid .stat-purse.has-gold {
+  background-image: url("assets/Village/bourse-plein-village.png") !important;
+}
+
+.game-shell:has(.scene.is-village:not(.has-win-banner)) > .stats-grid .stat-inventory {
+  background-image: url("assets/Village/inventaire-vide-village.png") !important;
+}
+
+.game-shell:has(.scene.is-village:not(.has-win-banner)) > .stats-grid .stat-inventory:has(.inventory-toggle.has-items) {
+  background-image: url("assets/Village/inventaire-plein-village.png") !important;
+}
+
+.game-shell:has(.scene.is-village:not(.has-win-banner)) > .stats-grid .stat-purse .purse-visual,
+.game-shell:has(.scene.is-village:not(.has-win-banner)) > .stats-grid .stat-inventory .inventory-toggle {
+  position: absolute !important;
+  left: 1.7% !important;
+  top: 2.7% !important;
+  width: 6.5% !important;
+  height: 11.3% !important;
+  display: block !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  pointer-events: auto !important;
+}
+
+.game-shell:has(.scene.is-village:not(.has-win-banner)) > .stats-grid .stat-inventory .inventory-toggle {
+  top: 16.3% !important;
+}
+
+.game-shell:has(.scene.is-village:not(.has-win-banner)) > .stats-grid .stat-inventory .inventory-toggle span {
+  display: none !important;
+}
+
+.game-shell:has(.scene.is-village:not(.has-win-banner)) > .stats-grid .stat-purse .purse-count {
+  position: absolute !important;
+  left: 2.1% !important;
+  top: 13.2% !important;
+  min-width: 5.4% !important;
+  height: auto !important;
+  display: flex !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+  pointer-events: none !important;
+}
+
+.game-shell:has(.scene.is-village:not(.has-win-banner)) > .stats-grid .stat-purse .purse-count::before {
+  content: none !important;
+}
+
+.game-shell:has(.scene.is-village:not(.has-win-banner)) > .stats-grid .stat-purse .purse-count strong {
+  color: #f5d06a !important;
+  font-family: var(--ui-font) !important;
+  font-size: clamp(0.82rem, 1.45vw, 1.14rem) !important;
+  line-height: 1 !important;
+  text-shadow: 0 3px 4px rgba(0, 0, 0, 0.95) !important;
+}
+
+/* Game Juice - Screen Shake, Red Flash, and Flying Coins */
+@keyframes screenShake {
+  0%, 100% { transform: translate(0, 0); }
+  10%, 90% { transform: translate(-3px, 2px) rotate(-0.5deg); }
+  20%, 80% { transform: translate(3px, -2px) rotate(0.5deg); }
+  30%, 70% { transform: translate(-2px, -3px) rotate(0deg); }
+  40%, 60% { transform: translate(2px, 3px) rotate(0.5deg); }
+  50% { transform: translate(-3px, 1px) rotate(-0.5deg); }
+}
+
+.game-shell.shake-active {
+  animation: screenShake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes redFlash {
+  0% {
+    box-shadow: inset 0 0 80px rgba(191, 76, 59, 0);
+  }
+  20% {
+    box-shadow: inset 0 0 100px rgba(191, 76, 59, 0.72);
+  }
+  100% {
+    box-shadow: inset 0 0 80px rgba(191, 76, 59, 0);
+  }
+}
+
+.scene.flash-red-active::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  border-radius: inherit;
+  animation: redFlash 0.5s ease-out forwards;
+}
+
+.flying-coin-particle {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  background: url("assets/Ui/po.png") center / contain no-repeat;
+  z-index: 10000;
+  pointer-events: none;
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease-in;
+  transform: scale(1.2);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.44));
+}
+
+@keyframes pursePop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15) rotate(3deg); }
+  100% { transform: scale(1); }
+}
+
+.stat-purse.pop-active {
+  animation: pursePop 0.3s ease-out;
+}
+
+@keyframes lifeChangePop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); filter: brightness(1.2); }
+  100% { transform: scale(1); }
+}
+
+.stat-life.life-change-active {
+  animation: lifeChangePop 0.4s ease-out;
 }

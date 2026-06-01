@@ -397,14 +397,4 @@ const eventPool = [
       ]));
     },
   },
-  {
-    weight: 1,
-    run() {
-      return instantDeath(randomFrom([
-        "Grodor ouvre une porte. Une voix murmure : « Avada Kedavra. ».",
-        "Grodor franchit une porte. Une grosse dame en robe rouge lève une petite couronne de travers. « Qu’on lui coupe la tête ! » Mauvaise porte.",
-        "Grodor pousse une porte. Un homme à crochet sourit dans l’ombre. Derrière lui, quelque chose fait tic-tac.",
-      ]));
-    },
-  },
 ];
