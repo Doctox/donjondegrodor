@@ -1,4 +1,4 @@
-const CACHE_NAME = "grodor-v181-village-sprite-ui2";
+const CACHE_NAME = "grodor-v195-death-overlay-mockup";
 
 const CORE_ASSETS = [
   "/",
@@ -93,8 +93,8 @@ const CORE_ASSETS = [
   "/assets/Ui/cadre-etage.png",
   "/assets/Ui/cadre-effet.png",
   "/assets/Ui/cadre-gagner.png",
+  "/assets/Ui/cadre-stat.png",
   "/assets/Ui/cadre-perdu.png",
-  "/assets/Ui/cadre-score.png",
   "/assets/Ui/cadre-tentative.png",
   "/assets/Ui/cadre-storyboard.png",
   "/assets/Ui/cadre-storyboard-geole.png",

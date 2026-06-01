@@ -16,7 +16,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=20260601-village-sprite-ui2">
+    <link rel="stylesheet" href="styles.css?v=20260601-death-overlay-mockup">
   </head>
   <body>
     <main class="game-shell">
@@ -93,7 +93,6 @@
             <p class="account-line" id="account-line">Connecté : Visiteur</p>
 
             <div class="settings-audio-group" style="margin: 14px 0; padding: 10px 0; border-top: 1px solid rgba(244, 234, 214, 0.12); border-bottom: 1px solid rgba(244, 234, 214, 0.12); text-align: left;">
-              <h4 style="margin: 0 0 10px 0; color: var(--gold); font-family: var(--ui-font); font-size: 0.86rem; text-transform: uppercase; letter-spacing: 0.5px;">Volumes</h4>
               <div style="margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
                 <span style="font-size: 0.84rem; color: var(--muted); min-width: 68px;">Musique</span>
                 <input type="range" id="volume-music" min="0" max="100" value="50" style="flex: 1; accent-color: var(--gold); cursor: pointer; height: 6px; border-radius: 3px; background: rgba(0,0,0,0.38);">
@@ -221,6 +220,12 @@
             Grodor entre dans le donjon. Son premier adversaire… euh… un tapis. Le tapis gagne par K.O.
             Grodor se réveille en cellule, face à une porte qui hurle : « Vous ne passerez pas ! »
           </p>
+          <aside class="village-tip-card" id="village-tip-card" hidden>
+            <strong>Astuce du Village</strong>
+            <p>Pose ton or et vends tes objets.</p>
+            <p id="village-install-prompt">Pour jouer comme une vraie appli :</p>
+            <small id="village-install-steps">iPhone : Partager &rarr; Ajouter Ã  l'Ã©cran d'accueil.<br>Android : menu du navigateur &rarr; Ajouter Ã  l'Ã©cran d'accueil.</small>
+          </aside>
         </div>
 
         <div class="reward-row" id="reward-row">
@@ -314,7 +319,7 @@
               </button>
             </div>
           </div>
-          <aside class="village-tip-card" id="village-tip-card" hidden>
+          <aside class="village-tip-card legacy-village-tip-card" hidden>
             <strong>Astuce du Village</strong>
             <p>Pose ton or et vends tes objets.</p>
             <p id="village-install-prompt">Pour jouer comme une vraie appli :</p>
@@ -374,6 +379,6 @@
     <script src="upgrades.js"></script>
     <script src="supabase-config.js"></script>
     <script src="vendor/supabase-js-v2.js"></script>
-    <script src="script.js?v=20260601-village-sprite-ui2"></script>
+    <script src="script.js?v=20260601-death-overlay-mockup"></script>
   </body>
 </html>
