@@ -1,0 +1,779 @@
+﻿{
+    "compressionlevel":  -1,
+    "height":  27,
+    "infinite":  false,
+    "layers":  [
+                   {
+                       "color":  "#ff55ff",
+                       "draworder":  "topdown",
+                       "id":  6,
+                       "name":  "paths",
+                       "objects":  [
+                                       {
+                                           "height":  0,
+                                           "id":  18,
+                                           "name":  "path_door_2_01",
+                                           "opacity":  1,
+                                           "point":  true,
+                                           "properties":  [
+                                                              {
+                                                                  "name":  "floor",
+                                                                  "type":  "int",
+                                                                  "value":  2
+                                                              },
+                                                              {
+                                                                  "name":  "order",
+                                                                  "type":  "int",
+                                                                  "value":  1
+                                                              },
+                                                              {
+                                                                  "name":  "pathId",
+                                                                  "type":  "string",
+                                                                  "value":  "door_2"
+                                                              },
+                                                              {
+                                                                  "name":  "type",
+                                                                  "type":  "string",
+                                                                  "value":  "pathPoint"
+                                                              }
+                                                          ],
+                                           "rotation":  0,
+                                           "type":  "",
+                                           "visible":  true,
+                                           "width":  0,
+                                           "x":  946,
+                                           "y":  554
+                                       },
+                                       {
+                                           "height":  0,
+                                           "id":  19,
+                                           "name":  "path_door_2_02",
+                                           "opacity":  1,
+                                           "point":  true,
+                                           "properties":  [
+                                                              {
+                                                                  "name":  "floor",
+                                                                  "type":  "int",
+                                                                  "value":  2
+                                                              },
+                                                              {
+                                                                  "name":  "order",
+                                                                  "type":  "int",
+                                                                  "value":  2
+                                                              },
+                                                              {
+                                                                  "name":  "pathId",
+                                                                  "type":  "string",
+                                                                  "value":  "door_2"
+                                                              },
+                                                              {
+                                                                  "name":  "type",
+                                                                  "type":  "string",
+                                                                  "value":  "pathPoint"
+                                                              }
+                                                          ],
+                                           "rotation":  0,
+                                           "type":  "",
+                                           "visible":  true,
+                                           "width":  0,
+                                           "x":  872.666666666667,
+                                           "y":  554
+                                       },
+                                       {
+                                           "height":  0,
+                                           "id":  20,
+                                           "name":  "path_door_2_end",
+                                           "opacity":  1,
+                                           "point":  true,
+                                           "properties":  [
+                                                              {
+                                                                  "name":  "floor",
+                                                                  "type":  "int",
+                                                                  "value":  2
+                                                              },
+                                                              {
+                                                                  "name":  "order",
+                                                                  "type":  "int",
+                                                                  "value":  99
+                                                              },
+                                                              {
+                                                                  "name":  "pathId",
+                                                                  "type":  "string",
+                                                                  "value":  "door_2"
+                                                              },
+                                                              {
+                                                                  "name":  "type",
+                                                                  "type":  "string",
+                                                                  "value":  "pathPoint"
+                                                              }
+                                                          ],
+                                           "rotation":  0,
+                                           "type":  "",
+                                           "visible":  true,
+                                           "width":  0,
+                                           "x":  792,
+                                           "y":  554
+                                       },
+                                       {
+                                           "height":  0,
+                                           "id":  21,
+                                           "name":  "path_door_1_01",
+                                           "opacity":  1,
+                                           "point":  true,
+                                           "properties":  [
+                                                              {
+                                                                  "name":  "floor",
+                                                                  "type":  "int",
+                                                                  "value":  2
+                                                              },
+                                                              {
+                                                                  "name":  "order",
+                                                                  "type":  "int",
+                                                                  "value":  1
+                                                              },
+                                                              {
+                                                                  "name":  "pathId",
+                                                                  "type":  "string",
+                                                                  "value":  "door_1"
+                                                              },
+                                                              {
+                                                                  "name":  "type",
+                                                                  "type":  "string",
+                                                                  "value":  "pathPoint"
+                                                              }
+                                                          ],
+                                           "rotation":  0,
+                                           "type":  "",
+                                           "visible":  true,
+                                           "width":  0,
+                                           "x":  1276.5,
+                                           "y":  553
+                                       },
+                                       {
+                                           "height":  0,
+                                           "id":  23,
+                                           "name":  "path_door_1_02",
+                                           "opacity":  1,
+                                           "point":  true,
+                                           "properties":  [
+                                                              {
+                                                                  "name":  "floor",
+                                                                  "type":  "int",
+                                                                  "value":  2
+                                                              },
+                                                              {
+                                                                  "name":  "order",
+                                                                  "type":  "int",
+                                                                  "value":  2
+                                                              },
+                                                              {
+                                                                  "name":  "pathId",
+                                                                  "type":  "string",
+                                                                  "value":  "door_1"
+                                                              },
+                                                              {
+                                                                  "name":  "type",
+                                                                  "type":  "string",
+                                                                  "value":  "pathPoint"
+                                                              }
+                                                          ],
+                                           "rotation":  0,
+                                           "type":  "",
+                                           "visible":  true,
+                                           "width":  0,
+                                           "x":  1194,
+                                           "y":  695
+                                       },
+                                       {
+                                           "height":  0,
+                                           "id":  24,
+                                           "name":  "path_door_1_03",
+                                           "opacity":  1,
+                                           "point":  true,
+                                           "properties":  [
+                                                              {
+                                                                  "name":  "floor",
+                                                                  "type":  "int",
+                                                                  "value":  1
+                                                              },
+                                                              {
+                                                                  "name":  "order",
+                                                                  "type":  "int",
+                                                                  "value":  3
+                                                              },
+                                                              {
+                                                                  "name":  "pathId",
+                                                                  "type":  "string",
+                                                                  "value":  "door_1"
+                                                              },
+                                                              {
+                                                                  "name":  "type",
+                                                                  "type":  "string",
+                                                                  "value":  "pathPoint"
+                                                              }
+                                                          ],
+                                           "rotation":  0,
+                                           "type":  "",
+                                           "visible":  true,
+                                           "width":  0,
+                                           "x":  1067,
+                                           "y":  840
+                                       },
+                                       {
+                                           "height":  0,
+                                           "id":  25,
+                                           "name":  "path_door_1_04",
+                                           "opacity":  1,
+                                           "point":  true,
+                                           "properties":  [
+                                                              {
+                                                                  "name":  "floor",
+                                                                  "type":  "int",
+                                                                  "value":  1
+                                                              },
+                                                              {
+                                                                  "name":  "order",
+                                                                  "type":  "int",
+                                                                  "value":  4
+                                                              },
+                                                              {
+                                                                  "name":  "pathId",
+                                                                  "type":  "string",
+                                                                  "value":  "door_1"
+                                                              },
+                                                              {
+                                                                  "name":  "type",
+                                                                  "type":  "string",
+                                                                  "value":  "pathPoint"
+                                                              }
+                                                          ],
+                                           "rotation":  0,
+                                           "type":  "",
+                                           "visible":  true,
+                                           "width":  0,
+                                           "x":  936.5,
+                                           "y":  833.5
+                                       },
+                                       {
+                                           "height":  0,
+                                           "id":  26,
+                                           "name":  "path_door_1_end",
+                                           "opacity":  1,
+                                           "point":  true,
+                                           "properties":  [
+                                                              {
+                                                                  "name":  "floor",
+                                                                  "type":  "int",
+                                                                  "value":  1
+                                                              },
+                                                              {
+                                                                  "name":  "order",
+                                                                  "type":  "int",
+                                                                  "value":  99
+                                                              },
+                                                              {
+                                                                  "name":  "pathId",
+                                                                  "type":  "string",
+                                                                  "value":  "door_1"
+                                                              },
+                                                              {
+                                                                  "name":  "type",
+                                                                  "type":  "string",
+                                                                  "value":  "pathPoint"
+                                                              }
+                                                          ],
+                                           "rotation":  0,
+                                           "type":  "",
+                                           "visible":  true,
+                                           "width":  0,
+                                           "x":  790.5,
+                                           "y":  831
+                                       },
+                                       {
+                                           "height":  0,
+                                           "id":  27,
+                                           "name":  "path_door_3_01",
+                                           "opacity":  1,
+                                           "point":  true,
+                                           "properties":  [
+                                                              {
+                                                                  "name":  "floor",
+                                                                  "type":  "int",
+                                                                  "value":  2
+                                                              },
+                                                              {
+                                                                  "name":  "order",
+                                                                  "type":  "int",
+                                                                  "value":  1
+                                                              },
+                                                              {
+                                                                  "name":  "pathId",
+                                                                  "type":  "string",
+                                                                  "value":  "door_3"
+                                                              },
+                                                              {
+                                                                  "name":  "type",
+                                                                  "type":  "string",
+                                                                  "value":  "pathPoint"
+                                                              }
+                                                          ],
+                                           "rotation":  0,
+                                           "type":  "",
+                                           "visible":  true,
+                                           "width":  0,
+                                           "x":  1102,
+                                           "y":  559.5
+                                       },
+                                       {
+                                           "height":  0,
+                                           "id":  28,
+                                           "name":  "path_door_3_02",
+                                           "opacity":  1,
+                                           "point":  true,
+                                           "properties":  [
+                                                              {
+                                                                  "name":  "floor",
+                                                                  "type":  "int",
+                                                                  "value":  2
+                                                              },
+                                                              {
+                                                                  "name":  "order",
+                                                                  "type":  "int",
+                                                                  "value":  2
+                                                              },
+                                                              {
+                                                                  "name":  "pathId",
+                                                                  "type":  "string",
+                                                                  "value":  "door_3"
+                                                              },
+                                                              {
+                                                                  "name":  "type",
+                                                                  "type":  "string",
+                                                                  "value":  "pathPoint"
+                                                              }
+                                                          ],
+                                           "rotation":  0,
+                                           "type":  "",
+                                           "visible":  true,
+                                           "width":  0,
+                                           "x":  1187,
+                                           "y":  447.5
+                                       },
+                                       {
+                                           "height":  0,
+                                           "id":  29,
+                                           "name":  "path_door_3_03",
+                                           "opacity":  1,
+                                           "point":  true,
+                                           "properties":  [
+                                                              {
+                                                                  "name":  "floor",
+                                                                  "type":  "int",
+                                                                  "value":  3
+                                                              },
+                                                              {
+                                                                  "name":  "order",
+                                                                  "type":  "int",
+                                                                  "value":  3
+                                                              },
+                                                              {
+                                                                  "name":  "pathId",
+                                                                  "type":  "string",
+                                                                  "value":  "door_3"
+                                                              },
+                                                              {
+                                                                  "name":  "type",
+                                                                  "type":  "string",
+                                                                  "value":  "pathPoint"
+                                                              }
+                                                          ],
+                                           "rotation":  0,
+                                           "type":  "",
+                                           "visible":  true,
+                                           "width":  0,
+                                           "x":  1280.5,
+                                           "y":  324
+                                       },
+                                       {
+                                           "height":  0,
+                                           "id":  30,
+                                           "name":  "path_door_3_04",
+                                           "opacity":  1,
+                                           "point":  true,
+                                           "properties":  [
+                                                              {
+                                                                  "name":  "floor",
+                                                                  "type":  "int",
+                                                                  "value":  3
+                                                              },
+                                                              {
+                                                                  "name":  "order",
+                                                                  "type":  "int",
+                                                                  "value":  4
+                                                              },
+                                                              {
+                                                                  "name":  "pathId",
+                                                                  "type":  "string",
+                                                                  "value":  "door_3"
+                                                              },
+                                                              {
+                                                                  "name":  "type",
+                                                                  "type":  "string",
+                                                                  "value":  "pathPoint"
+                                                              }
+                                                          ],
+                                           "rotation":  0,
+                                           "type":  "",
+                                           "visible":  true,
+                                           "width":  0,
+                                           "x":  1005,
+                                           "y":  317
+                                       },
+                                       {
+                                           "height":  0,
+                                           "id":  31,
+                                           "name":  "path_door_3_end",
+                                           "opacity":  1,
+                                           "point":  true,
+                                           "properties":  [
+                                                              {
+                                                                  "name":  "floor",
+                                                                  "type":  "int",
+                                                                  "value":  3
+                                                              },
+                                                              {
+                                                                  "name":  "order",
+                                                                  "type":  "int",
+                                                                  "value":  99
+                                                              },
+                                                              {
+                                                                  "name":  "pathId",
+                                                                  "type":  "string",
+                                                                  "value":  "door_3"
+                                                              },
+                                                              {
+                                                                  "name":  "type",
+                                                                  "type":  "string",
+                                                                  "value":  "pathPoint"
+                                                              }
+                                                          ],
+                                           "rotation":  0,
+                                           "type":  "",
+                                           "visible":  true,
+                                           "width":  0,
+                                           "x":  805,
+                                           "y":  317
+                                       }
+                                   ],
+                       "opacity":  1,
+                       "type":  "objectgroup",
+                       "visible":  true,
+                       "x":  0,
+                       "y":  0
+                   },
+                   {
+                       "color":  "#ff5500",
+                       "draworder":  "topdown",
+                       "id":  5,
+                       "name":  "spawns",
+                       "objects":  [
+                                       {
+                                           "height":  0,
+                                           "id":  17,
+                                           "name":  "spawn_grodor_start",
+                                           "opacity":  1,
+                                           "point":  true,
+                                           "properties":  [
+                                                              {
+                                                                  "name":  "character",
+                                                                  "type":  "string",
+                                                                  "value":  "grodor"
+                                                              },
+                                                              {
+                                                                  "name":  "floor",
+                                                                  "type":  "int",
+                                                                  "value":  3
+                                                              },
+                                                              {
+                                                                  "name":  "spawnId",
+                                                                  "type":  "string",
+                                                                  "value":  "start"
+                                                              },
+                                                              {
+                                                                  "name":  "type",
+                                                                  "type":  "string",
+                                                                  "value":  "spawn"
+                                                              }
+                                                          ],
+                                           "rotation":  0,
+                                           "type":  "",
+                                           "visible":  true,
+                                           "width":  0,
+                                           "x":  1034.333333333,
+                                           "y":  554
+                                       }
+                                   ],
+                       "opacity":  1,
+                       "type":  "objectgroup",
+                       "visible":  true,
+                       "x":  0,
+                       "y":  0
+                   },
+                   {
+                       "color":  "#00ff7f",
+                       "draworder":  "topdown",
+                       "id":  4,
+                       "name":  "interactives",
+                       "objects":  [
+                                       {
+                                           "height":  193.333333333333,
+                                           "id":  12,
+                                           "name":  "door_1",
+                                           "opacity":  1,
+                                           "properties":  [
+                                                              {
+                                                                  "name":  "doorIndex",
+                                                                  "type":  "int",
+                                                                  "value":  1
+                                                              },
+                                                              {
+                                                                  "name":  "floor",
+                                                                  "type":  "int",
+                                                                  "value":  1
+                                                              },
+                                                              {
+                                                                  "name":  "interaction",
+                                                                  "type":  "string",
+                                                                  "value":  "chooseDoor"
+                                                              },
+                                                              {
+                                                                  "name":  "pathId",
+                                                                  "type":  "string",
+                                                                  "value":  "door_1"
+                                                              },
+                                                              {
+                                                                  "name":  "targetScene",
+                                                                  "type":  "string",
+                                                                  "value":  "room_1"
+                                                              },
+                                                              {
+                                                                  "name":  "type",
+                                                                  "type":  "string",
+                                                                  "value":  "door"
+                                                              }
+                                                          ],
+                                           "rotation":  0,
+                                           "type":  "",
+                                           "visible":  true,
+                                           "width":  128,
+                                           "x":  669.333333333333,
+                                           "y":  628
+                                       },
+                                       {
+                                           "height":  175.999666666667,
+                                           "id":  13,
+                                           "name":  "door_2",
+                                           "opacity":  1,
+                                           "properties":  [
+                                                              {
+                                                                  "name":  "doorIndex",
+                                                                  "type":  "int",
+                                                                  "value":  2
+                                                              },
+                                                              {
+                                                                  "name":  "floor",
+                                                                  "type":  "int",
+                                                                  "value":  2
+                                                              },
+                                                              {
+                                                                  "name":  "interaction",
+                                                                  "type":  "string",
+                                                                  "value":  "chooseDoor"
+                                                              },
+                                                              {
+                                                                  "name":  "pathId",
+                                                                  "type":  "string",
+                                                                  "value":  "door_2"
+                                                              },
+                                                              {
+                                                                  "name":  "targetScene",
+                                                                  "type":  "string",
+                                                                  "value":  "room_2"
+                                                              },
+                                                              {
+                                                                  "name":  "type",
+                                                                  "type":  "string",
+                                                                  "value":  "door"
+                                                              }
+                                                          ],
+                                           "rotation":  0,
+                                           "type":  "",
+                                           "visible":  true,
+                                           "width":  121.333333333333,
+                                           "x":  680,
+                                           "y":  380.666833333333
+                                       },
+                                       {
+                                           "height":  176,
+                                           "id":  14,
+                                           "name":  "door_3",
+                                           "opacity":  1,
+                                           "properties":  [
+                                                              {
+                                                                  "name":  "doorIndex",
+                                                                  "type":  "int",
+                                                                  "value":  3
+                                                              },
+                                                              {
+                                                                  "name":  "floor",
+                                                                  "type":  "int",
+                                                                  "value":  3
+                                                              },
+                                                              {
+                                                                  "name":  "interaction",
+                                                                  "type":  "string",
+                                                                  "value":  "chooseDoor"
+                                                              },
+                                                              {
+                                                                  "name":  "pathId",
+                                                                  "type":  "string",
+                                                                  "value":  "door_3"
+                                                              },
+                                                              {
+                                                                  "name":  "targetScene",
+                                                                  "type":  "string",
+                                                                  "value":  "room_3"
+                                                              },
+                                                              {
+                                                                  "name":  "type",
+                                                                  "type":  "string",
+                                                                  "value":  "door"
+                                                              }
+                                                          ],
+                                           "rotation":  0,
+                                           "type":  "",
+                                           "visible":  true,
+                                           "width":  121.333,
+                                           "x":  679.3335,
+                                           "y":  137.333333333333
+                                       }
+                                   ],
+                       "opacity":  1,
+                       "type":  "objectgroup",
+                       "visible":  true,
+                       "x":  0,
+                       "y":  0
+                   },
+                   {
+                       "color":  "#00007f",
+                       "draworder":  "topdown",
+                       "id":  3,
+                       "name":  "walkable",
+                       "objects":  [
+                                       {
+                                           "height":  16,
+                                           "id":  9,
+                                           "name":  "walkable_platform_03",
+                                           "opacity":  1,
+                                           "properties":  [
+                                                              {
+                                                                  "name":  "floor",
+                                                                  "type":  "int",
+                                                                  "value":  3
+                                                              },
+                                                              {
+                                                                  "name":  "type",
+                                                                  "type":  "string",
+                                                                  "value":  "walkable"
+                                                              }
+                                                          ],
+                                           "rotation":  1,
+                                           "type":  "",
+                                           "visible":  true,
+                                           "width":  525,
+                                           "x":  712,
+                                           "y":  304.666666667
+                                       },
+                                       {
+                                           "height":  16,
+                                           "id":  10,
+                                           "name":  "walkable_platform_01",
+                                           "opacity":  1,
+                                           "properties":  [
+                                                              {
+                                                                  "name":  "floor",
+                                                                  "type":  "int",
+                                                                  "value":  1
+                                                              },
+                                                              {
+                                                                  "name":  "type",
+                                                                  "type":  "string",
+                                                                  "value":  "walkable"
+                                                              }
+                                                          ],
+                                           "rotation":  1,
+                                           "type":  "",
+                                           "visible":  true,
+                                           "width":  385.002194918389,
+                                           "x":  696.5,
+                                           "y":  817
+                                       },
+                                       {
+                                           "height":  16,
+                                           "id":  11,
+                                           "name":  "walkable_platform_02",
+                                           "opacity":  1,
+                                           "properties":  [
+                                                              {
+                                                                  "name":  "floor",
+                                                                  "type":  "int",
+                                                                  "value":  2
+                                                              },
+                                                              {
+                                                                  "name":  "type",
+                                                                  "type":  "string",
+                                                                  "value":  "walkable"
+                                                              }
+                                                          ],
+                                           "rotation":  1,
+                                           "type":  "",
+                                           "visible":  true,
+                                           "width":  514,
+                                           "x":  712,
+                                           "y":  550
+                                       }
+                                   ],
+                       "opacity":  1,
+                       "type":  "objectgroup",
+                       "visible":  true,
+                       "x":  0,
+                       "y":  0
+                   },
+                   {
+                       "id":  2,
+                       "image":  "../../backgrounds/dungeon/dungeon_interior.webp",
+                       "imageheight":  1080,
+                       "imagewidth":  1920,
+                       "locked":  true,
+                       "name":  "background",
+                       "opacity":  1,
+                       "type":  "imagelayer",
+                       "visible":  true,
+                       "x":  0,
+                       "y":  0
+                   }
+               ],
+    "nextlayerid":  8,
+    "nextobjectid":  32,
+    "orientation":  "orthogonal",
+    "renderorder":  "right-down",
+    "tiledversion":  "1.12.2",
+    "tileheight":  40,
+    "tilesets":  [
+
+                 ],
+    "tilewidth":  40,
+    "type":  "map",
+    "version":  "1.10",
+    "width":  48
+}
