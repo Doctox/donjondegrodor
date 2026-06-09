@@ -297,7 +297,7 @@ export const DUNGEON_EVENTS = {
   },
   jump: {
     id: "jump",
-    weight: 0,
+    weight: 1,
     title: GAME_TEXTS.dungeonEvents.jump.title,
     message: GAME_TEXTS.dungeonEvents.jump.message,
     effectLabel: GAME_TEXTS.dungeonEvents.jump.effectLabel,

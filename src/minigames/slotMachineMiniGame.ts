@@ -2,8 +2,6 @@ import Phaser from "phaser";
 import { IMAGE_ASSETS, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
 import { GAME_TEXTS } from "../data/gameTexts";
 import {
-  MINI_GAME_EVENT_IMAGE_HEIGHT,
-  MINI_GAME_EVENT_IMAGE_WIDTH,
   MiniGameController,
   MiniGameHost,
   MiniGameResult,
@@ -11,11 +9,17 @@ import {
 } from "./miniGameTypes";
 
 const SYMBOLS: SlotMachineSymbol[] = ["grodor", "gold", "skull", "pouch"];
+const SLOT_MACHINE_IMAGE = {
+  x: WORLD_WIDTH / 2,
+  y: WORLD_HEIGHT / 2,
+  width: WORLD_WIDTH,
+  height: WORLD_HEIGHT
+};
 const MACHINE_HIT_ZONE = {
   x: WORLD_WIDTH / 2,
-  y: WORLD_HEIGHT / 2 + 62,
-  width: 700,
-  height: 604
+  y: WORLD_HEIGHT / 2,
+  width: WORLD_WIDTH,
+  height: WORLD_HEIGHT
 };
 
 export class SlotMachineMiniGame implements MiniGameController {
@@ -26,15 +30,15 @@ export class SlotMachineMiniGame implements MiniGameController {
 
   start(): void {
     this.host.scene.add
-      .image(WORLD_WIDTH / 2, WORLD_HEIGHT / 2 + 54, IMAGE_ASSETS.slotMachineBackground.key)
-      .setDisplaySize(MINI_GAME_EVENT_IMAGE_WIDTH, MINI_GAME_EVENT_IMAGE_HEIGHT)
-      .setDepth(4);
+      .image(SLOT_MACHINE_IMAGE.x, SLOT_MACHINE_IMAGE.y, IMAGE_ASSETS.slotMachineBackground.key)
+      .setDisplaySize(SLOT_MACHINE_IMAGE.width, SLOT_MACHINE_IMAGE.height)
+      .setDepth(3);
 
     this.reelImages = [0, 1, 2].map((index) =>
       this.host.scene.add
-        .image(WORLD_WIDTH / 2, WORLD_HEIGHT / 2 + 54, this.getReelTexture(index, "gold"))
-        .setDisplaySize(MINI_GAME_EVENT_IMAGE_WIDTH, MINI_GAME_EVENT_IMAGE_HEIGHT)
-        .setDepth(5 + index)
+        .image(SLOT_MACHINE_IMAGE.x, SLOT_MACHINE_IMAGE.y, this.getReelTexture(index, "gold"))
+        .setDisplaySize(SLOT_MACHINE_IMAGE.width, SLOT_MACHINE_IMAGE.height)
+        .setDepth(4 + index)
         .setVisible(false)
     );
 

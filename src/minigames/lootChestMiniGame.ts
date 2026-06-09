@@ -21,6 +21,13 @@ const RARITIES: RarityDefinition[] = [
   { rarity: "epic", weight: 8 },
   { rarity: "legendary", weight: 2 }
 ];
+const LOOT_CHEST_IMAGE = {
+  x: WORLD_WIDTH / 2,
+  y: WORLD_HEIGHT / 2 + 54,
+  width: MINI_GAME_EVENT_IMAGE_WIDTH,
+  height: MINI_GAME_EVENT_IMAGE_HEIGHT
+};
+const LOOT_CHEST_BACKDROP_ALPHA = 0.82;
 
 export class LootChestMiniGame implements MiniGameController {
   private eventImage?: Phaser.GameObjects.Image;
@@ -31,17 +38,19 @@ export class LootChestMiniGame implements MiniGameController {
 
   start(): void {
     const scene = this.host.scene;
+    scene.add.rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT, 0x000000, LOOT_CHEST_BACKDROP_ALPHA).setOrigin(0).setDepth(3);
+
     this.eventImage = scene.add
-      .image(WORLD_WIDTH / 2, WORLD_HEIGHT / 2 + 54, IMAGE_ASSETS.lootChestClosed.key)
-      .setDisplaySize(MINI_GAME_EVENT_IMAGE_WIDTH, MINI_GAME_EVENT_IMAGE_HEIGHT)
+      .image(LOOT_CHEST_IMAGE.x, LOOT_CHEST_IMAGE.y, IMAGE_ASSETS.lootChestClosed.key)
+      .setDisplaySize(LOOT_CHEST_IMAGE.width, LOOT_CHEST_IMAGE.height)
       .setDepth(4);
     this.keyImage = scene.add
-      .image(WORLD_WIDTH / 2, WORLD_HEIGHT / 2 + 54, IMAGE_ASSETS.lootChestKeyAppear.key)
-      .setDisplaySize(MINI_GAME_EVENT_IMAGE_WIDTH, MINI_GAME_EVENT_IMAGE_HEIGHT)
+      .image(LOOT_CHEST_IMAGE.x, LOOT_CHEST_IMAGE.y, IMAGE_ASSETS.lootChestKeyAppear.key)
+      .setDisplaySize(LOOT_CHEST_IMAGE.width, LOOT_CHEST_IMAGE.height)
       .setVisible(false)
       .setDepth(4);
 
-    const hitZone = scene.add.zone(WORLD_WIDTH / 2, WORLD_HEIGHT / 2 + 20, 680, 520).setDepth(5).setInteractive({
+    const hitZone = scene.add.zone(WORLD_WIDTH / 2, WORLD_HEIGHT / 2, WORLD_WIDTH, WORLD_HEIGHT).setDepth(5).setInteractive({
       useHandCursor: true
     });
     hitZone.on("pointerdown", () => this.advance());
@@ -88,8 +97,8 @@ export class LootChestMiniGame implements MiniGameController {
       yoyo: true,
       repeat: 3,
       onComplete: () => {
-        this.eventImage?.setX(WORLD_WIDTH / 2);
-        this.keyImage?.setX(WORLD_WIDTH / 2);
+        this.eventImage?.setX(LOOT_CHEST_IMAGE.x);
+        this.keyImage?.setX(LOOT_CHEST_IMAGE.x);
       }
     });
   }
@@ -132,8 +141,8 @@ export class LootChestMiniGame implements MiniGameController {
   private showRarityImage(rarity: ItemRarity): void {
     if (!this.rarityImage) {
       this.rarityImage = this.host.scene.add
-        .image(WORLD_WIDTH / 2, WORLD_HEIGHT / 2 + 54, this.getRarityTexture(rarity))
-        .setDisplaySize(MINI_GAME_EVENT_IMAGE_WIDTH, MINI_GAME_EVENT_IMAGE_HEIGHT)
+        .image(LOOT_CHEST_IMAGE.x, LOOT_CHEST_IMAGE.y, this.getRarityTexture(rarity))
+        .setDisplaySize(LOOT_CHEST_IMAGE.width, LOOT_CHEST_IMAGE.height)
         .setDepth(5);
       return;
     }

@@ -8,22 +8,30 @@ import {
 
 const DISPLAY = {
   x: WORLD_WIDTH / 2,
-  y: WORLD_HEIGHT / 2 + 54,
-  width: 486,
-  height: 607
+  y: WORLD_HEIGHT / 2,
+  width: WORLD_WIDTH,
+  height: WORLD_HEIGHT
+};
+const BUBBLE_AREA = {
+  x: WORLD_WIDTH / 2,
+  y: WORLD_HEIGHT / 2,
+  width: WORLD_WIDTH,
+  height: WORLD_HEIGHT
 };
 const BUBBLE = {
-  size: 126,
-  hitSize: 118,
-  timeoutMs: 1000,
+  size: 189,
+  hitSize: 177,
+  minTimeoutMs: 850,
+  maxTimeoutMs: 1250,
   burstMs: 180,
   minCount: 3,
   maxCount: 6,
-  paddingX: 72,
-  paddingTop: 120,
-  paddingBottom: 78
+  paddingX: 96,
+  paddingTop: 96,
+  paddingBottom: 96
 };
 const SUCCESS_GOLD = 10;
+const READY_BUTTON_Y = WORLD_HEIGHT / 2 + 302;
 
 type DodgeChestPhase = "ready" | "running" | "success" | "failure";
 
@@ -36,6 +44,7 @@ export class DodgeChestMiniGame implements MiniGameController {
   private currentBubble = 0;
   private targetBubbles = 0;
   private currentBubbleFrame = 1;
+  private currentBubbleTimeoutMs = 0;
   private phase: DodgeChestPhase = "ready";
 
   constructor(private readonly host: MiniGameHost) {}
@@ -44,9 +53,12 @@ export class DodgeChestMiniGame implements MiniGameController {
     this.background = this.host.scene.add
       .image(DISPLAY.x, DISPLAY.y, IMAGE_ASSETS.dodgeChestOpen.key)
       .setDisplaySize(DISPLAY.width, DISPLAY.height)
-      .setDepth(4);
-    this.readyButton = this.host.createMiniGameButton(DISPLAY.x, DISPLAY.y + 248, GAME_TEXTS.miniGames.dodgeChest.readyButton, () =>
-      this.startSequence()
+      .setDepth(3);
+    this.readyButton = this.host.createMiniGameButton(
+      WORLD_WIDTH / 2,
+      READY_BUTTON_Y,
+      GAME_TEXTS.miniGames.dodgeChest.readyButton,
+      () => this.startSequence()
     );
     this.host.getStatusText()?.setText(GAME_TEXTS.miniGames.dodgeChest.instruction);
   }
@@ -56,7 +68,8 @@ export class DodgeChestMiniGame implements MiniGameController {
       phase: this.phase,
       currentBubble: this.currentBubble,
       targetBubbles: this.targetBubbles,
-      currentBubbleFrame: this.currentBubbleFrame
+      currentBubbleFrame: this.currentBubbleFrame,
+      currentBubbleTimeoutMs: this.currentBubbleTimeoutMs
     };
   }
 
@@ -88,6 +101,7 @@ export class DodgeChestMiniGame implements MiniGameController {
     this.currentBubble += 1;
     this.host.setStep(this.currentBubble);
     this.currentBubbleFrame = Phaser.Math.Between(1, 6);
+    this.currentBubbleTimeoutMs = Phaser.Math.Between(BUBBLE.minTimeoutMs, BUBBLE.maxTimeoutMs);
     const position = this.pickBubblePosition();
     this.bubbleImage = this.host.scene.add
       .image(position.x, position.y, this.getFrameTexture(this.currentBubbleFrame, "ok"))
@@ -98,7 +112,7 @@ export class DodgeChestMiniGame implements MiniGameController {
       .setDepth(9)
       .setInteractive({ useHandCursor: true });
     this.bubbleHitZone.on("pointerdown", () => this.popBubble());
-    this.timeoutEvent = this.host.scene.time.delayedCall(BUBBLE.timeoutMs, () => this.fail());
+    this.timeoutEvent = this.host.scene.time.delayedCall(this.currentBubbleTimeoutMs, () => this.fail());
     this.host.getStatusText()?.setText(GAME_TEXTS.miniGames.dodgeChest.target(this.currentBubble, this.targetBubbles));
     this.host.publishMiniGameReport();
   }
@@ -168,10 +182,10 @@ export class DodgeChestMiniGame implements MiniGameController {
   }
 
   private pickBubblePosition(): { x: number; y: number } {
-    const minX = DISPLAY.x - DISPLAY.width / 2 + BUBBLE.paddingX;
-    const maxX = DISPLAY.x + DISPLAY.width / 2 - BUBBLE.paddingX;
-    const minY = DISPLAY.y - DISPLAY.height / 2 + BUBBLE.paddingTop;
-    const maxY = DISPLAY.y + DISPLAY.height / 2 - BUBBLE.paddingBottom;
+    const minX = BUBBLE_AREA.x - BUBBLE_AREA.width / 2 + BUBBLE.paddingX;
+    const maxX = BUBBLE_AREA.x + BUBBLE_AREA.width / 2 - BUBBLE.paddingX;
+    const minY = BUBBLE_AREA.y - BUBBLE_AREA.height / 2 + BUBBLE.paddingTop;
+    const maxY = BUBBLE_AREA.y + BUBBLE_AREA.height / 2 - BUBBLE.paddingBottom;
 
     return {
       x: Phaser.Math.Between(Math.round(minX), Math.round(maxX)),

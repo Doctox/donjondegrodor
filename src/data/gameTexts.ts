@@ -147,13 +147,19 @@ export const GAME_TEXTS = {
       title: "Course au saut",
       intro: "Grodor court tout seul. Il faut cliquer Jump au bon moment.",
       instruction: "Grodor file vers le trou. Clique Jump juste avant le vide.",
-      tip: "Un seul saut. Rate-le, et Grodor devient une anecdote.",
+      tip: "Chaque chute coute 1 coeur. Tant qu'il respire, il recommence.",
       jumpButton: "Jump",
+      countdownStatus: "Prepare-toi...",
+      countdown: (value: number) => `${value}`,
       jumping: "Le saut part. Grodor mise tout sur ses genoux.",
       success: "Grodor franchit le trou: +10 PO.",
-      successDetail: "Saut propre. Fierte douteuse, bourse plus lourde.",
-      failure: "Grodor tombe. La run s'arrete la.",
-      failureDetail: "Le trou gagne. Comme souvent."
+      successDetail: (lostHearts: number) =>
+        lostHearts > 0 ? `Il y laisse ${lostHearts} coeur(s), mais passe quand meme.` : "Saut propre. Fierte douteuse, bourse plus lourde.",
+      retry: () => "Grodor tombe. Il recommence tant qu'il lui reste un coeur.",
+      retryDetail: "Retour au depart. Le trou ricane doucement.",
+      chancesLeft: (chancesLeft: number) => `${chancesLeft} coeur(s) restant(s): encore une tentative.`,
+      failure: "Grodor tombe une derniere fois.",
+      failureDetail: (lostHearts: number) => `Le trou gagne: -${lostHearts} coeur(s).`
     }
   },
   result: {

@@ -276,20 +276,29 @@ export class ResultScene extends Phaser.Scene {
   }
 
   private goToCell(): void {
+    this.input.enabled = false;
     resetDungeonRunState({ incrementAttempt: true });
+    this.scene.stop("CombatScene");
+    this.scene.stop("MiniGameScene");
     this.scene.stop("DungeonScene");
-    this.scene.start("CellScene");
+    this.time.delayedCall(0, () => this.scene.start("CellScene", { introOverlayActive: false }));
   }
 
   private goToVillage(): void {
+    this.input.enabled = false;
     resetDungeonRunState({ incrementAttempt: true });
+    this.scene.stop("CombatScene");
+    this.scene.stop("MiniGameScene");
     this.scene.stop("DungeonScene");
-    this.scene.start("VillageScene", { fromDungeon: true });
+    this.time.delayedCall(0, () => this.scene.start("VillageScene", { fromDungeon: true }));
   }
 
   private goToVictoryVillage(): void {
+    this.input.enabled = false;
     resetDungeonAttemptCounter();
+    this.scene.stop("CombatScene");
+    this.scene.stop("MiniGameScene");
     this.scene.stop("DungeonScene");
-    this.scene.start("VillageScene", { fromDungeon: true });
+    this.time.delayedCall(0, () => this.scene.start("VillageScene", { fromDungeon: true }));
   }
 }

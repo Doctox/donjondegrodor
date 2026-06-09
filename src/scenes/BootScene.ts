@@ -31,7 +31,7 @@ export class BootScene extends Phaser.Scene {
     if (sceneParam === "intro") {
       this.scene.start("IntroScene");
     } else if (sceneParam === "cell") {
-      this.scene.start("CellScene");
+      this.scene.start("CellScene", { introOverlayActive: false });
     } else if (sceneParam === "tiled" && IS_DEBUG_TOOLS_ENABLED) {
       this.scene.start("TiledDebugScene");
     } else if (sceneParam === "dungeon" || (sceneParam === "combat" && IS_DEBUG_TOOLS_ENABLED)) {

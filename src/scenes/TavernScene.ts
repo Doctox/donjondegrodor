@@ -219,6 +219,7 @@ export class TavernScene extends Phaser.Scene {
       resetDungeonRunState({ preserveInventoryEquipment: carriedEquipment.length > 0 });
     }
     this.scene.start("CellScene", {
+      introOverlayActive: false,
       preserveRunState: true,
       wakeMessage: GAME_TEXTS.village.tavern.wakeUpMessage
     });

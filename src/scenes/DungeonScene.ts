@@ -332,6 +332,7 @@ export class DungeonScene extends Phaser.Scene {
     this.moving = true;
     this.clearDoorReadingHints();
     doorSprite.setAlpha(1);
+    doorSprite.setTexture(this.getDoorTextureKey(doorName, "open"));
     this.setStatus(GAME_TEXTS.dungeon.pathInProgress(doorName));
     this.grodor.playWalk();
     this.publishMovementReport(doorName, "moving", path);
@@ -366,7 +367,6 @@ export class DungeonScene extends Phaser.Scene {
 
         this.grodor?.playIdle();
         this.grodor?.setFlipX(false);
-        doorSprite.setTexture(this.getDoorTextureKey(doorName, "open"));
         this.moving = false;
         if (getDungeonRunState().currentFloor === 1) {
           const finalOutcome = this.resolveFinalDoorOutcomeForScene();
@@ -604,6 +604,7 @@ export class DungeonScene extends Phaser.Scene {
       type: miniGameType,
       ownedInventory: getDungeonRunState().inventory,
       carriedGold: getDungeonRunState().carriedGold,
+      life: getDungeonRunState().life,
       maxLife: getDungeonRunState().maxLife
     });
     this.scene.bringToTop("MiniGameScene");

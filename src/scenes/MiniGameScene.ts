@@ -21,6 +21,7 @@ export class MiniGameScene extends Phaser.Scene {
   private type: MiniGameType = "loot_chest";
   private ownedInventory: string[] = [];
   private carriedGold = 0;
+  private life = 0;
   private maxLife = 0;
   private step = 0;
   private statusText?: Phaser.GameObjects.Text;
@@ -38,6 +39,7 @@ export class MiniGameScene extends Phaser.Scene {
     this.ownedInventory = [...(data.ownedInventory ?? [])];
     this.carriedGold = Math.max(0, Math.trunc(data.carriedGold ?? 0));
     this.maxLife = Math.max(0, Math.trunc(data.maxLife ?? 0));
+    this.life = Math.max(0, Math.min(this.maxLife, Math.trunc(data.life ?? this.maxLife)));
     this.step = 0;
     this.completed = false;
     this.result = undefined;
@@ -119,6 +121,7 @@ export class MiniGameScene extends Phaser.Scene {
       getRarityText: () => this.rarityText,
       getCarriedGold: () => this.carriedGold,
       getOwnedInventory: () => [...this.ownedInventory],
+      getLife: () => this.life,
       getMaxLife: () => this.maxLife,
       getStep: () => this.step,
       getCompleted: () => this.completed,
@@ -223,6 +226,7 @@ export class MiniGameScene extends Phaser.Scene {
       step: this.step,
       completed: this.completed,
       carriedGold: this.carriedGold,
+      life: this.life,
       maxLife: this.maxLife,
       result: this.result,
       ...(this.activeMiniGame?.getReportState?.() ?? {})

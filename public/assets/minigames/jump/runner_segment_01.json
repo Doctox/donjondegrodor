@@ -114,20 +114,20 @@
                 {
                  "height":0,
                  "id":2,
-                 "name":"",
+                 "name":"spawn_grodor",
                  "opacity":1,
                  "point":true,
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":180,
-                 "y":715
+                 "x":79.46482886074,
+                 "y":716.478458399107
                 }, 
                 {
                  "height":0,
                  "id":3,
-                 "name":"",
+                 "name":"segment_end",
                  "opacity":1,
                  "point":true,
                  "rotation":0,
@@ -156,7 +156,7 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":823.501328302468,
+                 "width":830.893620298002,
                  "x":1.47845839910677,
                  "y":765.841450737304
                 }, 
@@ -168,8 +168,8 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":674.176701690217,
-                 "x":1244.47885355947,
+                 "width":687.482827282178,
+                 "x":1231.17272796751,
                  "y":765.102227907827
                 }],
          "opacity":1,
@@ -184,28 +184,16 @@
          "name":"hazards",
          "objects":[
                 {
-                 "height":79.8367535517652,
-                 "id":6,
-                 "name":"lava_01",
-                 "opacity":1,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":371.093058175798,
-                 "x":847.156662688176,
-                 "y":751.056866746237
-                }, 
-                {
-                 "height":181.850383090132,
+                 "height":183.328841489239,
                  "id":7,
                  "name":"death_zone_lava_01",
                  "opacity":1,
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":447.97289492935,
-                 "x":811.673661109614,
-                 "y":714.095406768567
+                 "width":439.10214453471,
+                 "x":807.238285912294,
+                 "y":712.61694836946
                 }],
          "opacity":1,
          "type":"objectgroup",

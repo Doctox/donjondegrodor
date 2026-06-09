@@ -439,6 +439,7 @@ export class VillageScene extends Phaser.Scene {
       type: eventId,
       ownedInventory: getDungeonRunState().inventory,
       carriedGold: getDungeonRunState().carriedGold,
+      life: getDungeonRunState().life,
       maxLife: getDungeonRunState().maxLife
     });
     this.scene.bringToTop("MiniGameScene");
@@ -534,6 +535,7 @@ export class VillageScene extends Phaser.Scene {
           type: miniGameResult.followUpMiniGame,
           ownedInventory: getDungeonRunState().inventory,
           carriedGold: getDungeonRunState().carriedGold,
+          life: getDungeonRunState().life,
           maxLife: getDungeonRunState().maxLife
         });
         this.scene.bringToTop("MiniGameScene");

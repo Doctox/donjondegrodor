@@ -22,9 +22,13 @@ const CELL_ZONE = {
 export class CellScene extends DungeonScene {
   private transitioning = false;
   private dungeonStarted = false;
+  private introOverlayLocked = false;
   private startTimeoutId?: number;
-  private readonly handleCellPointerDown = (pointer: Phaser.Input.Pointer): void => {
-    if (this.isPointerInsideCellZone(pointer)) {
+  private readonly handleCellPointerDown = (): void => {
+    this.leaveCell();
+  };
+  private readonly handleWindowPointerDown = (event: PointerEvent): void => {
+    if (this.isClientPointInsideCanvas(event.clientX, event.clientY)) {
       this.leaveCell();
     }
   };
@@ -45,11 +49,16 @@ export class CellScene extends DungeonScene {
   }
 
   create(data: CellSceneData = {}): void {
+    const introOverlayActive = data.introOverlayActive === true;
+    this.scene.stop("ResultScene");
+    this.scene.stop("CombatScene");
+    this.scene.stop("MiniGameScene");
     super.create(data.preserveRunState ? { fromCell: true } : undefined);
     this.input.enabled = true;
     this.input.manager.enabled = true;
     this.transitioning = false;
     this.dungeonStarted = false;
+    this.introOverlayLocked = introOverlayActive;
 
     this.add
       .image(WORLD_WIDTH / 2, WORLD_HEIGHT / 2, IMAGE_ASSETS.dungeonGeole.key)
@@ -76,17 +85,19 @@ export class CellScene extends DungeonScene {
 
     this.input.keyboard?.once("keydown-ENTER", () => this.leaveCell());
     this.input.keyboard?.once("keydown-SPACE", () => this.leaveCell());
+    window.addEventListener("pointerdown", this.handleWindowPointerDown, true);
     window.addEventListener("keydown", this.handleWindowKeyDown);
-    if (data.introOverlayActive) {
+    if (introOverlayActive) {
       this.input.enabled = false;
     }
     this.time.delayedCall(0, () => {
-      if (!data.introOverlayActive) {
+      if (!introOverlayActive) {
         this.input.enabled = true;
         this.input.manager.enabled = true;
       }
       (window as unknown as { __cellSceneReport?: unknown }).__cellSceneReport = {
-        status: data.introOverlayActive ? "intro-locked" : "ready",
+        status: introOverlayActive ? "intro-locked" : "ready",
+        introOverlayActive,
         inputEnabled: this.input.enabled,
         inputManagerEnabled: this.input.manager.enabled,
         activeScenes: this.scene.manager.getScenes(true).map((scene) => scene.scene.key),
@@ -94,6 +105,7 @@ export class CellScene extends DungeonScene {
       };
     });
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      window.removeEventListener("pointerdown", this.handleWindowPointerDown, true);
       window.removeEventListener("keydown", this.handleWindowKeyDown);
       this.input.off("pointerdown", this.handleCellPointerDown);
       if (this.startTimeoutId !== undefined) {
@@ -104,15 +116,19 @@ export class CellScene extends DungeonScene {
   }
 
   public completeIntroOverlay(): void {
+    this.introOverlayLocked = false;
     this.input.enabled = true;
   }
 
   private leaveCell(): void {
-    if (this.transitioning || !this.input.enabled) {
+    if (this.transitioning || this.introOverlayLocked) {
       return;
     }
 
     this.transitioning = true;
+    this.input.enabled = true;
+    this.input.manager.enabled = true;
+    window.removeEventListener("pointerdown", this.handleWindowPointerDown, true);
     window.removeEventListener("keydown", this.handleWindowKeyDown);
 
     const pulse = this.add
@@ -159,6 +175,9 @@ export class CellScene extends DungeonScene {
       fromScene: this.scene.key
     };
     addGrodorStat("runsTotal");
+    this.scene.stop("ResultScene");
+    this.scene.stop("CombatScene");
+    this.scene.stop("MiniGameScene");
     this.scene.stop("DungeonScene");
     this.scene.start("DungeonScene", { fromCell: true });
   }
@@ -172,24 +191,28 @@ export class CellScene extends DungeonScene {
     );
   }
 
-  private isPointerInsideCellZone(pointer: Phaser.Input.Pointer): boolean {
-    const displayWidth = this.scale.displaySize.width || WORLD_WIDTH;
-    const displayHeight = this.scale.displaySize.height || WORLD_HEIGHT;
-    const candidates = [
-      { x: pointer.worldX, y: pointer.worldY, mode: "world" },
-      { x: pointer.x, y: pointer.y, mode: "game" },
-      {
-        x: pointer.x * (WORLD_WIDTH / displayWidth),
-        y: pointer.y * (WORLD_HEIGHT / displayHeight),
-        mode: "display-scaled"
-      }
-    ];
-    const matched = candidates.find((candidate) => this.isInsideCellZone(candidate.x, candidate.y));
-    (window as unknown as { __cellPointerReport?: unknown }).__cellPointerReport = {
-      matched: matched?.mode ?? null,
-      candidates,
+  private isClientPointInsideCanvas(clientX: number, clientY: number): boolean {
+    const canvas = this.game.canvas;
+    const bounds = canvas.getBoundingClientRect();
+    if (bounds.width <= 0 || bounds.height <= 0) {
+      return false;
+    }
+
+    const x = (clientX - bounds.left) * (WORLD_WIDTH / bounds.width);
+    const y = (clientY - bounds.top) * (WORLD_HEIGHT / bounds.height);
+    const matched = x >= 0 && x <= WORLD_WIDTH && y >= 0 && y <= WORLD_HEIGHT;
+    (window as unknown as { __cellWindowPointerReport?: unknown }).__cellWindowPointerReport = {
+      matched,
+      client: { x: clientX, y: clientY },
+      game: { x, y },
+      bounds: {
+        left: bounds.left,
+        top: bounds.top,
+        width: bounds.width,
+        height: bounds.height
+      },
       zone: CELL_ZONE
     };
-    return Boolean(matched);
+    return matched;
   }
 }

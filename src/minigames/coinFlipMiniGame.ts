@@ -8,9 +8,9 @@ import {
 
 const COIN_FLIP_IMAGE = {
   x: WORLD_WIDTH / 2,
-  y: WORLD_HEIGHT / 2 + 6,
-  width: 1280,
-  height: 720
+  y: WORLD_HEIGHT / 2,
+  width: WORLD_WIDTH,
+  height: WORLD_HEIGHT
 };
 
 export class CoinFlipMiniGame implements MiniGameController {
@@ -38,7 +38,7 @@ export class CoinFlipMiniGame implements MiniGameController {
     this.eventImage = this.host.scene.add
       .image(COIN_FLIP_IMAGE.x, COIN_FLIP_IMAGE.y, IMAGE_ASSETS.coinFlipStart.key)
       .setDisplaySize(COIN_FLIP_IMAGE.width, COIN_FLIP_IMAGE.height)
-      .setDepth(4);
+      .setDepth(3);
 
     if (this.host.getCarriedGold() <= 0) {
       const result: MiniGameResult = { type: "coin_flip", outcome: "neutral" };
