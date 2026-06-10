@@ -7,7 +7,8 @@ export type MiniGameType =
   | "slot_machine"
   | "dodge_chest"
   | "jump"
-  | "arm_wrestling";
+  | "arm_wrestling"
+  | "elevator";
 export type BonneteauIssue = "grodor" | "gold" | "skull" | "pierced_pouch";
 export type SlotMachineSymbol = "grodor" | "gold" | "skull" | "pouch";
 
@@ -16,6 +17,7 @@ export type MiniGameResult = {
   outcome: "success" | "failure" | "neutral";
   goldDelta?: number;
   goldLoss?: number;
+  floorDelta?: number;
   lifeDelta?: number;
   maxLifeLoss?: number;
   instantDeath?: boolean;

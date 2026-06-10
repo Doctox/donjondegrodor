@@ -61,7 +61,7 @@ import { DungeonDebugMenu } from "../ui/DungeonDebugMenu";
 import { createItemDescriptionBubble } from "../ui/itemDescriptionBubble";
 import { VillageBankPanel } from "../ui/village/VillageBankPanel";
 import { VillageShopPanel } from "../ui/village/VillageShopPanel";
-import { MiniGameResult } from "./MiniGameScene";
+import { MiniGameResult, MiniGameType } from "./MiniGameScene";
 
 type VillageBuildingId = "bank" | "shop" | "tavern" | "board" | "grodor_house";
 
@@ -428,7 +428,7 @@ export class VillageScene extends Phaser.Scene {
     this.restoreVillageOverlaysWhenCombatCloses(monsterId);
   }
 
-  private launchMiniGameDebug(eventId: "loot_chest" | "coin_flip" | "bonneteau" | "slot_machine" | "dodge_chest" | "jump"): void {
+  private launchMiniGameDebug(eventId: MiniGameType): void {
     if (this.scene.isActive("MiniGameScene")) {
       return;
     }

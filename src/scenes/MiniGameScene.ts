@@ -5,6 +5,7 @@ import { ArmWrestlingMiniGame } from "../minigames/armWrestlingMiniGame";
 import { BonneteauMiniGame } from "../minigames/bonneteauMiniGame";
 import { CoinFlipMiniGame } from "../minigames/coinFlipMiniGame";
 import { DodgeChestMiniGame } from "../minigames/dodgeChestMiniGame";
+import { ElevatorMiniGame } from "../minigames/elevatorMiniGame";
 import { JumpMiniGame } from "../minigames/jumpMiniGame";
 import { LootChestMiniGame } from "../minigames/lootChestMiniGame";
 import { SlotMachineMiniGame } from "../minigames/slotMachineMiniGame";
@@ -64,7 +65,8 @@ export class MiniGameScene extends Phaser.Scene {
       this.type !== "slot_machine" &&
       this.type !== "dodge_chest" &&
       this.type !== "jump" &&
-      this.type !== "arm_wrestling"
+      this.type !== "arm_wrestling" &&
+      this.type !== "elevator"
     ) {
       this.add
         .text(WORLD_WIDTH / 2, 158, this.getMiniGameTitle(), {
@@ -88,7 +90,8 @@ export class MiniGameScene extends Phaser.Scene {
           this.type === "slot_machine" ||
           this.type === "dodge_chest" ||
           this.type === "jump" ||
-          this.type === "arm_wrestling"
+          this.type === "arm_wrestling" ||
+          this.type === "elevator"
           ? ""
           : this.getMiniGameIntro(),
         {
@@ -137,6 +140,9 @@ export class MiniGameScene extends Phaser.Scene {
     }
     if (this.type === "arm_wrestling") {
       return new ArmWrestlingMiniGame(host);
+    }
+    if (this.type === "elevator") {
+      return new ElevatorMiniGame(host);
     }
 
     return new LootChestMiniGame(host);
@@ -228,6 +234,9 @@ export class MiniGameScene extends Phaser.Scene {
     if (this.type === "arm_wrestling") {
       return GAME_TEXTS.miniGames.armWrestling.title;
     }
+    if (this.type === "elevator") {
+      return GAME_TEXTS.miniGames.elevator.title;
+    }
 
     return GAME_TEXTS.miniGames.lootChest.title;
   }
@@ -250,6 +259,9 @@ export class MiniGameScene extends Phaser.Scene {
     }
     if (this.type === "arm_wrestling") {
       return GAME_TEXTS.miniGames.armWrestling.intro;
+    }
+    if (this.type === "elevator") {
+      return GAME_TEXTS.miniGames.elevator.intro;
     }
 
     return GAME_TEXTS.miniGames.lootChest.clickInstruction;

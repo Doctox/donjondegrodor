@@ -8,9 +8,9 @@ export class MonsterActor {
   private readonly hitZones = new Map<MonsterHitZone, Phaser.GameObjects.Rectangle>();
   private readonly definition: MonsterDefinition;
 
-  constructor(private readonly scene: Phaser.Scene, x: number, y: number, monsterId: MonsterId = "rat") {
+  constructor(private readonly scene: Phaser.Scene, x: number, y: number, monsterId: MonsterId = "rat", scaleMultiplier = 1) {
     this.definition = getMonsterDefinition(monsterId);
-    this.container = scene.add.container(x, y).setScale(this.definition.scale).setDepth(12);
+    this.container = scene.add.container(x, y).setScale(this.definition.scale * scaleMultiplier).setDepth(12);
 
     this.sprite = scene.add.image(0, 0, this.definition.idleTextureKey).setOrigin(0.5, 1);
     this.container.add(this.sprite);
@@ -54,6 +54,25 @@ export class MonsterActor {
       yoyo: true,
       repeat: 1,
       onComplete: () => rect.setFillStyle(0x50a8ff, this.getDebugAlpha())
+    });
+  }
+
+  flashHitZones(repeat = 2): void {
+    this.hitZones.forEach((rect) => {
+      this.scene.tweens.killTweensOf(rect);
+      rect.setFillStyle(0xffd25f, 0.28);
+      rect.setAlpha(1);
+      this.scene.tweens.add({
+        targets: rect,
+        alpha: 0.22,
+        duration: 170,
+        yoyo: true,
+        repeat: Math.max(0, repeat * 2 - 1),
+        onComplete: () => {
+          rect.setAlpha(1);
+          rect.setFillStyle(0x50a8ff, this.getDebugAlpha());
+        }
+      });
     });
   }
 

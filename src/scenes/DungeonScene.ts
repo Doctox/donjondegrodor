@@ -3,6 +3,7 @@ import { IS_DEBUG_TOOLS_ENABLED } from "../config/debugConfig";
 import { ANIMATION_KEYS, IMAGE_ASSETS, JSON_ASSETS, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
 import {
   addDungeonInventoryItem,
+  applyDungeonFloorDelta,
   addDungeonGoldReward,
   applyHeartLossWithCowardReflex,
   continueToNextFloor,
@@ -165,6 +166,8 @@ export class DungeonScene extends Phaser.Scene {
   private awaitingContinue = false;
   private pendingCombatEvent = false;
   private pendingMiniGameEvent = false;
+  private pendingMiniGameReturnPath: TiledPoint[] = [];
+  private pendingMiniGameDoorName?: string;
   private combatInputLocked = false;
   private doorSprites = new Map<string, Phaser.GameObjects.Sprite>();
   private doorHitZones = new Map<string, Phaser.GameObjects.Zone>();
@@ -261,6 +264,8 @@ export class DungeonScene extends Phaser.Scene {
     this.awaitingContinue = false;
     this.pendingCombatEvent = false;
     this.pendingMiniGameEvent = false;
+    this.pendingMiniGameReturnPath = [];
+    this.pendingMiniGameDoorName = undefined;
     this.combatInputLocked = false;
     this.doorSprites.clear();
     this.doorHitZones.clear();
@@ -421,6 +426,8 @@ export class DungeonScene extends Phaser.Scene {
         if (event.kind === "combat") {
           this.launchCombatEvent(event);
         } else if (event.kind === "minigame") {
+          this.pendingMiniGameReturnPath = [...path].reverse();
+          this.pendingMiniGameDoorName = doorName;
           this.launchMiniGameEvent(event);
         } else {
           this.playEventPose(event);
@@ -619,6 +626,7 @@ export class DungeonScene extends Phaser.Scene {
       monsterId: event.monsterId ?? "rat",
       debugDirect: false
     });
+    this.scene.bringToTop("CombatScene");
     this.restoreDungeonOverlaysWhenCombatCloses();
     publishDungeonCombatReport({
       status: "launched",
@@ -642,7 +650,8 @@ export class DungeonScene extends Phaser.Scene {
       event.id === "slot_machine" ||
       event.id === "dodge_chest" ||
       event.id === "jump" ||
-      event.id === "arm_wrestling"
+      event.id === "arm_wrestling" ||
+      event.id === "elevator"
         ? event.id
         : "loot_chest";
     this.scene.launch("MiniGameScene", {
@@ -781,6 +790,64 @@ export class DungeonScene extends Phaser.Scene {
   }
 
   private handleMiniGameResult(result: MiniGameResult): void {
+    this.returnFromMiniGameToSpawn(() => this.applyMiniGameResult(result));
+  }
+
+  private returnFromMiniGameToSpawn(onComplete: () => void): void {
+    const returnPath = [...this.pendingMiniGameReturnPath];
+    const doorName = this.pendingMiniGameDoorName;
+    this.pendingMiniGameReturnPath = [];
+    this.pendingMiniGameDoorName = undefined;
+
+    if (!this.grodor || returnPath.length === 0) {
+      this.resetGrodorToSpawn();
+      onComplete();
+      return;
+    }
+
+    this.awaitingContinue = true;
+    this.setDungeonCombatLock(true);
+    this.moving = true;
+    this.grodor.playWalk();
+    this.setStatus(GAME_TEXTS.dungeon.returningToSpawn);
+    this.walkMiniGameReturnPath(returnPath, 0, () => {
+      this.moving = false;
+      this.resetGrodorToSpawn();
+      if (doorName) {
+        this.publishMovementReport(doorName, "returned", returnPath);
+      }
+      onComplete();
+    });
+  }
+
+  private walkMiniGameReturnPath(path: TiledPoint[], index: number, onComplete: () => void): void {
+    if (!this.grodor) {
+      onComplete();
+      return;
+    }
+
+    const point = path[index];
+    const distance = Phaser.Math.Distance.Between(this.grodor.x, this.grodor.y, point.x, point.y);
+    this.grodor.setFlipX(point.x < this.grodor.x);
+
+    this.tweens.add({
+      targets: this.grodor.container,
+      x: point.x,
+      y: point.y,
+      duration: Phaser.Math.Clamp(distance * 2.4, 180, 760),
+      ease: "Sine.easeInOut",
+      onComplete: () => {
+        if (index < path.length - 1) {
+          this.walkMiniGameReturnPath(path, index + 1, onComplete);
+          return;
+        }
+
+        onComplete();
+      }
+    });
+  }
+
+  private applyMiniGameResult(result: MiniGameResult): void {
     const effectMessages: string[] = [];
     const beforeState = getDungeonRunState();
     if (result.outcome === "success") {
@@ -795,6 +862,10 @@ export class DungeonScene extends Phaser.Scene {
     }
     if (result.goldLoss) {
       loseCarriedGold(result.goldLoss);
+    }
+    if (result.floorDelta) {
+      const floorResult = applyDungeonFloorDelta(result.floorDelta);
+      effectMessages.push(...floorResult.effectMessages);
     }
     if (result.maxLifeLoss) {
       decreaseRunMaxLife(result.maxLifeLoss);
@@ -828,6 +899,7 @@ export class DungeonScene extends Phaser.Scene {
     const afterState = getDungeonRunState();
     const heartDelta = result.type === "jump" ? 0 : this.getMiniGameHeartDelta(beforeState, afterState);
     const hasGoldTransfer = this.hasMiniGameGoldTransfer(result);
+    const hasFloorTransfer = this.hasMiniGameFloorTransfer(result);
     if (heartDelta > 0) {
       this.renderRunHudState(beforeState);
     } else {
@@ -852,13 +924,36 @@ export class DungeonScene extends Phaser.Scene {
       showDefeat();
       return;
     }
+    if (hasFloorTransfer && !hasGoldTransfer && heartDelta === 0 && !result.followUpMiniGame) {
+      this.awaitingContinue = true;
+      this.setDungeonCombatLock(true);
+      this.continueRun(effectMessages);
+      this.awaitingContinue = true;
+      this.setDungeonCombatLock(true);
+      if ((result.floorDelta ?? 0) < 0) {
+        this.grodor?.playVictory();
+      } else {
+        this.grodor?.playHurt();
+      }
+      this.time.delayedCall(80, () => {
+        this.playMiniGameFloorTransfer(result, () => {
+          this.awaitingContinue = false;
+          this.setDungeonCombatLock(false);
+        });
+      });
+      return;
+    }
     if (result.followUpMiniGame) {
-      if (hasGoldTransfer || heartDelta !== 0) {
+      if (hasGoldTransfer || heartDelta !== 0 || hasFloorTransfer) {
         this.awaitingContinue = true;
         this.setDungeonCombatLock(true);
         if (heartDelta > 0) {
           this.grodor?.playVictory();
         } else if (heartDelta < 0) {
+          this.grodor?.playHurt();
+        } else if ((result.floorDelta ?? 0) < 0) {
+          this.grodor?.playVictory();
+        } else if ((result.floorDelta ?? 0) > 0) {
           this.grodor?.playHurt();
         }
         this.playMiniGameResultTransfers(result, heartDelta, () => this.launchMiniGameEvent(resolveDoorEvent(result.followUpMiniGame!)));
@@ -868,12 +963,16 @@ export class DungeonScene extends Phaser.Scene {
       this.launchMiniGameEvent(resolveDoorEvent(result.followUpMiniGame));
       return;
     }
-    if (hasGoldTransfer || heartDelta !== 0) {
+    if (hasGoldTransfer || heartDelta !== 0 || hasFloorTransfer) {
       this.awaitingContinue = true;
       this.setDungeonCombatLock(true);
       if (heartDelta > 0) {
         this.grodor?.playVictory();
       } else if (heartDelta < 0) {
+        this.grodor?.playHurt();
+      } else if ((result.floorDelta ?? 0) < 0) {
+        this.grodor?.playVictory();
+      } else if ((result.floorDelta ?? 0) > 0) {
         this.grodor?.playHurt();
       }
       this.playMiniGameResultTransfers(result, heartDelta, () => this.continueRun(effectMessages));
@@ -934,9 +1033,24 @@ export class DungeonScene extends Phaser.Scene {
       const goldResult = addDungeonGoldReward(result.goldReward);
       this.updateRunHud();
       this.awaitingContinue = true;
+      this.setDungeonCombatLock(true);
       this.grodor?.playIdle();
-      this.showCombatResultPanel(result, true, goldResult.effectMessages);
       this.setStatus(GAME_TEXTS.dungeon.combatWonStatus);
+      if (result.goldReward > 0) {
+        this.grodor?.playVictory();
+        this.playMiniGameResultTransfers(
+          {
+            type: "loot_chest",
+            outcome: "success",
+            goldDelta: result.goldReward
+          },
+          0,
+          () => this.continueRun(goldResult.effectMessages)
+        );
+        return;
+      }
+
+      this.continueRun(goldResult.effectMessages);
       return;
     }
 
@@ -1176,6 +1290,10 @@ export class DungeonScene extends Phaser.Scene {
     return result.goldDelta !== undefined || result.goldLoss !== undefined;
   }
 
+  private hasMiniGameFloorTransfer(result: MiniGameResult): boolean {
+    return result.floorDelta !== undefined && result.floorDelta !== 0;
+  }
+
   private playMiniGameResultTransfers(result: MiniGameResult, heartDelta: number, onComplete: () => void): void {
     const complete = () => {
       if (heartDelta > 0) {
@@ -1183,13 +1301,21 @@ export class DungeonScene extends Phaser.Scene {
       }
       onComplete();
     };
-    const playHeartTransfer = () => {
-      if (heartDelta !== 0) {
-        this.playMiniGameHeartTransfer(heartDelta, complete);
+    const playFloorTransfer = () => {
+      if (this.hasMiniGameFloorTransfer(result)) {
+        this.playMiniGameFloorTransfer(result, complete);
         return;
       }
 
       complete();
+    };
+    const playHeartTransfer = () => {
+      if (heartDelta !== 0) {
+        this.playMiniGameHeartTransfer(heartDelta, playFloorTransfer);
+        return;
+      }
+
+      playFloorTransfer();
     };
 
     if (this.hasMiniGameGoldTransfer(result)) {
@@ -1198,6 +1324,55 @@ export class DungeonScene extends Phaser.Scene {
     }
 
     playHeartTransfer();
+  }
+
+  private playMiniGameFloorTransfer(result: MiniGameResult, onComplete: () => void): void {
+    const floorDelta = Math.trunc(result.floorDelta ?? 0);
+    if (floorDelta === 0) {
+      onComplete();
+      return;
+    }
+
+    const x = this.grodor?.x ?? WORLD_WIDTH / 2;
+    const y = (this.grodor?.y ?? WORLD_HEIGHT / 2) - 150;
+    const isDown = floorDelta < 0;
+    const amountText = this.add
+      .text(x, y, isDown ? GAME_TEXTS.miniGames.elevator.resultFloorDown : GAME_TEXTS.miniGames.elevator.resultFloorUp, {
+        fontFamily: "Georgia, serif",
+        fontSize: "52px",
+        color: this.getMiniGameEffectTextColor(isDown ? 1 : -1),
+        align: "center",
+        stroke: "#120d0a",
+        strokeThickness: 8
+      })
+      .setOrigin(0.5)
+      .setDepth(COIN_FLIP_GOLD_TRANSFER.depthCoin + 2)
+      .setAlpha(0)
+      .setScale(0.82);
+
+    this.tweens.add({
+      targets: amountText,
+      alpha: 1,
+      y: y - 38,
+      scaleX: 1.12,
+      scaleY: 1.12,
+      duration: 260,
+      ease: "Back.easeOut",
+      onComplete: () => {
+        this.tweens.add({
+          targets: amountText,
+          alpha: 0,
+          y: y - 92,
+          delay: 720,
+          duration: 380,
+          ease: "Sine.easeIn",
+          onComplete: () => {
+            amountText.destroy();
+            onComplete();
+          }
+        });
+      }
+    });
   }
 
   private playMiniGameHeartTransfer(delta: number, onComplete: () => void): void {
@@ -1569,6 +1744,7 @@ export class DungeonScene extends Phaser.Scene {
     }
 
     this.resetDoorVisuals();
+    this.setDungeonCombatLock(false);
     this.resetGrodorToSpawn();
     this.updateRunHud();
     this.setStatus(GAME_TEXTS.itemEffects.combined([GAME_TEXTS.dungeon.nextFloorStatus(state.currentFloor), ...effectMessages]));
@@ -1699,7 +1875,7 @@ export class DungeonScene extends Phaser.Scene {
     this.grodor.setFlipX(false);
   }
 
-  private publishMovementReport(doorName: string, status: "moving" | "reached", path: TiledPoint[]): void {
+  private publishMovementReport(doorName: string, status: "moving" | "reached" | "returned", path: TiledPoint[]): void {
     publishTiledMovementReport({
       doorName,
       status,

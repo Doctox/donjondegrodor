@@ -15,7 +15,7 @@ type CombatOption = {
 
 type EventOption = {
   label: string;
-  id: "loot_chest" | "coin_flip" | "bonneteau" | "slot_machine" | "dodge_chest" | "jump";
+  id: "loot_chest" | "coin_flip" | "bonneteau" | "slot_machine" | "dodge_chest" | "jump" | "arm_wrestling" | "elevator";
 };
 
 const OPTIONS: EquipmentOption[] = [
@@ -39,7 +39,8 @@ const EVENT_OPTIONS: EventOption[] = [
   { label: GAME_TEXTS.debug.miniGameLabels.slotMachine, id: "slot_machine" },
   { label: GAME_TEXTS.debug.miniGameLabels.dodgeChest, id: "dodge_chest" },
   { label: GAME_TEXTS.debug.miniGameLabels.jump, id: "jump" },
-  { label: GAME_TEXTS.debug.miniGameLabels.armWrestling, id: "arm_wrestling" as EventOption["id"] }
+  { label: GAME_TEXTS.debug.miniGameLabels.armWrestling, id: "arm_wrestling" },
+  { label: GAME_TEXTS.debug.miniGameLabels.elevator, id: "elevator" }
 ];
 
 type DebugSubmenu = "stuff" | "combat" | "grodor" | "events";

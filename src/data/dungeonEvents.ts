@@ -33,7 +33,8 @@ export type DungeonEventId =
   | "slot_machine"
   | "dodge_chest"
   | "jump"
-  | "arm_wrestling";
+  | "arm_wrestling"
+  | "elevator";
 
 export type DungeonEventDefinition = {
   id: DungeonEventId;
@@ -62,7 +63,7 @@ export const DUNGEON_EVENTS = {
   },
   lose_heart: {
     id: "lose_heart",
-    weight: 3,
+    weight: 0,
     title: GAME_TEXTS.dungeonEvents.loseHeart.title,
     message: GAME_TEXTS.dungeonEvents.loseHeart.message,
     effectLabel: GAME_TEXTS.dungeonEvents.loseHeart.effectLabel,
@@ -71,7 +72,7 @@ export const DUNGEON_EVENTS = {
   },
   heal_heart: {
     id: "heal_heart",
-    weight: 2,
+    weight: 0,
     title: GAME_TEXTS.dungeonEvents.healHeart.title,
     message: GAME_TEXTS.dungeonEvents.healHeart.message,
     effectLabel: GAME_TEXTS.dungeonEvents.healHeart.effectLabel,
@@ -80,7 +81,7 @@ export const DUNGEON_EVENTS = {
   },
   nothing_gag: {
     id: "nothing_gag",
-    weight: 3,
+    weight: 0,
     title: GAME_TEXTS.dungeonEvents.nothingGag.title,
     message: GAME_TEXTS.dungeonEvents.nothingGag.message,
     effectLabel: GAME_TEXTS.dungeonEvents.nothingGag.effectLabel,
@@ -88,7 +89,7 @@ export const DUNGEON_EVENTS = {
   },
   floor_up: {
     id: "floor_up",
-    weight: 1,
+    weight: 0,
     title: GAME_TEXTS.dungeonEvents.floorUp.title,
     message: GAME_TEXTS.dungeonEvents.floorUp.message,
     effectLabel: GAME_TEXTS.dungeonEvents.floorUp.effectLabel,
@@ -97,7 +98,7 @@ export const DUNGEON_EVENTS = {
   },
   floor_down: {
     id: "floor_down",
-    weight: 1,
+    weight: 0,
     title: GAME_TEXTS.dungeonEvents.floorDown.title,
     message: GAME_TEXTS.dungeonEvents.floorDown.message,
     effectLabel: GAME_TEXTS.dungeonEvents.floorDown.effectLabel,
@@ -310,6 +311,14 @@ export const DUNGEON_EVENTS = {
     title: GAME_TEXTS.dungeonEvents.armWrestling.title,
     message: GAME_TEXTS.dungeonEvents.armWrestling.message,
     effectLabel: GAME_TEXTS.dungeonEvents.armWrestling.effectLabel,
+    kind: "minigame"
+  },
+  elevator: {
+    id: "elevator",
+    weight: 1,
+    title: GAME_TEXTS.dungeonEvents.elevator.title,
+    message: GAME_TEXTS.dungeonEvents.elevator.message,
+    effectLabel: GAME_TEXTS.dungeonEvents.elevator.effectLabel,
     kind: "minigame"
   }
 } satisfies Record<DungeonEventId, DungeonEventDefinition>;

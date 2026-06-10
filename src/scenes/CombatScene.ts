@@ -13,7 +13,6 @@ import {
   setDungeonLifeForCombat
 } from "../systems/dungeonRunState";
 import { addGrodorStat } from "../systems/grodorStats";
-import { createNineSlicePanel } from "../ui/nineSlicePanel";
 
 type CombatSceneData = {
   arena?: number;
@@ -23,20 +22,37 @@ type CombatSceneData = {
 
 const ARENA_KEYS = [IMAGE_ASSETS.combatArena1.key, IMAGE_ASSETS.combatArena2.key, IMAGE_ASSETS.combatArena3.key];
 const DEPTHS = {
-  overlay: 0,
-  zone: 5,
-  arena: 10,
+  arena: 0,
   actors: 20,
-  ui: 50
+  ui: 50,
+  exit: 70
 };
+const HEART_PANEL = {
+  x: 300,
+  y: 96,
+  minWidth: 276,
+  frameAspect: 356 / 147,
+  paddingX: 34,
+  heartSize: 42,
+  heartGap: 54
+};
+const INACTIVITY_HINT_MS = 4000;
+const EXIT_HINT_MS = 4000;
+const COMBAT_GRODOR_SCALE = 1.78;
+const COMBAT_MONSTER_SCALE_MULTIPLIER = 1.48;
 
 export class CombatScene extends Phaser.Scene {
   private grodor?: GrodorActor;
   private rat?: MonsterActor;
-  private messageText?: Phaser.GameObjects.Text;
+  private clickHintText?: Phaser.GameObjects.Text;
+  private exitHintText?: Phaser.GameObjects.Text;
+  private lifePanel?: Phaser.GameObjects.Image;
+  private combatMessage = "";
   private readonly grodorHearts: Phaser.GameObjects.Image[] = [];
   private readonly ratHearts: Phaser.GameObjects.Image[] = [];
-  private continueButton?: Phaser.GameObjects.Text;
+  private exitHitZone?: Phaser.GameObjects.Zone;
+  private inactivityTimer?: Phaser.Time.TimerEvent;
+  private exitHintTimer?: Phaser.Time.TimerEvent;
   private debugDirect = false;
   private inputLocked = false;
   private isClosing = false;
@@ -64,34 +80,27 @@ export class CombatScene extends Phaser.Scene {
     this.startingGrodorLife = this.grodorLife;
     const arenaKey = this.getArenaKey(data.arena);
 
-    this.add.rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT, 0x000000, 0.38).setOrigin(0).setDepth(DEPTHS.overlay);
-    this.add
-      .image(0, 0, IMAGE_ASSETS.combatZone.key)
-      .setOrigin(0)
-      .setDisplaySize(WORLD_WIDTH, WORLD_HEIGHT)
-      .setDepth(DEPTHS.zone);
     this.add.image(0, 0, arenaKey).setOrigin(0).setDisplaySize(WORLD_WIDTH, WORLD_HEIGHT).setDepth(DEPTHS.arena);
 
-    this.grodor = new GrodorActor(this, 635, 790);
+    this.grodor = new GrodorActor(this, 590, 835, COMBAT_GRODOR_SCALE);
     this.grodor.container.setDepth(DEPTHS.actors);
     this.grodor.setEquipment(getDungeonRunState().equipment);
     this.grodor.setFlipX(false);
-    this.grodor.container.setScale(0.9);
 
-    this.rat = new MonsterActor(this, 1270, 790, this.monsterId);
+    this.rat = new MonsterActor(this, 1270, 835, this.monsterId, COMBAT_MONSTER_SCALE_MULTIPLIER);
     this.rat.container.setDepth(DEPTHS.actors);
     this.rat.onZoneSelected((zone) => this.resolveZoneAttack(zone));
 
     this.createCombatHud();
     this.setCombatMessage(GAME_TEXTS.combat.chooseZone);
+    this.startInactivityHintTimer();
 
-    this.continueButton = this.createButton(960, 925, GAME_TEXTS.common.continue, () => this.closeCombat()).setVisible(false);
     if (this.grodorLife <= 0) {
       this.inputLocked = true;
       this.rat.setZonesEnabled(false);
       this.grodor.playDeath();
       this.setCombatMessage(GAME_TEXTS.combat.temporaryDefeat);
-      this.continueButton.setVisible(true);
+      this.prepareCombatExit();
     }
 
     (window as unknown as { __combatSceneReport?: unknown }).__combatSceneReport = {
@@ -108,8 +117,19 @@ export class CombatScene extends Phaser.Scene {
   }
 
   private createCombatHud(): void {
-    for (let index = 0; index < 6; index += 1) {
-      const heart = this.add.image(1518 + index * 56, 42, IMAGE_ASSETS.heartEmpty.key).setScale(0.08).setDepth(DEPTHS.ui);
+    const width = Math.max(HEART_PANEL.minWidth, HEART_PANEL.paddingX * 2 + this.grodorMaxLife * HEART_PANEL.heartGap);
+    const height = width / HEART_PANEL.frameAspect;
+    this.lifePanel = this.add
+      .image(HEART_PANEL.x, HEART_PANEL.y, IMAGE_ASSETS.dungeonHudHeartFrame.key)
+      .setDisplaySize(width, height)
+      .setDepth(DEPTHS.ui);
+
+    const firstHeartX = HEART_PANEL.x - ((this.grodorMaxLife - 1) * HEART_PANEL.heartGap) / 2;
+    for (let index = 0; index < this.grodorMaxLife; index += 1) {
+      const heart = this.add
+        .image(firstHeartX + index * HEART_PANEL.heartGap, HEART_PANEL.y, IMAGE_ASSETS.heartEmpty.key)
+        .setDisplaySize(HEART_PANEL.heartSize, HEART_PANEL.heartSize)
+        .setDepth(DEPTHS.ui + 1);
       this.grodorHearts.push(heart);
     }
 
@@ -123,28 +143,18 @@ export class CombatScene extends Phaser.Scene {
       this.ratHearts.push(heart);
     }
 
-    const panelWidth = 520;
-    const panelHeight = 220;
-    const panelX = WORLD_WIDTH - 304;
-    const panelY = WORLD_HEIGHT - 152;
-    createNineSlicePanel(this, IMAGE_ASSETS.frameStory.key, panelX, panelY, panelWidth, panelHeight, {
-      left: 64,
-      right: 64,
-      top: 64,
-      bottom: 64
-    }).setDepth(DEPTHS.ui);
-
-    this.messageText = this.add
-      .text(panelX, panelY, "", {
-        fontFamily: "Inter, Arial, sans-serif",
-        fontSize: "24px",
-        color: "#fff1c2",
+    this.clickHintText = this.add
+      .text(WORLD_WIDTH / 2, 890, GAME_TEXTS.combat.clickHint, {
+        fontFamily: "Georgia, serif",
+        fontSize: "54px",
+        color: "#ffe0a0",
         align: "center",
-        lineSpacing: 8,
-        wordWrap: { width: panelWidth - 76 }
+        stroke: "#120d0a",
+        strokeThickness: 8
       })
       .setOrigin(0.5)
-      .setDepth(DEPTHS.ui);
+      .setDepth(DEPTHS.ui)
+      .setVisible(false);
 
     this.updateLifeText();
   }
@@ -154,6 +164,7 @@ export class CombatScene extends Phaser.Scene {
       return;
     }
 
+    this.clearInactivityHint();
     this.inputLocked = true;
     this.rat.setZonesEnabled(false);
     this.rat.highlightZone(zone);
@@ -218,7 +229,7 @@ export class CombatScene extends Phaser.Scene {
         ratLife: this.ratLife,
         monsterLife: this.ratLife,
         grodorLife: this.grodorLife,
-        message: this.messageText?.text
+        message: this.combatMessage
       };
     });
   }
@@ -226,20 +237,81 @@ export class CombatScene extends Phaser.Scene {
   private resolveRoundEnd(): void {
     if (this.ratLife <= 0) {
       this.setCombatMessage(GAME_TEXTS.combat.victory(this.getMonsterName()));
-      this.continueButton?.setVisible(true);
+      this.prepareCombatExit();
       return;
     }
 
     if (this.grodorLife <= 0) {
       this.grodor?.playDeath();
       this.setCombatMessage(GAME_TEXTS.combat.temporaryDefeat);
-      this.continueButton?.setVisible(true);
+      this.prepareCombatExit();
       return;
     }
 
     this.grodor?.playIdle();
     this.inputLocked = false;
     this.rat?.setZonesEnabled(true);
+    this.startInactivityHintTimer();
+  }
+
+  private startInactivityHintTimer(): void {
+    this.clearInactivityHint();
+    this.inactivityTimer = this.time.delayedCall(INACTIVITY_HINT_MS, () => {
+      if (this.inputLocked || this.isClosing || !this.scene.isActive("CombatScene")) {
+        return;
+      }
+
+      this.clickHintText?.setVisible(true);
+      this.tweens.add({
+        targets: this.clickHintText,
+        alpha: 0.42,
+        duration: 220,
+        yoyo: true,
+        repeat: 3
+      });
+      this.rat?.flashHitZones(2);
+    });
+  }
+
+  private clearInactivityHint(): void {
+    this.inactivityTimer?.remove(false);
+    this.inactivityTimer = undefined;
+    this.clickHintText?.setVisible(false);
+    this.clickHintText?.setAlpha(1);
+  }
+
+  private prepareCombatExit(): void {
+    if (this.exitHitZone) {
+      return;
+    }
+
+    this.clearInactivityHint();
+    this.inputLocked = true;
+    this.rat?.setZonesEnabled(false);
+    this.exitHitZone = this.add
+      .zone(WORLD_WIDTH / 2, WORLD_HEIGHT / 2, WORLD_WIDTH, WORLD_HEIGHT)
+      .setDepth(DEPTHS.exit)
+      .setInteractive({ useHandCursor: true });
+    this.exitHitZone.once("pointerdown", () => this.closeCombat());
+    this.exitHintTimer = this.time.delayedCall(EXIT_HINT_MS, () => this.showExitHint());
+  }
+
+  private showExitHint(): void {
+    if (this.exitHintText || this.isClosing) {
+      return;
+    }
+
+    this.exitHintText = this.add
+      .text(WORLD_WIDTH / 2, 890, GAME_TEXTS.combat.exitHint, {
+        fontFamily: "Inter, Arial, sans-serif",
+        fontSize: "30px",
+        color: "#fff1c2",
+        align: "center",
+        stroke: "#120d0a",
+        strokeThickness: 5
+      })
+      .setOrigin(0.5)
+      .setDepth(DEPTHS.exit + 1);
   }
 
   private pickAttackResult(): "rat_damage" | "grodor_damage" | "nothing" {
@@ -267,7 +339,7 @@ export class CombatScene extends Phaser.Scene {
   }
 
   private setCombatMessage(message: string): void {
-    this.messageText?.setText(message);
+    this.combatMessage = message;
   }
 
   private flashLostGrodorHeart(previousLife: number): void {
@@ -308,7 +380,9 @@ export class CombatScene extends Phaser.Scene {
     }
 
     this.isClosing = true;
-    this.continueButton?.disableInteractive();
+    this.exitHitZone?.disableInteractive();
+    this.exitHintTimer?.remove(false);
+    this.exitHintTimer = undefined;
     this.time.removeAllEvents();
     const updatedState = setDungeonLifeForCombat(this.grodorLife);
     const result = this.createCombatResult();
@@ -345,8 +419,13 @@ export class CombatScene extends Phaser.Scene {
   private resetSceneState(): void {
     this.grodor = undefined;
     this.rat = undefined;
-    this.messageText = undefined;
-    this.continueButton = undefined;
+    this.combatMessage = "";
+    this.clickHintText = undefined;
+    this.exitHintText = undefined;
+    this.lifePanel = undefined;
+    this.exitHitZone = undefined;
+    this.inactivityTimer = undefined;
+    this.exitHintTimer = undefined;
     this.grodorHearts.length = 0;
     this.ratHearts.length = 0;
   }
@@ -391,23 +470,4 @@ export class CombatScene extends Phaser.Scene {
     window.location.href = url.toString();
   }
 
-  private createButton(x: number, y: number, label: string, onClick: () => void): Phaser.GameObjects.Text {
-    const button = this.add
-      .text(x, y, label, {
-        fontFamily: "Inter, Arial, sans-serif",
-        fontSize: "32px",
-        color: "#1b100b",
-        backgroundColor: "#f0c071",
-        padding: { x: 34, y: 14 }
-      })
-      .setOrigin(0.5)
-      .setDepth(DEPTHS.ui)
-      .setInteractive({ useHandCursor: true });
-
-    button.on("pointerover", () => button.setStyle({ backgroundColor: "#ffd98b" }));
-    button.on("pointerout", () => button.setStyle({ backgroundColor: "#f0c071" }));
-    button.on("pointerdown", onClick);
-
-    return button;
-  }
 }

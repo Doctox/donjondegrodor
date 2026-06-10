@@ -187,6 +187,22 @@ export const GAME_TEXTS = {
       success: "Victoire au bras de fer: +1 coeur max.",
       failure: "Grodor plie le bras: -1 coeur max.",
       exitHint: "Clique pour retourner a la tour"
+    },
+    elevator: {
+      title: "Ascenseur douteux",
+      intro: "Le gardien de l'ascenseur tend la main vers le levier.",
+      countdownStatus: "Prepare le timing...",
+      countdown: (value: number) => `${value}`,
+      instruction: "Stoppe le curseur au bon moment.",
+      success: "Descente brutale: -2 etages.",
+      neutral: (gold: number) => `Pourboire du gardien: -${gold} PO.`,
+      neutralEmpty: "Le gardien reclame un pourboire, mais la bourse est vide.",
+      failure: "Mauvais levier: +2 etages.",
+      resultFloorDown: "-1 etage",
+      resultFloorUp: "+1 etage",
+      floorDown: (amount: number) => `Ascenseur: -${amount} etage(s).`,
+      floorUp: (amount: number) => `Ascenseur: +${amount} etage(s).`,
+      exitHint: "Clique pour retourner a la tour"
     }
   },
   result: {
@@ -216,6 +232,7 @@ export const GAME_TEXTS = {
     doorOpened: (doorIndex: string) => `Porte ${doorIndex} ouverte`,
     pathMissing: (doorName: string) => `Aucun chemin Tiled pour ${doorName}.`,
     pathInProgress: (doorName: string) => `${doorName}: chemin Tiled en cours...`,
+    returningToSpawn: "Grodor revient au point de depart.",
     nextFloorStatus: (floor: number) => `Etage ${floor}: choisis une porte.`,
     combatDebugStatus: (monsterId: string) => `Combat debug: ${monsterId}.`,
     combatWonStatus: "Combat gagne.",
@@ -413,6 +430,8 @@ export const GAME_TEXTS = {
   },
   combat: {
     chooseZone: "Choisis ou Grodor doit frapper.",
+    clickHint: "Clique !",
+    exitHint: "Clique pour retourner a la tour",
     temporaryDefeat: "Defaite temporaire.\nGrodor tombe au sol.",
     stunnedReturn: "Grodor revient sonne du combat.",
     closedToCell: "Combat ferme.\nRetour a la geole.",
@@ -477,7 +496,8 @@ export const GAME_TEXTS = {
       slotMachine: "Machine a sous",
       dodgeChest: "Coffre Esquive",
       jump: "Course au saut",
-      armWrestling: "Bras de fer"
+      armWrestling: "Bras de fer",
+      elevator: "Ascenseur"
     },
     equipmentUpdated: "Equipement debug mis a jour.",
     grodorRecovered: "Debug: Grodor recupere 1 coeur.",
@@ -639,6 +659,11 @@ export const GAME_TEXTS = {
     armWrestling: {
       title: "Bras de fer",
       message: "Un costaud defie Grodor dans un duel de coudes douteux.",
+      effectLabel: "Mini-jeu"
+    },
+    elevator: {
+      title: "Ascenseur douteux",
+      message: "Un ascenseur a levier attend Grodor.",
       effectLabel: "Mini-jeu"
     }
   },

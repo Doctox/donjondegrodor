@@ -86,6 +86,13 @@ export type GoldRewardResult = {
   state: DungeonRunState;
 };
 
+export type FloorDeltaResult = {
+  requestedFloorDelta: number;
+  floorDelta: number;
+  effectMessages: string[];
+  state: DungeonRunState;
+};
+
 const BANK_GOLD_STORAGE_KEY = "grodor_bank_gold";
 const RUN_MAX_LIFE_CAP = 12;
 
@@ -472,6 +479,35 @@ export function loseCarriedGold(amount: number): DungeonRunState {
   };
 
   return getDungeonRunState();
+}
+
+export function applyDungeonFloorDelta(floorDelta: number, random: () => number = Math.random): FloorDeltaResult {
+  const requestedFloorDelta = Math.trunc(floorDelta);
+  if (requestedFloorDelta === 0) {
+    return {
+      requestedFloorDelta,
+      floorDelta: 0,
+      effectMessages: [],
+      state: getDungeonRunState()
+    };
+  }
+
+  const floorResult = applyFloorDeltaEquipmentEffects(state, requestedFloorDelta, random);
+  state = floorResult.state;
+  const appliedFloorDelta = floorResult.floorDelta;
+  const currentFloor = clampNumber(state.currentFloor + appliedFloorDelta, 1, state.totalFloors);
+  state = {
+    ...state,
+    currentFloor,
+    floor: currentFloor
+  };
+
+  return {
+    requestedFloorDelta,
+    floorDelta: appliedFloorDelta,
+    effectMessages: floorResult.effectMessages,
+    state: getDungeonRunState()
+  };
 }
 
 export function increaseRunMaxLife(amount: number): DungeonRunState {
