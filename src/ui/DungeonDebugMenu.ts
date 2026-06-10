@@ -38,7 +38,8 @@ const EVENT_OPTIONS: EventOption[] = [
   { label: GAME_TEXTS.debug.miniGameLabels.bonneteau, id: "bonneteau" },
   { label: GAME_TEXTS.debug.miniGameLabels.slotMachine, id: "slot_machine" },
   { label: GAME_TEXTS.debug.miniGameLabels.dodgeChest, id: "dodge_chest" },
-  { label: GAME_TEXTS.debug.miniGameLabels.jump, id: "jump" }
+  { label: GAME_TEXTS.debug.miniGameLabels.jump, id: "jump" },
+  { label: GAME_TEXTS.debug.miniGameLabels.armWrestling, id: "arm_wrestling" as EventOption["id"] }
 ];
 
 type DebugSubmenu = "stuff" | "combat" | "grodor" | "events";

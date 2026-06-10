@@ -19,33 +19,38 @@ const BUBBLE_AREA = {
   height: WORLD_HEIGHT
 };
 const BUBBLE = {
-  size: 189,
-  hitSize: 177,
-  minTimeoutMs: 850,
-  maxTimeoutMs: 1250,
-  burstMs: 180,
+  size: 260,
+  hitSize: 244,
+  minTimeoutMs: 560,
+  maxTimeoutMs: 930,
+  burstMs: 95,
   minCount: 3,
-  maxCount: 6,
-  paddingX: 96,
-  paddingTop: 96,
-  paddingBottom: 96
+  maxCount: 7,
+  paddingX: 135,
+  paddingTop: 135,
+  paddingBottom: 135
 };
 const SUCCESS_GOLD = 10;
-const READY_BUTTON_Y = WORLD_HEIGHT / 2 + 302;
+const COUNTDOWN_VALUES = [3, 2, 1, 0];
+const COUNTDOWN_INTERVAL_MS = 520;
 
-type DodgeChestPhase = "ready" | "running" | "success" | "failure";
+type DodgeChestPhase = "countdown" | "running" | "success" | "failure";
 
 export class DodgeChestMiniGame implements MiniGameController {
   private background?: Phaser.GameObjects.Image;
   private bubbleImage?: Phaser.GameObjects.Image;
   private bubbleHitZone?: Phaser.GameObjects.Zone;
+  private missHitZone?: Phaser.GameObjects.Zone;
   private timeoutEvent?: Phaser.Time.TimerEvent;
-  private readyButton?: Phaser.GameObjects.Text;
+  private countdownText?: Phaser.GameObjects.Text;
   private currentBubble = 0;
   private targetBubbles = 0;
   private currentBubbleFrame = 1;
   private currentBubbleTimeoutMs = 0;
-  private phase: DodgeChestPhase = "ready";
+  private phase: DodgeChestPhase = "countdown";
+  private exitHitZone?: Phaser.GameObjects.Zone;
+  private exitHint?: Phaser.GameObjects.Text;
+  private exitHintTimer?: Phaser.Time.TimerEvent;
 
   constructor(private readonly host: MiniGameHost) {}
 
@@ -54,13 +59,8 @@ export class DodgeChestMiniGame implements MiniGameController {
       .image(DISPLAY.x, DISPLAY.y, IMAGE_ASSETS.dodgeChestOpen.key)
       .setDisplaySize(DISPLAY.width, DISPLAY.height)
       .setDepth(3);
-    this.readyButton = this.host.createMiniGameButton(
-      WORLD_WIDTH / 2,
-      READY_BUTTON_Y,
-      GAME_TEXTS.miniGames.dodgeChest.readyButton,
-      () => this.startSequence()
-    );
-    this.host.getStatusText()?.setText(GAME_TEXTS.miniGames.dodgeChest.instruction);
+    this.host.getStatusText()?.setText("");
+    this.startCountdown();
   }
 
   getReportState(): Record<string, unknown> {
@@ -74,17 +74,49 @@ export class DodgeChestMiniGame implements MiniGameController {
   }
 
   private startSequence(): void {
-    if (this.host.getCompleted() || this.phase !== "ready") {
+    if (this.host.getCompleted() || this.phase !== "countdown") {
       return;
     }
 
     this.phase = "running";
-    this.readyButton?.destroy();
-    this.readyButton = undefined;
+    this.countdownText?.destroy();
+    this.countdownText = undefined;
     this.targetBubbles = Phaser.Math.Between(BUBBLE.minCount, BUBBLE.maxCount);
     this.background?.setTexture(IMAGE_ASSETS.dodgeChestDodge.key);
+    this.createMissHitZone();
     this.host.getRarityText()?.setText("");
     this.spawnNextBubble();
+  }
+
+  private startCountdown(): void {
+    this.countdownText = this.host.scene.add
+      .text(WORLD_WIDTH / 2, WORLD_HEIGHT / 2, "", {
+        fontFamily: "Georgia, serif",
+        fontSize: "126px",
+        color: "#fff1c2",
+        stroke: "#120d0a",
+        strokeThickness: 10
+      })
+      .setOrigin(0.5)
+      .setDepth(9);
+
+    let index = 0;
+    const tick = (): void => {
+      const value = COUNTDOWN_VALUES[index];
+      this.host.setStep(index);
+      this.countdownText?.setText(String(value));
+      this.host.publishMiniGameReport();
+      index += 1;
+
+      if (index < COUNTDOWN_VALUES.length) {
+        this.host.scene.time.delayedCall(COUNTDOWN_INTERVAL_MS, tick);
+        return;
+      }
+
+      this.host.scene.time.delayedCall(COUNTDOWN_INTERVAL_MS, () => this.startSequence());
+    };
+
+    tick();
   }
 
   private spawnNextBubble(): void {
@@ -113,8 +145,17 @@ export class DodgeChestMiniGame implements MiniGameController {
       .setInteractive({ useHandCursor: true });
     this.bubbleHitZone.on("pointerdown", () => this.popBubble());
     this.timeoutEvent = this.host.scene.time.delayedCall(this.currentBubbleTimeoutMs, () => this.fail());
-    this.host.getStatusText()?.setText(GAME_TEXTS.miniGames.dodgeChest.target(this.currentBubble, this.targetBubbles));
+    this.host.getStatusText()?.setText("");
     this.host.publishMiniGameReport();
+  }
+
+  private createMissHitZone(): void {
+    this.missHitZone?.destroy();
+    this.missHitZone = this.host.scene.add
+      .zone(WORLD_WIDTH / 2, WORLD_HEIGHT / 2, WORLD_WIDTH, WORLD_HEIGHT)
+      .setDepth(8)
+      .setInteractive({ useHandCursor: false });
+    this.missHitZone.on("pointerdown", () => this.fail());
   }
 
   private popBubble(): void {
@@ -138,7 +179,7 @@ export class DodgeChestMiniGame implements MiniGameController {
       goldDelta: SUCCESS_GOLD,
       dodgeChestFrame: this.currentBubbleFrame
     };
-    this.finish(result, GAME_TEXTS.miniGames.dodgeChest.success, "success");
+    this.finish(result, "success");
   }
 
   private fail(): void {
@@ -148,10 +189,10 @@ export class DodgeChestMiniGame implements MiniGameController {
       lifeDelta: -1,
       dodgeChestFrame: this.currentBubbleFrame
     };
-    this.finish(result, `${GAME_TEXTS.miniGames.dodgeChest.lateFailure} ${GAME_TEXTS.miniGames.dodgeChest.failure}`, "failure");
+    this.finish(result, "failure");
   }
 
-  private finish(result: MiniGameResult, status: string, outcome: "success" | "failure"): void {
+  private finish(result: MiniGameResult, outcome: "success" | "failure"): void {
     if (this.host.getCompleted()) {
       return;
     }
@@ -162,14 +203,53 @@ export class DodgeChestMiniGame implements MiniGameController {
     this.timeoutEvent = undefined;
     this.bubbleHitZone?.destroy();
     this.bubbleHitZone = undefined;
+    this.missHitZone?.destroy();
+    this.missHitZone = undefined;
     this.background?.setTexture(outcome === "success" ? IMAGE_ASSETS.dodgeChestOpenWin.key : IMAGE_ASSETS.dodgeChestDodgeLose.key);
     this.bubbleImage?.setTexture(this.getFrameTexture(this.currentBubbleFrame, outcome === "success" ? "ok" : "break"));
     this.bubbleImage?.setVisible(outcome === "failure");
     this.host.setResult(result);
-    this.host.getStatusText()?.setText(status);
-    this.host.getRarityText()?.setText(outcome === "success" ? GAME_TEXTS.miniGames.dodgeChest.success : GAME_TEXTS.miniGames.dodgeChest.failure);
-    this.host.createContinueButton(result);
+    this.host.getStatusText()?.setText("");
+    this.host.getRarityText()?.setText("");
+    this.createExitHitZone(result);
+    this.exitHintTimer = this.host.scene.time.delayedCall(4000, () => this.showExitHint());
     this.host.publishMiniGameReport();
+  }
+
+  private createExitHitZone(result: MiniGameResult): void {
+    if (this.exitHitZone) {
+      return;
+    }
+
+    this.exitHitZone = this.host.scene.add
+      .zone(WORLD_WIDTH / 2, WORLD_HEIGHT / 2, WORLD_WIDTH, WORLD_HEIGHT)
+      .setDepth(9)
+      .setInteractive({ useHandCursor: true });
+    this.exitHitZone.once("pointerdown", () => {
+      this.exitHintTimer?.remove(false);
+      this.exitHintTimer = undefined;
+      this.exitHint?.destroy();
+      this.exitHint = undefined;
+      this.host.finishMiniGame(result);
+    });
+  }
+
+  private showExitHint(): void {
+    if (this.exitHint) {
+      return;
+    }
+
+    this.exitHint = this.host.scene.add
+      .text(WORLD_WIDTH / 2, 890, GAME_TEXTS.miniGames.dodgeChest.exitHint, {
+        fontFamily: "Inter, Arial, sans-serif",
+        fontSize: "30px",
+        color: "#fff1c2",
+        align: "center",
+        stroke: "#120d0a",
+        strokeThickness: 5
+      })
+      .setOrigin(0.5)
+      .setDepth(8);
   }
 
   private clearBubble(): void {
@@ -177,6 +257,8 @@ export class DodgeChestMiniGame implements MiniGameController {
     this.timeoutEvent = undefined;
     this.bubbleHitZone?.destroy();
     this.bubbleHitZone = undefined;
+    this.missHitZone?.destroy();
+    this.missHitZone = undefined;
     this.bubbleImage?.destroy();
     this.bubbleImage = undefined;
   }

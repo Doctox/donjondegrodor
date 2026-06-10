@@ -2,8 +2,6 @@ import { IMAGE_ASSETS, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
 import { GAME_TEXTS } from "../data/gameTexts";
 import {
   BonneteauIssue,
-  MINI_GAME_EVENT_IMAGE_HEIGHT,
-  MINI_GAME_EVENT_IMAGE_WIDTH,
   MiniGameController,
   MiniGameHost,
   MiniGameResult
@@ -13,30 +11,34 @@ export class BonneteauMiniGame implements MiniGameController {
   private hitZones: Phaser.GameObjects.Zone[] = [];
   private cardOverlayImage?: Phaser.GameObjects.Image;
   private resultOverlayImage?: Phaser.GameObjects.Image;
+  private delayedClickHint?: Phaser.GameObjects.Text;
+  private delayedClickHintTween?: Phaser.Tweens.Tween;
+  private delayedClickHintTimer?: Phaser.Time.TimerEvent;
+  private delayedExitHint?: Phaser.GameObjects.Text;
+  private delayedExitHintTimer?: Phaser.Time.TimerEvent;
 
   constructor(private readonly host: MiniGameHost) {}
 
   start(): void {
     this.host.scene.add
-      .image(WORLD_WIDTH / 2, WORLD_HEIGHT / 2 + 54, IMAGE_ASSETS.bonneteauFaceCache.key)
-      .setDisplaySize(MINI_GAME_EVENT_IMAGE_WIDTH, MINI_GAME_EVENT_IMAGE_HEIGHT)
+      .image(WORLD_WIDTH / 2, WORLD_HEIGHT / 2, IMAGE_ASSETS.bonneteauFaceCache.key)
+      .setDisplaySize(WORLD_WIDTH, WORLD_HEIGHT)
       .setDepth(4);
     this.cardOverlayImage = this.host.scene.add
-      .image(WORLD_WIDTH / 2, WORLD_HEIGHT / 2 + 54, IMAGE_ASSETS.bonneteauSlot1Carte.key)
-      .setDisplaySize(MINI_GAME_EVENT_IMAGE_WIDTH, MINI_GAME_EVENT_IMAGE_HEIGHT)
+      .image(WORLD_WIDTH / 2, WORLD_HEIGHT / 2, IMAGE_ASSETS.bonneteauSlot1Carte.key)
+      .setDisplaySize(WORLD_WIDTH, WORLD_HEIGHT)
       .setDepth(5)
       .setVisible(false);
     this.resultOverlayImage = this.host.scene.add
-      .image(WORLD_WIDTH / 2, WORLD_HEIGHT / 2 + 54, IMAGE_ASSETS.bonneteauSlot1Po.key)
-      .setDisplaySize(MINI_GAME_EVENT_IMAGE_WIDTH, MINI_GAME_EVENT_IMAGE_HEIGHT)
+      .image(WORLD_WIDTH / 2, WORLD_HEIGHT / 2, IMAGE_ASSETS.bonneteauSlot1Po.key)
+      .setDisplaySize(WORLD_WIDTH, WORLD_HEIGHT)
       .setDepth(6)
       .setVisible(false);
-    this.host.getStatusText()?.setText(GAME_TEXTS.miniGames.bonneteau.instruction);
 
     const positions = [
-      { slot: 1 as const, x: 925, y: 559, width: 110, height: 135 },
-      { slot: 2 as const, x: 1000, y: 587, width: 105, height: 150 },
-      { slot: 3 as const, x: WORLD_WIDTH / 2 + 182, y: WORLD_HEIGHT / 2 + 76 }
+      { slot: 1 as const, x: 834, y: 424, width: 210, height: 190 },
+      { slot: 2 as const, x: 988, y: 482, width: 210, height: 190 },
+      { slot: 3 as const, x: 1136, y: 540, width: 230, height: 200 }
     ];
 
     positions.forEach(({ slot, x, y, width = 150, height = 260 }) => {
@@ -48,6 +50,7 @@ export class BonneteauMiniGame implements MiniGameController {
       this.hitZones.push(hitZone);
     });
     (window as unknown as { __bonneteauHitZoneReport?: unknown }).__bonneteauHitZoneReport = positions;
+    this.delayedClickHintTimer = this.host.scene.time.delayedCall(4000, () => this.showDelayedClickHint());
   }
 
   private reveal(slot: 1 | 2 | 3): void {
@@ -56,6 +59,7 @@ export class BonneteauMiniGame implements MiniGameController {
     }
 
     this.host.setCompleted(true);
+    this.hideDelayedClickHint();
     const issue = this.pickIssue();
     const goldLoss = issue === "pierced_pouch" ? Math.min(this.host.getCarriedGold(), Phaser.Math.Between(1, 3)) : undefined;
     const atMaxLife = this.host.getMaxLife() >= 12;
@@ -77,33 +81,86 @@ export class BonneteauMiniGame implements MiniGameController {
     this.cardOverlayImage?.setVisible(true);
     this.resultOverlayImage?.setTexture(this.getTexture(slot, issue));
     this.resultOverlayImage?.setVisible(true);
-    this.host.getStatusText()?.setText(this.getResultText(result));
-    this.host.getRarityText()?.setText(GAME_TEXTS.miniGames.bonneteau.revealed);
-    this.host.createContinueButton(result);
+    const exitZone = this.host.scene.add
+      .zone(WORLD_WIDTH / 2, WORLD_HEIGHT / 2, WORLD_WIDTH, WORLD_HEIGHT)
+      .setDepth(8)
+      .setInteractive({ useHandCursor: true });
+    this.delayedExitHintTimer = this.host.scene.time.delayedCall(4000, () => this.showDelayedExitHint());
+    exitZone.once("pointerdown", () => {
+      this.hideDelayedExitHint();
+      exitZone.destroy();
+      this.host.finishMiniGame(result);
+    });
     this.host.publishMiniGameReport();
+  }
+
+  private showDelayedClickHint(): void {
+    if (this.host.getCompleted() || this.delayedClickHint) {
+      return;
+    }
+
+    this.delayedClickHint = this.host.scene.add
+      .text(WORLD_WIDTH / 2, WORLD_HEIGHT / 2, GAME_TEXTS.miniGames.bonneteau.delayedClickHint, {
+        fontFamily: "Georgia, serif",
+        fontSize: "72px",
+        color: "#ffffff",
+        align: "center",
+        stroke: "#120d0a",
+        strokeThickness: 9
+      })
+      .setOrigin(0.5)
+      .setDepth(8)
+      .setAlpha(0.2);
+
+    this.delayedClickHintTween = this.host.scene.tweens.add({
+      targets: this.delayedClickHint,
+      alpha: 1,
+      scaleX: 1.12,
+      scaleY: 1.12,
+      duration: 360,
+      yoyo: true,
+      repeat: -1,
+      ease: "Sine.easeInOut"
+    });
+  }
+
+  private showDelayedExitHint(): void {
+    if (!this.host.getCompleted() || this.delayedExitHint) {
+      return;
+    }
+
+    this.delayedExitHint = this.host.scene.add
+      .text(WORLD_WIDTH / 2, 890, GAME_TEXTS.miniGames.bonneteau.delayedExitHint, {
+        fontFamily: "Inter, Arial, sans-serif",
+        fontSize: "30px",
+        color: "#fff1c2",
+        align: "center",
+        stroke: "#120d0a",
+        strokeThickness: 5
+      })
+      .setOrigin(0.5)
+      .setDepth(8);
+  }
+
+  private hideDelayedExitHint(): void {
+    this.delayedExitHintTimer?.remove(false);
+    this.delayedExitHintTimer = undefined;
+    this.delayedExitHint?.destroy();
+    this.delayedExitHint = undefined;
+  }
+
+  private hideDelayedClickHint(): void {
+    this.delayedClickHintTimer?.remove(false);
+    this.delayedClickHintTimer = undefined;
+    this.delayedClickHintTween?.stop();
+    this.delayedClickHintTween = undefined;
+    this.delayedClickHint?.destroy();
+    this.delayedClickHint = undefined;
   }
 
   private pickIssue(): BonneteauIssue {
     const issues: BonneteauIssue[] = ["grodor", "gold", "skull", "pierced_pouch"];
     return issues[Math.floor(Math.random() * issues.length)];
-  }
-
-  private getResultText(result: MiniGameResult): string {
-    if (result.issue === "grodor") {
-      return result.maxLifeDelta ? GAME_TEXTS.miniGames.bonneteau.grodor : GAME_TEXTS.miniGames.bonneteau.grodorMax;
-    }
-    if (result.issue === "gold") {
-      return GAME_TEXTS.miniGames.bonneteau.gold;
-    }
-    if (result.issue === "skull") {
-      return GAME_TEXTS.miniGames.bonneteau.skull;
-    }
-    if (result.issue === "pierced_pouch") {
-      const loss = result.goldLoss ?? 0;
-      return loss > 0 ? GAME_TEXTS.miniGames.bonneteau.piercedPouch(loss) : GAME_TEXTS.miniGames.bonneteau.piercedPouchEmpty;
-    }
-
-    return GAME_TEXTS.miniGames.bonneteau.revealed;
   }
 
   private getTexture(slot: 1 | 2 | 3, issue: BonneteauIssue | "carte"): string {

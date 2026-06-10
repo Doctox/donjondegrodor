@@ -9,7 +9,7 @@ import {
 
 const RUN_SPEED = 600;
 const GRAVITY = 1720;
-const JUMP_VELOCITY = 644;
+const JUMP_VELOCITY = 645;
 const LANDING_SNAP = 8;
 const FLOOR_MARGIN = 28;
 const FALL_LIMIT_Y = WORLD_HEIGHT + 120;
@@ -23,6 +23,8 @@ const JUMP_BUTTON_SIZE = 230;
 const COUNTDOWN_VALUES = [3, 2, 1, 0];
 const COUNTDOWN_INTERVAL_MS = 650;
 const RETRY_DELAY_MS = 720;
+const EXIT_HINT_MS = 4000;
+const VICTORY_X_OFFSET = -44;
 const HEART_PANEL = {
   x: 300,
   y: 96,
@@ -32,7 +34,13 @@ const HEART_PANEL = {
   heartSize: 42,
   heartGap: 54
 };
-const JUMP_UI_ASSETS = [IMAGE_ASSETS.dungeonHudHeartFrame, IMAGE_ASSETS.heartFull, IMAGE_ASSETS.heartEmpty, IMAGE_ASSETS.jumpButton];
+const JUMP_UI_ASSETS = [
+  IMAGE_ASSETS.dungeonHudHeartFrame,
+  IMAGE_ASSETS.heartFull,
+  IMAGE_ASSETS.heartEmpty,
+  IMAGE_ASSETS.heartBrake,
+  IMAGE_ASSETS.jumpButton
+];
 const JUMP_GRODOR_ASSETS = [
   IMAGE_ASSETS.grodorRun1,
   IMAGE_ASSETS.grodorRun2,
@@ -87,6 +95,9 @@ export class JumpMiniGame implements MiniGameController {
   private startingLife = 1;
   private attemptsLost = 0;
   private assetsReady = false;
+  private exitHitZone?: Phaser.GameObjects.Zone;
+  private exitHint?: Phaser.GameObjects.Text;
+  private exitHintTimer?: Phaser.Time.TimerEvent;
 
   constructor(private readonly host: MiniGameHost) {}
 
@@ -124,7 +135,7 @@ export class JumpMiniGame implements MiniGameController {
       .setScale(GRODOR_SCALE)
       .setDepth(12);
     this.grodor.setFlipX(false);
-    this.playRun();
+    this.playIdle();
 
     this.jumpButton = this.createJumpButton();
 
@@ -224,7 +235,8 @@ export class JumpMiniGame implements MiniGameController {
   private startCountdown(): void {
     this.phase = "countdown";
     this.setJumpButtonEnabled(false);
-    this.host.getStatusText()?.setText(GAME_TEXTS.miniGames.jump.countdownStatus);
+    this.playIdle();
+    this.host.getStatusText()?.setText("");
 
     this.countdownText?.destroy();
     this.countdownText = this.host.scene.add
@@ -275,7 +287,8 @@ export class JumpMiniGame implements MiniGameController {
     this.countdownText = undefined;
     this.phase = "running";
     this.setJumpButtonEnabled(true);
-    this.host.getStatusText()?.setText(GAME_TEXTS.miniGames.jump.instruction);
+    this.playRun();
+    this.host.getStatusText()?.setText("");
     this.host.publishMiniGameReport();
   }
 
@@ -331,7 +344,7 @@ export class JumpMiniGame implements MiniGameController {
     this.playJumpTakeoff();
     this.host.scene.time.delayedCall(JUMP_AIR_DELAY_MS, () => this.playJumpAir());
     this.host.setStep(1);
-    this.host.getStatusText()?.setText(GAME_TEXTS.miniGames.jump.jumping);
+    this.host.getStatusText()?.setText("");
     this.host.publishMiniGameReport();
   }
 
@@ -342,7 +355,7 @@ export class JumpMiniGame implements MiniGameController {
       goldDelta: SUCCESS_GOLD,
       lifeDelta: this.attemptsLost > 0 ? -this.attemptsLost : undefined
     };
-    this.finish(result, GAME_TEXTS.miniGames.jump.success, "success");
+    this.finish(result, "success");
   }
 
   private fail(): void {
@@ -351,6 +364,7 @@ export class JumpMiniGame implements MiniGameController {
     }
 
     this.attemptsLost += 1;
+    this.playHeartLossEffect(Math.min(this.startingLife - 1, this.attemptsLost - 1));
     this.updateLifeDisplay();
     if (this.getChancesLeft() > 0) {
       this.retry();
@@ -362,7 +376,7 @@ export class JumpMiniGame implements MiniGameController {
       outcome: "failure",
       lifeDelta: -this.attemptsLost
     };
-    this.finish(result, GAME_TEXTS.miniGames.jump.failure, "failure");
+    this.finish(result, "failure");
   }
 
   private retry(): void {
@@ -370,7 +384,7 @@ export class JumpMiniGame implements MiniGameController {
     this.host.setStep(this.attemptsLost);
     this.setJumpButtonEnabled(false);
     this.playDeath();
-    this.host.getStatusText()?.setText(GAME_TEXTS.miniGames.jump.retry());
+    this.host.getStatusText()?.setText("");
     this.host.getRarityText()?.setText("");
     this.host.publishMiniGameReport();
 
@@ -383,7 +397,6 @@ export class JumpMiniGame implements MiniGameController {
     }
 
     const start = this.pickStartPosition();
-    this.phase = "running";
     this.position = start;
     this.verticalVelocity = 0;
     this.isGrounded = true;
@@ -391,10 +404,9 @@ export class JumpMiniGame implements MiniGameController {
     this.jumpCleared = false;
     this.grodor.setPosition(start.x, start.y);
     this.grodor.setFlipX(false);
-    this.playRun();
-    this.setJumpButtonEnabled(true);
-    this.host.getStatusText()?.setText(GAME_TEXTS.miniGames.jump.instruction);
+    this.host.getStatusText()?.setText("");
     this.host.getRarityText()?.setText("");
+    this.startCountdown();
     this.host.publishMiniGameReport();
   }
 
@@ -410,12 +422,14 @@ export class JumpMiniGame implements MiniGameController {
         return;
       }
       this.phase = this.jumpCleared ? "finishing" : "running";
+      this.jumpUsed = false;
       this.playRun();
+      this.setJumpButtonEnabled(!this.jumpCleared);
       this.host.publishMiniGameReport();
     });
   }
 
-  private finish(result: MiniGameResult, status: string, phase: JumpPhase): void {
+  private finish(result: MiniGameResult, phase: JumpPhase): void {
     if (this.host.getCompleted()) {
       return;
     }
@@ -435,16 +449,51 @@ export class JumpMiniGame implements MiniGameController {
       this.playDeath();
     }
 
-    this.host.getStatusText()?.setText(status);
-    this.host.getRarityText()?.setText(
-      phase === "success" ? GAME_TEXTS.miniGames.jump.successDetail(this.attemptsLost) : GAME_TEXTS.miniGames.jump.failureDetail(this.attemptsLost)
-    );
-    this.host.createContinueButton(result);
+    this.host.getStatusText()?.setText("");
+    this.host.getRarityText()?.setText("");
+    this.createExitHitZone(result);
+    this.exitHintTimer = this.host.scene.time.delayedCall(EXIT_HINT_MS, () => this.showExitHint());
     this.host.publishMiniGameReport();
   }
 
   private getChancesLeft(): number {
     return Math.max(0, this.startingLife - this.attemptsLost);
+  }
+
+  private createExitHitZone(result: MiniGameResult): void {
+    if (this.exitHitZone) {
+      return;
+    }
+
+    this.exitHitZone = this.host.scene.add
+      .zone(WORLD_WIDTH / 2, WORLD_HEIGHT / 2, WORLD_WIDTH, WORLD_HEIGHT)
+      .setDepth(30)
+      .setInteractive({ useHandCursor: true });
+    this.exitHitZone.once("pointerdown", () => {
+      this.exitHintTimer?.remove(false);
+      this.exitHintTimer = undefined;
+      this.exitHint?.destroy();
+      this.exitHint = undefined;
+      this.host.finishMiniGame(result);
+    });
+  }
+
+  private showExitHint(): void {
+    if (this.exitHint) {
+      return;
+    }
+
+    this.exitHint = this.host.scene.add
+      .text(WORLD_WIDTH / 2, 890, GAME_TEXTS.miniGames.jump.exitHint, {
+        fontFamily: "Inter, Arial, sans-serif",
+        fontSize: "30px",
+        color: "#fff1c2",
+        align: "center",
+        stroke: "#120d0a",
+        strokeThickness: 5
+      })
+      .setOrigin(0.5)
+      .setDepth(29);
   }
 
   private createLifeDisplay(): void {
@@ -463,6 +512,60 @@ export class JumpMiniGame implements MiniGameController {
         .setDepth(8)
     );
     this.updateLifeDisplay();
+  }
+
+  private playHeartLossEffect(heartIndex: number): void {
+    const sourceHeart = this.heartIcons[heartIndex];
+    if (!sourceHeart) {
+      return;
+    }
+
+    const start = { x: sourceHeart.x, y: sourceHeart.y };
+    const end = {
+      x: this.grodor?.x ?? this.position.x,
+      y: (this.grodor?.y ?? this.position.y) - 118
+    };
+    const mid = {
+      x: (start.x + end.x) / 2,
+      y: Math.min(start.y, end.y) - 96
+    };
+    const heart = this.host.scene.add
+      .image(start.x, start.y, IMAGE_ASSETS.heartBrake.key)
+      .setDisplaySize(58, 54)
+      .setDepth(26)
+      .setAlpha(0);
+    const heartScaleX = heart.scaleX;
+    const heartScaleY = heart.scaleY;
+    heart.setScale(heartScaleX * 0.78, heartScaleY * 0.78);
+    const progress = { value: 0 };
+
+    this.host.scene.tweens.add({
+      targets: heart,
+      alpha: 1,
+      scaleX: heartScaleX,
+      scaleY: heartScaleY,
+      duration: 120,
+      ease: "Back.easeOut"
+    });
+    this.host.scene.tweens.add({
+      targets: progress,
+      value: 1,
+      duration: 1400,
+      ease: "Sine.easeInOut",
+      onUpdate: () => {
+        const t = progress.value;
+        const inv = 1 - t;
+        heart.setPosition(
+          inv * inv * start.x + 2 * inv * t * mid.x + t * t * end.x,
+          inv * inv * start.y + 2 * inv * t * mid.y + t * t * end.y
+        );
+        heart.setAngle(-34 * Math.sin(t * Math.PI * 2));
+        if (t > 0.8) {
+          heart.setAlpha(Math.max(0, (1 - t) / 0.2));
+        }
+      },
+      onComplete: () => heart.destroy()
+    });
   }
 
   private updateLifeDisplay(): void {
@@ -548,6 +651,9 @@ export class JumpMiniGame implements MiniGameController {
 
   private playVictory(): void {
     this.jumpPose = "victory";
+    if (this.grodor) {
+      this.grodor.setX(this.grodor.x + VICTORY_X_OFFSET);
+    }
     this.grodor?.play(ANIMATION_KEYS.grodorVictory);
   }
 

@@ -823,17 +823,26 @@ function parseInventoryParam(
 }
 
 function pickWeightedDungeonEvent(random: () => number): DungeonEventDefinition {
-  const totalWeight = DUNGEON_EVENT_LIST.reduce((total, event) => total + event.weight, 0);
+  const eligibleEvents = DUNGEON_EVENT_LIST.filter(isDungeonEventAvailable);
+  const totalWeight = eligibleEvents.reduce((total, event) => total + event.weight, 0);
+  if (totalWeight <= 0) {
+    return getDungeonEventDefinition("nothing")!;
+  }
+
   let cursor = random() * totalWeight;
 
-  for (const event of DUNGEON_EVENT_LIST) {
+  for (const event of eligibleEvents) {
     cursor -= event.weight;
     if (cursor <= 0) {
       return event;
     }
   }
 
-  return DUNGEON_EVENT_LIST[DUNGEON_EVENT_LIST.length - 1];
+  return eligibleEvents[eligibleEvents.length - 1] ?? getDungeonEventDefinition("nothing")!;
+}
+
+function isDungeonEventAvailable(event: DungeonEventDefinition): boolean {
+  return event.id !== "coin_flip" || state.carriedGold > 0;
 }
 
 function getGoldDelta(definition: DungeonEventDefinition, random: () => number): number {

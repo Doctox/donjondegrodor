@@ -25,6 +25,15 @@ const MACHINE_HIT_ZONE = {
 export class SlotMachineMiniGame implements MiniGameController {
   private reelImages: Phaser.GameObjects.Image[] = [];
   private reels: SlotMachineSymbol[] = [];
+  private resultLightImage?: Phaser.GameObjects.Image;
+  private resultLightTimer?: Phaser.Time.TimerEvent;
+  private resultLightFrame = 0;
+  private delayedClickHint?: Phaser.GameObjects.Text;
+  private delayedClickHintTween?: Phaser.Tweens.Tween;
+  private delayedClickHintTimer?: Phaser.Time.TimerEvent;
+  private exitHitZone?: Phaser.GameObjects.Zone;
+  private exitHint?: Phaser.GameObjects.Text;
+  private exitHintTimer?: Phaser.Time.TimerEvent;
 
   constructor(private readonly host: MiniGameHost) {}
 
@@ -39,18 +48,25 @@ export class SlotMachineMiniGame implements MiniGameController {
         .image(SLOT_MACHINE_IMAGE.x, SLOT_MACHINE_IMAGE.y, this.getReelTexture(index, "gold"))
         .setDisplaySize(SLOT_MACHINE_IMAGE.width, SLOT_MACHINE_IMAGE.height)
         .setDepth(4 + index)
-        .setVisible(false)
+        .setTexture(this.getReelTexture(index, "grodor"))
+        .setVisible(true)
     );
+    this.resultLightImage = this.host.scene.add
+      .image(SLOT_MACHINE_IMAGE.x, SLOT_MACHINE_IMAGE.y, IMAGE_ASSETS.slotMachineLightGreenLeft.key)
+      .setDisplaySize(SLOT_MACHINE_IMAGE.width, SLOT_MACHINE_IMAGE.height)
+      .setDepth(7)
+      .setVisible(false);
 
-    this.host.getStatusText()?.setText(GAME_TEXTS.miniGames.slotMachine.instruction);
     const hitZone = this.host.scene.add
       .zone(MACHINE_HIT_ZONE.x, MACHINE_HIT_ZONE.y, MACHINE_HIT_ZONE.width, MACHINE_HIT_ZONE.height)
       .setDepth(8)
       .setInteractive({ useHandCursor: true });
     hitZone.on("pointerdown", () => {
+      this.hideDelayedClickHint();
       hitZone.destroy();
       this.spin();
     });
+    this.delayedClickHintTimer = this.host.scene.time.delayedCall(4000, () => this.showDelayedClickHint());
   }
 
   getReportState(): Record<string, unknown> {
@@ -65,7 +81,8 @@ export class SlotMachineMiniGame implements MiniGameController {
     }
 
     this.host.setCompleted(true);
-    this.host.getStatusText()?.setText(GAME_TEXTS.miniGames.slotMachine.spinning);
+    this.hideDelayedClickHint();
+    this.host.getStatusText()?.setText("");
     this.host.getRarityText()?.setText("");
 
     const finalReels = [this.pickSymbol(), this.pickSymbol(), this.pickSymbol()] as SlotMachineSymbol[];
@@ -92,13 +109,111 @@ export class SlotMachineMiniGame implements MiniGameController {
     animate();
   }
 
+  private showDelayedClickHint(): void {
+    if (this.host.getCompleted() || this.delayedClickHint) {
+      return;
+    }
+
+    this.delayedClickHint = this.host.scene.add
+      .text(WORLD_WIDTH / 2, WORLD_HEIGHT / 2, GAME_TEXTS.miniGames.slotMachine.delayedClickHint, {
+        fontFamily: "Georgia, serif",
+        fontSize: "72px",
+        color: "#ffffff",
+        align: "center",
+        stroke: "#120d0a",
+        strokeThickness: 9
+      })
+      .setOrigin(0.5)
+      .setDepth(9)
+      .setAlpha(0.2);
+
+    this.delayedClickHintTween = this.host.scene.tweens.add({
+      targets: this.delayedClickHint,
+      alpha: 1,
+      scaleX: 1.12,
+      scaleY: 1.12,
+      duration: 360,
+      yoyo: true,
+      repeat: -1,
+      ease: "Sine.easeInOut"
+    });
+  }
+
+  private hideDelayedClickHint(): void {
+    this.delayedClickHintTimer?.remove(false);
+    this.delayedClickHintTimer = undefined;
+    this.delayedClickHintTween?.stop();
+    this.delayedClickHintTween = undefined;
+    this.delayedClickHint?.destroy();
+    this.delayedClickHint = undefined;
+  }
+
   private showResult(reels: SlotMachineSymbol[]): void {
     const result = this.resolveResult(reels);
     this.host.setResult(result);
-    this.host.getStatusText()?.setText(this.getResultText(result));
-    this.host.getRarityText()?.setText(reels.map((symbol) => this.getSymbolLabel(symbol)).join(" - "));
-    this.host.createContinueButton(result);
+    this.playResultLights(result);
+    this.host.getStatusText()?.setText("");
+    this.host.getRarityText()?.setText("");
+    this.createExitHitZone(result);
+    this.exitHintTimer = this.host.scene.time.delayedCall(4000, () => this.showExitHint());
     this.host.publishMiniGameReport();
+  }
+
+  private createExitHitZone(result: MiniGameResult): void {
+    if (this.exitHitZone) {
+      return;
+    }
+
+    this.exitHitZone = this.host.scene.add
+      .zone(WORLD_WIDTH / 2, WORLD_HEIGHT / 2, WORLD_WIDTH, WORLD_HEIGHT)
+      .setDepth(9)
+      .setInteractive({ useHandCursor: true });
+    this.exitHitZone.once("pointerdown", () => {
+      this.exitHintTimer?.remove(false);
+      this.exitHintTimer = undefined;
+      this.exitHint?.destroy();
+      this.exitHint = undefined;
+      this.resultLightTimer?.remove(false);
+      this.resultLightTimer = undefined;
+      this.host.finishMiniGame(result);
+    });
+  }
+
+  private showExitHint(): void {
+    if (this.exitHint) {
+      return;
+    }
+
+    this.exitHint = this.host.scene.add
+      .text(WORLD_WIDTH / 2, 890, GAME_TEXTS.miniGames.slotMachine.exitHint, {
+        fontFamily: "Inter, Arial, sans-serif",
+        fontSize: "30px",
+        color: "#fff1c2",
+        align: "center",
+        stroke: "#120d0a",
+        strokeThickness: 5
+      })
+      .setOrigin(0.5)
+      .setDepth(8);
+  }
+
+  private playResultLights(result: MiniGameResult): void {
+    this.resultLightTimer?.remove(false);
+    this.resultLightTimer = undefined;
+    const frames =
+      result.outcome === "neutral"
+        ? [IMAGE_ASSETS.slotMachineLightRedLeft.key, IMAGE_ASSETS.slotMachineLightRedRight.key]
+        : [IMAGE_ASSETS.slotMachineLightGreenLeft.key, IMAGE_ASSETS.slotMachineLightGreenRight.key];
+    this.resultLightFrame = 0;
+    this.resultLightImage?.setTexture(frames[this.resultLightFrame]).setVisible(true).setAlpha(1);
+    this.resultLightTimer = this.host.scene.time.addEvent({
+      delay: 280,
+      loop: true,
+      callback: () => {
+        this.resultLightFrame = (this.resultLightFrame + 1) % frames.length;
+        this.resultLightImage?.setTexture(frames[this.resultLightFrame]);
+      }
+    });
   }
 
   private resolveResult(reels: SlotMachineSymbol[]): MiniGameResult {
@@ -150,50 +265,8 @@ export class SlotMachineMiniGame implements MiniGameController {
     return { type: "slot_machine", outcome: "neutral", slotMachineReels: reels };
   }
 
-  private getResultText(result: MiniGameResult): string {
-    const reels = result.slotMachineReels ?? [];
-    const goldCount = this.countSymbol(reels, "gold");
-    const grodorCount = this.countSymbol(reels, "grodor");
-    const skullCount = this.countSymbol(reels, "skull");
-    const pouchCount = this.countSymbol(reels, "pouch");
-
-    if (goldCount === 3) {
-      return GAME_TEXTS.miniGames.slotMachine.goldThree;
-    }
-    if (grodorCount === 3) {
-      return GAME_TEXTS.miniGames.slotMachine.grodorThree;
-    }
-    if (skullCount === 3) {
-      return GAME_TEXTS.miniGames.slotMachine.skullThree;
-    }
-    if (pouchCount === 3) {
-      if (result.maxLifeLoss) {
-        return GAME_TEXTS.miniGames.slotMachine.pouchMaxLife;
-      }
-      return result.goldLoss ? GAME_TEXTS.miniGames.slotMachine.pouch(result.goldLoss) : GAME_TEXTS.miniGames.slotMachine.pouchEmpty;
-    }
-    if (goldCount === 2) {
-      return GAME_TEXTS.miniGames.slotMachine.goldTwo;
-    }
-    if (grodorCount === 2) {
-      return result.maxLifeDelta ? GAME_TEXTS.miniGames.slotMachine.grodorTwo : GAME_TEXTS.miniGames.slotMachine.grodorMax;
-    }
-    if (skullCount === 2) {
-      return GAME_TEXTS.miniGames.slotMachine.skullTwo;
-    }
-    if (pouchCount === 2) {
-      return result.goldLoss ? GAME_TEXTS.miniGames.slotMachine.pouchTwo(result.goldLoss) : GAME_TEXTS.miniGames.slotMachine.pouchEmpty;
-    }
-
-    return GAME_TEXTS.miniGames.slotMachine.neutral;
-  }
-
   private pickSymbol(): SlotMachineSymbol {
     return SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
-  }
-
-  private getSymbolLabel(symbol: SlotMachineSymbol): string {
-    return GAME_TEXTS.miniGames.slotMachine.symbolLabels[symbol];
   }
 
   private countSymbol(reels: SlotMachineSymbol[], symbol: SlotMachineSymbol): number {

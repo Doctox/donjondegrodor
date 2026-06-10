@@ -1,6 +1,13 @@
 import type Phaser from "phaser";
 
-export type MiniGameType = "loot_chest" | "coin_flip" | "bonneteau" | "slot_machine" | "dodge_chest" | "jump";
+export type MiniGameType =
+  | "loot_chest"
+  | "coin_flip"
+  | "bonneteau"
+  | "slot_machine"
+  | "dodge_chest"
+  | "jump"
+  | "arm_wrestling";
 export type BonneteauIssue = "grodor" | "gold" | "skull" | "pierced_pouch";
 export type SlotMachineSymbol = "grodor" | "gold" | "skull" | "pouch";
 
@@ -45,6 +52,7 @@ export type MiniGameHost = {
   setStep: (step: number) => void;
   setCompleted: (completed: boolean) => void;
   setResult: (result: MiniGameResult) => void;
+  finishMiniGame: (result: MiniGameResult) => void;
   createContinueButton: (result: MiniGameResult) => Phaser.GameObjects.Text;
   createMiniGameButton: (x: number, y: number, label: string, onClick: () => void) => Phaser.GameObjects.Text;
   publishMiniGameReport: () => void;

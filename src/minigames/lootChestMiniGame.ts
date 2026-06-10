@@ -23,16 +23,22 @@ const RARITIES: RarityDefinition[] = [
 ];
 const LOOT_CHEST_IMAGE = {
   x: WORLD_WIDTH / 2,
-  y: WORLD_HEIGHT / 2 + 54,
+  y: WORLD_HEIGHT / 2 - 52,
   width: MINI_GAME_EVENT_IMAGE_WIDTH,
   height: MINI_GAME_EVENT_IMAGE_HEIGHT
 };
 const LOOT_CHEST_BACKDROP_ALPHA = 0.82;
+const DELAYED_HINT_MS = 4000;
+const EXIT_HINT_MS = 4000;
 
 export class LootChestMiniGame implements MiniGameController {
   private eventImage?: Phaser.GameObjects.Image;
   private keyImage?: Phaser.GameObjects.Image;
   private rarityImage?: Phaser.GameObjects.Image;
+  private delayedHint?: Phaser.GameObjects.Text;
+  private delayedHintEvent?: Phaser.Time.TimerEvent;
+  private exitHint?: Phaser.GameObjects.Text;
+  private exitHitZone?: Phaser.GameObjects.Zone;
 
   constructor(private readonly host: MiniGameHost) {}
 
@@ -54,6 +60,7 @@ export class LootChestMiniGame implements MiniGameController {
       useHandCursor: true
     });
     hitZone.on("pointerdown", () => this.advance());
+    this.delayedHintEvent = scene.time.delayedCall(DELAYED_HINT_MS, () => this.showDelayedHint());
   }
 
   getReportState(): Record<string, unknown> {
@@ -67,8 +74,9 @@ export class LootChestMiniGame implements MiniGameController {
       return;
     }
 
+    this.clearDelayedHint();
     this.host.setStep(this.host.getStep() + 1);
-    this.host.getStatusText()?.setText(GAME_TEXTS.miniGames.lootChest.opening);
+    this.host.getStatusText()?.setText("");
     this.shakeChest();
 
     const step = this.host.getStep();
@@ -83,6 +91,44 @@ export class LootChestMiniGame implements MiniGameController {
     }
 
     this.host.publishMiniGameReport();
+  }
+
+  private showDelayedHint(): void {
+    if (this.host.getCompleted() || this.host.getStep() > 0 || this.delayedHint) {
+      return;
+    }
+
+    this.delayedHint = this.host.scene.add
+      .text(LOOT_CHEST_IMAGE.x, LOOT_CHEST_IMAGE.y, GAME_TEXTS.miniGames.lootChest.delayedClickHint, {
+        fontFamily: "Inter, Arial, sans-serif",
+        fontSize: "64px",
+        color: "#fff7ce",
+        align: "center",
+        stroke: "#120d0a",
+        strokeThickness: 9
+      })
+      .setOrigin(0.5)
+      .setDepth(8);
+    this.host.scene.tweens.add({
+      targets: this.delayedHint,
+      alpha: 0.32,
+      scaleX: 1.18,
+      scaleY: 1.18,
+      duration: 360,
+      yoyo: true,
+      repeat: -1,
+      ease: "Sine.easeInOut"
+    });
+  }
+
+  private clearDelayedHint(): void {
+    this.delayedHintEvent?.remove(false);
+    this.delayedHintEvent = undefined;
+    if (this.delayedHint) {
+      this.host.scene.tweens.killTweensOf(this.delayedHint);
+    }
+    this.delayedHint?.destroy();
+    this.delayedHint = undefined;
   }
 
   private shakeChest(): void {
@@ -154,7 +200,6 @@ export class LootChestMiniGame implements MiniGameController {
     this.host.getRarityText()?.setText(GAME_TEXTS.miniGames.lootChest.rarity(this.getRarityLabel(rarity)));
 
     if (result.itemId) {
-      const item = LOOTABLE_ITEM_DEFINITIONS.find((definition) => definition.id === result.itemId);
       const asset = INVENTORY_ITEM_ASSETS[result.itemId as keyof typeof INVENTORY_ITEM_ASSETS];
       if (asset && this.host.scene.textures.exists(asset.key)) {
         const icon = this.host.scene.add.image(WORLD_WIDTH / 2, 548, asset.key).setDepth(6);
@@ -162,13 +207,44 @@ export class LootChestMiniGame implements MiniGameController {
         icon.setScale(scale * 0.2);
         this.host.scene.tweens.add({ targets: icon, scaleX: scale, scaleY: scale, duration: 360, ease: "Back.easeOut" });
       }
-      this.host.getStatusText()?.setText(GAME_TEXTS.miniGames.lootChest.lootObtained(item?.name ?? result.itemId));
     } else {
-      this.host.getStatusText()?.setText(GAME_TEXTS.miniGames.lootChest.allOwnedFallback(result.goldDelta ?? 0));
+      this.host.getStatusText()?.setText("");
     }
 
-    this.host.createContinueButton(result);
+    this.host.getStatusText()?.setText("");
+    this.createExitHitZone(result);
+    this.host.scene.time.delayedCall(EXIT_HINT_MS, () => this.showExitHint());
     this.host.publishMiniGameReport();
+  }
+
+  private createExitHitZone(result: MiniGameResult): void {
+    if (this.exitHitZone) {
+      return;
+    }
+
+    this.exitHitZone = this.host.scene.add
+      .zone(WORLD_WIDTH / 2, WORLD_HEIGHT / 2, WORLD_WIDTH, WORLD_HEIGHT)
+      .setDepth(9)
+      .setInteractive({ useHandCursor: true });
+    this.exitHitZone.on("pointerdown", () => this.host.finishMiniGame(result));
+  }
+
+  private showExitHint(): void {
+    if (this.exitHint) {
+      return;
+    }
+
+    this.exitHint = this.host.scene.add
+      .text(WORLD_WIDTH / 2, 890, GAME_TEXTS.miniGames.lootChest.exitHint, {
+        fontFamily: "Inter, Arial, sans-serif",
+        fontSize: "30px",
+        color: "#fff1c2",
+        align: "center",
+        stroke: "#120d0a",
+        strokeThickness: 5
+      })
+      .setOrigin(0.5)
+      .setDepth(8);
   }
 
   private pickRarity(): ItemRarity {

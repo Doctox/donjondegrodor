@@ -32,7 +32,8 @@ export type DungeonEventId =
   | "bonneteau"
   | "slot_machine"
   | "dodge_chest"
-  | "jump";
+  | "jump"
+  | "arm_wrestling";
 
 export type DungeonEventDefinition = {
   id: DungeonEventId;
@@ -301,6 +302,14 @@ export const DUNGEON_EVENTS = {
     title: GAME_TEXTS.dungeonEvents.jump.title,
     message: GAME_TEXTS.dungeonEvents.jump.message,
     effectLabel: GAME_TEXTS.dungeonEvents.jump.effectLabel,
+    kind: "minigame"
+  },
+  arm_wrestling: {
+    id: "arm_wrestling",
+    weight: 1,
+    title: GAME_TEXTS.dungeonEvents.armWrestling.title,
+    message: GAME_TEXTS.dungeonEvents.armWrestling.message,
+    effectLabel: GAME_TEXTS.dungeonEvents.armWrestling.effectLabel,
     kind: "minigame"
   }
 } satisfies Record<DungeonEventId, DungeonEventDefinition>;

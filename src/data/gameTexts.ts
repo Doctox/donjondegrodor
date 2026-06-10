@@ -60,6 +60,8 @@ export const GAME_TEXTS = {
     lootChest: {
       title: "Coffre douteux",
       clickInstruction: "Clique le coffre pour forcer la serrure.",
+      delayedClickHint: "CLIQUE !",
+      exitHint: "Clique pour retourner a la tour",
       opening: "La cle gratte, coince, insiste.",
       rarity: (rarity: string) => `Rarete: ${rarity}`,
       lootObtained: (itemName: string) => `Trouvaille: ${itemName}`,
@@ -96,11 +98,18 @@ export const GAME_TEXTS = {
       win: (gold: number) => `Gagne: +${gold} PO`,
       lose: (gold: number) => `Perdu: -${gold} PO`,
       resultPile: "Resultat: Pile",
-      resultFace: "Resultat: Face"
+      resultFace: "Resultat: Face",
+      exitHint: "Clique pour retourner a la tour",
+      resultPanel: {
+        title: "Pile ou Face",
+        message: (side: "pile" | "face") => `La piece tombe sur ${side === "pile" ? "Pile" : "Face"}.`
+      }
     },
     bonneteau: {
       title: "Bonneteau",
       instruction: "Choisis une carte.",
+      delayedClickHint: "CLIQUE !",
+      delayedExitHint: "Clique pour retourner a la tour",
       revealed: "Carte revelee.",
       grodor: "Grodor respire mieux: +1 coeur max.",
       grodorMax: "Grodor est deja assez gonfle.",
@@ -113,6 +122,8 @@ export const GAME_TEXTS = {
       title: "Machine a sous",
       intro: "Une machine promet presque quelque chose.",
       instruction: "Clique la machine pour lancer les rouleaux.",
+      delayedClickHint: "CLIQUE !",
+      exitHint: "Clique pour retourner a la tour",
       spinning: "Les rouleaux trichent en cadence.",
       neutral: "Rien. Meme la machine semble decue.",
       goldThree: "Trois PO: +15 PO.",
@@ -141,7 +152,8 @@ export const GAME_TEXTS = {
       target: (current: number, total: number) => `Bulle ${current}/${total}: clique vite !`,
       success: "Esquive reussie: +10 PO.",
       lateFailure: "Trop tard. Le coffre a vise large.",
-      failure: "Rate: -1 coeur."
+      failure: "Rate: -1 coeur.",
+      exitHint: "Clique pour retourner a la tour"
     },
     jump: {
       title: "Course au saut",
@@ -159,7 +171,19 @@ export const GAME_TEXTS = {
       retryDetail: "Retour au depart. Le trou ricane doucement.",
       chancesLeft: (chancesLeft: number) => `${chancesLeft} coeur(s) restant(s): encore une tentative.`,
       failure: "Grodor tombe une derniere fois.",
-      failureDetail: (lostHearts: number) => `Le trou gagne: -${lostHearts} coeur(s).`
+      failureDetail: (lostHearts: number) => `Le trou gagne: -${lostHearts} coeur(s).`,
+      exitHint: "Clique pour retourner a la tour"
+    },
+    armWrestling: {
+      title: "Bras de fer",
+      intro: "Un adversaire pose le coude. Grodor regrette deja.",
+      countdownStatus: "Prepare ton doigt...",
+      countdown: (value: number) => `${value}`,
+      instruction: "Tape vite sur le bouton !",
+      effort: "Grodor pousse. Le bras adverse pousse aussi.",
+      success: "Victoire au bras de fer: +1 coeur max.",
+      failure: "Grodor plie le bras: -1 coeur max.",
+      exitHint: "Clique pour retourner a la tour"
     }
   },
   result: {
@@ -198,7 +222,9 @@ export const GAME_TEXTS = {
     exitReachedMessage: "Grodor apercoit enfin l'air libre.",
     exitReachedEffect: "Run terminee",
     cowardReflexTriggered: "Reflexes de Lache: coeur sauve.",
-    tragicCardioTriggered: "Cardio Tragique: +1 coeur max."
+    tragicCardioTriggered: "Cardio Tragique: +1 coeur max.",
+    pvDelta: (amount: number) => `${amount > 0 ? "+" : "-"}${Math.abs(amount)} PV`,
+    poDelta: (amount: number, sign: "+" | "-" = amount >= 0 ? "+" : "-") => `${sign}${Math.abs(amount)} PO`
   },
   village: {
     title: "Village",
@@ -447,7 +473,8 @@ export const GAME_TEXTS = {
       bonneteau: "Bonneteau",
       slotMachine: "Machine a sous",
       dodgeChest: "Coffre Esquive",
-      jump: "Course au saut"
+      jump: "Course au saut",
+      armWrestling: "Bras de fer"
     },
     equipmentUpdated: "Equipement debug mis a jour.",
     grodorRecovered: "Debug: Grodor recupere 1 coeur.",
@@ -604,6 +631,11 @@ export const GAME_TEXTS = {
     jump: {
       title: "Course au saut",
       message: "Un couloir pourri propose a Grodor un saut tres mal calibre.",
+      effectLabel: "Mini-jeu"
+    },
+    armWrestling: {
+      title: "Bras de fer",
+      message: "Un costaud defie Grodor dans un duel de coudes douteux.",
       effectLabel: "Mini-jeu"
     }
   },

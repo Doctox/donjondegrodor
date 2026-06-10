@@ -1,6 +1,7 @@
 import Phaser from "phaser";
-import { IMAGE_ASSETS, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
+import { WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
 import { GAME_TEXTS } from "../data/gameTexts";
+import { ArmWrestlingMiniGame } from "../minigames/armWrestlingMiniGame";
 import { BonneteauMiniGame } from "../minigames/bonneteauMiniGame";
 import { CoinFlipMiniGame } from "../minigames/coinFlipMiniGame";
 import { DodgeChestMiniGame } from "../minigames/dodgeChestMiniGame";
@@ -55,29 +56,53 @@ export class MiniGameScene extends Phaser.Scene {
 
   private createSharedShell(): void {
     this.add.rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT, 0x050403, 0.58).setOrigin(0).setDepth(1);
-    this.add.image(0, 0, IMAGE_ASSETS.combatZone.key).setOrigin(0).setDisplaySize(WORLD_WIDTH, WORLD_HEIGHT).setDepth(2);
 
-    this.add
-      .text(WORLD_WIDTH / 2, 158, this.getMiniGameTitle(), {
-        fontFamily: "Georgia, serif",
-        fontSize: "46px",
-        color: "#fff1c2",
-        stroke: "#120d0a",
-        strokeThickness: 7
-      })
-      .setOrigin(0.5)
-      .setDepth(4);
+    if (
+      this.type !== "loot_chest" &&
+      this.type !== "coin_flip" &&
+      this.type !== "bonneteau" &&
+      this.type !== "slot_machine" &&
+      this.type !== "dodge_chest" &&
+      this.type !== "jump" &&
+      this.type !== "arm_wrestling"
+    ) {
+      this.add
+        .text(WORLD_WIDTH / 2, 158, this.getMiniGameTitle(), {
+          fontFamily: "Georgia, serif",
+          fontSize: "46px",
+          color: "#fff1c2",
+          stroke: "#120d0a",
+          strokeThickness: 7
+        })
+        .setOrigin(0.5)
+        .setDepth(8);
+    }
 
     this.statusText = this.add
-      .text(WORLD_WIDTH / 2, 238, this.getMiniGameIntro(), {
+      .text(
+        WORLD_WIDTH / 2,
+        238,
+        this.type === "loot_chest" ||
+          this.type === "coin_flip" ||
+          this.type === "bonneteau" ||
+          this.type === "slot_machine" ||
+          this.type === "dodge_chest" ||
+          this.type === "jump" ||
+          this.type === "arm_wrestling"
+          ? ""
+          : this.getMiniGameIntro(),
+        {
         fontFamily: "Inter, Arial, sans-serif",
         fontSize: "28px",
         color: "#f9dfaa",
         align: "center",
+        stroke: "#120d0a",
+        strokeThickness: 5,
         wordWrap: { width: 720 }
-      })
+        }
+      )
       .setOrigin(0.5)
-      .setDepth(4);
+      .setDepth(8);
 
     this.rarityText = this.add
       .text(WORLD_WIDTH / 2, 764, "", {
@@ -90,7 +115,7 @@ export class MiniGameScene extends Phaser.Scene {
         wordWrap: { width: 760 }
       })
       .setOrigin(0.5)
-      .setDepth(4);
+      .setDepth(8);
   }
 
   private createMiniGameController(): MiniGameController {
@@ -109,6 +134,9 @@ export class MiniGameScene extends Phaser.Scene {
     }
     if (this.type === "jump") {
       return new JumpMiniGame(host);
+    }
+    if (this.type === "arm_wrestling") {
+      return new ArmWrestlingMiniGame(host);
     }
 
     return new LootChestMiniGame(host);
@@ -134,6 +162,7 @@ export class MiniGameScene extends Phaser.Scene {
       setResult: (result) => {
         this.result = result;
       },
+      finishMiniGame: (result) => this.finish(result),
       createContinueButton: (result) => this.createContinueButton(result),
       createMiniGameButton: (x, y, label, onClick) => this.createMiniGameButton(x, y, label, onClick),
       publishMiniGameReport: () => this.publishMiniGameReport()
@@ -196,6 +225,9 @@ export class MiniGameScene extends Phaser.Scene {
     if (this.type === "jump") {
       return GAME_TEXTS.miniGames.jump.title;
     }
+    if (this.type === "arm_wrestling") {
+      return GAME_TEXTS.miniGames.armWrestling.title;
+    }
 
     return GAME_TEXTS.miniGames.lootChest.title;
   }
@@ -215,6 +247,9 @@ export class MiniGameScene extends Phaser.Scene {
     }
     if (this.type === "jump") {
       return GAME_TEXTS.miniGames.jump.intro;
+    }
+    if (this.type === "arm_wrestling") {
+      return GAME_TEXTS.miniGames.armWrestling.intro;
     }
 
     return GAME_TEXTS.miniGames.lootChest.clickInstruction;

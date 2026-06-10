@@ -20,7 +20,8 @@ import {
   resolveFinalDoorOutcome,
   resolveRandomDoorEvent,
   setDungeonLifeForCombat,
-  DungeonRunEvent
+  type DungeonRunEvent,
+  type DungeonRunState
 } from "../systems/dungeonRunState";
 import { CombatResult } from "../data/combatResults";
 import {
@@ -95,6 +96,40 @@ const DEFAULT_DUNGEON_OPTIONS: DungeonSceneOptions = {
   debugMenu: true,
   combatDebugRoute: true,
   summaryMode: "dungeon"
+};
+
+const COIN_FLIP_GOLD_TRANSFER = {
+  pouch: { x: 1588, y: 276 },
+  chest: { x: 842, y: 786 },
+  chestWidth: 95,
+  chestHeight: 84,
+  coinWidth: 118,
+  coinHeight: 78,
+  maxVisibleCoins: 12,
+  coinStaggerMs: 130,
+  openMs: 140,
+  travelMs: 820,
+  closeMs: 170,
+  depthChest: 66,
+  depthCoin: 92,
+  amountText: { x: 1649, y: 338 }
+};
+
+const MINI_GAME_HEART_TRANSFER = {
+  hudHeart: { x: 1669, y: 121 },
+  heartWidth: 58,
+  heartHeight: 54,
+  maxVisibleHearts: 6,
+  heartStaggerMs: 120,
+  travelMs: 1400,
+  depthHeart: 93,
+  textLift: 78
+};
+
+const MINI_GAME_EFFECT_TEXT_COLORS = {
+  positive: "#53e86d",
+  neutral: "#ffffff",
+  negative: "#ff4f4f"
 };
 
 const DEBUG_STYLE: Record<DebugLayerKind, { fill: number; stroke: number; alpha: number }> = {
@@ -548,6 +583,11 @@ export class DungeonScene extends Phaser.Scene {
     this.debugController?.update();
   }
 
+  private renderRunHudState(state: DungeonRunState): void {
+    this.dungeonHud?.updateHud(state);
+    this.debugController?.update();
+  }
+
   private createDebugController(): void {
     this.debugController = new DungeonDebugController(this, {
       addDeathStats: () => this.addDeathStats(),
@@ -597,7 +637,12 @@ export class DungeonScene extends Phaser.Scene {
     this.setDungeonOverlaysVisible(false);
     this.setDungeonCombatLock(true);
     const miniGameType =
-      event.id === "coin_flip" || event.id === "bonneteau" || event.id === "slot_machine" || event.id === "dodge_chest" || event.id === "jump"
+      event.id === "coin_flip" ||
+      event.id === "bonneteau" ||
+      event.id === "slot_machine" ||
+      event.id === "dodge_chest" ||
+      event.id === "jump" ||
+      event.id === "arm_wrestling"
         ? event.id
         : "loot_chest";
     this.scene.launch("MiniGameScene", {
@@ -737,6 +782,7 @@ export class DungeonScene extends Phaser.Scene {
 
   private handleMiniGameResult(result: MiniGameResult): void {
     const effectMessages: string[] = [];
+    const beforeState = getDungeonRunState();
     if (result.outcome === "success") {
       addGrodorStat("miniJeuxReussis");
     }
@@ -779,19 +825,61 @@ export class DungeonScene extends Phaser.Scene {
     }
 
     this.syncGrodorEquipment();
-    this.updateRunHud();
+    const afterState = getDungeonRunState();
+    const heartDelta = result.type === "jump" ? 0 : this.getMiniGameHeartDelta(beforeState, afterState);
+    const hasGoldTransfer = this.hasMiniGameGoldTransfer(result);
+    if (heartDelta > 0) {
+      this.renderRunHudState(beforeState);
+    } else {
+      this.updateRunHud();
+    }
     if (getDungeonRunState().life <= 0) {
-      this.awaitingContinue = true;
-      this.setDungeonCombatLock(true);
-      this.grodor?.playDeath();
-      this.addDeathStats();
-      this.showDefeatResult();
+      const showDefeat = () => {
+        this.awaitingContinue = true;
+        this.setDungeonCombatLock(true);
+        this.grodor?.playDeath();
+        this.addDeathStats();
+        this.showDefeatResult();
+      };
+      if (heartDelta < 0) {
+        this.awaitingContinue = true;
+        this.setDungeonCombatLock(true);
+        this.grodor?.playHurt();
+        this.playMiniGameHeartTransfer(heartDelta, showDefeat);
+        return;
+      }
+
+      showDefeat();
       return;
     }
     if (result.followUpMiniGame) {
+      if (hasGoldTransfer || heartDelta !== 0) {
+        this.awaitingContinue = true;
+        this.setDungeonCombatLock(true);
+        if (heartDelta > 0) {
+          this.grodor?.playVictory();
+        } else if (heartDelta < 0) {
+          this.grodor?.playHurt();
+        }
+        this.playMiniGameResultTransfers(result, heartDelta, () => this.launchMiniGameEvent(resolveDoorEvent(result.followUpMiniGame!)));
+        return;
+      }
+
       this.launchMiniGameEvent(resolveDoorEvent(result.followUpMiniGame));
       return;
     }
+    if (hasGoldTransfer || heartDelta !== 0) {
+      this.awaitingContinue = true;
+      this.setDungeonCombatLock(true);
+      if (heartDelta > 0) {
+        this.grodor?.playVictory();
+      } else if (heartDelta < 0) {
+        this.grodor?.playHurt();
+      }
+      this.playMiniGameResultTransfers(result, heartDelta, () => this.continueRun(effectMessages));
+      return;
+    }
+
     this.grodor?.playVictory();
     this.continueRun(effectMessages);
   }
@@ -1072,6 +1160,395 @@ export class DungeonScene extends Phaser.Scene {
       effectMessages,
       canContinue,
       state: getDungeonRunState()
+    });
+  }
+
+  private getMiniGameHeartDelta(before: DungeonRunState, after: DungeonRunState): number {
+    const maxLifeDelta = after.maxLife - before.maxLife;
+    if (maxLifeDelta !== 0) {
+      return maxLifeDelta;
+    }
+
+    return after.life - before.life;
+  }
+
+  private hasMiniGameGoldTransfer(result: MiniGameResult): boolean {
+    return result.goldDelta !== undefined || result.goldLoss !== undefined;
+  }
+
+  private playMiniGameResultTransfers(result: MiniGameResult, heartDelta: number, onComplete: () => void): void {
+    const complete = () => {
+      if (heartDelta > 0) {
+        this.updateRunHud();
+      }
+      onComplete();
+    };
+    const playHeartTransfer = () => {
+      if (heartDelta !== 0) {
+        this.playMiniGameHeartTransfer(heartDelta, complete);
+        return;
+      }
+
+      complete();
+    };
+
+    if (this.hasMiniGameGoldTransfer(result)) {
+      this.playCoinFlipGoldTransfer(result, playHeartTransfer);
+      return;
+    }
+
+    playHeartTransfer();
+  }
+
+  private playMiniGameHeartTransfer(delta: number, onComplete: () => void): void {
+    const amount = Math.abs(Math.trunc(delta));
+    if (amount <= 0) {
+      onComplete();
+      return;
+    }
+
+    const isGain = delta > 0;
+    const visibleHearts = Math.min(amount, MINI_GAME_HEART_TRANSFER.maxVisibleHearts);
+    const grodorPoint = {
+      x: this.grodor?.x ?? WORLD_WIDTH / 2,
+      y: (this.grodor?.y ?? WORLD_HEIGHT / 2) - 118
+    };
+    const hudPoint = MINI_GAME_HEART_TRANSFER.hudHeart;
+    const from = isGain ? grodorPoint : hudPoint;
+    const to = isGain ? hudPoint : grodorPoint;
+
+    this.showMiniGameGrodorPvText(delta);
+
+    let completedHearts = 0;
+    for (let index = 0; index < visibleHearts; index += 1) {
+      this.time.delayedCall(index * MINI_GAME_HEART_TRANSFER.heartStaggerMs, () => {
+        this.createMiniGameTransferHeart(index, visibleHearts, isGain, from, to, () => {
+          completedHearts += 1;
+          if (completedHearts >= visibleHearts) {
+            this.time.delayedCall(120, onComplete);
+          }
+        });
+      });
+    }
+  }
+
+  private showMiniGameGrodorPvText(delta: number): void {
+    const x = this.grodor?.x ?? WORLD_WIDTH / 2;
+    const y = (this.grodor?.y ?? WORLD_HEIGHT / 2) - 170;
+    const amountText = this.add
+      .text(x, y, GAME_TEXTS.dungeon.pvDelta(delta), {
+        fontFamily: "Georgia, serif",
+        fontSize: "48px",
+        color: this.getMiniGameEffectTextColor(delta),
+        align: "center",
+        stroke: "#120d0a",
+        strokeThickness: 8
+      })
+      .setOrigin(0.5)
+      .setDepth(MINI_GAME_HEART_TRANSFER.depthHeart + 2)
+      .setAlpha(0)
+      .setScale(0.82);
+
+    this.tweens.add({
+      targets: amountText,
+      alpha: 1,
+      y: y - MINI_GAME_HEART_TRANSFER.textLift * 0.45,
+      scaleX: 1.1,
+      scaleY: 1.1,
+      duration: 260,
+      ease: "Back.easeOut",
+      onComplete: () => {
+        this.tweens.add({
+          targets: amountText,
+          alpha: 0,
+          y: y - MINI_GAME_HEART_TRANSFER.textLift,
+          delay: 620,
+          duration: 360,
+          ease: "Sine.easeIn",
+          onComplete: () => amountText.destroy()
+        });
+      }
+    });
+  }
+
+  private createMiniGameTransferHeart(
+    index: number,
+    total: number,
+    isGain: boolean,
+    from: { x: number; y: number },
+    to: { x: number; y: number },
+    onComplete: () => void
+  ): void {
+    const spread = (index - (total - 1) / 2) * 18;
+    const start = { x: from.x + spread, y: from.y + Math.sin(index) * 9 };
+    const end = { x: to.x + spread * 0.22, y: to.y + Math.cos(index) * 8 };
+    const mid = {
+      x: (start.x + end.x) / 2,
+      y: Math.min(start.y, end.y) - 132 - (index % 3) * 18
+    };
+    const heart = this.add
+      .image(start.x, start.y, isGain ? IMAGE_ASSETS.heartFull.key : IMAGE_ASSETS.heartBrake.key)
+      .setDisplaySize(MINI_GAME_HEART_TRANSFER.heartWidth, MINI_GAME_HEART_TRANSFER.heartHeight)
+      .setDepth(MINI_GAME_HEART_TRANSFER.depthHeart)
+      .setAlpha(0);
+    const heartScaleX = heart.scaleX;
+    const heartScaleY = heart.scaleY;
+    heart.setScale(heartScaleX * 0.78, heartScaleY * 0.78);
+    const progress = { value: 0 };
+
+    this.tweens.add({
+      targets: heart,
+      alpha: 1,
+      scaleX: heartScaleX,
+      scaleY: heartScaleY,
+      duration: 120,
+      ease: "Back.easeOut"
+    });
+    this.tweens.add({
+      targets: progress,
+      value: 1,
+      duration: MINI_GAME_HEART_TRANSFER.travelMs + index * 20,
+      ease: "Sine.easeInOut",
+      onUpdate: () => {
+        const t = progress.value;
+        const inv = 1 - t;
+        const x = inv * inv * start.x + 2 * inv * t * mid.x + t * t * end.x;
+        const y = inv * inv * start.y + 2 * inv * t * mid.y + t * t * end.y;
+        heart.setPosition(x, y);
+        heart.setAngle((isGain ? 22 : -34) * Math.sin(t * Math.PI * 2));
+        if (t > 0.8) {
+          const fade = Math.max(0, (1 - t) / 0.2);
+          heart.setAlpha(fade);
+        }
+      },
+      onComplete: () => {
+        heart.destroy();
+        onComplete();
+      }
+    });
+  }
+
+  private getMiniGameEffectTextColor(delta: number): string {
+    if (delta > 0) {
+      return MINI_GAME_EFFECT_TEXT_COLORS.positive;
+    }
+    if (delta < 0) {
+      return MINI_GAME_EFFECT_TEXT_COLORS.negative;
+    }
+
+    return MINI_GAME_EFFECT_TEXT_COLORS.neutral;
+  }
+
+  private playCoinFlipGoldTransfer(result: MiniGameResult, onComplete: () => void): void {
+    const direction =
+      (result.goldDelta ?? 0) > 0 ? "chest-to-pouch" : (result.goldLoss ?? 0) > 0 ? "pouch-to-chest" : undefined;
+    if (!direction) {
+      this.showCoinFlipNeutralGoldText(result, onComplete);
+      return;
+    }
+
+    const amount = Math.max(1, Math.trunc(result.goldDelta ?? result.goldLoss ?? 1));
+    const visibleCoins = Math.min(amount, COIN_FLIP_GOLD_TRANSFER.maxVisibleCoins);
+    const from = direction === "chest-to-pouch" ? COIN_FLIP_GOLD_TRANSFER.chest : COIN_FLIP_GOLD_TRANSFER.pouch;
+    const to = direction === "chest-to-pouch" ? COIN_FLIP_GOLD_TRANSFER.pouch : COIN_FLIP_GOLD_TRANSFER.chest;
+    const chest = this.add
+      .image(COIN_FLIP_GOLD_TRANSFER.chest.x, COIN_FLIP_GOLD_TRANSFER.chest.y, IMAGE_ASSETS.dungeonChestOpen.key)
+      .setDisplaySize(COIN_FLIP_GOLD_TRANSFER.chestWidth, COIN_FLIP_GOLD_TRANSFER.chestHeight)
+      .setDepth(COIN_FLIP_GOLD_TRANSFER.depthChest)
+      .setAlpha(0);
+    const amountText = this.add
+      .text(
+        COIN_FLIP_GOLD_TRANSFER.amountText.x,
+        COIN_FLIP_GOLD_TRANSFER.amountText.y,
+        GAME_TEXTS.dungeon.poDelta(amount, direction === "chest-to-pouch" ? "+" : "-"),
+        {
+          fontFamily: "Georgia, serif",
+          fontSize: "42px",
+          color: this.getMiniGameEffectTextColor(direction === "chest-to-pouch" ? amount : -amount),
+          align: "center",
+          stroke: "#120d0a",
+          strokeThickness: 7
+        }
+      )
+      .setOrigin(0.5)
+      .setDepth(COIN_FLIP_GOLD_TRANSFER.depthCoin + 1)
+      .setAlpha(0);
+    this.showCoinFlipGrodorAmountText(direction, amount);
+
+    this.tweens.add({
+      targets: chest,
+      alpha: 1,
+      duration: COIN_FLIP_GOLD_TRANSFER.openMs,
+      onComplete: () => {
+        this.tweens.add({
+          targets: amountText,
+          alpha: 1,
+          y: COIN_FLIP_GOLD_TRANSFER.amountText.y - 18,
+          scaleX: 1.12,
+          scaleY: 1.12,
+          duration: 220,
+          yoyo: true,
+          hold: 420,
+          onComplete: () => {
+            amountText.destroy();
+          }
+        });
+
+        let completedCoins = 0;
+        for (let index = 0; index < visibleCoins; index += 1) {
+          this.time.delayedCall(index * COIN_FLIP_GOLD_TRANSFER.coinStaggerMs, () => {
+            this.createCoinFlipTransferCoin(index, visibleCoins, direction, from, to, () => {
+              completedCoins += 1;
+              if (completedCoins >= visibleCoins) {
+                this.tweens.add({
+                  targets: chest,
+                  alpha: 0,
+                  delay: 120,
+                  duration: COIN_FLIP_GOLD_TRANSFER.closeMs,
+                  onComplete: () => {
+                    chest.destroy();
+                    onComplete();
+                  }
+                });
+              }
+            });
+          });
+        }
+      }
+    });
+  }
+
+  private showCoinFlipNeutralGoldText(result: MiniGameResult, onComplete: () => void): void {
+    const sign: "+" | "-" = result.goldLoss !== undefined ? "-" : "+";
+    const amount = Math.max(0, Math.trunc(result.goldDelta ?? result.goldLoss ?? 0));
+    const x = this.grodor?.x ?? WORLD_WIDTH / 2;
+    const y = (this.grodor?.y ?? WORLD_HEIGHT / 2) - 150;
+    const amountText = this.add
+      .text(x, y, GAME_TEXTS.dungeon.poDelta(amount, sign), {
+        fontFamily: "Georgia, serif",
+        fontSize: "46px",
+        color: this.getMiniGameEffectTextColor(0),
+        align: "center",
+        stroke: "#120d0a",
+        strokeThickness: 8
+      })
+      .setOrigin(0.5)
+      .setDepth(COIN_FLIP_GOLD_TRANSFER.depthCoin + 2)
+      .setAlpha(0)
+      .setScale(0.82);
+
+    this.tweens.add({
+      targets: amountText,
+      alpha: 1,
+      y: y - 34,
+      scaleX: 1.08,
+      scaleY: 1.08,
+      duration: 260,
+      ease: "Back.easeOut",
+      onComplete: () => {
+        this.tweens.add({
+          targets: amountText,
+          alpha: 0,
+          y: y - 78,
+          delay: 620,
+          duration: 360,
+          ease: "Sine.easeIn",
+          onComplete: () => {
+            amountText.destroy();
+            onComplete();
+          }
+        });
+      }
+    });
+  }
+
+  private showCoinFlipGrodorAmountText(direction: "chest-to-pouch" | "pouch-to-chest", amount: number): void {
+    const x = this.grodor?.x ?? WORLD_WIDTH / 2;
+    const y = (this.grodor?.y ?? WORLD_HEIGHT / 2) - 150;
+    const amountText = this.add
+      .text(x, y, GAME_TEXTS.dungeon.poDelta(amount, direction === "chest-to-pouch" ? "+" : "-"), {
+        fontFamily: "Georgia, serif",
+        fontSize: "46px",
+        color: this.getMiniGameEffectTextColor(direction === "chest-to-pouch" ? amount : -amount),
+        align: "center",
+        stroke: "#120d0a",
+        strokeThickness: 8
+      })
+      .setOrigin(0.5)
+      .setDepth(COIN_FLIP_GOLD_TRANSFER.depthCoin + 2)
+      .setAlpha(0)
+      .setScale(0.82);
+
+    this.tweens.add({
+      targets: amountText,
+      alpha: 1,
+      y: y - 34,
+      scaleX: 1.08,
+      scaleY: 1.08,
+      duration: 260,
+      ease: "Back.easeOut",
+      onComplete: () => {
+        this.tweens.add({
+          targets: amountText,
+          alpha: 0,
+          y: y - 78,
+          delay: 620,
+          duration: 360,
+          ease: "Sine.easeIn",
+          onComplete: () => amountText.destroy()
+        });
+      }
+    });
+  }
+
+  private createCoinFlipTransferCoin(
+    index: number,
+    total: number,
+    direction: "chest-to-pouch" | "pouch-to-chest",
+    from: { x: number; y: number },
+    to: { x: number; y: number },
+    onComplete: () => void
+  ): void {
+    const spread = (index - (total - 1) / 2) * 14;
+    const start = { x: from.x + spread, y: from.y + Math.sin(index) * 10 };
+    const end = { x: to.x + spread * 0.24, y: to.y + Math.cos(index) * 8 };
+    const mid = {
+      x: (start.x + end.x) / 2,
+      y: Math.min(start.y, end.y) - 150 - (index % 3) * 24
+    };
+    const coin = this.add
+      .image(start.x, start.y, IMAGE_ASSETS.gold.key)
+      .setDisplaySize(COIN_FLIP_GOLD_TRANSFER.coinWidth, COIN_FLIP_GOLD_TRANSFER.coinHeight)
+      .setDepth(COIN_FLIP_GOLD_TRANSFER.depthCoin)
+      .setAlpha(0);
+    const progress = { value: 0 };
+
+    this.tweens.add({
+      targets: coin,
+      alpha: 1,
+      duration: 80
+    });
+    this.tweens.add({
+      targets: progress,
+      value: 1,
+      duration: COIN_FLIP_GOLD_TRANSFER.travelMs + index * 18,
+      ease: "Sine.easeInOut",
+      onUpdate: () => {
+        const t = progress.value;
+        const inv = 1 - t;
+        const x = inv * inv * start.x + 2 * inv * t * mid.x + t * t * end.x;
+        const y = inv * inv * start.y + 2 * inv * t * mid.y + t * t * end.y;
+        coin.setPosition(x, y);
+        coin.setAngle((direction === "chest-to-pouch" ? 420 : -420) * t);
+        if (t > 0.78) {
+          const fade = Math.max(0, (1 - t) / 0.22);
+          coin.setAlpha(fade);
+        }
+      },
+      onComplete: () => {
+        coin.destroy();
+        onComplete();
+      }
     });
   }
 
