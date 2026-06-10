@@ -29,6 +29,9 @@ export const GAME_TEXTS = {
     loadingProgress: (percent: number) => `Chargement... ${percent}%`,
     clickToStart: "Clique pour commencer"
   },
+  mobile: {
+    fullscreenButton: "Plein ecran"
+  },
   inventory: {
     title: "Inventaire",
     empty: "Rien. Meme la poussiere est partie.",

@@ -67,8 +67,6 @@ body {
   z-index: 1;
   width: 100%;
   height: 100%;
-  display: grid;
-  place-items: center;
   touch-action: none;
 }
 
@@ -109,6 +107,44 @@ body {
 
   #game-root canvas {
     max-height: 100dvh;
+  }
+}
+
+.mobile-fullscreen-button {
+  position: fixed;
+  right: max(12px, env(safe-area-inset-right));
+  bottom: max(12px, env(safe-area-inset-bottom));
+  z-index: 90;
+  display: none;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid rgba(246, 220, 170, 0.5);
+  border-radius: 8px;
+  color: #fff1c2;
+  font-family: Georgia, serif;
+  font-size: 16px;
+  line-height: 1;
+  background: rgba(18, 10, 7, 0.86);
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.45),
+    0 12px 32px rgba(0, 0, 0, 0.42);
+  touch-action: manipulation;
+}
+
+.mobile-fullscreen-button:active {
+  transform: translateY(1px);
+}
+
+.mobile-fullscreen-button[hidden],
+#game-shell:fullscreen .mobile-fullscreen-button {
+  display: none;
+}
+
+@media (hover: none) and (pointer: coarse) and (orientation: landscape) {
+  .mobile-fullscreen-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
