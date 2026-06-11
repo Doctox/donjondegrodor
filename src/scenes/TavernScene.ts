@@ -4,6 +4,7 @@ import { GAME_TEXTS } from "../data/gameTexts";
 import { GrodorActor } from "../actors/GrodorActor";
 import { getDungeonRunState, resetDungeonRunState } from "../systems/dungeonRunState";
 import { getMaxStartingEquipmentCount, getStartingLoadoutCount } from "../systems/metaProgression";
+import { playZoneMusic } from "../systems/audioManager";
 import { setHudVisible } from "../ui/hud";
 import { setLetterboxBackdrop } from "../ui/letterboxBackdrop";
 import { createNineSlicePanel } from "../ui/nineSlicePanel";
@@ -39,6 +40,7 @@ export class TavernScene extends Phaser.Scene {
     this.resetRuntime();
     setHudVisible(false);
     setLetterboxBackdrop(IMAGE_ASSETS.tavernBackground.path);
+    playZoneMusic(this, "tavern");
     this.map = this.make.tilemap({ key: JSON_ASSETS.tavernMap.key });
     this.add.image(0, 0, IMAGE_ASSETS.tavernBackground.key).setOrigin(0).setDisplaySize(WORLD_WIDTH, WORLD_HEIGHT);
     this.cameras.main.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
@@ -208,7 +210,7 @@ export class TavernScene extends Phaser.Scene {
 
     const startingLoadoutCount = getStartingLoadoutCount();
     if (startingLoadoutCount > 0) {
-      resetDungeonRunState({ useStartingLoadout: true });
+      resetDungeonRunState({ useStartingLoadout: true, preserveCarriedGold: true });
     } else {
       const carriedEquipment = getDungeonRunState().equipment;
       const extraEquipmentCount = Math.max(0, carriedEquipment.length - getMaxStartingEquipmentCount());
@@ -216,7 +218,7 @@ export class TavernScene extends Phaser.Scene {
         this.showBlockedDepartureMessage(GAME_TEXTS.village.tavern.tooMuchCarriedEquipment(extraEquipmentCount));
         return;
       }
-      resetDungeonRunState({ preserveInventoryEquipment: carriedEquipment.length > 0 });
+      resetDungeonRunState({ preserveInventoryEquipment: carriedEquipment.length > 0, preserveCarriedGold: true });
     }
     this.scene.start("CellScene", {
       introOverlayActive: false,

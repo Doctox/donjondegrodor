@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import { WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
 import { GAME_TEXTS } from "../data/gameTexts";
+import { playZoneMusic } from "../systems/audioManager";
 import { ArmWrestlingMiniGame } from "../minigames/armWrestlingMiniGame";
 import { BonneteauMiniGame } from "../minigames/bonneteauMiniGame";
 import { CoinFlipMiniGame } from "../minigames/coinFlipMiniGame";
@@ -37,6 +38,7 @@ export class MiniGameScene extends Phaser.Scene {
   }
 
   create(data: MiniGameSceneData): void {
+    playZoneMusic(this, "dungeon");
     this.type = data.type;
     this.ownedInventory = [...(data.ownedInventory ?? [])];
     this.carriedGold = Math.max(0, Math.trunc(data.carriedGold ?? 0));

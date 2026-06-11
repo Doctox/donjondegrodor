@@ -6,6 +6,8 @@ import { IMAGE_ASSETS, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
 import { CombatResult } from "../data/combatResults";
 import { GAME_TEXTS } from "../data/gameTexts";
 import { getMonsterDefinition, isMonsterId, MonsterHitZone, MonsterId } from "../data/monsterDefinitions";
+import { playZoneMusic } from "../systems/audioManager";
+import { playSfx } from "../systems/sfxManager";
 import {
   applyHeartLossWithCowardReflex,
   applyMonsterDamageWithEquipment,
@@ -67,6 +69,7 @@ export class CombatScene extends Phaser.Scene {
   }
 
   create(data: CombatSceneData = {}): void {
+    playZoneMusic(this, "combat");
     this.resetSceneState();
     this.debugDirect = Boolean(data.debugDirect && IS_DEBUG_TOOLS_ENABLED);
     this.inputLocked = false;
@@ -181,9 +184,11 @@ export class CombatScene extends Phaser.Scene {
   private applyAttackResult(zone: MonsterHitZone, result: "rat_damage" | "grodor_damage" | "nothing"): void {
     const monsterName = this.getMonsterName();
     if (result === "rat_damage") {
+      playSfx("combatHit");
       const damageResult = applyMonsterDamageWithEquipment(1);
       this.ratLife = Math.max(0, this.ratLife - damageResult.damage);
       this.grodor?.setEquipment(damageResult.state.equipment);
+      this.playItemBreakSfx(damageResult.brokenItems);
       this.rat?.reactToHit();
       this.setCombatMessage(
         [GAME_TEXTS.combat.ratDamage(this.getZoneLabel(zone), monsterName), ...damageResult.effectMessages].join("\n")
@@ -195,10 +200,12 @@ export class CombatScene extends Phaser.Scene {
       this.grodorLife = syncedState.life;
       this.grodorMaxLife = syncedState.maxLife;
       this.grodor?.setEquipment(syncedState.equipment);
+      this.playItemBreakSfx(lossResult.brokenItems);
       if (lossResult.finalLoss <= 0) {
         this.grodor?.playIdle();
         this.setCombatMessage(lossResult.effectMessages.join("\n") || GAME_TEXTS.dungeon.cowardReflexTriggered);
       } else {
+        playSfx("grodorHurt");
         this.grodor?.playHurt();
         this.setCombatMessage(
           [GAME_TEXTS.combat.grodorDamage(this.getZoneLabel(zone), monsterName), ...lossResult.effectMessages].join("\n")
@@ -236,6 +243,7 @@ export class CombatScene extends Phaser.Scene {
 
   private resolveRoundEnd(): void {
     if (this.ratLife <= 0) {
+      playSfx("miniGameSuccess");
       this.setCombatMessage(GAME_TEXTS.combat.victory(this.getMonsterName()));
       this.prepareCombatExit();
       return;
@@ -243,6 +251,7 @@ export class CombatScene extends Phaser.Scene {
 
     if (this.grodorLife <= 0) {
       this.grodor?.playDeath();
+      playSfx("grodorDeath");
       this.setCombatMessage(GAME_TEXTS.combat.temporaryDefeat);
       this.prepareCombatExit();
       return;
@@ -252,6 +261,12 @@ export class CombatScene extends Phaser.Scene {
     this.inputLocked = false;
     this.rat?.setZonesEnabled(true);
     this.startInactivityHintTimer();
+  }
+
+  private playItemBreakSfx(brokenItems: string[] = []): void {
+    if (brokenItems.length > 0) {
+      playSfx("itemBreak");
+    }
   }
 
   private startInactivityHintTimer(): void {

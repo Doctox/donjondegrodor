@@ -6,6 +6,32 @@ export type AssetDefinition = {
   path: string;
 };
 
+export const AUDIO_ASSETS = {
+  musicIntro: { key: "music-intro", path: "/assets/audio/music/logo-intro.mp3" },
+  musicVillage: { key: "music-village", path: "/assets/audio/music/ambient-village.mp3" },
+  musicDungeon: { key: "music-dungeon", path: "/assets/audio/music/ambient-dungeon.mp3" },
+  musicCombat: { key: "music-combat", path: "/assets/audio/music/ambient-combat.mp3" },
+  musicShop: { key: "music-shop", path: "/assets/audio/sfx/ambient_shop.mp3" },
+  musicTavern: { key: "music-tavern", path: "/assets/audio/sfx/ambient_tavern.mp3" },
+  musicBank: { key: "music-bank", path: "/assets/audio/sfx/ambient_bank.mp3" }
+} satisfies Record<string, AssetDefinition>;
+
+export const SFX_ASSETS = {
+  uiClick: { key: "sfx-ui-click", path: "/assets/audio/sfx/ui_click.mp3" },
+  cellDoorOpen: { key: "sfx-cell-door-open", path: "/assets/audio/sfx/cell_door_open.mp3" },
+  dungeonDoorOpen: { key: "sfx-dungeon-door-open", path: "/assets/audio/sfx/dungeon_door_open.mp3" },
+  goldGain: { key: "sfx-gold-gain", path: "/assets/audio/sfx/gold_gain.mp3" },
+  goldLoss: { key: "sfx-gold-loss", path: "/assets/audio/sfx/gold_loss.mp3" },
+  chestOpen: { key: "sfx-chest-open", path: "/assets/audio/sfx/chest_open.mp3" },
+  itemPickup: { key: "sfx-item-pickup", path: "/assets/audio/sfx/item_pickup.mp3" },
+  itemBreak: { key: "sfx-item-break", path: "/assets/audio/sfx/item_break.mp3" },
+  grodorHurt: { key: "sfx-grodor-hurt", path: "/assets/audio/sfx/grodor_hurt.mp3" },
+  grodorDeath: { key: "sfx-grodor-death", path: "/assets/audio/sfx/grodor_death.mp3" },
+  combatHit: { key: "sfx-combat-hit", path: "/assets/audio/sfx/combat_hit.mp3" },
+  miniGameSuccess: { key: "sfx-minigame-success", path: "/assets/audio/sfx/minigame_success.mp3" },
+  miniGameFail: { key: "sfx-minigame-fail", path: "/assets/audio/sfx/minigame_fail.mp3" }
+} satisfies Record<string, AssetDefinition>;
+
 export const IMAGE_ASSETS = {
   introBackground: { key: "intro-background", path: "/assets/backgrounds/intro/intro_background.webp" },
   introLogo: { key: "intro-logo", path: "/assets/backgrounds/intro/intro_logo.png" },
@@ -505,7 +531,6 @@ export const IMAGE_ASSETS = {
   inventoryItemTinyHelmet: { key: "inventory-item-tiny-helmet", path: "/assets/ui/inventory/items/tiny_helmet.png" },
   inventoryItemTooLongCape: { key: "inventory-item-too-long-cape", path: "/assets/ui/inventory/items/too_long_cape.png" },
   inventoryItemWarUnderwear: { key: "inventory-item-war-underwear", path: "/assets/ui/inventory/items/war_underwear.png" },
-  combatZone: { key: "combat-zone", path: "/assets/combat/zone.png" },
   combatArena1: { key: "combat-arena-1", path: "/assets/combat/arene_1.webp" },
   combatArena2: { key: "combat-arena-2", path: "/assets/combat/arene_2.webp" },
   combatArena3: { key: "combat-arena-3", path: "/assets/combat/arene_3.webp" },
@@ -741,3 +766,5 @@ export const ANIMATION_KEYS = {
 export const INTRO_PRELOAD_IMAGES = [IMAGE_ASSETS.introBackground, IMAGE_ASSETS.introLogo];
 export const PRELOAD_IMAGES = Object.values(IMAGE_ASSETS);
 export const PRELOAD_JSON = Object.values(JSON_ASSETS);
+export const INTRO_PRELOAD_AUDIO = [AUDIO_ASSETS.musicIntro];
+export const PRELOAD_AUDIO = Object.values(AUDIO_ASSETS);

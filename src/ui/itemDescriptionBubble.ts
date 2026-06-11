@@ -9,28 +9,28 @@ export function createItemDescriptionBubble(
   itemDescription: string = GAME_TEXTS.inventory.descriptionFallback
 ): Phaser.GameObjects.Container {
   const bubble = scene.add.container(x, y);
-  const background = scene.add.rectangle(0, 0, 230, 76, 0x120d0a, 0.9).setOrigin(0.5);
+  const background = scene.add.rectangle(0, 0, 430, 168, 0x120d0a, 0.9).setOrigin(0.5);
   background.setStrokeStyle(2, 0xf0c071, 0.96);
   const title = scene.add
-    .text(0, -15, itemName, {
+    .text(0, -52, itemName, {
       fontFamily: "Georgia, serif",
-      fontSize: "18px",
+      fontSize: "34px",
       color: "#fff1c2",
       align: "center",
       stroke: "#070402",
-      strokeThickness: 4,
-      wordWrap: { width: 198 }
+      strokeThickness: 5,
+      wordWrap: { width: 382 }
     })
     .setOrigin(0.5);
   const description = scene.add
-    .text(0, 17, itemDescription, {
+    .text(0, 32, itemDescription, {
       fontFamily: "Inter, Arial, sans-serif",
-      fontSize: "13px",
+      fontSize: "26px",
       color: "#f9dfaa",
       align: "center",
       stroke: "#070402",
-      strokeThickness: 3,
-      wordWrap: { width: 198 }
+      strokeThickness: 4,
+      wordWrap: { width: 382 }
     })
     .setOrigin(0.5);
 

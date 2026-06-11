@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import { IMAGE_ASSETS, INVENTORY_ITEM_ASSETS, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
 import { GAME_TEXTS } from "../data/gameTexts";
 import { ItemRarity, LOOTABLE_ITEM_DEFINITIONS } from "../data/itemDefinitions";
+import { playSfx } from "../systems/sfxManager";
 import {
   MINI_GAME_EVENT_IMAGE_HEIGHT,
   MINI_GAME_EVENT_IMAGE_WIDTH,
@@ -75,6 +76,7 @@ export class LootChestMiniGame implements MiniGameController {
     }
 
     this.clearDelayedHint();
+    playSfx("uiClick", { volume: 0.8, cooldownMs: 90 });
     this.host.setStep(this.host.getStep() + 1);
     this.host.getStatusText()?.setText("");
     this.shakeChest();
@@ -153,6 +155,7 @@ export class LootChestMiniGame implements MiniGameController {
     this.host.setCompleted(true);
     this.keyImage?.setVisible(false);
     this.eventImage?.setTexture(IMAGE_ASSETS.lootChestOpen.key);
+    playSfx("chestOpen");
     this.host.scene.time.delayedCall(320, () => this.runRarityReveal());
   }
 

@@ -51,6 +51,8 @@ import {
   unequipStartingSlot
 } from "../systems/metaProgression";
 import { getPermanentUpgrades } from "../systems/permanentUpgrades";
+import { playZoneMusic } from "../systems/audioManager";
+import { playSfx } from "../systems/sfxManager";
 import { getInteractiveZones, getPathPoints, getSpawnPoint, TiledPoint, TiledZone } from "../systems/tiledMap";
 import { markVillageDiscovered } from "../systems/villageDiscovery";
 import { setLetterboxBackdrop } from "../ui/letterboxBackdrop";
@@ -105,10 +107,10 @@ const HOUSE_EQUIPMENT_PANEL = {
   ],
   loadoutCounter: { x: 214, y: 122 },
   closeButton: { x: 1054, y: 55, hitSize: 94 },
-  extraLabels: [{ x: 674, y: 250, label: GAME_TEXTS.inventory.equipmentSlotLabels.cape }],
   slots: {
     weapon: { x: 214, y: 250 },
     helmet: { x: 444, y: 198 },
+    cape: { x: 674, y: 250 },
     amulet: { x: 674, y: 746 },
     gloves: { x: 214, y: 473 },
     object: { x: 444, y: 746 },
@@ -116,7 +118,7 @@ const HOUSE_EQUIPMENT_PANEL = {
   } satisfies Record<EquipmentSlotId, { x: number; y: number }>
 };
 
-const HOUSE_EQUIPMENT_SLOT_IDS = ["weapon", "helmet", "amulet", "gloves", "object", "boots"] satisfies EquipmentSlotId[];
+const HOUSE_EQUIPMENT_SLOT_IDS = ["weapon", "helmet", "cape", "amulet", "gloves", "object", "boots"] satisfies EquipmentSlotId[];
 
 const HOUSE_CHEST_PANEL = {
   width: 407,
@@ -192,6 +194,7 @@ export class VillageScene extends Phaser.Scene {
     this.resetSceneRuntime();
     setHudVisible(false);
     setLetterboxBackdrop(IMAGE_ASSETS.villageBackground.path);
+    playZoneMusic(this, "village");
     this.fromDungeon = Boolean(data.fromDungeon) || new URLSearchParams(window.location.search).get("fromDungeon") === "1";
     this.fromTavern = Boolean(data.fromTavern);
     const params = new URLSearchParams(window.location.search);
@@ -477,6 +480,7 @@ export class VillageScene extends Phaser.Scene {
       restored = true;
       this.events.off("combat-closed", restore);
       combatScene.events.off(Phaser.Scenes.Events.SHUTDOWN, restore);
+      playZoneMusic(this, "village");
       this.setVillageOverlaysVisible(true);
       this.grodor?.setEquipment(getDungeonRunState().equipment);
       this.updateVillageHudOverlays();
@@ -509,13 +513,21 @@ export class VillageScene extends Phaser.Scene {
       restored = true;
       this.events.off("minigame-closed", restore);
       miniGameScene.events.off(Phaser.Scenes.Events.SHUTDOWN, restore);
+      if (miniGameResult?.outcome === "success") {
+        playSfx("miniGameSuccess");
+      } else if (miniGameResult?.outcome === "failure") {
+        playSfx("miniGameFail");
+      }
       if (miniGameResult?.goldDelta) {
+        playSfx("goldGain");
         addDungeonGoldReward(miniGameResult.goldDelta);
       }
       if (miniGameResult?.goldLoss) {
+        playSfx("goldLoss");
         loseCarriedGold(miniGameResult.goldLoss);
       }
       if (miniGameResult?.instantDeath) {
+        playSfx("grodorDeath");
         forceDungeonRunDeath();
       }
       if (miniGameResult?.maxLifeLoss) {
@@ -525,10 +537,13 @@ export class VillageScene extends Phaser.Scene {
         increaseRunMaxLife(miniGameResult.maxLifeDelta);
       }
       if ((miniGameResult?.lifeDelta ?? 0) < 0) {
-        applyHeartLossWithCowardReflex(Math.abs(miniGameResult?.lifeDelta ?? 0), "dungeon_event");
+        playSfx("grodorHurt");
+        const lossResult = applyHeartLossWithCowardReflex(Math.abs(miniGameResult?.lifeDelta ?? 0), "dungeon_event");
+        this.playItemBreakSfx(lossResult.brokenItems);
       }
       if (miniGameResult?.itemId) {
         addDungeonInventoryItem(miniGameResult.itemId);
+        playSfx("itemPickup");
       }
       if (miniGameResult?.followUpMiniGame) {
         this.scene.launch("MiniGameScene", {
@@ -542,6 +557,7 @@ export class VillageScene extends Phaser.Scene {
         this.restoreVillageOverlaysWhenMiniGameCloses(miniGameResult.followUpMiniGame);
         return;
       }
+      playZoneMusic(this, "village");
       this.setVillageOverlaysVisible(true);
       this.grodor?.setEquipment(getDungeonRunState().equipment);
       this.grodor?.playIdle();
@@ -556,6 +572,12 @@ export class VillageScene extends Phaser.Scene {
 
     this.events.once("minigame-closed", restore);
     miniGameScene.events.once(Phaser.Scenes.Events.SHUTDOWN, restore);
+  }
+
+  private playItemBreakSfx(brokenItems: string[] = []): void {
+    if (brokenItems.length > 0) {
+      playSfx("itemBreak");
+    }
   }
 
   private findSpawn(names: string[]): TiledPoint | undefined {
@@ -676,6 +698,7 @@ export class VillageScene extends Phaser.Scene {
   }
 
   private showBankPanel(): void {
+    playZoneMusic(this, "bank");
     const bankPanel = new VillageBankPanel(this, {
       onClose: () => this.closePanelAndReturnToCenter(),
       onHudRefresh: () => this.updateVillageHudOverlays(),
@@ -686,6 +709,7 @@ export class VillageScene extends Phaser.Scene {
   }
 
   private showShopPanel(): void {
+    playZoneMusic(this, "shop");
     this.shopPanel?.destroy();
     this.shopPanel = new VillageShopPanel(this, {
       onClose: () => this.closePanelAndReturnToCenter(),
@@ -884,10 +908,6 @@ export class VillageScene extends Phaser.Scene {
     HOUSE_EQUIPMENT_SLOT_IDS.forEach((slotId) => {
       const slot = HOUSE_EQUIPMENT_PANEL.slots[slotId];
       children.push(this.createHouseEquipmentLabel(slot.x, slot.y, GAME_TEXTS.inventory.equipmentSlotLabels[slotId]));
-    });
-
-    HOUSE_EQUIPMENT_PANEL.extraLabels.forEach((slot) => {
-      children.push(this.createHouseEquipmentLabel(slot.x, slot.y, slot.label));
     });
 
     HOUSE_EQUIPMENT_PANEL.keySlots.forEach((slot) => {
@@ -1152,6 +1172,7 @@ export class VillageScene extends Phaser.Scene {
   }
 
   private closePanelAndReturnToCenter(): void {
+    playZoneMusic(this, "village");
     this.shopPanel?.destroy();
     this.shopPanel = undefined;
     this.itemDescriptionBubble?.destroy();

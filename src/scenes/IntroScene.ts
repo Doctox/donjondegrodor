@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import { IMAGE_ASSETS, PRELOAD_IMAGES, PRELOAD_JSON, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
 import { GAME_TEXTS } from "../data/gameTexts";
+import { playZoneMusic } from "../systems/audioManager";
 import { resetGameState } from "../systems/gameState";
 import { setHudVisible } from "../ui/hud";
 import { setLetterboxBackdrop } from "../ui/letterboxBackdrop";
@@ -8,7 +9,7 @@ import { CellScene } from "./CellScene";
 
 const HALF_WIDTH = WORLD_WIDTH / 2;
 const LOGO_REVEAL_DURATION = 3000;
-const OPEN_DURATION = 900;
+const OPEN_DURATION = 3000;
 
 export class IntroScene extends Phaser.Scene {
   private background?: Phaser.GameObjects.Image;
@@ -91,6 +92,11 @@ export class IntroScene extends Phaser.Scene {
     }
 
     this.opening = true;
+    playZoneMusic(this, "intro", 0);
+    this.startOpeningTransition();
+  }
+
+  private startOpeningTransition(): void {
     this.ready = false;
     this.logo?.disableInteractive();
     this.input.off("pointerdown", this.handlePointerDown);
@@ -183,7 +189,6 @@ export class IntroScene extends Phaser.Scene {
       this.load.tilemapTiledJSON(asset.key, asset.path);
       queuedAssets += 1;
     });
-
     if (queuedAssets <= 0) {
       this.markGameplayAssetsReady();
       return;

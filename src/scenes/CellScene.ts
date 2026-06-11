@@ -2,6 +2,8 @@ import Phaser from "phaser";
 import { IS_DEBUG_TOOLS_ENABLED } from "../config/debugConfig";
 import { IMAGE_ASSETS, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
 import { addGrodorStat } from "../systems/grodorStats";
+import { playZoneMusic } from "../systems/audioManager";
+import { playSfx } from "../systems/sfxManager";
 import { DungeonScene } from "./DungeonScene";
 
 type CellSceneData = {
@@ -53,7 +55,7 @@ export class CellScene extends DungeonScene {
     this.scene.stop("ResultScene");
     this.scene.stop("CombatScene");
     this.scene.stop("MiniGameScene");
-    super.create(data.preserveRunState ? { fromCell: true } : undefined);
+    super.create({ fromCell: data.preserveRunState, suppressMusic: true });
     this.input.enabled = true;
     this.input.manager.enabled = true;
     this.transitioning = false;
@@ -126,6 +128,8 @@ export class CellScene extends DungeonScene {
     }
 
     this.transitioning = true;
+    playSfx("cellDoorOpen");
+    playZoneMusic(this, "dungeon");
     this.input.enabled = true;
     this.input.manager.enabled = true;
     window.removeEventListener("pointerdown", this.handleWindowPointerDown, true);

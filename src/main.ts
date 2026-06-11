@@ -11,6 +11,7 @@ import { MiniGameScene } from "./scenes/MiniGameScene";
 import { TiledDebugScene } from "./scenes/TiledDebugScene";
 import { NineSliceTestScene } from "./scenes/NineSliceTestScene";
 import { WORLD_HEIGHT, WORLD_WIDTH } from "./data/assetKeys";
+import { setupAudioSettingsButton } from "./ui/audioSettings";
 import { setupMobileFullscreenButton } from "./ui/mobileFullscreen";
 import "./styles.css";
 
@@ -41,4 +42,5 @@ const config: Phaser.Types.Core.GameConfig = {
 };
 
 new Phaser.Game(config);
+setupAudioSettingsButton();
 setupMobileFullscreenButton();

@@ -4,13 +4,21 @@ import { IMAGE_ASSETS, INVENTORY_ITEM_ASSETS, WORLD_HEIGHT, WORLD_WIDTH } from "
 import { GrodorEquipmentId } from "../data/equipmentDefinitions";
 import { GAME_TEXTS } from "../data/gameTexts";
 import { EquipmentSlotId, getEquipmentSlot, getItemDefinition } from "../data/itemDefinitions";
+import {
+  getCowardReflexCancelPercent,
+  getDoorReadingPercent,
+  getMaxStartingEquipmentCount,
+  getPermanentUpgrades,
+  getTragicCardioPercent,
+  PermanentUpgradeId
+} from "../systems/permanentUpgrades";
 import { createItemDescriptionBubble } from "./itemDescriptionBubble";
 
 const PANEL_DEPTH = 92;
 const PANEL_SOURCE = {
-  width: 1116,
+  width: 1206,
   height: 971,
-  displayWidth: 1116,
+  displayWidth: 1206,
   displayHeight: 971
 };
 
@@ -29,13 +37,13 @@ const EQUIPMENT_SLOTS = {
   weapon: { x: 214, y: 250 },
   helmet: { x: 444, y: 198 },
   amulet: { x: 674, y: 746 },
+  cape: { x: 674, y: 250 },
   gloves: { x: 214, y: 473 },
   object: { x: 444, y: 746 },
   boots: { x: 674, y: 473 }
 } satisfies Record<EquipmentSlotId, { x: number; y: number }>;
 
-const EQUIPMENT_SLOT_IDS = ["weapon", "helmet", "amulet", "gloves", "object", "boots"] satisfies EquipmentSlotId[];
-const EXTRA_SLOT_LABELS = [{ x: 674, y: 250, label: GAME_TEXTS.inventory.equipmentSlotLabels.cape }];
+const EQUIPMENT_SLOT_IDS = ["weapon", "helmet", "cape", "amulet", "gloves", "object", "boots"] satisfies EquipmentSlotId[];
 
 const KEY_SLOT_POSITIONS = [
   { x: 901, y: 201 },
@@ -44,7 +52,14 @@ const KEY_SLOT_POSITIONS = [
   { x: 901, y: 774 }
 ];
 
-const CLOSE_BUTTON = { x: 1054, y: 55, hitSize: 94 };
+const PASSIVE_SLOT_POSITIONS = [
+  { x: 1066, y: 161 },
+  { x: 1066, y: 279 },
+  { x: 1066, y: 397 },
+  { x: 1066, y: 515 }
+];
+
+const CLOSE_BUTTON = { x: 1144, y: 55, hitSize: 94 };
 
 type EquippedItem = {
   id: GrodorEquipmentId;
@@ -53,12 +68,21 @@ type EquippedItem = {
   slot: EquipmentSlotId;
 };
 
+type PassiveInventoryItem = {
+  id: PermanentUpgradeId;
+  name: string;
+  description: string;
+  level: number;
+  iconKey: string;
+};
+
 export class InventoryEquipmentPanel {
   private readonly blocker: Phaser.GameObjects.Rectangle;
   private readonly panelBlocker: Phaser.GameObjects.Zone;
   private readonly container: Phaser.GameObjects.Container;
   private readonly grodor: GrodorActor;
   private itemDescriptionBubble?: Phaser.GameObjects.Container;
+  private activeDescriptionKey?: string;
   private readonly handleEscape: (event: KeyboardEvent) => void;
 
   constructor(
@@ -92,7 +116,7 @@ export class InventoryEquipmentPanel {
       .setInteractive({ useHandCursor: true });
     closeHitZone.on("pointerdown", () => this.onClose());
 
-    this.grodor = new GrodorActor(scene, WORLD_WIDTH / 2 - 106, WORLD_HEIGHT / 2 + 142);
+    this.grodor = new GrodorActor(scene, WORLD_WIDTH / 2 - 142, WORLD_HEIGHT / 2 + 142);
     this.grodor.container.setDepth(PANEL_DEPTH + 3);
     this.grodor.container.setScale(1.08);
     this.grodor.setEquipment(equipment);
@@ -104,7 +128,8 @@ export class InventoryEquipmentPanel {
       ...this.createKeySlotFrames(),
       closeButton,
       closeHitZone,
-      ...this.createSlotItems(equippedItems)
+      ...this.createSlotItems(equippedItems),
+      ...this.createPassiveItems()
     ]);
 
     this.handleEscape = (event: KeyboardEvent): void => {
@@ -210,21 +235,6 @@ export class InventoryEquipmentPanel {
       children.push(label);
     });
 
-    EXTRA_SLOT_LABELS.forEach((slot) => {
-      children.push(
-        this.scene.add
-          .text(this.toPanelX(slot.x), this.toPanelY(slot.y) + 42, slot.label, {
-            fontFamily: "Georgia, serif",
-            fontSize: "22px",
-            color: "#fff1c2",
-            align: "center",
-            stroke: "#120d0a",
-            strokeThickness: 4
-          })
-          .setOrigin(0.5)
-      );
-    });
-
     return children;
   }
 
@@ -236,10 +246,95 @@ export class InventoryEquipmentPanel {
     );
   }
 
+  private createPassiveItems(): Phaser.GameObjects.GameObject[] {
+    return this.getPassiveItems().flatMap((passive, index) => {
+      const slot = PASSIVE_SLOT_POSITIONS[index];
+      if (!slot) {
+        return [];
+      }
+
+      const x = this.toPanelX(slot.x);
+      const y = this.toPanelY(slot.y);
+      const children: Phaser.GameObjects.GameObject[] = [];
+
+      if (this.scene.textures.exists(passive.iconKey)) {
+        const icon = this.scene.add.image(x, y, passive.iconKey);
+        const iconScale = Math.min(82 / icon.width, 82 / icon.height);
+        icon.setScale(iconScale);
+        children.push(icon);
+      }
+
+      const hitZone = this.scene.add.zone(x, y, 108, 108).setInteractive({ useHandCursor: true });
+      hitZone.on("pointerdown", () => this.showItemDescription(x, y, passive.name, passive.description));
+      children.push(hitZone);
+
+      return children;
+    });
+  }
+
+  private getPassiveItems(): PassiveInventoryItem[] {
+    const text = GAME_TEXTS.village.shop;
+    const upgrades = getPermanentUpgrades();
+    const passives: PassiveInventoryItem[] = [];
+
+    if (upgrades.dressingLevel > 0) {
+      passives.push({
+        id: "dressing",
+        name: text.dressingName,
+        description: text.dressingEffect(getMaxStartingEquipmentCount()),
+        level: upgrades.dressingLevel,
+        iconKey: IMAGE_ASSETS.passiveSurvivalDressing.key
+      });
+    }
+    if (upgrades.cowardReflexLevel > 0) {
+      passives.push({
+        id: "cowardReflex",
+        name: text.cowardReflexName,
+        description: text.cowardReflexEffect(getCowardReflexCancelPercent()),
+        level: upgrades.cowardReflexLevel,
+        iconKey: IMAGE_ASSETS.passiveCowardReflexes.key
+      });
+    }
+    if (upgrades.tragicCardioLevel > 0) {
+      passives.push({
+        id: "tragicCardio",
+        name: text.tragicCardioName,
+        description: text.tragicCardioEffect(getTragicCardioPercent()),
+        level: upgrades.tragicCardioLevel,
+        iconKey: IMAGE_ASSETS.passiveTragicCardio.key
+      });
+    }
+    if (upgrades.doorReadingLevel > 0) {
+      passives.push({
+        id: "doorReading",
+        name: text.doorReadingName,
+        description: text.doorReadingEffect(getDoorReadingPercent()),
+        level: upgrades.doorReadingLevel,
+        iconKey: IMAGE_ASSETS.passiveDoorReading.key
+      });
+    }
+
+    return passives;
+  }
+
   private showItemDescription(x: number, y: number, itemName: string, itemDescription: string): void {
+    const descriptionKey = `${itemName}:${itemDescription}`;
+    if (this.activeDescriptionKey === descriptionKey && this.itemDescriptionBubble) {
+      this.itemDescriptionBubble.destroy();
+      this.itemDescriptionBubble = undefined;
+      this.activeDescriptionKey = undefined;
+      return;
+    }
+
     this.itemDescriptionBubble?.destroy();
-    this.itemDescriptionBubble = createItemDescriptionBubble(this.scene, x, y + 112, itemName, itemDescription);
-    this.container.add(this.itemDescriptionBubble);
+    this.itemDescriptionBubble = createItemDescriptionBubble(
+      this.scene,
+      this.container.x + x,
+      this.container.y + y + 112,
+      itemName,
+      itemDescription
+    ).setDepth(PANEL_DEPTH + 4);
+    this.activeDescriptionKey = descriptionKey;
   }
 
   private toPanelX(sourceX: number): number {

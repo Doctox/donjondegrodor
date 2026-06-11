@@ -4,7 +4,7 @@ import { GAME_TEXTS } from "./gameTexts";
 export type ItemKind = "equipment" | "item";
 export type ItemId = GrodorEquipmentId | "gold_coin_test" | "weird_stone_test";
 export type ItemRarity = "common" | "rare" | "epic" | "legendary";
-export type EquipmentSlotId = "weapon" | "helmet" | "amulet" | "gloves" | "boots" | "object";
+export type EquipmentSlotId = "weapon" | "helmet" | "amulet" | "gloves" | "boots" | "object" | "cape";
 
 export type ItemDefinition = {
   id: ItemId;
@@ -46,7 +46,7 @@ export const ITEM_DEFINITIONS = {
     name: GAME_TEXTS.items.tooLongCape,
     kind: "equipment",
     equipmentId: "too_long_cape",
-    equipmentSlot: "object",
+    equipmentSlot: "cape",
     rarity: "common",
     lootable: true,
     shopDiscoverable: true,

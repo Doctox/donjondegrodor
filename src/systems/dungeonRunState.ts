@@ -142,6 +142,7 @@ export function resetDungeonRunState(
   options: {
     incrementAttempt?: boolean;
     preserveInventoryEquipment?: boolean;
+    preserveCarriedGold?: boolean;
     useStartingLoadout?: boolean;
     random?: () => number;
   } = {}
@@ -150,6 +151,7 @@ export function resetDungeonRunState(
   const startingLoadoutItems = options.useStartingLoadout ? Object.values(getStartingLoadout()).filter(Boolean) : [];
   const preservedInventory = options.preserveInventoryEquipment ? [...state.inventory] : startingLoadoutItems;
   const preservedEquipment = options.preserveInventoryEquipment ? normalizeEquipmentBySlot(state.equipment) : normalizeEquipmentBySlot(startingLoadoutItems);
+  const preservedCarriedGold = options.preserveCarriedGold ? state.carriedGold : 0;
   resetCurrentGrodorRunStats();
   state = createNewRunState(state.wins, state.bankGold, attempt, options.random);
   if (options.preserveInventoryEquipment || options.useStartingLoadout) {
@@ -160,6 +162,13 @@ export function resetDungeonRunState(
       equipment: preservedEquipment
     };
     state = applyEquipmentMaxLifeToState(state, previousEquipment);
+  }
+  if (preservedCarriedGold > 0) {
+    state = {
+      ...state,
+      gold: preservedCarriedGold,
+      carriedGold: preservedCarriedGold
+    };
   }
   if (options.useStartingLoadout) {
     clearStartingLoadout();
@@ -234,7 +243,8 @@ export function pickRandomDoorEventId(random: () => number = Math.random): Dunge
 }
 
 export function resolveDoorEvent(id: string, random: () => number = Math.random): DungeonRunEvent {
-  const definition = getDungeonEventDefinition(id) ?? getDungeonEventDefinition("nothing")!;
+  const baseDefinition = getDungeonEventDefinition(id) ?? getDungeonEventDefinition("nothing")!;
+  const definition = baseDefinition.id === "combat" ? pickRandomCombatDefinition(random) : baseDefinition;
   let goldDelta = getGoldDelta(definition, random);
   let lifeDelta = definition.lifeDelta ?? 0;
   let floorDelta = definition.floorDelta ?? 0;
@@ -298,6 +308,12 @@ export function resolveDoorEvent(id: string, random: () => number = Math.random)
     floorDelta,
     state: getDungeonRunState()
   };
+}
+
+function pickRandomCombatDefinition(random: () => number): DungeonEventDefinition {
+  const combatIds = ["combat_rat", "combat_skeleton", "combat_guard"] as const;
+  const eventId = combatIds[Math.floor(random() * combatIds.length)] ?? "combat_rat";
+  return getDungeonEventDefinition(eventId) ?? getDungeonEventDefinition("combat_rat")!;
 }
 
 export function resolveFinalDoorOutcome(

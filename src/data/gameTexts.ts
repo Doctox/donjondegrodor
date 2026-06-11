@@ -308,6 +308,7 @@ export const GAME_TEXTS = {
         weapon: "Arme",
         helmet: "Casque",
         amulet: "Amulette",
+        cape: "Cape",
         gloves: "Gants",
         boots: "Bottes",
         object: "Objet"

@@ -1,5 +1,11 @@
 import Phaser from "phaser";
-import { INTRO_PRELOAD_IMAGES, PRELOAD_IMAGES, PRELOAD_JSON, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
+import {
+  INTRO_PRELOAD_IMAGES,
+  PRELOAD_IMAGES,
+  PRELOAD_JSON,
+  WORLD_HEIGHT,
+  WORLD_WIDTH
+} from "../data/assetKeys";
 import { IS_DEBUG_TOOLS_ENABLED } from "../config/debugConfig";
 import { GAME_TEXTS } from "../data/gameTexts";
 import { mountHud, setHudVisible } from "../ui/hud";

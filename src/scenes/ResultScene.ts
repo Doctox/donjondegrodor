@@ -3,6 +3,8 @@ import { IMAGE_ASSETS, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
 import { GAME_TEXTS } from "../data/gameTexts";
 import { resetDungeonAttemptCounter, resetDungeonRunState } from "../systems/dungeonRunState";
 import { calculateCurrentGrodorRunScore, getCurrentGrodorRunStats, GrodorScore } from "../systems/grodorStats";
+import { playZoneMusic, stopZoneMusic } from "../systems/audioManager";
+import { playSfx } from "../systems/sfxManager";
 import { hasDiscoveredVillage } from "../systems/villageDiscovery";
 import { createNineSlicePanel } from "../ui/nineSlicePanel";
 import { setHudVisible } from "../ui/hud";
@@ -67,8 +69,11 @@ export class ResultScene extends Phaser.Scene {
     const runStats = getCurrentGrodorRunStats();
 
     if (mode === "victory") {
+      playZoneMusic(this, "village");
+      playSfx("miniGameSuccess");
       this.createVictoryLayout(runScore, runStats);
     } else {
+      stopZoneMusic(this);
       this.createDefeatLayout(runScore, villageDiscovered);
     }
 

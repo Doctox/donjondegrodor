@@ -48,6 +48,8 @@ import {
 import { DungeonEventDefinition, DungeonEventId, getDungeonEventDefinition } from "../data/dungeonEvents";
 import { GAME_TEXTS } from "../data/gameTexts";
 import { getEquipmentSlot, getItemDefinition } from "../data/itemDefinitions";
+import { playZoneMusic } from "../systems/audioManager";
+import { playSfx } from "../systems/sfxManager";
 import { addGrodorStat } from "../systems/grodorStats";
 import { discoverShopItems, getDiscoveredShopItems } from "../systems/metaProgression";
 import { shouldRevealDoorReadingHint } from "../systems/permanentUpgrades";
@@ -89,6 +91,7 @@ type DungeonSceneOptions = {
 type DungeonSceneData = {
   fromCell?: boolean;
   resultOverlay?: "defeat" | "victory";
+  suppressMusic?: boolean;
 };
 
 const DEFAULT_DUNGEON_OPTIONS: DungeonSceneOptions = {
@@ -107,9 +110,9 @@ const COIN_FLIP_GOLD_TRANSFER = {
   coinWidth: 118,
   coinHeight: 78,
   maxVisibleCoins: 12,
-  coinStaggerMs: 130,
+  coinStaggerMs: 180,
   openMs: 140,
-  travelMs: 820,
+  travelMs: 1500,
   closeMs: 170,
   depthChest: 66,
   depthCoin: 92,
@@ -190,6 +193,9 @@ export class DungeonScene extends Phaser.Scene {
     this.resetSceneRuntime();
     setHudVisible(false);
     setLetterboxBackdrop(IMAGE_ASSETS.dungeonInterior.path);
+    if (!data.suppressMusic) {
+      playZoneMusic(this, "dungeon");
+    }
     this.cameras.main.resetFX();
     this.cameras.main.setAlpha(1);
     const params = new URLSearchParams(window.location.search);
@@ -373,6 +379,7 @@ export class DungeonScene extends Phaser.Scene {
     this.clearDoorReadingHints();
     doorSprite.setAlpha(1);
     doorSprite.setTexture(this.getDoorTextureKey(doorName, "open"));
+    playSfx("dungeonDoorOpen");
     this.setStatus(GAME_TEXTS.dungeon.pathInProgress(doorName));
     this.grodor.playWalk();
     this.publishMovementReport(doorName, "moving", path);
@@ -424,6 +431,8 @@ export class DungeonScene extends Phaser.Scene {
         this.updateRunHud();
         this.setStatus(GAME_TEXTS.dungeon.doorReached(doorName.replace("door_", "")));
         if (event.kind === "combat") {
+          this.pendingMiniGameReturnPath = [...path].reverse();
+          this.pendingMiniGameDoorName = doorName;
           this.launchCombatEvent(event);
         } else if (event.kind === "minigame") {
           this.pendingMiniGameReturnPath = [...path].reverse();
@@ -733,6 +742,7 @@ export class DungeonScene extends Phaser.Scene {
       restored = true;
       this.events.off("combat-closed", restore);
       combatScene.events.off(Phaser.Scenes.Events.SHUTDOWN, restore);
+      playZoneMusic(this, "dungeon");
       this.setDungeonOverlaysVisible(true);
       this.setDungeonCombatLock(false);
       if (combatResult) {
@@ -741,10 +751,16 @@ export class DungeonScene extends Phaser.Scene {
       this.updateRunHud();
       if (combatResult) {
         this.pendingCombatEvent = false;
-        this.handleCombatResult(combatResult);
+        if (combatResult.outcome === "death") {
+          this.pendingMiniGameReturnPath = [];
+          this.pendingMiniGameDoorName = undefined;
+          this.handleCombatResult(combatResult);
+        } else {
+          this.returnFromMiniGameToSpawn(() => this.handleCombatResult(combatResult));
+        }
       } else if (this.pendingCombatEvent) {
         this.pendingCombatEvent = false;
-        this.continueRun();
+        this.returnFromMiniGameToSpawn(() => this.continueRun());
       }
 
       publishDungeonCombatResultReport({
@@ -768,6 +784,7 @@ export class DungeonScene extends Phaser.Scene {
       restored = true;
       this.events.off("minigame-closed", restore);
       miniGameScene.events.off(Phaser.Scenes.Events.SHUTDOWN, restore);
+      playZoneMusic(this, "dungeon");
       this.setDungeonOverlaysVisible(true);
       this.setDungeonCombatLock(false);
 
@@ -790,7 +807,23 @@ export class DungeonScene extends Phaser.Scene {
   }
 
   private handleMiniGameResult(result: MiniGameResult): void {
+    if (this.isMiniGameResultFatal(result)) {
+      this.pendingMiniGameReturnPath = [];
+      this.pendingMiniGameDoorName = undefined;
+      this.applyMiniGameResult(result);
+      return;
+    }
+
     this.returnFromMiniGameToSpawn(() => this.applyMiniGameResult(result));
+  }
+
+  private isMiniGameResultFatal(result: MiniGameResult): boolean {
+    if (result.instantDeath) {
+      return true;
+    }
+
+    const lifeLoss = Math.max(0, Math.abs(Math.min(0, Math.trunc(result.lifeDelta ?? 0))));
+    return lifeLoss > 0 && getDungeonRunState().life - lifeLoss <= 0;
   }
 
   private returnFromMiniGameToSpawn(onComplete: () => void): void {
@@ -852,6 +885,9 @@ export class DungeonScene extends Phaser.Scene {
     const beforeState = getDungeonRunState();
     if (result.outcome === "success") {
       addGrodorStat("miniJeuxReussis");
+      playSfx("miniGameSuccess");
+    } else if (result.outcome === "failure") {
+      playSfx("miniGameFail");
     }
     if (result.instantDeath) {
       forceDungeonRunDeath();
@@ -874,8 +910,12 @@ export class DungeonScene extends Phaser.Scene {
       increaseRunMaxLife(result.maxLifeDelta);
     }
     if ((result.lifeDelta ?? 0) < 0) {
+      if (result.type !== "jump") {
+        playSfx("grodorHurt");
+      }
       const lossResult = applyHeartLossWithCowardReflex(Math.abs(result.lifeDelta ?? 0), "dungeon_event");
       effectMessages.push(...lossResult.effectMessages);
+      this.playItemBreakSfx(lossResult.brokenItems);
     }
     if (result.itemId) {
       const conflictItemId = this.getEquipmentConflictItem(result.itemId);
@@ -893,6 +933,7 @@ export class DungeonScene extends Phaser.Scene {
       }
 
       addDungeonInventoryItem(result.itemId);
+      playSfx("itemPickup");
     }
 
     this.syncGrodorEquipment();
@@ -910,6 +951,7 @@ export class DungeonScene extends Phaser.Scene {
         this.awaitingContinue = true;
         this.setDungeonCombatLock(true);
         this.grodor?.playDeath();
+        playSfx("grodorDeath");
         this.addDeathStats();
         this.showDefeatResult();
       };
@@ -1057,6 +1099,7 @@ export class DungeonScene extends Phaser.Scene {
     this.awaitingContinue = true;
     this.setDungeonCombatLock(true);
     this.grodor?.playDeath();
+    playSfx("grodorDeath");
     this.setStatus(GAME_TEXTS.dungeon.runEndedStatus);
     this.addDeathStats();
     publishDungeonDeathResetReport({
@@ -1074,6 +1117,12 @@ export class DungeonScene extends Phaser.Scene {
       url.searchParams.delete(key);
     });
     window.location.href = url.toString();
+  }
+
+  private playItemBreakSfx(brokenItems: string[] = []): void {
+    if (brokenItems.length > 0) {
+      playSfx("itemBreak");
+    }
   }
 
   private showDefeatResult(): void {
@@ -1223,8 +1272,14 @@ export class DungeonScene extends Phaser.Scene {
       });
       this.time.delayedCall(650, () => this.showDefeatResult());
     } else {
+      this.awaitingContinue = true;
+      this.setDungeonCombatLock(true);
       this.grodor?.playHurt();
-      this.showFinalDoorPanel(outcome, () => this.retryFinalDoor());
+      if (outcome.lifeDelta < 0) {
+        playSfx("grodorHurt");
+      }
+      this.setStatus(outcome.message);
+      this.playMiniGameHeartTransfer(outcome.lifeDelta, () => this.retryFinalDoor());
     }
 
     publishDungeonFinalDoorReport({
@@ -1238,6 +1293,7 @@ export class DungeonScene extends Phaser.Scene {
     this.eventPanel = undefined;
     this.awaitingContinue = false;
     this.resetDoorVisuals();
+    this.setDungeonCombatLock(false);
     this.resetGrodorToSpawn();
     this.grodor?.playIdle();
     this.updateRunHud();
@@ -1555,6 +1611,7 @@ export class DungeonScene extends Phaser.Scene {
       alpha: 1,
       duration: COIN_FLIP_GOLD_TRANSFER.openMs,
       onComplete: () => {
+        playSfx(direction === "chest-to-pouch" ? "goldGain" : "goldLoss");
         this.tweens.add({
           targets: amountText,
           alpha: 1,

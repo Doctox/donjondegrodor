@@ -6,6 +6,7 @@ import {
   MiniGameHost,
   MiniGameResult
 } from "./miniGameTypes";
+import { playSfx } from "../systems/sfxManager";
 
 const RUN_SPEED = 600;
 const GRAVITY = 1720;
@@ -520,6 +521,7 @@ export class JumpMiniGame implements MiniGameController {
       return;
     }
 
+    playSfx("grodorHurt");
     const start = { x: sourceHeart.x, y: sourceHeart.y };
     const end = {
       x: this.grodor?.x ?? this.position.x,

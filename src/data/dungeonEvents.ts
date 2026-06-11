@@ -13,6 +13,7 @@ export type DungeonEventId =
   | "gain_gold"
   | "lose_life"
   | "nothing"
+  | "combat"
   | "combat_rat"
   | "combat_skeleton"
   | "combat_guard"
@@ -131,9 +132,17 @@ export const DUNGEON_EVENTS = {
     effectLabel: GAME_TEXTS.dungeonEvents.nothing.effectLabel,
     kind: "nothing"
   },
+  combat: {
+    id: "combat",
+    weight: 2,
+    title: GAME_TEXTS.dungeonEvents.combatRat.title,
+    message: GAME_TEXTS.dungeonEvents.combatRat.message,
+    effectLabel: GAME_TEXTS.dungeonEvents.combatRat.effectLabel,
+    kind: "combat"
+  },
   combat_rat: {
     id: "combat_rat",
-    weight: 1,
+    weight: 0,
     title: GAME_TEXTS.dungeonEvents.combatRat.title,
     message: GAME_TEXTS.dungeonEvents.combatRat.message,
     effectLabel: GAME_TEXTS.dungeonEvents.combatRat.effectLabel,
@@ -142,7 +151,7 @@ export const DUNGEON_EVENTS = {
   },
   combat_skeleton: {
     id: "combat_skeleton",
-    weight: 1,
+    weight: 0,
     title: GAME_TEXTS.dungeonEvents.combatSkeleton.title,
     message: GAME_TEXTS.dungeonEvents.combatSkeleton.message,
     effectLabel: GAME_TEXTS.dungeonEvents.combatSkeleton.effectLabel,
@@ -151,7 +160,7 @@ export const DUNGEON_EVENTS = {
   },
   combat_guard: {
     id: "combat_guard",
-    weight: 1,
+    weight: 0,
     title: GAME_TEXTS.dungeonEvents.combatGuard.title,
     message: GAME_TEXTS.dungeonEvents.combatGuard.message,
     effectLabel: GAME_TEXTS.dungeonEvents.combatGuard.effectLabel,
@@ -267,7 +276,7 @@ export const DUNGEON_EVENTS = {
   },
   coin_flip: {
     id: "coin_flip",
-    weight: 1,
+    weight: 2,
     title: GAME_TEXTS.dungeonEvents.coinFlip.title,
     message: GAME_TEXTS.dungeonEvents.coinFlip.message,
     effectLabel: GAME_TEXTS.dungeonEvents.coinFlip.effectLabel,
@@ -275,7 +284,7 @@ export const DUNGEON_EVENTS = {
   },
   bonneteau: {
     id: "bonneteau",
-    weight: 1,
+    weight: 2,
     title: GAME_TEXTS.dungeonEvents.bonneteau.title,
     message: GAME_TEXTS.dungeonEvents.bonneteau.message,
     effectLabel: GAME_TEXTS.dungeonEvents.bonneteau.effectLabel,
@@ -283,7 +292,7 @@ export const DUNGEON_EVENTS = {
   },
   slot_machine: {
     id: "slot_machine",
-    weight: 1,
+    weight: 2,
     title: GAME_TEXTS.dungeonEvents.slotMachine.title,
     message: GAME_TEXTS.dungeonEvents.slotMachine.message,
     effectLabel: GAME_TEXTS.dungeonEvents.slotMachine.effectLabel,
@@ -291,7 +300,7 @@ export const DUNGEON_EVENTS = {
   },
   dodge_chest: {
     id: "dodge_chest",
-    weight: 1,
+    weight: 2,
     title: GAME_TEXTS.dungeonEvents.dodgeChest.title,
     message: GAME_TEXTS.dungeonEvents.dodgeChest.message,
     effectLabel: GAME_TEXTS.dungeonEvents.dodgeChest.effectLabel,
@@ -299,7 +308,7 @@ export const DUNGEON_EVENTS = {
   },
   jump: {
     id: "jump",
-    weight: 1,
+    weight: 2,
     title: GAME_TEXTS.dungeonEvents.jump.title,
     message: GAME_TEXTS.dungeonEvents.jump.message,
     effectLabel: GAME_TEXTS.dungeonEvents.jump.effectLabel,
@@ -307,7 +316,7 @@ export const DUNGEON_EVENTS = {
   },
   arm_wrestling: {
     id: "arm_wrestling",
-    weight: 1,
+    weight: 2,
     title: GAME_TEXTS.dungeonEvents.armWrestling.title,
     message: GAME_TEXTS.dungeonEvents.armWrestling.message,
     effectLabel: GAME_TEXTS.dungeonEvents.armWrestling.effectLabel,
@@ -315,7 +324,7 @@ export const DUNGEON_EVENTS = {
   },
   elevator: {
     id: "elevator",
-    weight: 1,
+    weight: 2,
     title: GAME_TEXTS.dungeonEvents.elevator.title,
     message: GAME_TEXTS.dungeonEvents.elevator.message,
     effectLabel: GAME_TEXTS.dungeonEvents.elevator.effectLabel,
