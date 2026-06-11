@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import { GAME_TEXTS } from "../data/gameTexts";
 import { MONSTER_LIST, MonsterId } from "../data/monsterDefinitions";
+import { isJumpHitboxDebugEnabled, toggleJumpHitboxDebug } from "../minigames/jumpDebugConfig";
 import { DungeonRunState } from "../systems/dungeonRunState";
 
 type EquipmentOption = {
@@ -53,6 +54,8 @@ export class DungeonDebugMenu {
   private readonly combatButtons: Phaser.GameObjects.Container[] = [];
   private readonly grodorButtons: Phaser.GameObjects.Container[] = [];
   private readonly eventButtons: Phaser.GameObjects.Container[] = [];
+  private jumpSubmenu?: Phaser.GameObjects.Container;
+  private jumpHitboxButton?: Phaser.GameObjects.Container;
   private readonly stuffTab: Phaser.GameObjects.Container;
   private readonly combatTab: Phaser.GameObjects.Container;
   private readonly grodorTab: Phaser.GameObjects.Container;
@@ -115,10 +118,18 @@ export class DungeonDebugMenu {
     });
 
     EVENT_OPTIONS.forEach((option, index) => {
-      const button = this.createButton(14, 120 + index * 38, option.label, () => this.onEventStart(option.id), 258);
+      const button = this.createButton(
+        14,
+        120 + index * 38,
+        option.label,
+        () => (option.id === "jump" ? this.toggleJumpSubmenu() : this.onEventStart(option.id)),
+        258
+      );
       this.eventButtons.push(button);
       this.panel.add(button);
     });
+    this.jumpSubmenu = this.createJumpSubmenu();
+    this.panel.add(this.jumpSubmenu);
 
     const healButton = this.createButton(14, 120, GAME_TEXTS.debug.heal, () => this.onGrodorLifeChange(1), 258);
     const damageButton = this.createButton(14, 158, GAME_TEXTS.debug.damage, () => this.onGrodorLifeChange(-1), 258);
@@ -177,6 +188,7 @@ export class DungeonDebugMenu {
     this.combatButtons.forEach((button) => button.setVisible(submenu === "combat"));
     this.grodorButtons.forEach((button) => button.setVisible(submenu === "grodor"));
     this.eventButtons.forEach((button) => button.setVisible(submenu === "events"));
+    this.jumpSubmenu?.setVisible(false);
     this.tintTab(this.stuffTab, submenu === "stuff");
     this.tintTab(this.combatTab, submenu === "combat");
     this.tintTab(this.grodorTab, submenu === "grodor");
@@ -204,6 +216,48 @@ export class DungeonDebugMenu {
     return button;
   }
 
+  private createJumpSubmenu(): Phaser.GameObjects.Container {
+    const submenu = this.scene.add.container(306, 286).setVisible(false);
+    const background = this.scene.add.rectangle(0, 0, 178, 122, 0x120d0a, 0.92).setOrigin(0);
+    background.setStrokeStyle(2, 0xe0b46e, 0.9);
+    const title = this.scene.add.text(14, 10, GAME_TEXTS.debug.jumpDebugTitle, this.textStyle(17, "#fff1c2"));
+    const launchButton = this.createButton(14, 42, GAME_TEXTS.debug.jumpDebugLaunch, () => this.onEventStart("jump"), 150, 15);
+    this.jumpHitboxButton = this.createButton(
+      14,
+      80,
+      GAME_TEXTS.debug.jumpDebugHitbox(isJumpHitboxDebugEnabled()),
+      () => this.toggleJumpHitbox(),
+      150,
+      15
+    );
+    submenu.add([background, title, launchButton, this.jumpHitboxButton]);
+    return submenu;
+  }
+
+  private toggleJumpSubmenu(): void {
+    if (this.activeSubmenu !== "events" || !this.jumpSubmenu) {
+      return;
+    }
+
+    this.jumpSubmenu.setVisible(!this.jumpSubmenu.visible);
+    this.updateCurrentText();
+  }
+
+  private toggleJumpHitbox(): void {
+    const enabled = toggleJumpHitboxDebug();
+    if (this.jumpHitboxButton) {
+      this.setButtonLabel(this.jumpHitboxButton, GAME_TEXTS.debug.jumpDebugHitbox(enabled));
+    }
+    this.updateCurrentText();
+  }
+
+  private setButtonLabel(button: Phaser.GameObjects.Container, label: string): void {
+    const text = button.list.find((entry) => entry instanceof Phaser.GameObjects.Text);
+    if (text instanceof Phaser.GameObjects.Text) {
+      text.setText(label);
+    }
+  }
+
   private tintTab(tab: Phaser.GameObjects.Container, active: boolean): void {
     const background = tab.list[0];
     if (background instanceof Phaser.GameObjects.Rectangle) {
@@ -223,7 +277,7 @@ export class DungeonDebugMenu {
     } else if (this.activeSubmenu === "combat") {
       this.currentText.setText(GAME_TEXTS.debug.monsterTest);
     } else if (this.activeSubmenu === "events") {
-      this.currentText.setText(GAME_TEXTS.debug.eventTest);
+      this.currentText.setText(GAME_TEXTS.debug.jumpDebugStatus(isJumpHitboxDebugEnabled()));
     } else {
       this.currentText.setText(
         runState ? GAME_TEXTS.debug.grodorStatus(runState.life, runState.maxLife, runState.carriedGold) : GAME_TEXTS.debug.grodorLifeFallback
@@ -240,8 +294,14 @@ export class DungeonDebugMenu {
       x <= originX + 292 &&
       y >= originY + 46 &&
       y <= originY + 46 + 458;
+    const insideJumpSubmenu =
+      Boolean(this.jumpSubmenu?.visible) &&
+      x >= originX + 306 &&
+      x <= originX + 306 + 178 &&
+      y >= originY + 46 + 286 &&
+      y <= originY + 46 + 286 + 122;
 
-    return insideInfoButton || insidePanel;
+    return insideInfoButton || insidePanel || insideJumpSubmenu;
   }
 
   private textStyle(fontSize: number, color: string): Phaser.Types.GameObjects.Text.TextStyle {

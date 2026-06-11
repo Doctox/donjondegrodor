@@ -674,6 +674,47 @@ export const IMAGE_ASSETS = {
   },
   elevatorArrowUpRed: { key: "elevator-arrow-up-red", path: "/assets/minigames/elevator/fleche_haut_rouge.png" },
   jumpRunnerScene: { key: "jump-runner-scene", path: "/assets/minigames/jump/runner_segment_01.png" },
+  jumpRunnerScene02: { key: "jump-runner-scene-02", path: "/assets/minigames/jump/runner_segment_02.png" },
+  jumpRunnerScene03: { key: "jump-runner-scene-03", path: "/assets/minigames/jump/runner_segment_03.png" },
+  jumpRunnerSpike03: { key: "jump-runner-spike-03", path: "/assets/minigames/jump/runner_spike_03.png" },
+  jumpGeneratedBackground01: {
+    key: "jump-generated-background-01",
+    path: "/assets/minigames/jump/generated/background_01.png"
+  },
+  jumpGeneratedBackground02: {
+    key: "jump-generated-background-02",
+    path: "/assets/minigames/jump/generated/background_02.png"
+  },
+  jumpGeneratedBackground03: {
+    key: "jump-generated-background-03",
+    path: "/assets/minigames/jump/generated/background_03.png"
+  },
+  jumpGeneratedBackground04: {
+    key: "jump-generated-background-04",
+    path: "/assets/minigames/jump/generated/background_04.png"
+  },
+  jumpGeneratedBackground05: {
+    key: "jump-generated-background-05",
+    path: "/assets/minigames/jump/generated/background_05.png"
+  },
+  jumpGeneratedBackground06: {
+    key: "jump-generated-background-06",
+    path: "/assets/minigames/jump/generated/background_06.png"
+  },
+  jumpGeneratedBackground07: {
+    key: "jump-generated-background-07",
+    path: "/assets/minigames/jump/generated/background_07.png"
+  },
+  jumpGeneratedLava: { key: "jump-generated-lava", path: "/assets/minigames/jump/generated/lava.png" },
+  jumpGeneratedHole: { key: "jump-generated-hole", path: "/assets/minigames/jump/generated/hole.png" },
+  jumpGeneratedSpike: { key: "jump-generated-spike", path: "/assets/minigames/jump/generated/spike.png" },
+  jumpGeneratedSpike01: { key: "jump-generated-spike-01", path: "/assets/minigames/jump/generated/spike_01.png" },
+  jumpGeneratedSpikeCover: {
+    key: "jump-generated-spike-cover",
+    path: "/assets/minigames/jump/generated/spike_cover.png"
+  },
+  jumpGeneratedWater: { key: "jump-generated-water", path: "/assets/minigames/jump/generated/water.png" },
+  jumpGeneratedWolfspike: { key: "jump-generated-wolfspike", path: "/assets/minigames/jump/generated/wolfspike.png" },
   ratIdle: { key: "rat-idle", path: "/assets/sprites/monsters/rat/rat_idle.png" },
   skeletonIdle: { key: "skeleton-idle", path: "/assets/sprites/monsters/skeleton/skeleton_idle.png" },
   guardIdle: { key: "guard-idle", path: "/assets/sprites/monsters/guard/guard_idle.png" }
@@ -695,7 +736,9 @@ export const JSON_ASSETS = {
   dungeonMap: { key: "dungeon-map", path: "/assets/tiled/dungeon/dungeon_map.json" },
   villageMap: { key: "village-map", path: "/assets/village/village_map.json" },
   tavernMap: { key: "tavern-map", path: "/assets/village/tavern/tavern_grodor.json" },
-  jumpRunnerSegment: { key: "jump-runner-segment", path: "/assets/minigames/jump/runner_segment_01.json" }
+  jumpRunnerSegment: { key: "jump-runner-segment", path: "/assets/minigames/jump/runner_segment_01.json" },
+  jumpRunnerSegment02: { key: "jump-runner-segment-02", path: "/assets/minigames/jump/runner_segment_02.json" },
+  jumpRunnerSegment03: { key: "jump-runner-segment-03", path: "/assets/minigames/jump/runner_segment_03.json" }
 } satisfies Record<string, AssetDefinition>;
 
 export const ANIMATION_KEYS = {

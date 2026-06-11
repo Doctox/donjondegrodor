@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { ANIMATION_KEYS, IMAGE_ASSETS, JSON_ASSETS, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
+import { ANIMATION_KEYS, AssetDefinition, IMAGE_ASSETS, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
 import { GAME_TEXTS } from "../data/gameTexts";
 import {
   MiniGameController,
@@ -7,15 +7,27 @@ import {
   MiniGameResult
 } from "./miniGameTypes";
 import { playSfx } from "../systems/sfxManager";
+import { isJumpHitboxDebugEnabled } from "./jumpDebugConfig";
+import {
+  createGeneratedJumpSegment,
+  GeneratedJumpSegment,
+  GeneratedJumpSprite,
+  JUMP_GENERATED_ASSETS
+} from "./jumpSegmentGenerator";
 
-const RUN_SPEED = 600;
+const RUN_SPEED = 660;
 const GRAVITY = 1720;
-const JUMP_VELOCITY = 645;
+const JUMP_VELOCITY = 610;
 const LANDING_SNAP = 8;
-const FLOOR_MARGIN = 28;
+const FLOOR_EDGE_MARGIN = 0;
+const HAZARD_EDGE_MARGIN = 28;
+const HAZARD_TRIGGER_DEPTH_RATIO = 0.68;
+const WATER_SLIDE_SPEED = 820;
+const TIMED_SPIKE_INTERVAL_MS = 760;
+const TIMED_SPIKE_REVEAL_DISTANCE = 400;
 const FALL_LIMIT_Y = WORLD_HEIGHT + 120;
 const SUCCESS_GOLD = 10;
-const GRODOR_SCALE = 0.74;
+const GRODOR_SCALE = 1.1;
 const GRODOR_RUN_FRAME_RATE = 9;
 const JUMP_AIR_DELAY_MS = 120;
 const JUMP_RESUME_DELAY_MS = 190;
@@ -72,8 +84,22 @@ type PointMarker = {
   y: number;
 };
 
+type JumpSegmentAsset = {
+  image: AssetDefinition;
+  map?: AssetDefinition;
+  spikeCover?: AssetDefinition;
+  generated?: GeneratedJumpSegment;
+};
+
+const GENERATED_SEGMENT_MIN = 1;
+const GENERATED_SEGMENT_MAX = 4;
+
 export class JumpMiniGame implements MiniGameController {
   private background?: Phaser.GameObjects.Image;
+  private spikeCover?: Phaser.GameObjects.Image;
+  private generatedSprites: Phaser.GameObjects.Image[] = [];
+  private generatedTimedSpikeSprites: Phaser.GameObjects.Image[] = [];
+  private generatedTimedSpikeCoverSprites: Phaser.GameObjects.Image[] = [];
   private grodor?: Phaser.GameObjects.Sprite;
   private jumpButton?: Phaser.GameObjects.Image;
   private countdownText?: Phaser.GameObjects.Text;
@@ -81,16 +107,23 @@ export class JumpMiniGame implements MiniGameController {
   private heartIcons: Phaser.GameObjects.Image[] = [];
   private floors: RectRegion[] = [];
   private markers: PointMarker[] = [];
-  private deathZone?: RectRegion;
+  private deathZones: RectRegion[] = [];
+  private timedSpikeZones: RectRegion[] = [];
+  private waterZones: RectRegion[] = [];
   private leftSafeFloor?: RectRegion;
-  private rightSafeFloor?: RectRegion;
+  private finalSafeFloor?: RectRegion;
   private spawnStart?: PointMarker;
   private segmentEnd?: PointMarker;
+  private currentSegmentIndex = 0;
+  private runSegments: JumpSegmentAsset[] = [];
   private phase: JumpPhase = "countdown";
   private jumpPose: JumpPose = "run";
   private position = { x: 0, y: 0 };
   private verticalVelocity = 0;
   private isGrounded = true;
+  private isWaterSliding = false;
+  private timedSpikeElapsedMs = 0;
+  private timedSpikesActive = false;
   private jumpUsed = false;
   private jumpCleared = false;
   private startingLife = 1;
@@ -99,6 +132,7 @@ export class JumpMiniGame implements MiniGameController {
   private exitHitZone?: Phaser.GameObjects.Zone;
   private exitHint?: Phaser.GameObjects.Text;
   private exitHintTimer?: Phaser.Time.TimerEvent;
+  private debugGraphics?: Phaser.GameObjects.Graphics;
 
   constructor(private readonly host: MiniGameHost) {}
 
@@ -112,21 +146,16 @@ export class JumpMiniGame implements MiniGameController {
 
     this.startingLife = Math.max(1, this.host.getLife());
     this.attemptsLost = 0;
+    this.runSegments = this.createRunSegments();
+    this.currentSegmentIndex = 0;
     this.ensureGrodorAnimations();
     this.background = this.host.scene.add
-      .image(WORLD_WIDTH / 2, WORLD_HEIGHT / 2, IMAGE_ASSETS.jumpRunnerScene.key)
+      .image(WORLD_WIDTH / 2, WORLD_HEIGHT / 2, this.getCurrentSegment().image.key)
       .setDisplaySize(WORLD_WIDTH, WORLD_HEIGHT)
       .setDepth(3);
     this.createLifeDisplay();
 
-    const map = this.host.scene.make.tilemap({ key: JSON_ASSETS.jumpRunnerSegment.key });
-    this.markers = this.readPointLayer(map, "markers");
-    this.floors = this.readRectLayer(map, "collision");
-    this.deathZone = this.readRectLayer(map, "hazards").find((region) => region.name.includes("death_zone"));
-    this.leftSafeFloor = this.getLeftSafeFloor();
-    this.rightSafeFloor = this.getRightSafeFloor();
-    this.spawnStart = this.getMarker("spawn_grodor");
-    this.segmentEnd = this.getMarker("segment_end");
+    this.loadCurrentSegment();
 
     const start = this.pickStartPosition();
     this.position = start;
@@ -151,21 +180,18 @@ export class JumpMiniGame implements MiniGameController {
   }
 
   private ensureAssetsLoaded(): boolean {
-    const missingImage = !this.host.scene.textures.exists(IMAGE_ASSETS.jumpRunnerScene.key);
-    const missingMap = !this.host.scene.cache.tilemap.exists(JSON_ASSETS.jumpRunnerSegment.key);
+    const segmentImages = [...JUMP_GENERATED_ASSETS];
+    const missingImages = segmentImages.filter((asset) => !this.host.scene.textures.exists(asset.key));
     const missingGrodorAssets = JUMP_GRODOR_ASSETS.filter((asset) => !this.host.scene.textures.exists(asset.key));
     const missingUiAssets = JUMP_UI_ASSETS.filter((asset) => !this.host.scene.textures.exists(asset.key));
 
-    if (!missingImage && !missingMap && missingGrodorAssets.length === 0 && missingUiAssets.length === 0) {
+    if (missingImages.length === 0 && missingGrodorAssets.length === 0 && missingUiAssets.length === 0) {
       return false;
     }
 
-    if (missingImage) {
-      this.host.scene.load.image(IMAGE_ASSETS.jumpRunnerScene.key, IMAGE_ASSETS.jumpRunnerScene.path);
-    }
-    if (missingMap) {
-      this.host.scene.load.tilemapTiledJSON(JSON_ASSETS.jumpRunnerSegment.key, JSON_ASSETS.jumpRunnerSegment.path);
-    }
+    missingImages.forEach((asset) => {
+      this.host.scene.load.image(asset.key, asset.path);
+    });
     missingGrodorAssets.forEach((asset) => {
       this.host.scene.load.image(asset.key, asset.path);
     });
@@ -185,11 +211,16 @@ export class JumpMiniGame implements MiniGameController {
   getReportState(): Record<string, unknown> {
     return {
       phase: this.phase,
+      segmentIndex: this.currentSegmentIndex,
+      segmentCount: this.runSegments.length,
+      generated: Boolean(this.getCurrentSegment().generated),
       jumpUsed: this.jumpUsed,
       startingLife: this.startingLife,
       attemptsLost: this.attemptsLost,
       chancesLeft: this.getChancesLeft(),
       isGrounded: this.isGrounded,
+      isWaterSliding: this.isWaterSliding,
+      timedSpikesActive: this.timedSpikesActive,
       jumpPose: this.jumpPose,
       spawnGrodor: this.spawnStart ? { x: Math.round(this.spawnStart.x), y: Math.round(this.spawnStart.y) } : undefined,
       segmentEnd: this.segmentEnd ? { x: Math.round(this.segmentEnd.x), y: Math.round(this.segmentEnd.y) } : undefined,
@@ -294,12 +325,18 @@ export class JumpMiniGame implements MiniGameController {
   }
 
   private update(_: number, delta: number): void {
-    if (this.host.getCompleted() || (this.phase !== "running" && this.phase !== "finishing") || !this.grodor) {
+    if (this.host.getCompleted() || !this.grodor) {
+      return;
+    }
+
+    this.updateTimedSpikes(delta);
+
+    if (this.phase !== "running" && this.phase !== "finishing") {
       return;
     }
 
     const deltaSeconds = Math.min(delta, 40) / 1000;
-    this.position.x += RUN_SPEED * deltaSeconds;
+    this.position.x += (this.isWaterSliding ? WATER_SLIDE_SPEED : RUN_SPEED) * deltaSeconds;
 
     if (!this.isGrounded) {
       this.verticalVelocity += GRAVITY * deltaSeconds;
@@ -308,7 +345,15 @@ export class JumpMiniGame implements MiniGameController {
 
     const wasGrounded = this.isGrounded;
     const landingFloor = this.findLandingFloor(this.position.x, this.position.y);
-    if (landingFloor && this.verticalVelocity >= 0) {
+    const waterZone = this.findWaterZone(this.position.x, this.position.y);
+    if (waterZone) {
+      this.startWaterSlide(waterZone);
+    } else if (this.isWaterSliding) {
+      this.isGrounded = true;
+      this.verticalVelocity = 0;
+      this.setJumpButtonEnabled(false);
+      this.playRun();
+    } else if (landingFloor && this.verticalVelocity >= 0) {
       this.position.y = landingFloor.y;
       this.verticalVelocity = 0;
       this.isGrounded = true;
@@ -322,9 +367,10 @@ export class JumpMiniGame implements MiniGameController {
     }
 
     this.grodor.setPosition(this.position.x, this.position.y);
+    this.refreshDebugOverlay();
 
     if (this.phase === "finishing" && this.hasReachedSegmentEnd()) {
-      this.succeed();
+      this.completeSegment();
       return;
     }
 
@@ -334,7 +380,7 @@ export class JumpMiniGame implements MiniGameController {
   }
 
   private jump(): void {
-    if (this.host.getCompleted() || this.phase !== "running" || !this.isGrounded || this.jumpUsed) {
+    if (this.host.getCompleted() || this.phase !== "running" || !this.isGrounded || this.jumpUsed || this.isWaterSliding) {
       return;
     }
 
@@ -397,23 +443,48 @@ export class JumpMiniGame implements MiniGameController {
       return;
     }
 
+    this.placeGrodorAtSegmentStart();
+    this.startCountdown();
+    this.host.publishMiniGameReport();
+  }
+
+  private startNextSegmentRun(): void {
+    if (this.host.getCompleted() || !this.grodor) {
+      return;
+    }
+
+    this.placeGrodorAtSegmentStart();
+    this.countdownText?.destroy();
+    this.countdownText = undefined;
+    this.phase = "running";
+    this.playRun();
+    this.setJumpButtonEnabled(true);
+    this.host.publishMiniGameReport();
+  }
+
+  private placeGrodorAtSegmentStart(): void {
+    if (!this.grodor) {
+      return;
+    }
+
     const start = this.pickStartPosition();
     this.position = start;
     this.verticalVelocity = 0;
     this.isGrounded = true;
+    this.isWaterSliding = false;
+    this.timedSpikeElapsedMs = 0;
+    this.timedSpikesActive = false;
     this.jumpUsed = false;
     this.jumpCleared = false;
     this.grodor.setPosition(start.x, start.y);
     this.grodor.setFlipX(false);
     this.host.getStatusText()?.setText("");
     this.host.getRarityText()?.setText("");
-    this.startCountdown();
-    this.host.publishMiniGameReport();
   }
 
   private startLandingSequence(landingFloor: RectRegion): void {
     this.phase = "landing";
-    this.jumpCleared = landingFloor === this.rightSafeFloor;
+    this.jumpCleared = landingFloor === this.finalSafeFloor;
     this.grodor?.setPosition(this.position.x, this.position.y);
     this.playJumpLanding();
     this.host.publishMiniGameReport();
@@ -428,6 +499,17 @@ export class JumpMiniGame implements MiniGameController {
       this.setJumpButtonEnabled(!this.jumpCleared);
       this.host.publishMiniGameReport();
     });
+  }
+
+  private completeSegment(): void {
+    if (this.currentSegmentIndex >= this.runSegments.length - 1) {
+      this.succeed();
+      return;
+    }
+
+    this.currentSegmentIndex += 1;
+    this.loadCurrentSegment();
+    this.startNextSegmentRun();
   }
 
   private finish(result: MiniGameResult, phase: JumpPhase): void {
@@ -715,7 +797,7 @@ export class JumpMiniGame implements MiniGameController {
     }
 
     return {
-      x: startFloor.x + FLOOR_MARGIN + 8,
+      x: startFloor.x + FLOOR_EDGE_MARGIN + 8,
       y: startFloor.y
     };
   }
@@ -736,6 +818,112 @@ export class JumpMiniGame implements MiniGameController {
     return [...this.floors].sort((first, second) => second.x - first.x)[0];
   }
 
+  private loadCurrentSegment(): void {
+    const segment = this.getCurrentSegment();
+    this.background?.setTexture(segment.image.key);
+    this.spikeCover?.setVisible(Boolean(segment.spikeCover));
+    this.clearGeneratedSprites();
+
+    if (segment.generated) {
+      this.loadGeneratedSegment(segment.generated);
+      return;
+    }
+
+    if (!segment.map) {
+      return;
+    }
+
+    const map = this.host.scene.make.tilemap({ key: segment.map.key });
+    const hazards = this.readRectLayer(map, "hazards");
+    this.markers = this.readPointLayer(map, "markers");
+    this.floors = this.readRectLayer(map, "collision");
+    this.waterZones = hazards.filter((region) => region.name.includes("water"));
+    this.timedSpikeZones = segment.spikeCover
+      ? hazards.filter((region) => region.name.includes("death_zone_spike_01"))
+      : [];
+    this.deathZones = hazards.filter(
+      (region) =>
+        region.name.includes("death_zone") &&
+        !this.waterZones.includes(region) &&
+        !this.timedSpikeZones.includes(region)
+    );
+    this.leftSafeFloor = this.getLeftSafeFloor();
+    this.finalSafeFloor = this.getRightSafeFloor();
+    this.spawnStart = this.getMarker("spawn_grodor");
+    this.segmentEnd = this.getMarker("segment_end");
+    this.isWaterSliding = false;
+    this.timedSpikeElapsedMs = 0;
+    this.timedSpikesActive = false;
+    this.updateSpikeCoverVisibility();
+    this.refreshDebugOverlay();
+  }
+
+  private loadGeneratedSegment(segment: GeneratedJumpSegment): void {
+    this.markers = segment.markers.map((marker) => ({ ...marker }));
+    this.floors = segment.floors.map((floor) => ({ ...floor }));
+    const hazards = segment.hazards.map((hazard) => ({ ...hazard }));
+    this.waterZones = hazards.filter((region) => region.name.includes("water"));
+    this.timedSpikeZones = hazards.filter((region) => region.name.includes("death_zone_spike_01"));
+    this.deathZones = hazards.filter(
+      (region) =>
+        region.name.includes("death_zone") &&
+        !this.waterZones.includes(region) &&
+        !this.timedSpikeZones.includes(region)
+    );
+    this.createGeneratedSprites(segment.sprites);
+    this.leftSafeFloor = this.getLeftSafeFloor();
+    this.finalSafeFloor = this.getRightSafeFloor();
+    this.spawnStart = this.getMarker("spawn_grodor");
+    this.segmentEnd = this.getMarker("segment_end");
+    this.isWaterSliding = false;
+    this.timedSpikeElapsedMs = 0;
+    this.timedSpikesActive = false;
+    this.updateSpikeCoverVisibility();
+    this.refreshDebugOverlay();
+  }
+
+  private createGeneratedSprites(sprites: GeneratedJumpSprite[]): void {
+    sprites.forEach((spriteConfig) => {
+      const sprite = this.host.scene.add
+        .image(spriteConfig.x, spriteConfig.y, spriteConfig.asset.key)
+        .setOrigin(0, spriteConfig.originY ?? 1)
+        .setDisplaySize(spriteConfig.width, spriteConfig.height)
+        .setDepth(5);
+
+      this.generatedSprites.push(sprite);
+      if (spriteConfig.kind === "timed_spike") {
+        this.generatedTimedSpikeSprites.push(sprite);
+      } else if (spriteConfig.kind === "timed_spike_cover") {
+        this.generatedTimedSpikeCoverSprites.push(sprite);
+      }
+    });
+  }
+
+  private clearGeneratedSprites(): void {
+    this.generatedSprites.forEach((sprite) => sprite.destroy());
+    this.generatedSprites = [];
+    this.generatedTimedSpikeSprites = [];
+    this.generatedTimedSpikeCoverSprites = [];
+  }
+
+  private getCurrentSegment(): JumpSegmentAsset {
+    const segment = this.runSegments[this.currentSegmentIndex] ?? this.runSegments[0];
+    if (segment) {
+      return segment;
+    }
+
+    const generated = createGeneratedJumpSegment();
+    return { image: generated.image, generated };
+  }
+
+  private createRunSegments(): JumpSegmentAsset[] {
+    const segmentCount = Phaser.Math.Between(GENERATED_SEGMENT_MIN, GENERATED_SEGMENT_MAX);
+    return Array.from({ length: segmentCount }, () => {
+      const generated = createGeneratedJumpSegment();
+      return { image: generated.image, generated };
+    });
+  }
+
   private getMarker(name: string): PointMarker | undefined {
     return this.markers.find((marker) => marker.name === name);
   }
@@ -754,30 +942,159 @@ export class JumpMiniGame implements MiniGameController {
   }
 
   private isWithinFloorX(x: number, floor: RectRegion): boolean {
-    return x >= floor.x + FLOOR_MARGIN && x <= floor.x + floor.width - FLOOR_MARGIN;
+    return x >= floor.x + FLOOR_EDGE_MARGIN && x <= floor.x + floor.width - FLOOR_EDGE_MARGIN;
   }
 
   private hasEnteredDeathZone(): boolean {
-    if (!this.deathZone) {
+    const activeDeathZones = this.timedSpikesActive ? [...this.deathZones, ...this.timedSpikeZones] : this.deathZones;
+    if (activeDeathZones.length === 0) {
       return false;
     }
 
-    return (
-      this.position.x >= this.deathZone.x + FLOOR_MARGIN &&
-      this.position.x <= this.deathZone.x + this.deathZone.width - FLOOR_MARGIN &&
-      this.position.y >= this.deathZone.y - 8
+    return activeDeathZones.some(
+      (deathZone) =>
+        this.position.x >= deathZone.x + HAZARD_EDGE_MARGIN &&
+        this.position.x <= deathZone.x + deathZone.width - HAZARD_EDGE_MARGIN &&
+        this.position.y >= deathZone.y + deathZone.height * HAZARD_TRIGGER_DEPTH_RATIO &&
+        this.position.y <= deathZone.y + deathZone.height + 8
     );
   }
 
+  private findWaterZone(x: number, y: number): RectRegion | undefined {
+    return this.waterZones.find(
+      (waterZone) =>
+        x >= waterZone.x &&
+        x <= waterZone.x + waterZone.width &&
+        y >= waterZone.y - 12 &&
+        y <= waterZone.y + waterZone.height + 18
+    );
+  }
+
+  private startWaterSlide(waterZone: RectRegion): void {
+    this.isWaterSliding = true;
+    this.isGrounded = true;
+    this.verticalVelocity = 0;
+    this.position.y = Math.min(this.position.y, waterZone.y + waterZone.height - 12);
+    this.setJumpButtonEnabled(false);
+    this.playRun();
+  }
+
+  private updateTimedSpikes(delta: number): void {
+    if (this.timedSpikeZones.length === 0) {
+      this.timedSpikesActive = false;
+      this.updateSpikeCoverVisibility();
+      return;
+    }
+
+    const nextTimedSpike = this.timedSpikeZones.find((zone) => this.position.x <= zone.x + zone.width);
+    if (nextTimedSpike && this.position.x < nextTimedSpike.x - TIMED_SPIKE_REVEAL_DISTANCE) {
+      this.timedSpikeElapsedMs = 0;
+      this.timedSpikesActive = false;
+      this.updateSpikeCoverVisibility();
+      return;
+    }
+
+    this.timedSpikeElapsedMs += delta;
+    const nextActive = Math.floor(this.timedSpikeElapsedMs / TIMED_SPIKE_INTERVAL_MS) % 2 === 1;
+    if (nextActive !== this.timedSpikesActive) {
+      this.timedSpikesActive = nextActive;
+      this.updateSpikeCoverVisibility();
+    }
+  }
+
+  private updateSpikeCoverVisibility(): void {
+    if (this.spikeCover) {
+      this.spikeCover.setVisible(this.timedSpikeZones.length > 0 && !this.timedSpikesActive && Boolean(this.getCurrentSegment().spikeCover));
+    }
+
+    this.generatedTimedSpikeSprites.forEach((sprite) => sprite.setVisible(this.timedSpikeZones.length > 0 && this.timedSpikesActive));
+    this.generatedTimedSpikeCoverSprites.forEach((sprite) => sprite.setVisible(this.timedSpikeZones.length > 0 && !this.timedSpikesActive));
+  }
+
   private isBeyondGap(): boolean {
-    if (!this.deathZone) {
+    if (this.deathZones.length === 0) {
       return false;
     }
 
-    return this.position.x >= this.deathZone.x + this.deathZone.width + 40;
+    const lastDeathZone = [...this.deathZones].sort((first, second) => second.x - first.x)[0];
+    return this.position.x >= lastDeathZone.x + lastDeathZone.width + 40;
   }
 
   private hasReachedSegmentEnd(): boolean {
     return this.position.x >= (this.segmentEnd?.x ?? WORLD_WIDTH - 80);
+  }
+
+  private refreshDebugOverlay(): void {
+    if (!isJumpHitboxDebugEnabled()) {
+      this.debugGraphics?.clear();
+      return;
+    }
+
+    const graphics = this.getDebugGraphics();
+    graphics.clear();
+
+    this.floors.forEach((floor) => {
+      graphics.fillStyle(0x47a7ff, 0.18);
+      graphics.lineStyle(3, 0x47a7ff, 0.95);
+      graphics.fillRect(floor.x, floor.y, floor.width, floor.height);
+      graphics.strokeRect(floor.x, floor.y, floor.width, floor.height);
+    });
+
+    this.waterZones.forEach((waterZone) => {
+      graphics.fillStyle(0x28d7ff, 0.22);
+      graphics.lineStyle(3, 0x28d7ff, 0.95);
+      graphics.fillRect(waterZone.x, waterZone.y, waterZone.width, waterZone.height);
+      graphics.strokeRect(waterZone.x, waterZone.y, waterZone.width, waterZone.height);
+    });
+
+    this.deathZones.forEach((deathZone) => {
+      const triggerY = deathZone.y + deathZone.height * HAZARD_TRIGGER_DEPTH_RATIO;
+      const triggerHeight = Math.max(0, deathZone.y + deathZone.height - triggerY);
+      graphics.fillStyle(0xff2b2b, 0.18);
+      graphics.lineStyle(3, 0xff2b2b, 0.95);
+      graphics.fillRect(deathZone.x, deathZone.y, deathZone.width, deathZone.height);
+      graphics.strokeRect(deathZone.x, deathZone.y, deathZone.width, deathZone.height);
+
+      graphics.fillStyle(0xff00ff, 0.22);
+      graphics.lineStyle(2, 0xff00ff, 0.95);
+      graphics.fillRect(deathZone.x + HAZARD_EDGE_MARGIN, triggerY, Math.max(0, deathZone.width - HAZARD_EDGE_MARGIN * 2), triggerHeight);
+      graphics.strokeRect(deathZone.x + HAZARD_EDGE_MARGIN, triggerY, Math.max(0, deathZone.width - HAZARD_EDGE_MARGIN * 2), triggerHeight);
+    });
+
+    this.timedSpikeZones.forEach((deathZone) => {
+      const triggerY = deathZone.y + deathZone.height * HAZARD_TRIGGER_DEPTH_RATIO;
+      const triggerHeight = Math.max(0, deathZone.y + deathZone.height - triggerY);
+      graphics.fillStyle(this.timedSpikesActive ? 0xff2b2b : 0x777777, this.timedSpikesActive ? 0.2 : 0.12);
+      graphics.lineStyle(3, this.timedSpikesActive ? 0xff2b2b : 0xaaaaaa, 0.95);
+      graphics.fillRect(deathZone.x, deathZone.y, deathZone.width, deathZone.height);
+      graphics.strokeRect(deathZone.x, deathZone.y, deathZone.width, deathZone.height);
+
+      if (this.timedSpikesActive) {
+        graphics.fillStyle(0xff00ff, 0.22);
+        graphics.lineStyle(2, 0xff00ff, 0.95);
+        graphics.fillRect(deathZone.x + HAZARD_EDGE_MARGIN, triggerY, Math.max(0, deathZone.width - HAZARD_EDGE_MARGIN * 2), triggerHeight);
+        graphics.strokeRect(deathZone.x + HAZARD_EDGE_MARGIN, triggerY, Math.max(0, deathZone.width - HAZARD_EDGE_MARGIN * 2), triggerHeight);
+      }
+    });
+
+    this.markers.forEach((marker) => {
+      graphics.fillStyle(0xffe36e, 0.9);
+      graphics.lineStyle(2, 0x120d0a, 0.9);
+      graphics.fillCircle(marker.x, marker.y, 9);
+      graphics.strokeCircle(marker.x, marker.y, 13);
+    });
+
+    graphics.fillStyle(0xffffff, 0.98);
+    graphics.lineStyle(2, 0x000000, 0.95);
+    graphics.fillCircle(this.position.x, this.position.y, 7);
+    graphics.strokeCircle(this.position.x, this.position.y, 11);
+  }
+
+  private getDebugGraphics(): Phaser.GameObjects.Graphics {
+    if (!this.debugGraphics) {
+      this.debugGraphics = this.host.scene.add.graphics().setDepth(23);
+    }
+
+    return this.debugGraphics;
   }
 }

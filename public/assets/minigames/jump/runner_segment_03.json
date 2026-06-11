@@ -83,10 +83,12 @@
         }, 
         {
          "id":2,
-         "image":"runner_segment_01.png",
+         "image":"runner_segment_03.png",
          "imageheight":1080,
          "imagewidth":1920,
          "name":"Calque d'Images 1",
+         "offsetx":0,
+         "offsety":2,
          "opacity":1,
          "type":"imagelayer",
          "visible":true,
@@ -108,8 +110,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":80,
-                 "y":762
+                 "x":74,
+                 "y":781
                 }, 
                 {
                  "height":0,
@@ -121,8 +123,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":77.464828861,
-                 "y":762
+                 "x":75.464828861,
+                 "y":781
                 }, 
                 {
                  "height":0,
@@ -134,8 +136,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":1860,
-                 "y":762
+                 "x":1862,
+                 "y":781
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -149,28 +151,52 @@
          "name":"collision",
          "objects":[
                 {
-                 "height":99.0567127401532,
+                 "height":99,
                  "id":4,
                  "name":"collision_floor_01",
                  "opacity":1,
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":830.893620298002,
-                 "x":1.47845839910677,
-                 "y":765.841450737304
+                 "width":392.893620298,
+                 "x":-2.521541601,
+                 "y":787
                 }, 
                 {
-                 "height":99.0567,
+                 "height":99,
                  "id":5,
                  "name":"collision_floor_02",
                  "opacity":1,
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":687.482827282178,
-                 "x":1231.17272796751,
-                 "y":765.102227907827
+                 "width":361.482827282,
+                 "x":599.172727968,
+                 "y":787
+                }, 
+                {
+                 "height":99,
+                 "id":9,
+                 "name":"collision_floor_04",
+                 "opacity":1,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":261.483,
+                 "x":1659.2585,
+                 "y":785
+                }, 
+                {
+                 "height":99,
+                 "id":13,
+                 "name":"collision_floor_03",
+                 "opacity":1,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":355.483,
+                 "x":1105.2585,
+                 "y":784.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -184,16 +210,40 @@
          "name":"hazards",
          "objects":[
                 {
-                 "height":183.328841489239,
+                 "height":127.328841489,
                  "id":7,
-                 "name":"death_zone_lava_01",
+                 "name":"death_zone_wolfspike_01",
                  "opacity":1,
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":439.10214453471,
-                 "x":807.238285912294,
-                 "y":712.61694836946
+                 "width":235.102144535,
+                 "x":1443.238285912,
+                 "y":680
+                }, 
+                {
+                 "height":111.329,
+                 "id":10,
+                 "name":"death_zone_water_01",
+                 "opacity":1,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":188.102,
+                 "x":935.449,
+                 "y":696
+                }, 
+                {
+                 "height":125.329,
+                 "id":11,
+                 "name":"death_zone_spike_01",
+                 "opacity":1,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":229.102,
+                 "x":379.449,
+                 "y":688.3355
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -202,7 +252,7 @@
          "y":0
         }],
  "nextlayerid":7,
- "nextobjectid":8,
+ "nextobjectid":14,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.12.2",
