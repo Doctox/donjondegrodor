@@ -4,7 +4,7 @@ import { GAME_TEXTS } from "./gameTexts";
 export type ItemKind = "equipment" | "item";
 export type ItemId = GrodorEquipmentId | "gold_coin_test" | "weird_stone_test";
 export type ItemRarity = "common" | "rare" | "epic" | "legendary";
-export type EquipmentSlotId = "weapon" | "helmet" | "amulet" | "gloves" | "boots" | "object" | "cape";
+export type EquipmentSlotId = "weapon" | "helmet" | "amulet" | "gloves" | "boots" | "object" | "cape" | "belt";
 
 export type ItemDefinition = {
   id: ItemId;
@@ -47,7 +47,7 @@ export const ITEM_DEFINITIONS = {
     kind: "equipment",
     equipmentId: "too_long_cape",
     equipmentSlot: "cape",
-    rarity: "common",
+    rarity: "rare",
     lootable: true,
     shopDiscoverable: true,
     description: GAME_TEXTS.items.descriptions.tooLongCape
@@ -57,7 +57,7 @@ export const ITEM_DEFINITIONS = {
     name: GAME_TEXTS.items.warUnderwear,
     kind: "equipment",
     equipmentId: "war_underwear",
-    equipmentSlot: "object",
+    equipmentSlot: "belt",
     rarity: "epic",
     lootable: true,
     shopDiscoverable: true,
@@ -102,7 +102,7 @@ export const ITEM_DEFINITIONS = {
     kind: "equipment",
     equipmentId: "ankle_ball",
     equipmentSlot: "object",
-    rarity: "rare",
+    rarity: "common",
     lootable: true,
     shopDiscoverable: true,
     description: GAME_TEXTS.items.descriptions.ankleBall

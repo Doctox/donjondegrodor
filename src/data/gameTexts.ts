@@ -45,7 +45,8 @@ export const GAME_TEXTS = {
       gloves: "Gants",
       boots: "Bottes",
       object: "Objets",
-      cape: "Cape"
+      cape: "Cape",
+      belt: "Ceinture"
     }
   },
   itemEffects: {
@@ -54,7 +55,7 @@ export const GAME_TEXTS = {
     almostHeroMedallionSave: "Medaillon: Grodor reste a 1 coeur.",
     stickyGlovesGold: (gold: number) => `Gants Collants: +${gold} PO.`,
     panicSandalsBlock: "Sandales de Panique: -1 coeur perdu.",
-    ankleBallFloor: "Boulet au Pied: l'escalier inverse sa honte.",
+    ankleBallSlow: "Boulet au Pied: Grodor va moins vite.",
     emotionalPebbleHeal: "Caillou Affectif: +1 coeur.",
     itemBroke: (itemName: string) => `${itemName} casse.`,
     combined: (messages: string[]) => messages.join(" ")
@@ -311,7 +312,8 @@ export const GAME_TEXTS = {
         cape: "Cape",
         gloves: "Gants",
         boots: "Bottes",
-        object: "Objet"
+        object: "Objet",
+        belt: "Ceinture"
       },
       permanentUpgradesTitle: "Ameliorations permanentes",
       passiveShopTitle: "Ameliorations passives",
@@ -690,7 +692,7 @@ export const GAME_TEXTS = {
       panicSandals: "Hors combat, peut annuler 1 coeur perdu.",
       almostHeroMedallion: "Sauve Grodor d'une mort chiffree, puis casse.",
       tinyHelmet: "En combat, peut annuler 1 coeur perdu.",
-      ankleBall: "Transforme les mauvais escaliers en descente.",
+      ankleBall: "Ralentit Grodor dans Jump et le curseur de l'ascenseur.",
       axe: "En combat, ajoute +1 degat quand Grodor touche.",
       stickyGloves: "Peut ajouter des PO bonus quand Grodor gagne de l'or.",
       emotionalPebble: "Peut rendre 1 coeur apres une perte."

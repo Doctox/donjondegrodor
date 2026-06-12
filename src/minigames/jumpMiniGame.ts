@@ -14,8 +14,10 @@ import {
   GeneratedJumpSprite,
   JUMP_GENERATED_ASSETS
 } from "./jumpSegmentGenerator";
+import { getDungeonRunState } from "../systems/dungeonRunState";
 
 const RUN_SPEED = 660;
+const ANKLE_BALL_RUN_SPEED_MULTIPLIER = 0.88;
 const GRAVITY = 1720;
 const JUMP_VELOCITY = 610;
 const LANDING_SNAP = 8;
@@ -220,6 +222,8 @@ export class JumpMiniGame implements MiniGameController {
       chancesLeft: this.getChancesLeft(),
       isGrounded: this.isGrounded,
       isWaterSliding: this.isWaterSliding,
+      ankleBallActive: this.hasAnkleBall(),
+      runSpeed: Math.round(this.getRunSpeed()),
       timedSpikesActive: this.timedSpikesActive,
       jumpPose: this.jumpPose,
       spawnGrodor: this.spawnStart ? { x: Math.round(this.spawnStart.x), y: Math.round(this.spawnStart.y) } : undefined,
@@ -336,7 +340,7 @@ export class JumpMiniGame implements MiniGameController {
     }
 
     const deltaSeconds = Math.min(delta, 40) / 1000;
-    this.position.x += (this.isWaterSliding ? WATER_SLIDE_SPEED : RUN_SPEED) * deltaSeconds;
+    this.position.x += (this.isWaterSliding ? WATER_SLIDE_SPEED : this.getRunSpeed()) * deltaSeconds;
 
     if (!this.isGrounded) {
       this.verticalVelocity += GRAVITY * deltaSeconds;
@@ -393,6 +397,14 @@ export class JumpMiniGame implements MiniGameController {
     this.host.setStep(1);
     this.host.getStatusText()?.setText("");
     this.host.publishMiniGameReport();
+  }
+
+  private getRunSpeed(): number {
+    return this.hasAnkleBall() ? RUN_SPEED * ANKLE_BALL_RUN_SPEED_MULTIPLIER : RUN_SPEED;
+  }
+
+  private hasAnkleBall(): boolean {
+    return getDungeonRunState().equipment.includes("ankle_ball");
   }
 
   private succeed(): void {

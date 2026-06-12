@@ -321,13 +321,13 @@ function sanitizeOwnedItemCounts(itemCounts: OwnedItemCounts): OwnedItemCounts {
 
 function sanitizeStartingLoadout(value: Record<string, unknown>): StartingLoadout {
   return Object.fromEntries(
-    Object.entries(value).flatMap(([slot, itemId]) => {
+    Object.entries(value).flatMap(([, itemId]) => {
       if (typeof itemId !== "string") {
         return [];
       }
 
       const itemSlot = getEquipmentSlot(itemId);
-      if (!itemSlot || itemSlot !== slot) {
+      if (!itemSlot) {
         return [];
       }
 

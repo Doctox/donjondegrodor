@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import { IMAGE_ASSETS, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
 import { GAME_TEXTS } from "../data/gameTexts";
+import { getDungeonRunState } from "../systems/dungeonRunState";
 import { MiniGameController, MiniGameHost, MiniGameResult } from "./miniGameTypes";
 
 const DISPLAY = {
@@ -32,6 +33,7 @@ const CURSOR = {
   height: 79
 };
 const CURSOR_SPEED = 3.9;
+const ANKLE_BALL_CURSOR_SPEED_MULTIPLIER = 0.78;
 const RESULT_FLASHES = 6;
 const RESULT_FLASH_INTERVAL_MS = 150;
 const GREEN_LIMIT = 0.39;
@@ -111,6 +113,8 @@ export class ElevatorMiniGame implements MiniGameController {
       phase: this.phase,
       cursorPosition: Number(this.cursorPosition.toFixed(3)),
       cursorDirection: this.cursorDirection,
+      ankleBallActive: this.hasAnkleBall(),
+      cursorSpeed: Number(this.getCursorSpeed().toFixed(2)),
       result: this.result
     };
   }
@@ -136,7 +140,7 @@ export class ElevatorMiniGame implements MiniGameController {
       return;
     }
 
-    this.cursorPosition += this.cursorDirection * CURSOR_SPEED * (delta / 1000);
+    this.cursorPosition += this.cursorDirection * this.getCursorSpeed() * (delta / 1000);
     if (this.cursorPosition <= 0) {
       this.cursorPosition = 0;
       this.cursorDirection = 1;
@@ -234,6 +238,14 @@ export class ElevatorMiniGame implements MiniGameController {
       outcome: "failure",
       floorDelta: 2
     });
+  }
+
+  private getCursorSpeed(): number {
+    return this.hasAnkleBall() ? CURSOR_SPEED * ANKLE_BALL_CURSOR_SPEED_MULTIPLIER : CURSOR_SPEED;
+  }
+
+  private hasAnkleBall(): boolean {
+    return getDungeonRunState().equipment.includes("ankle_ball");
   }
 
   private finish(result: MiniGameResult): void {

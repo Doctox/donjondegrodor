@@ -113,12 +113,13 @@ const HOUSE_EQUIPMENT_PANEL = {
     cape: { x: 674, y: 250 },
     amulet: { x: 674, y: 746 },
     gloves: { x: 214, y: 473 },
+    belt: { x: 214, y: 746 },
     object: { x: 444, y: 746 },
     boots: { x: 674, y: 473 }
   } satisfies Record<EquipmentSlotId, { x: number; y: number }>
 };
 
-const HOUSE_EQUIPMENT_SLOT_IDS = ["weapon", "helmet", "cape", "amulet", "gloves", "object", "boots"] satisfies EquipmentSlotId[];
+const HOUSE_EQUIPMENT_SLOT_IDS = ["weapon", "helmet", "cape", "gloves", "boots", "belt", "object", "amulet"] satisfies EquipmentSlotId[];
 
 const HOUSE_CHEST_PANEL = {
   width: 407,

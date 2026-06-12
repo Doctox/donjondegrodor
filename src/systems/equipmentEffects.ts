@@ -8,7 +8,6 @@ const DISPLAY_BREAK_CHANCES: Record<string, number> = {
   axe: 50,
   tiny_helmet: 50,
   panic_sandals: 50,
-  ankle_ball: 50,
   almost_hero_medallion: 100
 };
 
@@ -162,21 +161,8 @@ export function applyGoldGainEquipmentEffects(
 export function applyFloorDeltaEquipmentEffects(
   sourceState: DungeonRunState,
   floorDelta: number,
-  random: () => number
+  _random: () => number
 ): FloorDeltaEquipmentResult {
-  if (floorDelta > 0 && isEquipmentActive(sourceState, "ankle_ball")) {
-    const breakResult = maybeBreakEquipment(sourceState, "ankle_ball", 0.5, random);
-    return {
-      state: breakResult.state,
-      floorDelta: -Math.abs(floorDelta),
-      effectMessages: [
-        GAME_TEXTS.itemEffects.ankleBallFloor,
-        ...breakResult.brokenItems.map((itemId) => GAME_TEXTS.itemEffects.itemBroke(getItemName(itemId)))
-      ],
-      brokenItems: breakResult.brokenItems
-    };
-  }
-
   return { state: sourceState, floorDelta, effectMessages: [], brokenItems: [] };
 }
 

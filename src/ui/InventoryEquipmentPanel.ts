@@ -39,11 +39,12 @@ const EQUIPMENT_SLOTS = {
   amulet: { x: 674, y: 746 },
   cape: { x: 674, y: 250 },
   gloves: { x: 214, y: 473 },
+  belt: { x: 214, y: 746 },
   object: { x: 444, y: 746 },
   boots: { x: 674, y: 473 }
 } satisfies Record<EquipmentSlotId, { x: number; y: number }>;
 
-const EQUIPMENT_SLOT_IDS = ["weapon", "helmet", "cape", "amulet", "gloves", "object", "boots"] satisfies EquipmentSlotId[];
+const EQUIPMENT_SLOT_IDS = ["weapon", "helmet", "cape", "gloves", "boots", "belt", "object", "amulet"] satisfies EquipmentSlotId[];
 
 const KEY_SLOT_POSITIONS = [
   { x: 901, y: 201 },
