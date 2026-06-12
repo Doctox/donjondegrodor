@@ -55,7 +55,6 @@ import { discoverShopItems, getDiscoveredShopItems } from "../systems/metaProgre
 import { shouldRevealDoorReadingHint } from "../systems/permanentUpgrades";
 import { getDoorPathPoints, getInteractiveZones, getSpawnPoint, TiledPoint } from "../systems/tiledMap";
 import { setHudVisible } from "../ui/hud";
-import { createNineSlicePanel } from "../ui/nineSlicePanel";
 import { DungeonHud } from "../ui/DungeonHud";
 import { InventoryPanel } from "../ui/InventoryPanel";
 import { InventoryEquipmentPanel } from "../ui/InventoryEquipmentPanel";
@@ -159,8 +158,6 @@ export class DungeonScene extends Phaser.Scene {
   private spawn?: TiledPoint;
   private infoLines: string[] = [];
   private statusMessage = "";
-  private infoPanel?: Phaser.GameObjects.NineSlice;
-  private infoText?: Phaser.GameObjects.Text;
   private dungeonHud?: DungeonHud;
   private inventoryPanel?: InventoryPanel | InventoryEquipmentPanel;
   private debugController?: DungeonDebugController;
@@ -660,8 +657,6 @@ export class DungeonScene extends Phaser.Scene {
     }
     this.dungeonHud?.setVisible(visible);
     this.debugController?.setVisible(visible);
-    this.infoPanel?.setVisible(visible);
-    this.infoText?.setVisible(visible);
   }
 
   private openInventoryPanel(): void {
