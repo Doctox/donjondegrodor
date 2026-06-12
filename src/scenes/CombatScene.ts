@@ -15,6 +15,7 @@ import {
   setDungeonLifeForCombat
 } from "../systems/dungeonRunState";
 import { addGrodorStat } from "../systems/grodorStats";
+import { showFloatingEffectSequence, showFloatingEffectText } from "../ui/floatingEffectText";
 
 type CombatSceneData = {
   arena?: number;
@@ -190,6 +191,11 @@ export class CombatScene extends Phaser.Scene {
       this.grodor?.setEquipment(damageResult.state.equipment);
       this.playItemBreakSfx(damageResult.brokenItems);
       this.rat?.reactToHit();
+      if (this.ratLife <= 0) {
+        this.rat?.playKo();
+      }
+      this.showCombatEffectText(this.getMonsterEffectPoint(), GAME_TEXTS.combat.pvDelta(-damageResult.damage), "negative");
+      this.showCombatEffectMessages(damageResult.effectMessages);
       this.setCombatMessage(
         [GAME_TEXTS.combat.ratDamage(this.getZoneLabel(zone), monsterName), ...damageResult.effectMessages].join("\n")
       );
@@ -203,14 +209,18 @@ export class CombatScene extends Phaser.Scene {
       this.playItemBreakSfx(lossResult.brokenItems);
       if (lossResult.finalLoss <= 0) {
         this.grodor?.playIdle();
+        this.showCombatEffectText(this.getGrodorEffectPoint(), GAME_TEXTS.combat.dodge, "dodge");
+        this.showCombatEffectMessages(lossResult.effectMessages);
         this.setCombatMessage(lossResult.effectMessages.join("\n") || GAME_TEXTS.dungeon.cowardReflexTriggered);
       } else {
         playSfx("grodorHurt");
         this.grodor?.playHurt();
+        this.showCombatEffectText(this.getGrodorEffectPoint(), GAME_TEXTS.combat.pvDelta(-lossResult.finalLoss), "negative");
+        this.showCombatEffectMessages(lossResult.effectMessages);
         this.setCombatMessage(
           [GAME_TEXTS.combat.grodorDamage(this.getZoneLabel(zone), monsterName), ...lossResult.effectMessages].join("\n")
         );
-        this.flashLostGrodorHeart(previousLife);
+        this.playCombatHeartLossEffect(previousLife);
       }
       (window as unknown as { __combatLifeSyncReport?: unknown }).__combatLifeSyncReport = {
         grodorLife: this.grodorLife,
@@ -218,6 +228,7 @@ export class CombatScene extends Phaser.Scene {
         state: syncedState
       };
     } else {
+      this.showCombatEffectText(this.getMonsterEffectPoint(), GAME_TEXTS.combat.dodge, "dodge");
       this.setCombatMessage(GAME_TEXTS.combat.nothing(this.getZoneLabel(zone)));
     }
 
@@ -357,24 +368,111 @@ export class CombatScene extends Phaser.Scene {
     this.combatMessage = message;
   }
 
-  private flashLostGrodorHeart(previousLife: number): void {
-    const lostHeart = this.grodorHearts[previousLife - 1];
-    if (!lostHeart) {
+  private playCombatHeartLossEffect(previousLife: number): void {
+    const sourceHeart = this.grodorHearts[previousLife - 1];
+    if (!sourceHeart) {
       return;
     }
 
+    const start = { x: sourceHeart.x, y: sourceHeart.y };
+    const end = this.getGrodorEffectPoint(-120);
+    const mid = {
+      x: (start.x + end.x) / 2,
+      y: Math.min(start.y, end.y) - 120
+    };
+    const heart = this.add
+      .image(start.x, start.y, IMAGE_ASSETS.heartBrake.key)
+      .setDisplaySize(58, 54)
+      .setDepth(DEPTHS.ui + 7)
+      .setAlpha(0);
+    const heartScaleX = heart.scaleX;
+    const heartScaleY = heart.scaleY;
+    heart.setScale(heartScaleX * 0.78, heartScaleY * 0.78);
+    const progress = { value: 0 };
+
     this.tweens.add({
-      targets: lostHeart,
-      scale: 0.12,
-      alpha: 0.45,
+      targets: heart,
+      alpha: 1,
+      scaleX: heartScaleX,
+      scaleY: heartScaleY,
       duration: 120,
-      yoyo: true,
-      repeat: 1,
+      ease: "Back.easeOut"
+    });
+    this.tweens.add({
+      targets: progress,
+      value: 1,
+      duration: 1400,
+      ease: "Sine.easeInOut",
+      onUpdate: () => {
+        const t = progress.value;
+        const inv = 1 - t;
+        heart.setPosition(
+          inv * inv * start.x + 2 * inv * t * mid.x + t * t * end.x,
+          inv * inv * start.y + 2 * inv * t * mid.y + t * t * end.y
+        );
+        heart.setAngle(-34 * Math.sin(t * Math.PI * 2));
+        if (t > 0.8) {
+          heart.setAlpha(Math.max(0, (1 - t) / 0.2));
+        }
+      },
       onComplete: () => {
-        lostHeart.setScale(0.08);
-        lostHeart.setAlpha(1);
+        heart.destroy();
       }
     });
+  }
+
+  private showCombatEffectMessages(messages: string[]): void {
+    if (messages.length <= 0) {
+      return;
+    }
+
+    showFloatingEffectSequence(this, messages, () => this.getGrodorEffectPoint(-168), {
+      depth: DEPTHS.ui + 8,
+      tone: "item",
+      fontSize: 34,
+      wrapWidth: 620,
+      startDelayMs: 720,
+      staggerMs: 1500
+    });
+  }
+
+  private showCombatEffectText(
+    point: { x: number; y: number },
+    text: string,
+    tone: "negative" | "dodge" | "item",
+    fontSize = 48,
+    wrapWidth = 420
+  ): void {
+    showFloatingEffectText(this, point, text, {
+      depth: DEPTHS.ui + 8,
+      tone,
+      fontSize,
+      wrapWidth,
+      holdMs: 900,
+      startScale: 0.84
+    });
+  }
+
+  private getGrodorEffectPoint(offsetY = -250): { x: number; y: number } {
+    return {
+      x: this.grodor?.x ?? 590,
+      y: (this.grodor?.y ?? 835) + offsetY
+    };
+  }
+
+  private getMonsterEffectPoint(): { x: number; y: number } {
+    const heartPoint = this.rat?.getHeartPosition();
+    if (heartPoint) {
+      return {
+        x: heartPoint.x + 18,
+        y: heartPoint.y - 36
+      };
+    }
+
+    return {
+      x: this.rat?.container.x ?? 1270,
+      y: (this.rat?.container.y ?? 835) - 360
+    };
   }
 
   private getZoneLabel(zone: MonsterHitZone): string {

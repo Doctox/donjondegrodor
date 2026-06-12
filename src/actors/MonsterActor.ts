@@ -7,6 +7,7 @@ export class MonsterActor {
   private readonly sprite: Phaser.GameObjects.Image;
   private readonly hitZones = new Map<MonsterHitZone, Phaser.GameObjects.Rectangle>();
   private readonly definition: MonsterDefinition;
+  private ko = false;
 
   constructor(private readonly scene: Phaser.Scene, x: number, y: number, monsterId: MonsterId = "rat", scaleMultiplier = 1) {
     this.definition = getMonsterDefinition(monsterId);
@@ -77,6 +78,11 @@ export class MonsterActor {
   }
 
   reactToHit(): void {
+    if (this.ko) {
+      return;
+    }
+
+    this.sprite.setTexture(this.definition.hurtTextureKey);
     this.sprite.setTint(0xff7070);
     this.scene.tweens.add({
       targets: this.container,
@@ -85,8 +91,21 @@ export class MonsterActor {
       yoyo: true,
       repeat: 4,
       ease: "Sine.easeInOut",
-      onComplete: () => this.sprite.clearTint()
+      onComplete: () => {
+        this.sprite.clearTint();
+        if (!this.ko) {
+          this.sprite.setTexture(this.definition.idleTextureKey);
+        }
+      }
     });
+  }
+
+  playKo(): void {
+    this.ko = true;
+    this.scene.tweens.killTweensOf(this.container);
+    this.sprite.clearTint();
+    this.sprite.setTexture(this.definition.koTextureKey);
+    this.setZonesEnabled(false);
   }
 
   private createHitZones(): void {

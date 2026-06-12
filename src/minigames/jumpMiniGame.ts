@@ -8,13 +8,14 @@ import {
 } from "./miniGameTypes";
 import { playSfx } from "../systems/sfxManager";
 import { isJumpHitboxDebugEnabled } from "./jumpDebugConfig";
+import { applyHeartLossWithCowardReflex, getDungeonRunState } from "../systems/dungeonRunState";
+import { showFloatingEffectSequence } from "../ui/floatingEffectText";
 import {
   createGeneratedJumpSegment,
   GeneratedJumpSegment,
   GeneratedJumpSprite,
   JUMP_GENERATED_ASSETS
 } from "./jumpSegmentGenerator";
-import { getDungeonRunState } from "../systems/dungeonRunState";
 
 const RUN_SPEED = 660;
 const ANKLE_BALL_RUN_SPEED_MULTIPLIER = 0.88;
@@ -411,8 +412,7 @@ export class JumpMiniGame implements MiniGameController {
     const result: MiniGameResult = {
       type: "jump",
       outcome: "success",
-      goldDelta: SUCCESS_GOLD,
-      lifeDelta: this.attemptsLost > 0 ? -this.attemptsLost : undefined
+      goldDelta: SUCCESS_GOLD
     };
     this.finish(result, "success");
   }
@@ -423,9 +423,21 @@ export class JumpMiniGame implements MiniGameController {
     }
 
     this.attemptsLost += 1;
-    this.playHeartLossEffect(Math.min(this.startingLife - 1, this.attemptsLost - 1));
+    const previousLife = getDungeonRunState().life;
+    const lossResult = applyHeartLossWithCowardReflex(1, "dungeon_event");
+    const currentLife = lossResult.state.life;
+    const netLifeLoss = previousLife - currentLife;
+    if (netLifeLoss > 0) {
+      this.playHeartLossEffect(Math.max(0, Math.min(this.startingLife - 1, previousLife - 1)));
+    } else if (lossResult.finalLoss > 0) {
+      playSfx("grodorHurt");
+    }
+    if (lossResult.brokenItems.length > 0) {
+      playSfx("itemBreak");
+    }
+    this.showJumpEffectMessages(lossResult.effectMessages);
     this.updateLifeDisplay();
-    if (this.getChancesLeft() > 0) {
+    if (currentLife > 0) {
       this.retry();
       return;
     }
@@ -433,7 +445,7 @@ export class JumpMiniGame implements MiniGameController {
     const result: MiniGameResult = {
       type: "jump",
       outcome: "failure",
-      lifeDelta: -this.attemptsLost
+      instantDeath: true
     };
     this.finish(result, "failure");
   }
@@ -552,7 +564,7 @@ export class JumpMiniGame implements MiniGameController {
   }
 
   private getChancesLeft(): number {
-    return Math.max(0, this.startingLife - this.attemptsLost);
+    return Math.max(0, Math.min(this.startingLife, getDungeonRunState().life));
   }
 
   private createExitHitZone(result: MiniGameResult): void {
@@ -661,6 +673,24 @@ export class JumpMiniGame implements MiniGameController {
         }
       },
       onComplete: () => heart.destroy()
+    });
+  }
+
+  private showJumpEffectMessages(messages: string[]): void {
+    if (messages.length <= 0) {
+      return;
+    }
+
+    showFloatingEffectSequence(this.host.scene, messages, () => ({
+      x: this.grodor?.x ?? this.position.x,
+      y: (this.grodor?.y ?? this.position.y) - 188
+    }), {
+      depth: 30,
+      tone: "item",
+      fontSize: 36,
+      wrapWidth: 620,
+      startDelayMs: 420,
+      staggerMs: 1500
     });
   }
 

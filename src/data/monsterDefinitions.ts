@@ -18,6 +18,8 @@ export type MonsterDefinition = {
   maxLife: number;
   baseGoldReward: number;
   idleTextureKey: string;
+  hurtTextureKey: string;
+  koTextureKey: string;
   scale: number;
   spriteHeight: number;
   heartOffsetY: number;
@@ -31,6 +33,8 @@ export const MONSTER_DEFINITIONS = {
     maxLife: 1,
     baseGoldReward: 1,
     idleTextureKey: IMAGE_ASSETS.ratIdle.key,
+    hurtTextureKey: IMAGE_ASSETS.ratHurt.key,
+    koTextureKey: IMAGE_ASSETS.ratKo.key,
     scale: 0.34,
     spriteHeight: 996,
     heartOffsetY: 34,
@@ -46,6 +50,8 @@ export const MONSTER_DEFINITIONS = {
     maxLife: 2,
     baseGoldReward: 2,
     idleTextureKey: IMAGE_ASSETS.skeletonIdle.key,
+    hurtTextureKey: IMAGE_ASSETS.skeletonHurt.key,
+    koTextureKey: IMAGE_ASSETS.skeletonKo.key,
     scale: 0.38,
     spriteHeight: 1090,
     heartOffsetY: 36,
@@ -61,6 +67,8 @@ export const MONSTER_DEFINITIONS = {
     maxLife: 3,
     baseGoldReward: 3,
     idleTextureKey: IMAGE_ASSETS.guardIdle.key,
+    hurtTextureKey: IMAGE_ASSETS.guardHurt.key,
+    koTextureKey: IMAGE_ASSETS.guardKo.key,
     scale: 0.43,
     spriteHeight: 934,
     heartOffsetY: 38,

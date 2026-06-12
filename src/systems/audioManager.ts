@@ -36,12 +36,15 @@ const VOLUME_MULTIPLIER_BY_ZONE = {
   village: 1,
   dungeon: 1,
   combat: 1,
-  shop: 1.55,
-  tavern: 1.55,
-  bank: 1.55
+  shop: 3.1,
+  tavern: 3.1,
+  bank: 3.1
 } satisfies Record<MusicZone, number>;
 
 let player: HTMLAudioElement | undefined;
+let audioContext: AudioContext | undefined;
+let gainNode: GainNode | undefined;
+let sourceNode: MediaElementAudioSourceNode | undefined;
 let currentZone: MusicZone | undefined;
 let requestedZone: MusicZone | undefined;
 let volume = readStoredVolume();
@@ -62,7 +65,8 @@ export function playZoneMusic(scene: Phaser.Scene, zone: MusicZone, fadeMs = DEF
   }
 
   if (currentZone === zone && !player.paused) {
-    fadeTo(getEffectiveVolume(), fadeMs);
+    updateZoneGain();
+    fadeTo(getElementVolume(), fadeMs);
     publishAudioReport(scene, zone, "already-playing");
     return;
   }
@@ -77,13 +81,13 @@ export function playZoneMusic(scene: Phaser.Scene, zone: MusicZone, fadeMs = DEF
       }
       switchToZone(zone);
       requestPlay();
-      fadeTo(getEffectiveVolume(), fadeMs);
+      fadeTo(getElementVolume(), fadeMs);
       publishAudioReport(scene, zone, "transitioned");
     });
   } else {
     switchToZone(zone);
     requestPlay();
-    fadeTo(getEffectiveVolume(), fadeMs);
+    fadeTo(getElementVolume(), fadeMs);
   }
 
   publishAudioReport(scene, zone, "play-requested");
@@ -121,7 +125,7 @@ export function stopZoneMusic(scene?: Phaser.Scene, fadeMs = DEFAULT_FADE_MS): v
 export function setGlobalMusicMuted(scene: Phaser.Scene | undefined, nextMuted: boolean): void {
   muted = nextMuted;
   writeStorage(STORAGE_KEYS.muted, muted ? "1" : "0");
-  fadeTo(getEffectiveVolume(), 160);
+  fadeTo(getElementVolume(), 160);
   publishAudioReport(scene, currentZone, "muted-updated");
 }
 
@@ -133,7 +137,7 @@ export function toggleGlobalMusicMuted(scene?: Phaser.Scene): boolean {
 export function setGlobalMusicVolume(scene: Phaser.Scene | undefined, nextVolume: number): void {
   volume = Phaser.Math.Clamp(nextVolume, 0, 1);
   writeStorage(STORAGE_KEYS.volume, String(volume));
-  fadeTo(getEffectiveVolume(), 160);
+  fadeTo(getElementVolume(), 160);
   publishAudioReport(scene, currentZone, "volume-updated");
 }
 
@@ -150,6 +154,7 @@ function ensurePlayer(): void {
   player.loop = true;
   player.preload = "auto";
   player.volume = 0;
+  ensureAudioGraph();
 }
 
 function switchToZone(zone: MusicZone): void {
@@ -160,6 +165,7 @@ function switchToZone(zone: MusicZone): void {
   const asset = MUSIC_BY_ZONE[zone];
   if (player.src.endsWith(asset.path)) {
     currentZone = zone;
+    updateZoneGain();
     return;
   }
 
@@ -172,6 +178,7 @@ function switchToZone(zone: MusicZone): void {
   player.volume = 0;
   player.load();
   currentZone = zone;
+  updateZoneGain();
 }
 
 function ensureUserAudioUnlock(): void {
@@ -194,8 +201,9 @@ function ensureUserAudioUnlock(): void {
       player.volume = 0;
       currentZone = requestedZone;
     }
+    void audioContext?.resume();
     requestPlay();
-    fadeTo(getEffectiveVolume(), 160);
+    fadeTo(getElementVolume(), 160);
   };
 
   window.addEventListener("pointerdown", unlock, true);
@@ -262,13 +270,43 @@ function cancelFade(): void {
   fadeIntervalId = undefined;
 }
 
-function getEffectiveVolume(): number {
+function ensureAudioGraph(): void {
+  if (!player || sourceNode || gainNode) {
+    return;
+  }
+
+  try {
+    const AudioContextConstructor = window.AudioContext;
+    audioContext = audioContext ?? new AudioContextConstructor();
+    sourceNode = audioContext.createMediaElementSource(player);
+    gainNode = audioContext.createGain();
+    sourceNode.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    updateZoneGain();
+  } catch (error) {
+    lastPlayError = error instanceof Error ? error.message : String(error);
+  }
+}
+
+function updateZoneGain(): void {
+  if (!gainNode) {
+    return;
+  }
+
+  gainNode.gain.value = currentZone ? VOLUME_MULTIPLIER_BY_ZONE[currentZone] : 1;
+}
+
+function getElementVolume(): number {
   if (muted) {
     return 0;
   }
 
+  return Phaser.Math.Clamp(volume, 0, 1);
+}
+
+function getEffectiveVolume(): number {
   const zoneMultiplier = currentZone ? VOLUME_MULTIPLIER_BY_ZONE[currentZone] : 1;
-  return Phaser.Math.Clamp(volume * zoneMultiplier, 0, 1);
+  return getElementVolume() * zoneMultiplier;
 }
 
 function readStoredMuted(): boolean {

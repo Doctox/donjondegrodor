@@ -217,7 +217,7 @@ export class ElevatorMiniGame implements MiniGameController {
       this.finish({
         type: "elevator",
         outcome: "success",
-        floorDelta: -2
+        floorDelta: -1
       });
       return;
     }

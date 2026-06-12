@@ -53,7 +53,6 @@ export class TavernScene extends Phaser.Scene {
       this.grodor.playIdle();
     }
 
-    this.createStatusPanel();
     this.createInteractives();
     this.setStatus(GAME_TEXTS.village.tavern.message);
     this.publishReport();
@@ -273,28 +272,6 @@ export class TavernScene extends Phaser.Scene {
       })
       .setOrigin(0.5)
       .setInteractive({ useHandCursor: true });
-  }
-
-  private createStatusPanel(): void {
-    const panelX = WORLD_WIDTH - 304;
-    const panelY = WORLD_HEIGHT - 152;
-    createNineSlicePanel(this, IMAGE_ASSETS.frameStory.key, panelX, panelY, 520, 220, {
-      left: 36,
-      right: 36,
-      top: 36,
-      bottom: 36
-    }).setDepth(60);
-    this.statusText = this.add
-      .text(panelX, panelY, "", {
-        fontFamily: "Inter, Arial, sans-serif",
-        fontSize: "24px",
-        color: "#fff1c2",
-        align: "center",
-        lineSpacing: 8,
-        wordWrap: { width: 420 }
-      })
-      .setOrigin(0.5)
-      .setDepth(61);
   }
 
   private setStatus(message: string): void {

@@ -452,7 +452,7 @@ export function applyHeartLossWithCowardReflex(
     addGrodorStat("degatsSubis", finalLoss);
   }
 
-  const postLossResult = applyPostHeartLossEquipmentEffects(state, finalLoss, random);
+  const postLossResult = applyPostHeartLossEquipmentEffects(state, finalLoss, requestedLoss, random);
   state = postLossResult.state;
   effectMessages.push(...postLossResult.effectMessages);
   brokenItems.push(...postLossResult.brokenItems);

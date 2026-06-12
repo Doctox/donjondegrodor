@@ -718,8 +718,14 @@ export const IMAGE_ASSETS = {
   jumpGeneratedWater: { key: "jump-generated-water", path: assetPath("/assets/minigames/jump/generated/water.png") },
   jumpGeneratedWolfspike: { key: "jump-generated-wolfspike", path: assetPath("/assets/minigames/jump/generated/wolfspike.png") },
   ratIdle: { key: "rat-idle", path: assetPath("/assets/sprites/monsters/rat/rat_idle.png") },
+  ratHurt: { key: "rat-hurt", path: assetPath("/assets/sprites/monsters/rat/rat_hurt.png") },
+  ratKo: { key: "rat-ko", path: assetPath("/assets/sprites/monsters/rat/rat_ko.png") },
   skeletonIdle: { key: "skeleton-idle", path: assetPath("/assets/sprites/monsters/skeleton/skeleton_idle.png") },
-  guardIdle: { key: "guard-idle", path: assetPath("/assets/sprites/monsters/guard/guard_idle.png") }
+  skeletonHurt: { key: "skeleton-hurt", path: assetPath("/assets/sprites/monsters/skeleton/skeleton_hurt.png") },
+  skeletonKo: { key: "skeleton-ko", path: assetPath("/assets/sprites/monsters/skeleton/skeleton_ko.png") },
+  guardIdle: { key: "guard-idle", path: assetPath("/assets/sprites/monsters/guard/guard_idle.png") },
+  guardHurt: { key: "guard-hurt", path: assetPath("/assets/sprites/monsters/guard/guard_hurt.png") },
+  guardKo: { key: "guard-ko", path: assetPath("/assets/sprites/monsters/guard/guard_ko.png") }
 } satisfies Record<string, AssetDefinition>;
 
 export const INVENTORY_ITEM_ASSETS = {

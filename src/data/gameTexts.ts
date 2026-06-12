@@ -448,6 +448,8 @@ export const GAME_TEXTS = {
     grodorDamage: (zoneLabel: string, monsterName: string) =>
       `Grodor frappe ${zoneLabel}, mais ${monsterName} riposte.\nGrodor perd 1 PV.`,
     nothing: (zoneLabel: string) => `Grodor frappe ${zoneLabel}.\nRien ne se passe.`,
+    dodge: "ESQUIVE",
+    pvDelta: (amount: number) => `${amount > 0 ? "+" : ""}${amount} PV`,
     victory: (monsterName: string) => `Victoire !\n${monsterName} est vaincu.`,
     zoneLabels: {
       head: "la tete",

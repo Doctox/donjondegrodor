@@ -65,13 +65,13 @@ export function applyPreHeartLossEquipmentEffects(
   if (specializedItem && remainingLoss > 0 && isEquipmentActive(state, specializedItem)) {
     remainingLoss = Math.max(0, remainingLoss - 1);
     effectMessages.push(specializedItem === "tiny_helmet" ? GAME_TEXTS.itemEffects.tinyHelmetBlock : GAME_TEXTS.itemEffects.panicSandalsBlock);
-    if (specializedItem === "tiny_helmet" && hasSurvivalCombo(state)) {
+    const breakChance = specializedItem === "tiny_helmet" ? getSurvivalHelmetBreakChance(state) : 0.5;
+    const breakResult = maybeBreakEquipment(state, specializedItem, breakChance, random);
+    state = breakResult.state;
+    brokenItems.push(...breakResult.brokenItems);
+    appendBrokenItemMessages(effectMessages, breakResult.brokenItems);
+    if (specializedItem === "tiny_helmet" && hasSurvivalCombo(state) && breakResult.brokenItems.length <= 0) {
       effectMessages.push(getSurvivalComboMessage(state, "noBreak"));
-    } else {
-      const breakResult = maybeBreakEquipment(state, specializedItem, 0.5, random);
-      state = breakResult.state;
-      brokenItems.push(...breakResult.brokenItems);
-      appendBrokenItemMessages(effectMessages, breakResult.brokenItems);
     }
   }
 
@@ -86,6 +86,7 @@ export function applyPreHeartLossEquipmentEffects(
 export function applyPostHeartLossEquipmentEffects(
   sourceState: DungeonRunState,
   finalLoss: number,
+  requestedLoss: number,
   random: () => number
 ): PostHeartLossEquipmentResult {
   const effectMessages: string[] = [];
@@ -93,11 +94,11 @@ export function applyPostHeartLossEquipmentEffects(
   let state = sourceState;
 
   if (
-    finalLoss > 0 &&
+    requestedLoss > 0 &&
     state.life > 0 &&
     state.life < state.maxLife &&
     isEquipmentActive(state, "emotional_pebble") &&
-    (hasSurvivalCombo(state) || random() < 0.5)
+    random() < getSurvivalPebbleHealChance(state)
   ) {
     state = {
       ...state,
@@ -115,7 +116,11 @@ export function applyPostHeartLossEquipmentEffects(
       life: 1
     };
     effectMessages.push(GAME_TEXTS.itemEffects.almostHeroMedallionSave);
-    if (hasSurvivalCombo(state)) {
+    const breakResult = maybeBreakEquipment(state, "almost_hero_medallion", getSurvivalMedallionBreakChance(state), random);
+    state = breakResult.state;
+    brokenItems.push(...breakResult.brokenItems);
+    appendBrokenItemMessages(effectMessages, breakResult.brokenItems);
+    if (hasSurvivalCombo(state) && breakResult.brokenItems.length <= 0) {
       effectMessages.push(getSurvivalComboMessage(state, "survive"));
       if (isEquipmentActive(state, "emotional_pebble") && state.life < state.maxLife) {
         state = {
@@ -125,11 +130,6 @@ export function applyPostHeartLossEquipmentEffects(
         effectMessages.push(GAME_TEXTS.itemEffects.emotionalPebbleHeal);
         effectMessages.push(getSurvivalComboMessage(state, "heal"));
       }
-    } else {
-      const breakResult = breakEquipment(state, "almost_hero_medallion");
-      state = breakResult.state;
-      brokenItems.push(...breakResult.brokenItems);
-      appendBrokenItemMessages(effectMessages, breakResult.brokenItems);
     }
   }
 
@@ -257,6 +257,44 @@ function getWarUnderwearMaxLifeBonus(equipment: string[]): number {
   }
 
   return getSurvivalGroupCount(equipment) >= 2 ? 2 : 1;
+}
+
+function getSurvivalHelmetBreakChance(sourceState: DungeonRunState): number {
+  const groupCount = getSurvivalGroupCount(sourceState.equipment);
+  if (groupCount >= 4) {
+    return 0.2;
+  }
+  if (groupCount >= 3) {
+    return 0.3;
+  }
+  if (groupCount >= 2) {
+    return 0.4;
+  }
+  return 0.5;
+}
+
+function getSurvivalMedallionBreakChance(sourceState: DungeonRunState): number {
+  const groupCount = getSurvivalGroupCount(sourceState.equipment);
+  if (groupCount >= 4) {
+    return 0.25;
+  }
+  if (groupCount >= 3) {
+    return 0.45;
+  }
+  if (groupCount >= 2) {
+    return 0.65;
+  }
+  return 1;
+}
+
+function getSurvivalPebbleHealChance(sourceState: DungeonRunState): number {
+  if (hasSurvivalMegaCombo(sourceState)) {
+    return 1;
+  }
+  if (hasSurvivalCombo(sourceState)) {
+    return 0.65;
+  }
+  return 0.5;
 }
 
 function hasSurvivalCombo(sourceState: DungeonRunState): boolean {

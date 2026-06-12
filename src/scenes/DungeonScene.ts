@@ -58,6 +58,7 @@ import { setHudVisible } from "../ui/hud";
 import { DungeonHud } from "../ui/DungeonHud";
 import { InventoryPanel } from "../ui/InventoryPanel";
 import { InventoryEquipmentPanel } from "../ui/InventoryEquipmentPanel";
+import { showFloatingEffectSequence } from "../ui/floatingEffectText";
 import { GrodorActor } from "../actors/GrodorActor";
 import { setLetterboxBackdrop } from "../ui/letterboxBackdrop";
 import { DungeonDebugController } from "./dungeon/DungeonDebugController";
@@ -1041,6 +1042,7 @@ export class DungeonScene extends Phaser.Scene {
   }
 
   private handleCombatResult(result: CombatResult): void {
+    this.syncGrodorEquipment();
     if (result.outcome === "victory") {
       addGrodorStat("combatsGagnes");
       const goldResult = addDungeonGoldReward(result.goldReward);
@@ -1483,42 +1485,18 @@ export class DungeonScene extends Phaser.Scene {
       return;
     }
 
-    const x = this.grodor?.x ?? WORLD_WIDTH / 2;
-    const y = (this.grodor?.y ?? WORLD_HEIGHT / 2) - 218;
-    const effectText = this.add
-      .text(x, y, GAME_TEXTS.itemEffects.combined(messages), {
-        fontFamily: "Georgia, serif",
-        fontSize: "38px",
-        color: "#f8e7b1",
-        align: "center",
-        stroke: "#120d0a",
-        strokeThickness: 7,
-        wordWrap: { width: 620, useAdvancedWrap: true }
-      })
-      .setOrigin(0.5)
-      .setDepth(MINI_GAME_HEART_TRANSFER.depthHeart + 3)
-      .setAlpha(0)
-      .setScale(0.86);
-
-    this.tweens.add({
-      targets: effectText,
-      alpha: 1,
-      y: y - 28,
-      scaleX: 1,
-      scaleY: 1,
-      duration: 220,
-      ease: "Back.easeOut",
-      onComplete: () => {
-        this.tweens.add({
-          targets: effectText,
-          alpha: 0,
-          y: y - 92,
-          delay: 980,
-          duration: 360,
-          ease: "Sine.easeIn",
-          onComplete: () => effectText.destroy()
-        });
-      }
+    showFloatingEffectSequence(this, messages, () => ({
+      x: this.grodor?.x ?? WORLD_WIDTH / 2,
+      y: (this.grodor?.y ?? WORLD_HEIGHT / 2) - 218
+    }), {
+      depth: MINI_GAME_HEART_TRANSFER.depthHeart + 3,
+      tone: "item",
+      fontSize: 38,
+      wrapWidth: 620,
+      holdMs: 1250,
+      rise: 28,
+      fadeRise: 92,
+      staggerMs: 1500
     });
   }
 
