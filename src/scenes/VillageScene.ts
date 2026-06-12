@@ -53,7 +53,7 @@ import {
 import { getPermanentUpgrades } from "../systems/permanentUpgrades";
 import { playZoneMusic } from "../systems/audioManager";
 import { playSfx } from "../systems/sfxManager";
-import { getInteractiveZones, getPathPoints, getSpawnPoint, TiledPoint, TiledZone } from "../systems/tiledMap";
+import { getInteractiveZones, getPathObjectNames, getPathPoints, getSpawnPoint, TiledPoint, TiledZone } from "../systems/tiledMap";
 import { markVillageDiscovered } from "../systems/villageDiscovery";
 import { setLetterboxBackdrop } from "../ui/letterboxBackdrop";
 import { createNineSlicePanel } from "../ui/nineSlicePanel";
@@ -66,6 +66,7 @@ import { VillageShopPanel } from "../ui/village/VillageShopPanel";
 import { MiniGameResult, MiniGameType } from "./MiniGameScene";
 
 type VillageBuildingId = "bank" | "shop" | "tavern" | "board" | "grodor_house";
+type VillageLocationId = "defaut" | "dungeon" | "bank" | "shop" | "tavern" | "board" | "house";
 
 type VillageSceneData = {
   fromDungeon?: boolean;
@@ -73,6 +74,14 @@ type VillageSceneData = {
 };
 
 const BUILDINGS: VillageBuildingId[] = ["bank", "shop", "tavern", "board", "grodor_house"];
+const DEFAULT_VILLAGE_LOCATION: VillageLocationId = "defaut";
+const BUILDING_LOCATION = {
+  bank: "bank",
+  shop: "shop",
+  tavern: "tavern",
+  board: "board",
+  grodor_house: "house"
+} satisfies Record<VillageBuildingId, VillageLocationId>;
 const BUILDING_TEXT = {
   bank: GAME_TEXTS.village.bank,
   shop: GAME_TEXTS.village.shop,
@@ -169,6 +178,7 @@ export class VillageScene extends Phaser.Scene {
   private fromDungeon = false;
   private fromTavern = false;
   private hasEnteredVillage = true;
+  private currentLocation: VillageLocationId = DEFAULT_VILLAGE_LOCATION;
   private moving = false;
   private activeBuilding?: VillageBuildingId;
   private panel?: Phaser.GameObjects.Container;
@@ -205,12 +215,13 @@ export class VillageScene extends Phaser.Scene {
       markVillageDiscovered();
     }
     this.hasEnteredVillage = !this.fromDungeon;
+    this.currentLocation = this.fromDungeon ? "dungeon" : this.fromTavern ? "tavern" : DEFAULT_VILLAGE_LOCATION;
     this.map = this.make.tilemap({ key: JSON_ASSETS.villageMap.key });
     this.add.image(0, 0, IMAGE_ASSETS.villageBackground.key).setOrigin(0).setDisplaySize(WORLD_WIDTH, WORLD_HEIGHT);
     this.cameras.main.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
     this.createVillageHudOverlays();
 
-    this.villageSpawn = this.findSpawn(["spawn_grodor_village"]);
+    this.villageSpawn = this.findSpawn(["spawn_grodor_village", "spawn_defaut_village", "spawn_default_village"]);
     const dungeonSpawn = this.findSpawn(["spawn_dungeon", "spawn_grodor_from_dungeon", "spawn_from_dungeon"]);
     const tavernSpawn = this.findSpawn(["spawn_from_tavern"]);
     const start = this.fromDungeon ? dungeonSpawn ?? this.villageSpawn : this.fromTavern ? tavernSpawn ?? this.villageSpawn : this.villageSpawn;
@@ -242,6 +253,7 @@ export class VillageScene extends Phaser.Scene {
     this.map = undefined;
     this.grodor = undefined;
     this.villageSpawn = undefined;
+    this.currentLocation = DEFAULT_VILLAGE_LOCATION;
     this.moving = false;
     this.activeBuilding = undefined;
     this.fromTavern = false;
@@ -608,11 +620,10 @@ export class VillageScene extends Phaser.Scene {
       return;
     }
 
-    const entryPath = this.hasEnteredVillage ? [] : getPathPoints(this.map, "path_from_dungeon_");
-    const buildingPath = getPathPoints(this.map, `path_${building}_`);
-    const path = [...entryPath, ...buildingPath];
+    const targetLocation = this.getBuildingLocation(building);
+    const path = this.getVillagePath(this.currentLocation, targetLocation);
 
-    if (path.length === 0) {
+    if (path.length === 0 && this.currentLocation !== targetLocation) {
       this.setStatus(GAME_TEXTS.village.missingPath(building));
       return;
     }
@@ -622,13 +633,39 @@ export class VillageScene extends Phaser.Scene {
     this.publishReport();
     this.setInputsEnabled(false);
     this.setStatus(GAME_TEXTS.village.movingTo(BUILDING_TEXT[building].label));
+    if (this.currentLocation === targetLocation) {
+      this.grodor.playIdle();
+      this.grodor.setFlipX(false);
+      this.showBuildingPanel(building);
+      this.publishMovementReport(building, zone, "arrived", path);
+      return;
+    }
+
     this.walkPath(path, () => {
+      this.currentLocation = targetLocation;
       this.grodor?.playIdle();
       this.grodor?.setFlipX(false);
       this.showBuildingPanel(building);
       this.publishMovementReport(building, zone, "arrived", path);
     });
     this.publishMovementReport(building, zone, "moving", path);
+  }
+
+  private getBuildingLocation(building: VillageBuildingId): VillageLocationId {
+    return BUILDING_LOCATION[building];
+  }
+
+  private getVillagePath(from: VillageLocationId, to: VillageLocationId): TiledPoint[] {
+    if (!this.map || from === to) {
+      return [];
+    }
+
+    const directPath = getPathPoints(this.map, `path_${from}_to_${to}_`);
+    if (directPath.length > 0) {
+      return directPath;
+    }
+
+    return getPathPoints(this.map, `path_${to}_to_${from}_`, { reverse: true });
   }
 
   private walkPath(path: TiledPoint[], onComplete: () => void): void {
@@ -651,7 +688,7 @@ export class VillageScene extends Phaser.Scene {
         targets: this.grodor.container,
         x: point.x,
         y: point.y,
-        duration: Phaser.Math.Clamp(distance * 2.1, 240, 820),
+        duration: Phaser.Math.Clamp(distance * 2.8, 320, 1150),
         ease: "Sine.easeInOut",
         onComplete: () => {
           if (index < path.length - 1) {
@@ -1178,39 +1215,12 @@ export class VillageScene extends Phaser.Scene {
     this.panel?.destroy();
     this.panel = undefined;
 
-    const building = this.activeBuilding;
-    if (!this.map || !building) {
-      this.resetToCenterFallback();
-      return;
-    }
-
-    const path = getPathPoints(this.map, `path_${building}_`, { reverse: true });
-    if (path.length === 0) {
-      this.resetToCenterFallback();
-      return;
-    }
-
-    const returnPath = this.villageSpawn ? [...path, this.villageSpawn] : path;
-    this.walkPath(returnPath, () => {
-      this.updateVillageGrodorEquipment();
-      this.grodor?.setFlipX(false);
-      this.setInputsEnabled(true);
-      this.setStatus(GAME_TEXTS.village.chooseBuilding);
-      this.activeBuilding = undefined;
-      this.publishReturnReport(returnPath);
-    });
-  }
-
-  private resetToCenterFallback(): void {
-    if (this.grodor && this.villageSpawn) {
-      this.grodor.setPosition(this.villageSpawn.x, this.villageSpawn.y);
-      this.updateVillageGrodorEquipment();
-      this.grodor.setFlipX(false);
-    }
-
-    this.activeBuilding = undefined;
+    this.updateVillageGrodorEquipment();
+    this.grodor?.setFlipX(false);
+    this.grodor?.playIdle();
     this.setInputsEnabled(true);
     this.setStatus(GAME_TEXTS.village.chooseBuilding);
+    this.publishReturnReport([]);
   }
 
   private createStatusPanel(): void {
@@ -1243,7 +1253,7 @@ export class VillageScene extends Phaser.Scene {
         goldText: this.villageGoldText?.text
       },
       spawns: this.map?.getObjectLayer("spawns")?.objects.map((object) => object.name) ?? [],
-      paths: this.map?.getObjectLayer("paths")?.objects.map((object) => object.name).filter(Boolean) ?? []
+      paths: this.map ? getPathObjectNames(this.map) : []
     });
   }
 

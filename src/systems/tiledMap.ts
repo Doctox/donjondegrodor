@@ -16,7 +16,7 @@ export function getDoorPathPoints(map: Phaser.Tilemaps.Tilemap, doorIndex: numbe
 }
 
 export function getPathPoints(map: Phaser.Tilemaps.Tilemap, prefix: string, options: { reverse?: boolean } = {}): TiledPoint[] {
-  const points = (map.getObjectLayer("paths")?.objects ?? [])
+  const points = getPathObjects(map)
     .filter((object) => object.name?.startsWith(prefix))
     .map((object) => ({
       name: object.name ?? "",
@@ -26,6 +26,10 @@ export function getPathPoints(map: Phaser.Tilemaps.Tilemap, prefix: string, opti
     .sort((a, b) => getPathOrder(a.name) - getPathOrder(b.name));
 
   return options.reverse ? points.reverse() : points;
+}
+
+export function getPathObjectNames(map: Phaser.Tilemaps.Tilemap): string[] {
+  return getPathObjects(map).map((object) => object.name).filter(Boolean) as string[];
 }
 
 export function getSpawnPoint(map: Phaser.Tilemaps.Tilemap, name: string): TiledPoint | undefined {
@@ -63,4 +67,10 @@ function getPathOrder(name: string): number {
 
   const match = name.match(/_(\d+)$/);
   return match ? Number.parseInt(match[1], 10) : Number.MAX_SAFE_INTEGER - 1;
+}
+
+function getPathObjects(map: Phaser.Tilemaps.Tilemap): Phaser.Types.Tilemaps.TiledObject[] {
+  return map.objects
+    .filter((layer) => layer.name === "paths" || layer.name.startsWith("path_"))
+    .flatMap((layer) => layer.objects ?? []);
 }
