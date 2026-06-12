@@ -10,6 +10,7 @@ const DISPLAY_BREAK_CHANCES: Record<string, number> = {
   panic_sandals: 50,
   almost_hero_medallion: 100
 };
+const SURVIVAL_GROUP = ["tiny_helmet", "almost_hero_medallion", "war_underwear", "emotional_pebble"] as const;
 
 export type HeartLossEquipmentResult = {
   state: DungeonRunState;
@@ -64,10 +65,14 @@ export function applyPreHeartLossEquipmentEffects(
   if (specializedItem && remainingLoss > 0 && isEquipmentActive(state, specializedItem)) {
     remainingLoss = Math.max(0, remainingLoss - 1);
     effectMessages.push(specializedItem === "tiny_helmet" ? GAME_TEXTS.itemEffects.tinyHelmetBlock : GAME_TEXTS.itemEffects.panicSandalsBlock);
-    const breakResult = maybeBreakEquipment(state, specializedItem, 0.5, random);
-    state = breakResult.state;
-    brokenItems.push(...breakResult.brokenItems);
-    appendBrokenItemMessages(effectMessages, breakResult.brokenItems);
+    if (specializedItem === "tiny_helmet" && hasSurvivalCombo(state)) {
+      effectMessages.push(getSurvivalComboMessage(state, "noBreak"));
+    } else {
+      const breakResult = maybeBreakEquipment(state, specializedItem, 0.5, random);
+      state = breakResult.state;
+      brokenItems.push(...breakResult.brokenItems);
+      appendBrokenItemMessages(effectMessages, breakResult.brokenItems);
+    }
   }
 
   return {
@@ -87,12 +92,21 @@ export function applyPostHeartLossEquipmentEffects(
   const brokenItems: string[] = [];
   let state = sourceState;
 
-  if (finalLoss > 0 && state.life > 0 && state.life < state.maxLife && isEquipmentActive(state, "emotional_pebble") && random() < 0.5) {
+  if (
+    finalLoss > 0 &&
+    state.life > 0 &&
+    state.life < state.maxLife &&
+    isEquipmentActive(state, "emotional_pebble") &&
+    (hasSurvivalCombo(state) || random() < 0.5)
+  ) {
     state = {
       ...state,
       life: Math.min(state.maxLife, state.life + 1)
     };
     effectMessages.push(GAME_TEXTS.itemEffects.emotionalPebbleHeal);
+    if (hasSurvivalCombo(state)) {
+      effectMessages.push(getSurvivalComboMessage(state, "heal"));
+    }
   }
 
   if (finalLoss > 0 && state.life <= 0 && isEquipmentActive(state, "almost_hero_medallion")) {
@@ -101,10 +115,22 @@ export function applyPostHeartLossEquipmentEffects(
       life: 1
     };
     effectMessages.push(GAME_TEXTS.itemEffects.almostHeroMedallionSave);
-    const breakResult = breakEquipment(state, "almost_hero_medallion");
-    state = breakResult.state;
-    brokenItems.push(...breakResult.brokenItems);
-    appendBrokenItemMessages(effectMessages, breakResult.brokenItems);
+    if (hasSurvivalCombo(state)) {
+      effectMessages.push(getSurvivalComboMessage(state, "survive"));
+      if (isEquipmentActive(state, "emotional_pebble") && state.life < state.maxLife) {
+        state = {
+          ...state,
+          life: Math.min(state.maxLife, state.life + 1)
+        };
+        effectMessages.push(GAME_TEXTS.itemEffects.emotionalPebbleHeal);
+        effectMessages.push(getSurvivalComboMessage(state, "heal"));
+      }
+    } else {
+      const breakResult = breakEquipment(state, "almost_hero_medallion");
+      state = breakResult.state;
+      brokenItems.push(...breakResult.brokenItems);
+      appendBrokenItemMessages(effectMessages, breakResult.brokenItems);
+    }
   }
 
   return {
@@ -167,10 +193,10 @@ export function applyFloorDeltaEquipmentEffects(
 }
 
 export function applyEquipmentMaxLifeToState(source: DungeonRunState, previousEquipment: string[]): DungeonRunState {
-  const previousHadSlip = previousEquipment.includes("war_underwear");
-  const nextHadSlip = source.equipment.includes("war_underwear");
-  const baseMaxLife = Math.max(BASE_MAX_LIFE, source.maxLife - (previousHadSlip ? 1 : 0));
-  const maxLife = Math.min(RUN_MAX_LIFE_CAP, baseMaxLife + (nextHadSlip ? 1 : 0));
+  const previousBonus = getWarUnderwearMaxLifeBonus(previousEquipment);
+  const nextBonus = getWarUnderwearMaxLifeBonus(source.equipment);
+  const baseMaxLife = Math.max(BASE_MAX_LIFE, source.maxLife - previousBonus);
+  const maxLife = Math.min(RUN_MAX_LIFE_CAP, baseMaxLife + nextBonus);
   return {
     ...source,
     maxLife,
@@ -223,6 +249,37 @@ function breakEquipment(sourceState: DungeonRunState, itemId: string): { state: 
 
 function isEquipmentActive(sourceState: DungeonRunState, itemId: string): boolean {
   return sourceState.equipment.includes(itemId);
+}
+
+function getWarUnderwearMaxLifeBonus(equipment: string[]): number {
+  if (!equipment.includes("war_underwear")) {
+    return 0;
+  }
+
+  return getSurvivalGroupCount(equipment) >= 2 ? 2 : 1;
+}
+
+function hasSurvivalCombo(sourceState: DungeonRunState): boolean {
+  return getSurvivalGroupCount(sourceState.equipment) >= 2;
+}
+
+function hasSurvivalMegaCombo(sourceState: DungeonRunState): boolean {
+  return getSurvivalGroupCount(sourceState.equipment) >= SURVIVAL_GROUP.length;
+}
+
+function getSurvivalGroupCount(equipment: string[]): number {
+  return SURVIVAL_GROUP.filter((itemId) => equipment.includes(itemId)).length;
+}
+
+function getSurvivalComboMessage(sourceState: DungeonRunState, effect: "heal" | "noBreak" | "survive"): string {
+  if (hasSurvivalMegaCombo(sourceState)) {
+    if (effect === "survive") {
+      return GAME_TEXTS.itemEffects.megaComboSurvive;
+    }
+    return effect === "heal" ? GAME_TEXTS.itemEffects.megaComboHeal : GAME_TEXTS.itemEffects.megaComboNoBreak;
+  }
+
+  return effect === "heal" ? GAME_TEXTS.itemEffects.comboHeal : GAME_TEXTS.itemEffects.comboNoBreak;
 }
 
 function getItemName(itemId: string): string {

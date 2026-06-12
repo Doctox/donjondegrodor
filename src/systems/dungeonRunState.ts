@@ -59,6 +59,7 @@ export type FinalDoorOutcome = {
   title: string;
   message: string;
   effectLabel: string;
+  effectMessages: string[];
   lifeDelta: number;
   victory: boolean;
   defeated: boolean;
@@ -322,9 +323,11 @@ export function resolveFinalDoorOutcome(
   roll: number = Math.random()
 ): FinalDoorOutcome {
   const outcome = forcedOutcome ?? pickFinalDoorOutcome(sourceState.totalFloors, roll);
+  const startingLife = state.life;
   let lifeDelta = outcome === "escape" ? 0 : outcome === "bruise" ? -1 : -2;
   const texts = GAME_TEXTS.finalDoor[outcome];
   let effectLabel: string = texts.effectLabel;
+  let effectMessages: string[] = [];
 
   state = {
     ...state,
@@ -334,9 +337,10 @@ export function resolveFinalDoorOutcome(
   };
   if (lifeDelta < 0) {
     const lossResult = applyHeartLossWithCowardReflex(Math.abs(lifeDelta), "final_door");
-    lifeDelta = -lossResult.finalLoss;
+    effectMessages = lossResult.effectMessages;
+    lifeDelta = state.life - startingLife;
     if (lossResult.effectMessages.length > 0) {
-      effectLabel = lossResult.message ?? effectLabel;
+      effectLabel = combineEffectMessages([effectLabel, ...lossResult.effectMessages]);
     }
   }
 
@@ -346,6 +350,7 @@ export function resolveFinalDoorOutcome(
     title: texts.title,
     message: texts.message,
     effectLabel,
+    effectMessages,
     lifeDelta,
     victory: outcome === "escape",
     defeated: state.life <= 0,

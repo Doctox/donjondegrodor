@@ -907,8 +907,9 @@ export class DungeonScene extends Phaser.Scene {
     }
 
     this.syncGrodorEquipment();
+    this.showGrodorEffectMessages(effectMessages);
     const afterState = getDungeonRunState();
-    const heartDelta = result.type === "jump" ? 0 : this.getMiniGameHeartDelta(beforeState, afterState);
+    const heartDelta = this.getMiniGameHeartDelta(beforeState, afterState);
     const hasGoldTransfer = this.hasMiniGameGoldTransfer(result);
     const hasFloorTransfer = this.hasMiniGameFloorTransfer(result);
     if (heartDelta > 0) {
@@ -1248,8 +1249,13 @@ export class DungeonScene extends Phaser.Scene {
       if (outcome.lifeDelta < 0) {
         playSfx("grodorHurt");
       }
-      this.setStatus(outcome.message);
-      this.playMiniGameHeartTransfer(outcome.lifeDelta, () => this.retryFinalDoor());
+      this.setStatus(outcome.effectMessages.length > 0 ? outcome.effectLabel : outcome.message);
+      this.showGrodorEffectMessages(outcome.effectMessages);
+      if (outcome.lifeDelta !== 0) {
+        this.playMiniGameHeartTransfer(outcome.lifeDelta, () => this.retryFinalDoor());
+      } else {
+        this.time.delayedCall(900, () => this.retryFinalDoor());
+      }
     }
 
     publishDungeonFinalDoorReport({
@@ -1467,6 +1473,50 @@ export class DungeonScene extends Phaser.Scene {
           duration: 360,
           ease: "Sine.easeIn",
           onComplete: () => amountText.destroy()
+        });
+      }
+    });
+  }
+
+  private showGrodorEffectMessages(messages: string[]): void {
+    if (messages.length <= 0) {
+      return;
+    }
+
+    const x = this.grodor?.x ?? WORLD_WIDTH / 2;
+    const y = (this.grodor?.y ?? WORLD_HEIGHT / 2) - 218;
+    const effectText = this.add
+      .text(x, y, GAME_TEXTS.itemEffects.combined(messages), {
+        fontFamily: "Georgia, serif",
+        fontSize: "38px",
+        color: "#f8e7b1",
+        align: "center",
+        stroke: "#120d0a",
+        strokeThickness: 7,
+        wordWrap: { width: 620, useAdvancedWrap: true }
+      })
+      .setOrigin(0.5)
+      .setDepth(MINI_GAME_HEART_TRANSFER.depthHeart + 3)
+      .setAlpha(0)
+      .setScale(0.86);
+
+    this.tweens.add({
+      targets: effectText,
+      alpha: 1,
+      y: y - 28,
+      scaleX: 1,
+      scaleY: 1,
+      duration: 220,
+      ease: "Back.easeOut",
+      onComplete: () => {
+        this.tweens.add({
+          targets: effectText,
+          alpha: 0,
+          y: y - 92,
+          delay: 980,
+          duration: 360,
+          ease: "Sine.easeIn",
+          onComplete: () => effectText.destroy()
         });
       }
     });
