@@ -13,6 +13,7 @@ import { NineSliceTestScene } from "./scenes/NineSliceTestScene";
 import { WORLD_HEIGHT, WORLD_WIDTH } from "./data/assetKeys";
 import { setupAudioSettingsButton } from "./ui/audioSettings";
 import { setupMobileFullscreenButton } from "./ui/mobileFullscreen";
+import { setLetterboxBackdrop } from "./ui/letterboxBackdrop";
 import "./styles.css";
 
 const config: Phaser.Types.Core.GameConfig = {
@@ -41,6 +42,7 @@ const config: Phaser.Types.Core.GameConfig = {
   ]
 };
 
+setLetterboxBackdrop();
 new Phaser.Game(config);
 setupAudioSettingsButton();
 setupMobileFullscreenButton();
