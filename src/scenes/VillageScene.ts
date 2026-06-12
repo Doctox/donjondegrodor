@@ -172,7 +172,6 @@ export class VillageScene extends Phaser.Scene {
   private moving = false;
   private activeBuilding?: VillageBuildingId;
   private panel?: Phaser.GameObjects.Container;
-  private statusText?: Phaser.GameObjects.Text;
   private villagePouchOverlay?: Phaser.GameObjects.Image;
   private villageInventoryOverlay?: Phaser.GameObjects.Image;
   private villageGoldBubble?: Phaser.GameObjects.Ellipse;
@@ -247,7 +246,6 @@ export class VillageScene extends Phaser.Scene {
     this.activeBuilding = undefined;
     this.fromTavern = false;
     this.panel = undefined;
-    this.statusText = undefined;
     this.villagePouchOverlay = undefined;
     this.villageInventoryOverlay = undefined;
     this.villageGoldBubble = undefined;
@@ -460,7 +458,6 @@ export class VillageScene extends Phaser.Scene {
     this.villageGoldText?.setVisible(visible && getDungeonRunState().carriedGold > 0);
     this.villageBankGoldBubble?.setVisible(visible && getDungeonRunState().bankGold > 0);
     this.villageBankGoldText?.setVisible(visible && getDungeonRunState().bankGold > 0);
-    this.statusText?.setVisible(visible);
     this.debugMenu?.setVisible(visible);
     this.setInputsEnabled(visible);
     if (visible) {
@@ -1217,39 +1214,11 @@ export class VillageScene extends Phaser.Scene {
   }
 
   private createStatusPanel(): void {
-    const panelX = WORLD_WIDTH - 304;
-    const panelY = WORLD_HEIGHT - 152;
-    createNineSlicePanel(this, IMAGE_ASSETS.frameStory.key, panelX, panelY, 520, 220, {
-      left: 36,
-      right: 36,
-      top: 36,
-      bottom: 36
-    }).setDepth(50);
-    this.statusText = this.add
-      .text(panelX, panelY, "", {
-        fontFamily: "Inter, Arial, sans-serif",
-        fontSize: "24px",
-        color: "#fff1c2",
-        align: "center",
-        lineSpacing: 8,
-        wordWrap: { width: 444 }
-      })
-      .setOrigin(0.5)
-      .setDepth(51);
+    // Persistent bottom-right story frame intentionally removed.
   }
 
-  private setStatus(message: string): void {
-    const runState = getDungeonRunState();
+  private setStatus(_message: string): void {
     this.updateVillageHudOverlays();
-    this.statusText?.setText(
-      [
-        GAME_TEXTS.village.title,
-        GAME_TEXTS.village.bank.carriedGold(runState.carriedGold),
-        GAME_TEXTS.village.bank.bankGold(runState.bankGold),
-        "",
-        message
-      ].join("\n")
-    );
   }
 
   private setInputsEnabled(enabled: boolean): void {

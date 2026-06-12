@@ -157,10 +157,10 @@ export class DungeonScene extends Phaser.Scene {
   private map?: Phaser.Tilemaps.Tilemap;
   private grodor?: GrodorActor;
   private spawn?: TiledPoint;
-  private infoPanel?: Phaser.GameObjects.NineSlice;
-  private infoText?: Phaser.GameObjects.Text;
   private infoLines: string[] = [];
   private statusMessage = "";
+  private infoPanel?: Phaser.GameObjects.NineSlice;
+  private infoText?: Phaser.GameObjects.Text;
   private dungeonHud?: DungeonHud;
   private inventoryPanel?: InventoryPanel | InventoryEquipmentPanel;
   private debugController?: DungeonDebugController;
@@ -258,8 +258,6 @@ export class DungeonScene extends Phaser.Scene {
     this.map = undefined;
     this.grodor = undefined;
     this.spawn = undefined;
-    this.infoPanel = undefined;
-    this.infoText = undefined;
     this.infoLines = [];
     this.statusMessage = "";
     this.dungeonHud = undefined;
@@ -545,28 +543,6 @@ export class DungeonScene extends Phaser.Scene {
         ? GAME_TEXTS.cell.clickToStart
         : GAME_TEXTS.dungeon.chooseDoorStatus;
 
-    const panelWidth = 520;
-    const panelHeight = this.debugMode ? 260 : 220;
-    const panelX = WORLD_WIDTH - 304;
-    const panelY = WORLD_HEIGHT - 152;
-    this.infoPanel = createNineSlicePanel(this, IMAGE_ASSETS.frameStory.key, panelX, panelY, panelWidth, panelHeight, {
-      left: 36,
-      right: 36,
-      top: 36,
-      bottom: 36
-    }).setDepth(40);
-
-    this.infoText = this.add
-      .text(panelX, panelY, "", {
-        fontFamily: "Inter, Arial, sans-serif",
-        fontSize: "24px",
-        color: "#fff1c2",
-        align: "center",
-        lineSpacing: 8,
-        wordWrap: { width: panelWidth - 76 }
-      })
-      .setOrigin(0.5)
-      .setDepth(41);
     this.renderInfoPanel();
   }
 
@@ -582,8 +558,7 @@ export class DungeonScene extends Phaser.Scene {
   }
 
   private renderInfoPanel(): void {
-    const lines = this.statusMessage ? [...this.infoLines, "", this.statusMessage] : this.infoLines;
-    this.infoText?.setText(lines.join("\n"));
+    // Persistent bottom-right story frame intentionally removed.
   }
 
   private createRunHud(): void {
