@@ -14,6 +14,7 @@ import {
   setDungeonLifeForCombat
 } from "../../systems/dungeonRunState";
 import { resetAllLocalProgressDebug } from "../../systems/fullProgressReset";
+import type { GrodorDebugMode } from "../../systems/grodorDebugMode";
 import { DungeonDebugMenu } from "../../ui/DungeonDebugMenu";
 
 export type DungeonDebugControllerCallbacks = {
@@ -25,6 +26,7 @@ export type DungeonDebugControllerCallbacks = {
   setAwaitingContinue: (awaitingContinue: boolean) => void;
   setDungeonCombatLock: (locked: boolean) => void;
   setDungeonOverlaysVisible: (visible: boolean) => void;
+  setGrodorMode: (mode: GrodorDebugMode) => void;
   setStatus: (message: string) => void;
   showDefeatResult: () => void;
   syncGrodorEquipment: () => void;
@@ -60,7 +62,8 @@ export class DungeonDebugController {
       (delta) => this.handleLifeChange(delta),
       () => this.handleGoldAdd(),
       () => this.resetAllProgress(),
-      () => this.scene.scene.start("VillageScene")
+      () => this.scene.scene.start("VillageScene"),
+      (mode) => this.callbacks.setGrodorMode(mode)
     );
     this.debugMenu.update(getDungeonRunState());
   }

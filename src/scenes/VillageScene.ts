@@ -1,5 +1,7 @@
 import Phaser from "phaser";
 import { GrodorActor } from "../actors/GrodorActor";
+import { RiggedGrodorAccessories, preloadRiggedGrodorAccessoryAssets } from "../actors/RiggedGrodorAccessories";
+import { RiggedGrodorActor, preloadRiggedGrodorActorAssets } from "../actors/RiggedGrodorActor";
 import { IS_DEBUG_TOOLS_ENABLED } from "../config/debugConfig";
 import {
   IMAGE_ASSETS,
@@ -73,6 +75,21 @@ import { createItemDescriptionBubble } from "../ui/itemDescriptionBubble";
 import { VillageBankPanel } from "../ui/village/VillageBankPanel";
 import { VillageShopPanel } from "../ui/village/VillageShopPanel";
 import { MiniGameResult, MiniGameType } from "./MiniGameScene";
+import {
+  ATTACK_ONE_RIG_PROJECT_SAVE_PATH,
+  ATTACK_ONE_RIG_STORAGE_KEY,
+  FRONT_RIG_PROJECT_SAVE_PATH,
+  FRONT_RIG_STORAGE_KEY,
+  HURT_RIG_PROJECT_SAVE_PATH,
+  HURT_RIG_STORAGE_KEY,
+  SIDE_RIG_PROJECT_SAVE_PATH,
+  SIDE_RIG_STORAGE_KEY,
+  VICTORY_RIG_PROJECT_SAVE_PATH,
+  VICTORY_RIG_STORAGE_KEY
+} from "../rig/grodorRigDefinitions";
+import type { GrodorRigPresetInput } from "../rig/grodorRig";
+import { getGrodorDebugMode, setGrodorDebugMode, type GrodorDebugMode } from "../systems/grodorDebugMode";
+import { assetPath } from "../utils/assetPath";
 
 type VillageBuildingId = "bank" | "shop" | "tavern" | "board" | "grodor_house";
 type VillageLocationId = "defaut" | "dungeon" | "bank" | "shop" | "tavern" | "board" | "house";
@@ -81,6 +98,7 @@ type VillageSceneData = {
   fromDungeon?: boolean;
   fromTavern?: boolean;
 };
+type VillageGrodorActor = GrodorActor | RiggedGrodorActor;
 
 const BUILDINGS: VillageBuildingId[] = ["bank", "shop", "tavern", "board", "grodor_house"];
 const DEFAULT_VILLAGE_LOCATION: VillageLocationId = "defaut";
@@ -106,7 +124,7 @@ const HOUSE_EQUIPMENT_PANEL = {
   displayHeight: 750,
   x: -320,
   y: 6,
-  grodor: { x: 452, y: 628 },
+  grodor: { x: 442, y: 628 },
   allSlots: [
     { x: 214, y: 250 },
     { x: 444, y: 198 },
@@ -138,6 +156,20 @@ const HOUSE_EQUIPMENT_PANEL = {
 };
 
 const HOUSE_EQUIPMENT_SLOT_IDS = ["weapon", "helmet", "cape", "gloves", "boots", "belt", "object", "amulet"] satisfies EquipmentSlotId[];
+const VILLAGE_GRODOR_WALK_DURATION = {
+  distanceMultiplier: 4.1,
+  minMs: 460,
+  maxMs: 1620
+};
+const VILLAGE_GRODOR_V3_SCALE = {
+  idle: 0.19,
+  walk: 0.245
+};
+const HOUSE_GRODOR_PREVIEW_SCALE = {
+  sprite: 0.82,
+  rigIdle: 0.32,
+  rigWalk: 0.41
+};
 
 const HOUSE_CHEST_PANEL = {
   width: 407,
@@ -182,7 +214,10 @@ const HOUSE_CHEST_PANEL = {
 
 export class VillageScene extends Phaser.Scene {
   private map?: Phaser.Tilemaps.Tilemap;
-  private grodor?: GrodorActor;
+  private grodor?: VillageGrodorActor;
+  private grodorAccessories?: RiggedGrodorAccessories;
+  private houseGrodorPreview?: VillageGrodorActor;
+  private grodorMode: GrodorDebugMode = "sprite";
   private villageSpawn?: TiledPoint;
   private fromDungeon = false;
   private fromTavern = false;
@@ -212,6 +247,10 @@ export class VillageScene extends Phaser.Scene {
   preload(): void {
     preloadImages(this, VILLAGE_PRELOAD_IMAGES);
     preloadTilemaps(this, VILLAGE_PRELOAD_JSON);
+    if (IS_DEBUG_TOOLS_ENABLED) {
+      preloadRiggedGrodorActorAssets(this);
+      preloadRiggedGrodorAccessoryAssets(this);
+    }
   }
 
   create(data: VillageSceneData = {}): void {
@@ -225,6 +264,7 @@ export class VillageScene extends Phaser.Scene {
     if (IS_DEBUG_TOOLS_ENABLED && params.get("scene") === "village") {
       applyDungeonRunDebugOverrides(params);
     }
+    this.grodorMode = getGrodorDebugMode();
     if (this.fromDungeon) {
       markVillageDiscovered();
     }
@@ -241,9 +281,9 @@ export class VillageScene extends Phaser.Scene {
     const start = this.fromDungeon ? dungeonSpawn ?? this.villageSpawn : this.fromTavern ? tavernSpawn ?? this.villageSpawn : this.villageSpawn;
 
     if (start) {
-      this.grodor = new GrodorActor(this, start.x, start.y);
+      this.grodor = this.createGrodorActor(start.x, start.y);
       this.grodor.container.setDepth(20);
-      this.grodor.setEquipment(this.getVillageDisplayedEquipment());
+      this.syncVillageGrodorEquipment();
       this.grodor.playIdle();
     }
 
@@ -257,15 +297,31 @@ export class VillageScene extends Phaser.Scene {
     this.publishReport();
   }
 
+  update(time: number): void {
+    if (this.grodor instanceof RiggedGrodorActor) {
+      this.grodor.update(time / 1000);
+      this.grodorAccessories?.update(time / 1000, this.moving);
+    }
+    if (this.houseGrodorPreview instanceof RiggedGrodorActor) {
+      this.houseGrodorPreview.update(time / 1000);
+    }
+  }
+
   private resetSceneRuntime(): void {
     this.shopPanel?.destroy();
+    this.destroyHouseGrodorPreview();
     if (!this.shopPanel) {
       this.panel?.destroy();
     }
     this.inventoryPanel?.destroy();
     this.itemDescriptionBubble?.destroy();
+    this.grodorAccessories?.destroy();
+    this.grodor?.destroy();
     this.map = undefined;
     this.grodor = undefined;
+    this.grodorAccessories = undefined;
+    this.houseGrodorPreview = undefined;
+    this.grodorMode = "sprite";
     this.villageSpawn = undefined;
     this.currentLocation = DEFAULT_VILLAGE_LOCATION;
     this.moving = false;
@@ -374,7 +430,7 @@ export class VillageScene extends Phaser.Scene {
       this,
       (items) => {
         const state = setDungeonEquipmentForDebug(items);
-        this.grodor?.setEquipment(state.equipment);
+        this.syncVillageGrodorEquipment(state.equipment);
         this.grodor?.playIdle();
         this.updateVillageHudOverlays();
         this.setStatus(state.lastEvent);
@@ -383,7 +439,7 @@ export class VillageScene extends Phaser.Scene {
       (eventId) => this.launchMiniGameDebug(eventId),
       (delta) => {
         const state = adjustDungeonLifeForDebug(delta);
-        this.grodor?.setEquipment(state.equipment);
+        this.syncVillageGrodorEquipment(state.equipment);
         this.grodor?.playIdle();
         this.updateVillageHudOverlays();
         this.setStatus(state.lastEvent);
@@ -397,7 +453,8 @@ export class VillageScene extends Phaser.Scene {
         resetAllLocalProgressDebug();
         this.reloadGameFromStart();
       },
-      () => this.setStatus(GAME_TEXTS.village.chooseBuilding)
+      () => this.setStatus(GAME_TEXTS.village.chooseBuilding),
+      (mode) => this.setGrodorMode(mode)
     );
     this.updateVillageDebugMenu();
   }
@@ -438,8 +495,171 @@ export class VillageScene extends Phaser.Scene {
   }
 
   private updateVillageGrodorEquipment(): void {
-    this.grodor?.setEquipment(this.getVillageDisplayedEquipment());
+    this.syncVillageGrodorEquipment();
     this.grodor?.playIdle();
+  }
+
+  private createGrodorActor(x: number, y: number): VillageGrodorActor {
+    if (this.grodorMode !== "rigV3") {
+      return new GrodorActor(this, x, y);
+    }
+
+    const actor = new RiggedGrodorActor(this, {
+      x,
+      y,
+      depth: 20,
+      idleScale: VILLAGE_GRODOR_V3_SCALE.idle,
+      walkScale: VILLAGE_GRODOR_V3_SCALE.walk
+    });
+    void this.loadRiggedGrodorPresets(actor);
+    return actor;
+  }
+
+  private async loadRiggedGrodorPresets(actor: RiggedGrodorActor): Promise<void> {
+    await this.applyRiggedGrodorPresets(actor);
+
+    if (this.grodor !== actor) {
+      return;
+    }
+
+    actor.playIdle();
+    this.syncVillageGrodorEquipment();
+  }
+
+  private async loadRiggedGrodorHousePreviewPresets(actor: RiggedGrodorActor, equipment: string[]): Promise<void> {
+    await this.applyRiggedGrodorPresets(actor);
+
+    if (this.houseGrodorPreview !== actor) {
+      return;
+    }
+
+    actor.setEquipment(equipment);
+    actor.playIdle();
+  }
+
+  private async applyRiggedGrodorPresets(actor: RiggedGrodorActor): Promise<void> {
+    const [idlePreset, walkPreset, victoryPreset, hurtPreset, attackOnePreset] = await Promise.all([
+      this.loadRigPreset(FRONT_RIG_STORAGE_KEY, FRONT_RIG_PROJECT_SAVE_PATH),
+      this.loadRigPreset(SIDE_RIG_STORAGE_KEY, SIDE_RIG_PROJECT_SAVE_PATH),
+      this.loadRigPreset(VICTORY_RIG_STORAGE_KEY, VICTORY_RIG_PROJECT_SAVE_PATH),
+      this.loadRigPreset(HURT_RIG_STORAGE_KEY, HURT_RIG_PROJECT_SAVE_PATH),
+      this.loadRigPreset(ATTACK_ONE_RIG_STORAGE_KEY, ATTACK_ONE_RIG_PROJECT_SAVE_PATH)
+    ]);
+
+    if (idlePreset) {
+      actor.applyIdlePreset(idlePreset);
+    }
+    if (walkPreset) {
+      actor.applyWalkPreset(walkPreset);
+    }
+    if (victoryPreset) {
+      actor.applyVictoryPreset(victoryPreset);
+    }
+    if (hurtPreset) {
+      actor.applyHurtPreset(hurtPreset);
+    }
+    if (attackOnePreset) {
+      actor.applyAttackOnePreset(attackOnePreset);
+    }
+  }
+
+  private async loadRigPreset(storageKey: string, projectPath: string): Promise<GrodorRigPresetInput | null> {
+    try {
+      const response = await fetch(`${assetPath(projectPath)}?v=${Date.now()}`);
+      return response.ok ? ((await response.json()) as GrodorRigPresetInput) : null;
+    } catch {
+      // Local editor storage remains a fallback for temporary work-in-progress presets.
+    }
+
+    try {
+      const saved = localStorage.getItem(storageKey);
+      return saved ? (JSON.parse(saved) as GrodorRigPresetInput) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  private setGrodorMode(mode: GrodorDebugMode): void {
+    if (!IS_DEBUG_TOOLS_ENABLED) {
+      return;
+    }
+
+    if (this.moving || this.panel || this.inventoryPanel || this.shopPanel) {
+      this.setStatus("Mode Grodor indisponible pendant une action.");
+      return;
+    }
+
+    const nextMode = setGrodorDebugMode(mode);
+    if (this.grodorMode === nextMode && this.grodor) {
+      this.setStatus(`Mode Grodor: ${nextMode === "rigV3" ? "V3 rig" : "sprite actuel"}.`);
+      return;
+    }
+
+    const x = this.grodor?.x ?? this.villageSpawn?.x ?? WORLD_WIDTH / 2;
+    const y = this.grodor?.y ?? this.villageSpawn?.y ?? WORLD_HEIGHT / 2;
+    this.grodorAccessories?.destroy();
+    this.grodorAccessories = undefined;
+    this.grodor?.destroy();
+    this.grodorMode = nextMode;
+    this.grodor = this.createGrodorActor(x, y);
+    this.grodor.container.setDepth(20);
+    this.syncVillageGrodorEquipment();
+    this.grodor.playIdle();
+    this.grodor.setFlipX(false);
+    this.setStatus(`Mode Grodor: ${nextMode === "rigV3" ? "V3 rig" : "sprite actuel"}.`);
+    this.updateVillageDebugMenu();
+  }
+
+  private syncVillageGrodorEquipment(equipment = this.getVillageDisplayedEquipment()): void {
+    this.grodor?.setEquipment(equipment);
+    this.syncVillageGrodorAccessories(equipment);
+  }
+
+  private syncVillageGrodorAccessories(equipment = this.getVillageDisplayedEquipment()): void {
+    if (!(this.grodor instanceof RiggedGrodorActor)) {
+      this.grodorAccessories?.destroy();
+      this.grodorAccessories = undefined;
+      return;
+    }
+
+    if (!this.grodorAccessories) {
+      this.grodorAccessories = new RiggedGrodorAccessories(this, this.grodor);
+    } else {
+      this.grodorAccessories.setActor(this.grodor);
+    }
+    this.grodorAccessories.setEquipment(equipment);
+  }
+
+  private createGrodorHousePreview(equipment: string[]): VillageGrodorActor {
+    const x = this.houseEquipmentX(HOUSE_EQUIPMENT_PANEL.grodor.x);
+    const y = this.houseEquipmentY(HOUSE_EQUIPMENT_PANEL.grodor.y);
+
+    if (this.grodorMode !== "rigV3") {
+      const actor = new GrodorActor(this, x, y);
+      actor.container.setScale(HOUSE_GRODOR_PREVIEW_SCALE.sprite);
+      actor.setEquipment(equipment);
+      actor.playIdle();
+      this.houseGrodorPreview = actor;
+      return actor;
+    }
+
+    const actor = new RiggedGrodorActor(this, {
+      x,
+      y,
+      depth: 80,
+      idleScale: HOUSE_GRODOR_PREVIEW_SCALE.rigIdle,
+      walkScale: HOUSE_GRODOR_PREVIEW_SCALE.rigWalk
+    });
+    actor.setEquipment(equipment);
+    actor.playIdle();
+    this.houseGrodorPreview = actor;
+    void this.loadRiggedGrodorHousePreviewPresets(actor, equipment);
+    return actor;
+  }
+
+  private destroyHouseGrodorPreview(): void {
+    this.houseGrodorPreview?.destroy();
+    this.houseGrodorPreview = undefined;
   }
 
   private launchCombatDebug(monsterId: MonsterId): void {
@@ -506,7 +726,7 @@ export class VillageScene extends Phaser.Scene {
       combatScene.events.off(Phaser.Scenes.Events.SHUTDOWN, restore);
       playZoneMusic(this, "village");
       this.setVillageOverlaysVisible(true);
-      this.grodor?.setEquipment(getDungeonRunState().equipment);
+      this.syncVillageGrodorEquipment();
       this.updateVillageHudOverlays();
       this.setStatus(
         combatResult
@@ -583,7 +803,7 @@ export class VillageScene extends Phaser.Scene {
       }
       playZoneMusic(this, "village");
       this.setVillageOverlaysVisible(true);
-      this.grodor?.setEquipment(getDungeonRunState().equipment);
+      this.syncVillageGrodorEquipment();
       this.grodor?.playIdle();
       this.updateVillageHudOverlays();
       this.setStatus(GAME_TEXTS.village.chooseBuilding);
@@ -702,7 +922,11 @@ export class VillageScene extends Phaser.Scene {
         targets: this.grodor.container,
         x: point.x,
         y: point.y,
-        duration: Phaser.Math.Clamp(distance * 2.8, 320, 1150),
+        duration: Phaser.Math.Clamp(
+          distance * VILLAGE_GRODOR_WALK_DURATION.distanceMultiplier,
+          VILLAGE_GRODOR_WALK_DURATION.minMs,
+          VILLAGE_GRODOR_WALK_DURATION.maxMs
+        ),
         ease: "Sine.easeInOut",
         onComplete: () => {
           if (index < path.length - 1) {
@@ -787,6 +1011,7 @@ export class VillageScene extends Phaser.Scene {
   }
 
   private showGrodorHousePanel(feedback?: string): void {
+    this.destroyHouseGrodorPreview();
     const text = GAME_TEXTS.village.grodorHouse;
     const carriedItems = this.collectCurrentRunShopItems();
     if (carriedItems.length > 0) {
@@ -807,14 +1032,7 @@ export class VillageScene extends Phaser.Scene {
     const chestPanel = this.add
       .image(HOUSE_CHEST_PANEL.x, HOUSE_CHEST_PANEL.y, IMAGE_ASSETS.grodorHouseChestPanel.key)
       .setDisplaySize(HOUSE_CHEST_PANEL.displayWidth, HOUSE_CHEST_PANEL.displayHeight);
-    const grodorPreview = new GrodorActor(
-      this,
-      this.houseEquipmentX(HOUSE_EQUIPMENT_PANEL.grodor.x),
-      this.houseEquipmentY(HOUSE_EQUIPMENT_PANEL.grodor.y)
-    );
-    grodorPreview.container.setScale(0.82);
-    grodorPreview.setEquipment(this.getVillageDisplayedEquipment());
-    grodorPreview.playIdle();
+    const grodorPreview = this.createGrodorHousePreview(this.getVillageDisplayedEquipment());
     const title = this.add
       .text(0, -476, text.title, {
         fontFamily: "Georgia, serif",
@@ -1120,6 +1338,7 @@ export class VillageScene extends Phaser.Scene {
   private refreshGrodorHousePanel(feedback: string): void {
     this.itemDescriptionBubble?.destroy();
     this.itemDescriptionBubble = undefined;
+    this.destroyHouseGrodorPreview();
     this.panel?.destroy();
     this.panel = undefined;
     this.showGrodorHousePanel(feedback);
@@ -1222,6 +1441,7 @@ export class VillageScene extends Phaser.Scene {
 
   private closePanelAndReturnToCenter(): void {
     playZoneMusic(this, "village");
+    this.destroyHouseGrodorPreview();
     this.shopPanel?.destroy();
     this.shopPanel = undefined;
     this.itemDescriptionBubble?.destroy();

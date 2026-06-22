@@ -1,0 +1,1409 @@
+{
+  "formatVersion": 1,
+  "rig": "sideAttack1",
+  "scale": 0.82,
+  "selected": "cape_side",
+  "selectedGroup": [],
+  "animationEnabled": false,
+  "secondaryMotionEnabled": true,
+  "lockedWalkFrame": 3,
+  "layerOrder": [
+    "hand_back",
+    "glove_back",
+    "torso",
+    "belly",
+    "leg_back",
+    "shoe_back",
+    "leg_front",
+    "shoe_front",
+    "underwear",
+    "auto_side_ceinture_test",
+    "auto_side_war_underwear_walk",
+    "attack_front_shoulder_over",
+    "cape_side_collar",
+    "head",
+    "auto_side_tiny_helmet",
+    "attack_front_arm",
+    "attack_front_forearm_over",
+    "attack_front_hand_over",
+    "auto_side_axe",
+    "glove_front",
+    "cape_side"
+  ],
+  "anchors": {
+    "glove_back": "hand_back",
+    "glove_front": "attack_front_hand_over",
+    "auto_side_axe": "attack_front_hand_over",
+    "shoe_back": "leg_back",
+    "shoe_front": "leg_front",
+    "auto_side_tiny_helmet": "head",
+    "auto_side_ceinture_test": "underwear",
+    "auto_side_war_underwear_walk": "underwear"
+  },
+  "offsets": {
+    "cape_side": {
+      "x": 0,
+      "y": -5
+    },
+    "cape_side_collar": {
+      "x": 0,
+      "y": 0
+    },
+    "underwear": {
+      "x": 0,
+      "y": 0
+    },
+    "leg_back": {
+      "x": 0,
+      "y": 0
+    },
+    "shoe_back": {
+      "x": 29,
+      "y": 58
+    },
+    "leg_front": {
+      "x": 0,
+      "y": 0
+    },
+    "shoe_front": {
+      "x": 7,
+      "y": 30
+    },
+    "belly": {
+      "x": 0,
+      "y": 0
+    },
+    "torso": {
+      "x": 0,
+      "y": 0
+    },
+    "hand_back": {
+      "x": 0,
+      "y": 0
+    },
+    "glove_back": {
+      "x": 210,
+      "y": 21
+    },
+    "head": {
+      "x": 0,
+      "y": 0
+    },
+    "attack_front_shoulder_over": {
+      "x": -1,
+      "y": 0
+    },
+    "attack_front_forearm_over": {
+      "x": -1,
+      "y": 0
+    },
+    "attack_front_hand_over": {
+      "x": -1,
+      "y": 0
+    },
+    "attack_front_arm": {
+      "x": 0,
+      "y": 0
+    },
+    "glove_front": {
+      "x": 33,
+      "y": 76
+    },
+    "auto_side_axe": {
+      "x": 340,
+      "y": -61
+    },
+    "auto_side_ceinture_test": {
+      "x": -3,
+      "y": 128
+    },
+    "auto_side_tiny_helmet": {
+      "x": 1,
+      "y": -233
+    },
+    "auto_side_war_underwear_walk": {
+      "x": 5,
+      "y": 132
+    }
+  },
+  "sizeAdjustments": {
+    "cape_side": {
+      "scaleX": 1.1800000000000002,
+      "scaleY": 1.1500000000000001,
+      "rotation": 0
+    },
+    "cape_side_collar": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
+    "underwear": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
+    "leg_back": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
+    "shoe_back": {
+      "scaleX": 1.4500000000000004,
+      "scaleY": 1.4800000000000004,
+      "rotation": 36
+    },
+    "leg_front": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
+    "shoe_front": {
+      "scaleX": 1.6000000000000005,
+      "scaleY": 1.5700000000000005,
+      "rotation": -34
+    },
+    "belly": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
+    "torso": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
+    "hand_back": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
+    "glove_back": {
+      "scaleX": 1.3300000000000003,
+      "scaleY": 1.3300000000000003,
+      "rotation": -58
+    },
+    "head": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
+    "attack_front_shoulder_over": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
+    "attack_front_forearm_over": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
+    "attack_front_hand_over": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
+    "attack_front_arm": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
+    "glove_front": {
+      "scaleX": 1.2700000000000002,
+      "scaleY": 1.3300000000000003,
+      "rotation": -202
+    },
+    "auto_side_axe": {
+      "scaleX": 0.5799999999999996,
+      "scaleY": 0.6099999999999997,
+      "rotation": -34
+    },
+    "auto_side_ceinture_test": {
+      "scaleX": 1.2400000000000002,
+      "scaleY": 0.7599999999999998,
+      "rotation": 0
+    },
+    "auto_side_tiny_helmet": {
+      "scaleX": 1.03,
+      "scaleY": 0.8499999999999999,
+      "rotation": -4
+    },
+    "auto_side_war_underwear_walk": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    }
+  },
+  "poseAdjustments": [
+    {
+      "cape_side": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "cape_side_collar": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "underwear": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "leg_back": {
+        "offset": {
+          "x": -31,
+          "y": 6
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -28
+        }
+      },
+      "shoe_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "leg_front": {
+        "offset": {
+          "x": 35,
+          "y": 16
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 14
+        }
+      },
+      "shoe_front": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "belly": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "torso": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hand_back": {
+        "offset": {
+          "x": 114,
+          "y": 116
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -28
+        }
+      },
+      "glove_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "head": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "attack_front_shoulder_over": {
+        "offset": {
+          "x": -126,
+          "y": 73
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 2
+        }
+      },
+      "attack_front_forearm_over": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "attack_front_hand_over": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "attack_front_arm": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "glove_front": {
+        "offset": {
+          "x": -35,
+          "y": -70
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -46
+        }
+      },
+      "auto_side_axe": {
+        "offset": {
+          "x": -80,
+          "y": -114
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -40
+        }
+      },
+      "auto_side_ceinture_test": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_tiny_helmet": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_war_underwear_walk": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      }
+    },
+    {
+      "cape_side": {
+        "offset": {
+          "x": -91,
+          "y": 4
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -18
+        }
+      },
+      "cape_side_collar": {
+        "offset": {
+          "x": -83,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -18
+        }
+      },
+      "underwear": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "leg_back": {
+        "offset": {
+          "x": -31,
+          "y": 6
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -28
+        }
+      },
+      "shoe_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "leg_front": {
+        "offset": {
+          "x": 35,
+          "y": 16
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 14
+        }
+      },
+      "shoe_front": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "belly": {
+        "offset": {
+          "x": -65,
+          "y": -12
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -18
+        }
+      },
+      "torso": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hand_back": {
+        "offset": {
+          "x": 91,
+          "y": 116
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -74
+        }
+      },
+      "glove_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "head": {
+        "offset": {
+          "x": -125,
+          "y": -6
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -20
+        }
+      },
+      "attack_front_shoulder_over": {
+        "offset": {
+          "x": -225,
+          "y": 79
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -38
+        }
+      },
+      "attack_front_forearm_over": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "attack_front_hand_over": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "attack_front_arm": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "glove_front": {
+        "offset": {
+          "x": -35,
+          "y": -70
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -42
+        }
+      },
+      "auto_side_axe": {
+        "offset": {
+          "x": -77,
+          "y": -111
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -44
+        }
+      },
+      "auto_side_ceinture_test": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_tiny_helmet": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_war_underwear_walk": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      }
+    },
+    {
+      "cape_side": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "cape_side_collar": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "underwear": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "leg_back": {
+        "offset": {
+          "x": -31,
+          "y": 6
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -28
+        }
+      },
+      "shoe_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "leg_front": {
+        "offset": {
+          "x": 35,
+          "y": 16
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 14
+        }
+      },
+      "shoe_front": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "belly": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "torso": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hand_back": {
+        "offset": {
+          "x": 114,
+          "y": 116
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -28
+        }
+      },
+      "glove_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "head": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "attack_front_shoulder_over": {
+        "offset": {
+          "x": -145,
+          "y": 77
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -38
+        }
+      },
+      "attack_front_forearm_over": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "attack_front_hand_over": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "attack_front_arm": {
+        "offset": {
+          "x": -124,
+          "y": 114
+        },
+        "size": {
+          "scaleX": 1.06,
+          "scaleY": 1.06,
+          "rotation": -22
+        }
+      },
+      "glove_front": {
+        "offset": {
+          "x": 7,
+          "y": -84
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -16
+        }
+      },
+      "auto_side_axe": {
+        "offset": {
+          "x": -2,
+          "y": -99
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_ceinture_test": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_tiny_helmet": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_war_underwear_walk": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      }
+    },
+    {
+      "cape_side": {
+        "offset": {
+          "x": 81,
+          "y": -4
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 26
+        }
+      },
+      "cape_side_collar": {
+        "offset": {
+          "x": 83,
+          "y": -4
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 26
+        }
+      },
+      "underwear": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "leg_back": {
+        "offset": {
+          "x": 8,
+          "y": -23
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 20
+        }
+      },
+      "shoe_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "leg_front": {
+        "offset": {
+          "x": 35,
+          "y": 12
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 26
+        }
+      },
+      "shoe_front": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "belly": {
+        "offset": {
+          "x": 69,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 20
+        }
+      },
+      "torso": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hand_back": {
+        "offset": {
+          "x": 94,
+          "y": 85
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 208
+        }
+      },
+      "glove_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "head": {
+        "offset": {
+          "x": 120,
+          "y": 9
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 18
+        }
+      },
+      "attack_front_shoulder_over": {
+        "offset": {
+          "x": -145,
+          "y": 77
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -38
+        }
+      },
+      "attack_front_forearm_over": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "attack_front_hand_over": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "attack_front_arm": {
+        "offset": {
+          "x": -49,
+          "y": 103
+        },
+        "size": {
+          "scaleX": 1.06,
+          "scaleY": 1.06,
+          "rotation": 16
+        }
+      },
+      "glove_front": {
+        "offset": {
+          "x": 9,
+          "y": -87
+        },
+        "size": {
+          "scaleX": 1.03,
+          "scaleY": 1.03,
+          "rotation": -12
+        }
+      },
+      "auto_side_axe": {
+        "offset": {
+          "x": 9,
+          "y": -93
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -8
+        }
+      },
+      "auto_side_ceinture_test": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_tiny_helmet": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_war_underwear_walk": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      }
+    }
+  ],
+  "poseVisibility": [
+    {
+      "cape_side": true,
+      "cape_side_collar": true,
+      "underwear": true,
+      "leg_back": true,
+      "shoe_back": true,
+      "leg_front": true,
+      "shoe_front": true,
+      "belly": true,
+      "torso": true,
+      "hand_back": true,
+      "glove_back": true,
+      "head": true,
+      "attack_front_shoulder_over": true,
+      "attack_front_forearm_over": true,
+      "attack_front_hand_over": true,
+      "attack_front_arm": false,
+      "glove_front": true,
+      "auto_side_axe": true,
+      "auto_side_ceinture_test": true,
+      "auto_side_tiny_helmet": true,
+      "auto_side_war_underwear_walk": true
+    },
+    {
+      "cape_side": true,
+      "cape_side_collar": true,
+      "underwear": true,
+      "leg_back": true,
+      "shoe_back": true,
+      "leg_front": true,
+      "shoe_front": true,
+      "belly": true,
+      "torso": true,
+      "hand_back": true,
+      "glove_back": true,
+      "head": true,
+      "attack_front_shoulder_over": true,
+      "attack_front_forearm_over": true,
+      "attack_front_hand_over": true,
+      "attack_front_arm": false,
+      "glove_front": true,
+      "auto_side_axe": true,
+      "auto_side_ceinture_test": true,
+      "auto_side_tiny_helmet": true,
+      "auto_side_war_underwear_walk": true
+    },
+    {
+      "cape_side": true,
+      "cape_side_collar": true,
+      "underwear": true,
+      "leg_back": true,
+      "shoe_back": true,
+      "leg_front": true,
+      "shoe_front": true,
+      "belly": true,
+      "torso": true,
+      "hand_back": true,
+      "glove_back": true,
+      "head": true,
+      "attack_front_shoulder_over": false,
+      "attack_front_forearm_over": false,
+      "attack_front_hand_over": false,
+      "attack_front_arm": true,
+      "glove_front": true,
+      "auto_side_axe": true,
+      "auto_side_ceinture_test": true,
+      "auto_side_tiny_helmet": true,
+      "auto_side_war_underwear_walk": true
+    },
+    {
+      "cape_side": true,
+      "cape_side_collar": true,
+      "underwear": true,
+      "leg_back": true,
+      "shoe_back": true,
+      "leg_front": true,
+      "shoe_front": true,
+      "belly": true,
+      "torso": true,
+      "hand_back": true,
+      "glove_back": true,
+      "head": true,
+      "attack_front_shoulder_over": false,
+      "attack_front_forearm_over": false,
+      "attack_front_hand_over": false,
+      "attack_front_arm": true,
+      "glove_front": true,
+      "auto_side_axe": true,
+      "auto_side_ceinture_test": true,
+      "auto_side_tiny_helmet": true,
+      "auto_side_war_underwear_walk": true
+    }
+  ],
+  "visibility": {
+    "cape_side": true,
+    "cape_side_collar": true,
+    "underwear": true,
+    "leg_back": true,
+    "shoe_back": true,
+    "leg_front": true,
+    "shoe_front": true,
+    "belly": true,
+    "torso": true,
+    "hand_back": true,
+    "glove_back": true,
+    "head": true,
+    "attack_front_shoulder_over": true,
+    "attack_front_forearm_over": true,
+    "attack_front_hand_over": true,
+    "attack_front_arm": true,
+    "glove_front": true,
+    "auto_side_axe": true,
+    "auto_side_ceinture_test": true,
+    "auto_side_tiny_helmet": true,
+    "auto_side_war_underwear_walk": true
+  },
+  "stuffAdjustments": {
+    "cape_side": {
+      "offset": {
+        "x": 0,
+        "y": -5
+      },
+      "size": {
+        "scaleX": 1.1800000000000002,
+        "scaleY": 1.1500000000000001,
+        "rotation": 0
+      },
+      "visible": true
+    },
+    "cape_side_collar": {
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      },
+      "visible": true
+    },
+    "shoe_back": {
+      "offset": {
+        "x": 29,
+        "y": 58
+      },
+      "size": {
+        "scaleX": 1.4500000000000004,
+        "scaleY": 1.4800000000000004,
+        "rotation": 36
+      },
+      "visible": true
+    },
+    "shoe_front": {
+      "offset": {
+        "x": 7,
+        "y": 30
+      },
+      "size": {
+        "scaleX": 1.6000000000000005,
+        "scaleY": 1.5700000000000005,
+        "rotation": -34
+      },
+      "visible": true
+    },
+    "glove_back": {
+      "offset": {
+        "x": 210,
+        "y": 21
+      },
+      "size": {
+        "scaleX": 1.3300000000000003,
+        "scaleY": 1.3300000000000003,
+        "rotation": -58
+      },
+      "visible": true
+    },
+    "glove_front": {
+      "offset": {
+        "x": 33,
+        "y": 76
+      },
+      "size": {
+        "scaleX": 1.2700000000000002,
+        "scaleY": 1.3300000000000003,
+        "rotation": -202
+      },
+      "visible": true
+    },
+    "auto_side_axe": {
+      "offset": {
+        "x": 340,
+        "y": -61
+      },
+      "size": {
+        "scaleX": 0.5799999999999996,
+        "scaleY": 0.6099999999999997,
+        "rotation": -34
+      },
+      "visible": true
+    },
+    "auto_side_ceinture_test": {
+      "offset": {
+        "x": -3,
+        "y": 128
+      },
+      "size": {
+        "scaleX": 1.2400000000000002,
+        "scaleY": 0.7599999999999998,
+        "rotation": 0
+      },
+      "visible": true
+    },
+    "auto_side_tiny_helmet": {
+      "offset": {
+        "x": 1,
+        "y": -233
+      },
+      "size": {
+        "scaleX": 1.03,
+        "scaleY": 0.8499999999999999,
+        "rotation": -4
+      },
+      "visible": true
+    },
+    "auto_side_war_underwear_walk": {
+      "offset": {
+        "x": 5,
+        "y": 132
+      },
+      "size": {
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      },
+      "visible": true
+    }
+  }
+}

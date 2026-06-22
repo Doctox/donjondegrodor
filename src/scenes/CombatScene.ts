@@ -1,6 +1,8 @@
 import Phaser from "phaser";
 import { GrodorActor } from "../actors/GrodorActor";
 import { MonsterActor } from "../actors/MonsterActor";
+import { RiggedGrodorAccessories, preloadRiggedGrodorAccessoryAssets } from "../actors/RiggedGrodorAccessories";
+import { RiggedGrodorActor, preloadRiggedGrodorActorAssets } from "../actors/RiggedGrodorActor";
 import { IS_DEBUG_TOOLS_ENABLED } from "../config/debugConfig";
 import { COMBAT_PRELOAD_IMAGES, IMAGE_ASSETS, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
 import { CombatResult } from "../data/combatResults";
@@ -16,13 +18,29 @@ import {
   setDungeonLifeForCombat
 } from "../systems/dungeonRunState";
 import { addGrodorStat } from "../systems/grodorStats";
+import { getGrodorDebugMode, type GrodorDebugMode } from "../systems/grodorDebugMode";
+import {
+  ATTACK_ONE_RIG_PROJECT_SAVE_PATH,
+  ATTACK_ONE_RIG_STORAGE_KEY,
+  FRONT_RIG_PROJECT_SAVE_PATH,
+  FRONT_RIG_STORAGE_KEY,
+  HURT_RIG_PROJECT_SAVE_PATH,
+  HURT_RIG_STORAGE_KEY,
+  SIDE_RIG_PROJECT_SAVE_PATH,
+  SIDE_RIG_STORAGE_KEY,
+  VICTORY_RIG_PROJECT_SAVE_PATH,
+  VICTORY_RIG_STORAGE_KEY
+} from "../rig/grodorRigDefinitions";
+import type { GrodorRigPresetInput } from "../rig/grodorRig";
 import { showFloatingEffectSequence, showFloatingEffectText } from "../ui/floatingEffectText";
+import { assetPath } from "../utils/assetPath";
 
 type CombatSceneData = {
   arena?: number;
   debugDirect?: boolean;
   monsterId?: MonsterId | string;
 };
+type CombatGrodorActor = GrodorActor | RiggedGrodorActor;
 
 const ARENA_KEYS = [IMAGE_ASSETS.combatArena1.key, IMAGE_ASSETS.combatArena2.key, IMAGE_ASSETS.combatArena3.key];
 const DEPTHS = {
@@ -43,10 +61,16 @@ const HEART_PANEL = {
 const INACTIVITY_HINT_MS = 4000;
 const EXIT_HINT_MS = 4000;
 const COMBAT_GRODOR_SCALE = 1.78;
+const COMBAT_GRODOR_V3_SCALE = {
+  idle: 0.52,
+  walk: 0.67
+};
 const COMBAT_MONSTER_SCALE_MULTIPLIER = 1.48;
 
 export class CombatScene extends Phaser.Scene {
-  private grodor?: GrodorActor;
+  private grodor?: CombatGrodorActor;
+  private grodorAccessories?: RiggedGrodorAccessories;
+  private grodorMode: GrodorDebugMode = "sprite";
   private rat?: MonsterActor;
   private clickHintText?: Phaser.GameObjects.Text;
   private exitHintText?: Phaser.GameObjects.Text;
@@ -72,6 +96,10 @@ export class CombatScene extends Phaser.Scene {
 
   preload(): void {
     preloadImages(this, COMBAT_PRELOAD_IMAGES);
+    if (IS_DEBUG_TOOLS_ENABLED) {
+      preloadRiggedGrodorActorAssets(this);
+      preloadRiggedGrodorAccessoryAssets(this);
+    }
   }
 
   create(data: CombatSceneData = {}): void {
@@ -80,6 +108,7 @@ export class CombatScene extends Phaser.Scene {
     this.debugDirect = Boolean(data.debugDirect && IS_DEBUG_TOOLS_ENABLED);
     this.inputLocked = false;
     this.isClosing = false;
+    this.grodorMode = getGrodorDebugMode();
     this.monsterId = this.resolveMonsterId(data.monsterId);
     const monsterDefinition = getMonsterDefinition(this.monsterId);
     this.ratLife = monsterDefinition.maxLife;
@@ -91,9 +120,9 @@ export class CombatScene extends Phaser.Scene {
 
     this.add.image(0, 0, arenaKey).setOrigin(0).setDisplaySize(WORLD_WIDTH, WORLD_HEIGHT).setDepth(DEPTHS.arena);
 
-    this.grodor = new GrodorActor(this, 590, 835, COMBAT_GRODOR_SCALE);
+    this.grodor = this.createGrodorActor(590, 835);
     this.grodor.container.setDepth(DEPTHS.actors);
-    this.grodor.setEquipment(getDungeonRunState().equipment);
+    this.syncGrodorEquipment();
     this.grodor.setFlipX(false);
 
     this.rat = new MonsterActor(this, 1270, 835, this.monsterId, COMBAT_MONSTER_SCALE_MULTIPLIER);
@@ -107,7 +136,7 @@ export class CombatScene extends Phaser.Scene {
     if (this.grodorLife <= 0) {
       this.inputLocked = true;
       this.rat.setZonesEnabled(false);
-      this.grodor.playDeath();
+      this.playGrodorDeath();
       this.setCombatMessage(GAME_TEXTS.combat.temporaryDefeat);
       this.prepareCombatExit();
     }
@@ -123,6 +152,98 @@ export class CombatScene extends Phaser.Scene {
       grodorMaxLife: this.grodorMaxLife,
       startingGrodorLife: this.startingGrodorLife
     };
+  }
+
+  update(time: number): void {
+    if (this.grodor instanceof RiggedGrodorActor) {
+      this.grodor.update(time / 1000);
+      this.grodorAccessories?.update(time / 1000, false);
+    }
+  }
+
+  private createGrodorActor(x: number, y: number): CombatGrodorActor {
+    if (this.grodorMode !== "rigV3") {
+      return new GrodorActor(this, x, y, COMBAT_GRODOR_SCALE);
+    }
+
+    const actor = new RiggedGrodorActor(this, {
+      x,
+      y,
+      depth: DEPTHS.actors,
+      idleScale: COMBAT_GRODOR_V3_SCALE.idle,
+      walkScale: COMBAT_GRODOR_V3_SCALE.walk
+    });
+    void this.loadRiggedGrodorPresets(actor);
+    return actor;
+  }
+
+  private async loadRiggedGrodorPresets(actor: RiggedGrodorActor): Promise<void> {
+    const [idlePreset, walkPreset, victoryPreset, hurtPreset, attackOnePreset] = await Promise.all([
+      this.loadRigPreset(FRONT_RIG_STORAGE_KEY, FRONT_RIG_PROJECT_SAVE_PATH),
+      this.loadRigPreset(SIDE_RIG_STORAGE_KEY, SIDE_RIG_PROJECT_SAVE_PATH),
+      this.loadRigPreset(VICTORY_RIG_STORAGE_KEY, VICTORY_RIG_PROJECT_SAVE_PATH),
+      this.loadRigPreset(HURT_RIG_STORAGE_KEY, HURT_RIG_PROJECT_SAVE_PATH),
+      this.loadRigPreset(ATTACK_ONE_RIG_STORAGE_KEY, ATTACK_ONE_RIG_PROJECT_SAVE_PATH)
+    ]);
+
+    if (this.grodor !== actor) {
+      return;
+    }
+
+    if (idlePreset) {
+      actor.applyIdlePreset(idlePreset);
+    }
+    if (walkPreset) {
+      actor.applyWalkPreset(walkPreset);
+    }
+    if (victoryPreset) {
+      actor.applyVictoryPreset(victoryPreset);
+    }
+    if (hurtPreset) {
+      actor.applyHurtPreset(hurtPreset);
+    }
+    if (attackOnePreset) {
+      actor.applyAttackOnePreset(attackOnePreset);
+    }
+
+    actor.playIdle();
+    this.syncGrodorEquipment();
+  }
+
+  private async loadRigPreset(storageKey: string, projectPath: string): Promise<GrodorRigPresetInput | null> {
+    try {
+      const response = await fetch(`${assetPath(projectPath)}?v=${Date.now()}`);
+      return response.ok ? ((await response.json()) as GrodorRigPresetInput) : null;
+    } catch {
+      // Local editor storage remains a fallback for temporary work-in-progress presets.
+    }
+
+    try {
+      const saved = localStorage.getItem(storageKey);
+      return saved ? (JSON.parse(saved) as GrodorRigPresetInput) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  private syncGrodorEquipment(equipment = getDungeonRunState().equipment): void {
+    this.grodor?.setEquipment(equipment);
+    this.syncGrodorAccessories(equipment);
+  }
+
+  private syncGrodorAccessories(equipment = getDungeonRunState().equipment): void {
+    if (!(this.grodor instanceof RiggedGrodorActor)) {
+      this.grodorAccessories?.destroy();
+      this.grodorAccessories = undefined;
+      return;
+    }
+
+    if (!this.grodorAccessories) {
+      this.grodorAccessories = new RiggedGrodorAccessories(this, this.grodor);
+    } else {
+      this.grodorAccessories.setActor(this.grodor);
+    }
+    this.grodorAccessories.setEquipment(equipment);
   }
 
   private createCombatHud(): void {
@@ -193,7 +314,7 @@ export class CombatScene extends Phaser.Scene {
       playSfx("combatHit");
       const damageResult = applyMonsterDamageWithEquipment(1);
       this.ratLife = Math.max(0, this.ratLife - damageResult.damage);
-      this.grodor?.setEquipment(damageResult.state.equipment);
+      this.syncGrodorEquipment(damageResult.state.equipment);
       this.playItemBreakSfx(damageResult.brokenItems);
       this.rat?.reactToHit();
       if (this.ratLife <= 0) {
@@ -210,7 +331,7 @@ export class CombatScene extends Phaser.Scene {
       const syncedState = lossResult.state;
       this.grodorLife = syncedState.life;
       this.grodorMaxLife = syncedState.maxLife;
-      this.grodor?.setEquipment(syncedState.equipment);
+      this.syncGrodorEquipment(syncedState.equipment);
       this.playItemBreakSfx(lossResult.brokenItems);
       if (lossResult.finalLoss <= 0) {
         this.grodor?.playIdle();
@@ -260,13 +381,14 @@ export class CombatScene extends Phaser.Scene {
   private resolveRoundEnd(): void {
     if (this.ratLife <= 0) {
       playSfx("miniGameSuccess");
+      this.grodor?.playVictory();
       this.setCombatMessage(GAME_TEXTS.combat.victory(this.getMonsterName()));
       this.prepareCombatExit();
       return;
     }
 
     if (this.grodorLife <= 0) {
-      this.grodor?.playDeath();
+      this.playGrodorDeath();
       playSfx("grodorDeath");
       this.setCombatMessage(GAME_TEXTS.combat.temporaryDefeat);
       this.prepareCombatExit();
@@ -283,6 +405,24 @@ export class CombatScene extends Phaser.Scene {
     if (brokenItems.length > 0) {
       playSfx("itemBreak");
     }
+  }
+
+  private playGrodorDeath(): void {
+    if (!(this.grodor instanceof RiggedGrodorActor)) {
+      this.grodor?.playDeath();
+      return;
+    }
+
+    const x = this.grodor.x;
+    const y = this.grodor.y;
+    this.grodorAccessories?.destroy();
+    this.grodorAccessories = undefined;
+    this.grodor.destroy();
+    this.grodor = new GrodorActor(this, x, y, COMBAT_GRODOR_SCALE);
+    this.grodor.container.setDepth(DEPTHS.actors);
+    this.grodor.setEquipment(getDungeonRunState().equipment);
+    this.grodor.setFlipX(false);
+    this.grodor.playDeath();
   }
 
   private startInactivityHintTimer(): void {
@@ -535,7 +675,11 @@ export class CombatScene extends Phaser.Scene {
   }
 
   private resetSceneState(): void {
+    this.grodorAccessories?.destroy();
+    this.grodor?.destroy();
     this.grodor = undefined;
+    this.grodorAccessories = undefined;
+    this.grodorMode = "sprite";
     this.rat = undefined;
     this.combatMessage = "";
     this.clickHintText = undefined;

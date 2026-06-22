@@ -3,6 +3,7 @@ import { GAME_TEXTS } from "../data/gameTexts";
 import { MONSTER_LIST, MonsterId } from "../data/monsterDefinitions";
 import { isJumpHitboxDebugEnabled, toggleJumpHitboxDebug } from "../minigames/jumpDebugConfig";
 import { DungeonRunState } from "../systems/dungeonRunState";
+import { getGrodorDebugMode, type GrodorDebugMode } from "../systems/grodorDebugMode";
 
 type EquipmentOption = {
   label: string;
@@ -53,6 +54,7 @@ export class DungeonDebugMenu {
   private readonly stuffButtons: Phaser.GameObjects.Container[] = [];
   private readonly combatButtons: Phaser.GameObjects.Container[] = [];
   private readonly grodorButtons: Phaser.GameObjects.Container[] = [];
+  private readonly grodorModeButtons: Phaser.GameObjects.Container[] = [];
   private readonly eventButtons: Phaser.GameObjects.Container[] = [];
   private jumpSubmenu?: Phaser.GameObjects.Container;
   private jumpHitboxButton?: Phaser.GameObjects.Container;
@@ -79,7 +81,8 @@ export class DungeonDebugMenu {
     private readonly onGrodorLifeChange: (delta: number) => void,
     private readonly onGrodorGoldAdd: () => void,
     private readonly onFullReset: () => void,
-    private readonly onVillageStart: () => void
+    private readonly onVillageStart: () => void,
+    private readonly onGrodorModeChange: (mode: GrodorDebugMode) => void
   ) {
     this.container = scene.add.container(28, 384).setDepth(140);
     this.panel = scene.add.container(0, 46).setVisible(false);
@@ -142,8 +145,11 @@ export class DungeonDebugMenu {
       this.closePanel();
       this.onVillageStart();
     }, 258);
+    const spriteModeButton = this.createButton(14, 310, GAME_TEXTS.debug.grodorModeSprite, () => this.setGrodorMode("sprite"), 258, 15);
+    const rigModeButton = this.createButton(14, 348, GAME_TEXTS.debug.grodorModeRigV3, () => this.setGrodorMode("rigV3"), 258, 15);
     this.grodorButtons.push(healButton, damageButton, addGoldButton, resetButton, villageButton);
-    this.panel.add([healButton, damageButton, addGoldButton, resetButton, villageButton]);
+    this.grodorModeButtons.push(spriteModeButton, rigModeButton);
+    this.panel.add([healButton, damageButton, addGoldButton, resetButton, villageButton, spriteModeButton, rigModeButton]);
 
     this.setSubmenu("stuff");
     this.container.add([infoButton, this.panel]);
@@ -163,6 +169,11 @@ export class DungeonDebugMenu {
       ? this.currentEquipment.filter((equippedItem) => equippedItem !== item)
       : [...this.currentEquipment, item];
     this.onEquipmentChange(nextEquipment);
+  }
+
+  private setGrodorMode(mode: GrodorDebugMode): void {
+    this.onGrodorModeChange(mode);
+    this.updateCurrentText();
   }
 
   private togglePanel(): void {
@@ -187,6 +198,7 @@ export class DungeonDebugMenu {
     this.stuffButtons.forEach((button) => button.setVisible(submenu === "stuff"));
     this.combatButtons.forEach((button) => button.setVisible(submenu === "combat"));
     this.grodorButtons.forEach((button) => button.setVisible(submenu === "grodor"));
+    this.grodorModeButtons.forEach((button) => button.setVisible(submenu === "grodor"));
     this.eventButtons.forEach((button) => button.setVisible(submenu === "events"));
     this.jumpSubmenu?.setVisible(false);
     this.tintTab(this.stuffTab, submenu === "stuff");
@@ -279,8 +291,12 @@ export class DungeonDebugMenu {
     } else if (this.activeSubmenu === "events") {
       this.currentText.setText(GAME_TEXTS.debug.jumpDebugStatus(isJumpHitboxDebugEnabled()));
     } else {
+      const mode = getGrodorDebugMode();
       this.currentText.setText(
-        runState ? GAME_TEXTS.debug.grodorStatus(runState.life, runState.maxLife, runState.carriedGold) : GAME_TEXTS.debug.grodorLifeFallback
+        [
+          GAME_TEXTS.debug.grodorMode(mode === "rigV3" ? GAME_TEXTS.debug.grodorModeRigV3 : GAME_TEXTS.debug.grodorModeSprite),
+          runState ? GAME_TEXTS.debug.grodorStatus(runState.life, runState.maxLife, runState.carriedGold) : GAME_TEXTS.debug.grodorLifeFallback
+        ].join("\n")
       );
     }
   }

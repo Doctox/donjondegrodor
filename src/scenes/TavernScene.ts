@@ -2,6 +2,9 @@ import Phaser from "phaser";
 import { IMAGE_ASSETS, JSON_ASSETS, TAVERN_PRELOAD_IMAGES, TAVERN_PRELOAD_JSON, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
 import { GAME_TEXTS } from "../data/gameTexts";
 import { GrodorActor } from "../actors/GrodorActor";
+import { RiggedGrodorAccessories, preloadRiggedGrodorAccessoryAssets } from "../actors/RiggedGrodorAccessories";
+import { RiggedGrodorActor, preloadRiggedGrodorActorAssets } from "../actors/RiggedGrodorActor";
+import { IS_DEBUG_TOOLS_ENABLED } from "../config/debugConfig";
 import { getDungeonRunState, resetDungeonRunState } from "../systems/dungeonRunState";
 import { getMaxStartingEquipmentCount, getStartingLoadoutCount } from "../systems/metaProgression";
 import { playZoneMusic } from "../systems/audioManager";
@@ -9,6 +12,21 @@ import { preloadImages, preloadTilemaps } from "../systems/scenePreload";
 import { setHudVisible } from "../ui/hud";
 import { setLetterboxBackdrop } from "../ui/letterboxBackdrop";
 import { createNineSlicePanel } from "../ui/nineSlicePanel";
+import {
+  ATTACK_ONE_RIG_PROJECT_SAVE_PATH,
+  ATTACK_ONE_RIG_STORAGE_KEY,
+  FRONT_RIG_PROJECT_SAVE_PATH,
+  FRONT_RIG_STORAGE_KEY,
+  HURT_RIG_PROJECT_SAVE_PATH,
+  HURT_RIG_STORAGE_KEY,
+  SIDE_RIG_PROJECT_SAVE_PATH,
+  SIDE_RIG_STORAGE_KEY,
+  VICTORY_RIG_PROJECT_SAVE_PATH,
+  VICTORY_RIG_STORAGE_KEY
+} from "../rig/grodorRigDefinitions";
+import type { GrodorRigPresetInput } from "../rig/grodorRig";
+import { getGrodorDebugMode, type GrodorDebugMode } from "../systems/grodorDebugMode";
+import { assetPath } from "../utils/assetPath";
 
 type TavernPoint = {
   name: string;
@@ -22,12 +40,19 @@ type TavernZone = TavernPoint & {
 };
 
 type TavernAction = "drink" | "exit";
+type TavernGrodorActor = GrodorActor | RiggedGrodorActor;
 
 const TAVERN_GRODOR_SCALE = 0.95;
+const TAVERN_GRODOR_V3_SCALE = {
+  idle: 0.27,
+  walk: 0.348
+};
 
 export class TavernScene extends Phaser.Scene {
   private map?: Phaser.Tilemaps.Tilemap;
-  private grodor?: GrodorActor;
+  private grodor?: TavernGrodorActor;
+  private grodorAccessories?: RiggedGrodorAccessories;
+  private grodorMode: GrodorDebugMode = "sprite";
   private moving = false;
   private confirmationPanel?: Phaser.GameObjects.Container;
   private statusText?: Phaser.GameObjects.Text;
@@ -40,6 +65,10 @@ export class TavernScene extends Phaser.Scene {
   preload(): void {
     preloadImages(this, TAVERN_PRELOAD_IMAGES);
     preloadTilemaps(this, TAVERN_PRELOAD_JSON);
+    if (IS_DEBUG_TOOLS_ENABLED) {
+      preloadRiggedGrodorActorAssets(this);
+      preloadRiggedGrodorAccessoryAssets(this);
+    }
   }
 
   create(): void {
@@ -47,15 +76,20 @@ export class TavernScene extends Phaser.Scene {
     setHudVisible(false);
     setLetterboxBackdrop(IMAGE_ASSETS.tavernBackground.path);
     playZoneMusic(this, "tavern");
+    this.grodorMode = getGrodorDebugMode();
     this.map = this.make.tilemap({ key: JSON_ASSETS.tavernMap.key });
     this.add.image(0, 0, IMAGE_ASSETS.tavernBackground.key).setOrigin(0).setDisplaySize(WORLD_WIDTH, WORLD_HEIGHT);
     this.cameras.main.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.grodorAccessories?.destroy();
+      this.grodorAccessories = undefined;
+    });
 
     const spawn = this.getPoint("spawn_grodor", ["spawn"]);
     if (spawn) {
-      this.grodor = new GrodorActor(this, spawn.x, spawn.y, TAVERN_GRODOR_SCALE);
+      this.grodor = this.createGrodorActor(spawn.x, spawn.y);
       this.grodor.container.setDepth(20);
-      this.grodor.setEquipment(getDungeonRunState().equipment);
+      this.syncGrodorEquipment();
       this.grodor.playIdle();
     }
 
@@ -64,13 +98,107 @@ export class TavernScene extends Phaser.Scene {
     this.publishReport();
   }
 
+  update(time: number): void {
+    if (this.grodor instanceof RiggedGrodorActor) {
+      this.grodor.update(time / 1000);
+      this.grodorAccessories?.update(time / 1000, this.moving);
+    }
+  }
+
   private resetRuntime(): void {
     this.map = undefined;
     this.grodor = undefined;
+    this.grodorAccessories = undefined;
+    this.grodorMode = "sprite";
     this.moving = false;
     this.confirmationPanel = undefined;
     this.statusText = undefined;
     this.zones.clear();
+  }
+
+  private createGrodorActor(x: number, y: number): TavernGrodorActor {
+    if (this.grodorMode !== "rigV3") {
+      return new GrodorActor(this, x, y, TAVERN_GRODOR_SCALE);
+    }
+
+    const actor = new RiggedGrodorActor(this, {
+      x,
+      y,
+      depth: 20,
+      idleScale: TAVERN_GRODOR_V3_SCALE.idle,
+      walkScale: TAVERN_GRODOR_V3_SCALE.walk
+    });
+    void this.loadRiggedGrodorPresets(actor);
+    return actor;
+  }
+
+  private async loadRiggedGrodorPresets(actor: RiggedGrodorActor): Promise<void> {
+    const [idlePreset, walkPreset, victoryPreset, hurtPreset, attackOnePreset] = await Promise.all([
+      this.loadRigPreset(FRONT_RIG_STORAGE_KEY, FRONT_RIG_PROJECT_SAVE_PATH),
+      this.loadRigPreset(SIDE_RIG_STORAGE_KEY, SIDE_RIG_PROJECT_SAVE_PATH),
+      this.loadRigPreset(VICTORY_RIG_STORAGE_KEY, VICTORY_RIG_PROJECT_SAVE_PATH),
+      this.loadRigPreset(HURT_RIG_STORAGE_KEY, HURT_RIG_PROJECT_SAVE_PATH),
+      this.loadRigPreset(ATTACK_ONE_RIG_STORAGE_KEY, ATTACK_ONE_RIG_PROJECT_SAVE_PATH)
+    ]);
+
+    if (this.grodor !== actor) {
+      return;
+    }
+
+    if (idlePreset) {
+      actor.applyIdlePreset(idlePreset);
+    }
+    if (walkPreset) {
+      actor.applyWalkPreset(walkPreset);
+    }
+    if (victoryPreset) {
+      actor.applyVictoryPreset(victoryPreset);
+    }
+    if (hurtPreset) {
+      actor.applyHurtPreset(hurtPreset);
+    }
+    if (attackOnePreset) {
+      actor.applyAttackOnePreset(attackOnePreset);
+    }
+
+    actor.playIdle();
+    this.syncGrodorEquipment();
+  }
+
+  private async loadRigPreset(storageKey: string, projectPath: string): Promise<GrodorRigPresetInput | null> {
+    try {
+      const response = await fetch(`${assetPath(projectPath)}?v=${Date.now()}`);
+      return response.ok ? ((await response.json()) as GrodorRigPresetInput) : null;
+    } catch {
+      // Local editor storage remains a fallback for temporary work-in-progress presets.
+    }
+
+    try {
+      const saved = localStorage.getItem(storageKey);
+      return saved ? (JSON.parse(saved) as GrodorRigPresetInput) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  private syncGrodorEquipment(equipment = getDungeonRunState().equipment): void {
+    this.grodor?.setEquipment(equipment);
+    this.syncGrodorAccessories(equipment);
+  }
+
+  private syncGrodorAccessories(equipment = getDungeonRunState().equipment): void {
+    if (!(this.grodor instanceof RiggedGrodorActor)) {
+      this.grodorAccessories?.destroy();
+      this.grodorAccessories = undefined;
+      return;
+    }
+
+    if (!this.grodorAccessories) {
+      this.grodorAccessories = new RiggedGrodorAccessories(this, this.grodor);
+    } else {
+      this.grodorAccessories.setActor(this.grodor);
+    }
+    this.grodorAccessories.setEquipment(equipment);
   }
 
   private createInteractives(): void {
@@ -199,9 +327,12 @@ export class TavernScene extends Phaser.Scene {
     this.confirmationPanel = undefined;
     const spawnBeer = this.getPoint("spawn_beer", ["spawn"]);
     if (this.grodor && spawnBeer) {
-      this.grodor.setPosition(spawnBeer.x, spawnBeer.y);
-      this.grodor.setFlipX(false);
-      this.grodor.playIdle();
+      this.walkPath([spawnBeer], () => {
+        this.grodor?.setFlipX(false);
+        this.setInputsEnabled(true);
+        this.setStatus(GAME_TEXTS.village.tavern.backAtBeer);
+      });
+      return;
     }
     this.setInputsEnabled(true);
     this.setStatus(GAME_TEXTS.village.tavern.backAtBeer);

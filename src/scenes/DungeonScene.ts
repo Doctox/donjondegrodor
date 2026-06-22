@@ -68,8 +68,25 @@ import { InventoryPanel } from "../ui/InventoryPanel";
 import { InventoryEquipmentPanel } from "../ui/InventoryEquipmentPanel";
 import { showFloatingEffectSequence } from "../ui/floatingEffectText";
 import { GrodorActor } from "../actors/GrodorActor";
+import { RiggedGrodorAccessories, preloadRiggedGrodorAccessoryAssets } from "../actors/RiggedGrodorAccessories";
+import { RiggedGrodorActor, preloadRiggedGrodorActorAssets } from "../actors/RiggedGrodorActor";
+import {
+  ATTACK_ONE_RIG_PROJECT_SAVE_PATH,
+  ATTACK_ONE_RIG_STORAGE_KEY,
+  FRONT_RIG_PROJECT_SAVE_PATH,
+  FRONT_RIG_STORAGE_KEY,
+  HURT_RIG_PROJECT_SAVE_PATH,
+  HURT_RIG_STORAGE_KEY,
+  SIDE_RIG_PROJECT_SAVE_PATH,
+  SIDE_RIG_STORAGE_KEY,
+  VICTORY_RIG_PROJECT_SAVE_PATH,
+  VICTORY_RIG_STORAGE_KEY
+} from "../rig/grodorRigDefinitions";
+import type { GrodorRigPresetInput } from "../rig/grodorRig";
+import { getGrodorDebugMode, setGrodorDebugMode, type GrodorDebugMode } from "../systems/grodorDebugMode";
 import { preloadImages, preloadTilemaps } from "../systems/scenePreload";
 import { setLetterboxBackdrop } from "../ui/letterboxBackdrop";
+import { assetPath } from "../utils/assetPath";
 import { DungeonDebugController } from "./dungeon/DungeonDebugController";
 import { DungeonPanelFactory } from "./dungeon/DungeonPanelFactory";
 import { MiniGameResult } from "./MiniGameScene";
@@ -88,6 +105,8 @@ type DebugEntry = {
   height: number;
   point: boolean;
 };
+
+type DungeonGrodorActor = GrodorActor | RiggedGrodorActor;
 
 type DungeonSceneOptions = {
   doorInteractions: boolean;
@@ -145,6 +164,11 @@ const MINI_GAME_EFFECT_TEXT_COLORS = {
   negative: "#ff4f4f"
 };
 
+const DUNGEON_POSE_RETURN_DELAY_MS = {
+  victory: 950,
+  hurt: 1350
+};
+
 const DEBUG_STYLE: Record<DebugLayerKind, { fill: number; stroke: number; alpha: number }> = {
   collisions: { fill: 0xff2b2b, stroke: 0xff7777, alpha: 0.28 },
   interactives: { fill: 0x2d7dff, stroke: 0x9bc4ff, alpha: 0.32 },
@@ -164,7 +188,9 @@ export class DungeonScene extends Phaser.Scene {
   protected readonly options: DungeonSceneOptions;
   private debugEntries: DebugEntry[] = [];
   private map?: Phaser.Tilemaps.Tilemap;
-  private grodor?: GrodorActor;
+  private grodor?: DungeonGrodorActor;
+  private grodorAccessories?: RiggedGrodorAccessories;
+  private grodorMode: GrodorDebugMode = "sprite";
   private spawn?: TiledPoint;
   private infoLines: string[] = [];
   private statusMessage = "";
@@ -199,6 +225,10 @@ export class DungeonScene extends Phaser.Scene {
   preload(): void {
     preloadImages(this, DUNGEON_PRELOAD_IMAGES);
     preloadTilemaps(this, DUNGEON_PRELOAD_JSON);
+    if (IS_DEBUG_TOOLS_ENABLED) {
+      preloadRiggedGrodorActorAssets(this);
+      preloadRiggedGrodorAccessoryAssets(this);
+    }
   }
 
   create(data: DungeonSceneData = {}): void {
@@ -216,6 +246,7 @@ export class DungeonScene extends Phaser.Scene {
       resetDungeonRunState();
     }
     DungeonDebugController.applyDebugOverridesIfEnabled(this.scene.key, params, startedFromCell);
+    this.grodorMode = getGrodorDebugMode();
     publishDungeonSceneReport({
       sceneKey: this.scene.key,
       options: this.options
@@ -242,7 +273,7 @@ export class DungeonScene extends Phaser.Scene {
     const spawn = this.findSpawn();
     if (spawn && this.options.spawnGrodor) {
       this.spawn = spawn;
-      this.grodor = new GrodorActor(this, spawn.x, spawn.y);
+      this.grodor = this.createGrodorActor(spawn.x, spawn.y);
       this.syncGrodorEquipment();
     }
 
@@ -265,10 +296,19 @@ export class DungeonScene extends Phaser.Scene {
     }
   }
 
+  update(time: number): void {
+    if (this.grodor instanceof RiggedGrodorActor) {
+      this.grodor.update(time / 1000);
+      this.grodorAccessories?.update(time / 1000, this.moving);
+    }
+  }
+
   private resetSceneRuntime(): void {
+    this.grodorAccessories?.destroy();
     this.debugEntries = [];
     this.map = undefined;
     this.grodor = undefined;
+    this.grodorAccessories = undefined;
     this.spawn = undefined;
     this.infoLines = [];
     this.statusMessage = "";
@@ -598,6 +638,7 @@ export class DungeonScene extends Phaser.Scene {
       playDeath: () => this.grodor?.playDeath(),
       playIdle: () => this.grodor?.playIdle(),
       restoreDungeonOverlaysWhenCombatCloses: () => this.restoreDungeonOverlaysWhenCombatCloses(),
+      setGrodorMode: (mode) => this.setGrodorMode(mode),
       setAwaitingContinue: (awaitingContinue) => {
         this.awaitingContinue = awaitingContinue;
       },
@@ -608,6 +649,103 @@ export class DungeonScene extends Phaser.Scene {
       syncGrodorEquipment: () => this.syncGrodorEquipment(),
       updateRunHud: () => this.updateRunHud()
     });
+  }
+
+  private createGrodorActor(x: number, y: number): DungeonGrodorActor {
+    if (this.grodorMode !== "rigV3") {
+      return new GrodorActor(this, x, y);
+    }
+
+    const actor = new RiggedGrodorActor(this, { x, y, depth: 12 });
+    void this.loadRiggedGrodorPresets(actor);
+    return actor;
+  }
+
+  private async loadRiggedGrodorPresets(actor: RiggedGrodorActor): Promise<void> {
+    const [idlePreset, walkPreset, victoryPreset, hurtPreset, attackOnePreset] = await Promise.all([
+      this.loadRigPreset(FRONT_RIG_STORAGE_KEY, FRONT_RIG_PROJECT_SAVE_PATH),
+      this.loadRigPreset(SIDE_RIG_STORAGE_KEY, SIDE_RIG_PROJECT_SAVE_PATH),
+      this.loadRigPreset(VICTORY_RIG_STORAGE_KEY, VICTORY_RIG_PROJECT_SAVE_PATH),
+      this.loadRigPreset(HURT_RIG_STORAGE_KEY, HURT_RIG_PROJECT_SAVE_PATH),
+      this.loadRigPreset(ATTACK_ONE_RIG_STORAGE_KEY, ATTACK_ONE_RIG_PROJECT_SAVE_PATH)
+    ]);
+
+    if (this.grodor !== actor) {
+      return;
+    }
+
+    if (idlePreset) {
+      actor.applyIdlePreset(idlePreset);
+    }
+    if (walkPreset) {
+      actor.applyWalkPreset(walkPreset);
+    }
+    if (victoryPreset) {
+      actor.applyVictoryPreset(victoryPreset);
+    }
+    if (hurtPreset) {
+      actor.applyHurtPreset(hurtPreset);
+    }
+    if (attackOnePreset) {
+      actor.applyAttackOnePreset(attackOnePreset);
+    }
+
+    actor.playIdle();
+  }
+
+  private async loadRigPreset(storageKey: string, projectPath: string): Promise<GrodorRigPresetInput | null> {
+    try {
+      const response = await fetch(`${assetPath(projectPath)}?v=${Date.now()}`);
+      return response.ok ? ((await response.json()) as GrodorRigPresetInput) : null;
+    } catch {
+      // Local editor storage remains a fallback for temporary work-in-progress presets.
+    }
+
+    try {
+      const saved = localStorage.getItem(storageKey);
+      return saved ? (JSON.parse(saved) as GrodorRigPresetInput) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  private async loadLocalRigPreset(storageKey: string): Promise<GrodorRigPresetInput | null> {
+    try {
+      const saved = localStorage.getItem(storageKey);
+      return saved ? (JSON.parse(saved) as GrodorRigPresetInput) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  private setGrodorMode(mode: GrodorDebugMode): void {
+    if (!IS_DEBUG_TOOLS_ENABLED) {
+      return;
+    }
+
+    if (this.moving || this.combatInputLocked || this.awaitingContinue) {
+      this.setStatus("Mode Grodor indisponible pendant une action.");
+      return;
+    }
+
+    const nextMode = setGrodorDebugMode(mode);
+    if (this.grodorMode === nextMode && this.grodor) {
+      this.setStatus(`Mode Grodor: ${nextMode === "rigV3" ? "V3 rig" : "sprite actuel"}.`);
+      return;
+    }
+
+    const x = this.grodor?.x ?? this.spawn?.x ?? WORLD_WIDTH / 2;
+    const y = this.grodor?.y ?? this.spawn?.y ?? WORLD_HEIGHT / 2;
+    this.grodorAccessories?.destroy();
+    this.grodorAccessories = undefined;
+    this.grodor?.destroy();
+    this.grodorMode = nextMode;
+    this.grodor = this.createGrodorActor(x, y);
+    this.syncGrodorEquipment();
+    this.grodor.playIdle();
+    this.grodor.setFlipX(false);
+    this.setStatus(`Mode Grodor: ${nextMode === "rigV3" ? "V3 rig" : "sprite actuel"}.`);
+    this.debugController?.update();
   }
 
   private launchCombatEvent(event: DungeonRunEvent): void {
@@ -1189,7 +1327,24 @@ export class DungeonScene extends Phaser.Scene {
   }
 
   private syncGrodorEquipment(): void {
-    this.grodor?.setEquipment(getDungeonRunState().equipment);
+    const equipment = getDungeonRunState().equipment;
+    this.grodor?.setEquipment(equipment);
+    this.syncGrodorAccessories(equipment);
+  }
+
+  private syncGrodorAccessories(equipment = getDungeonRunState().equipment): void {
+    if (!(this.grodor instanceof RiggedGrodorActor)) {
+      this.grodorAccessories?.destroy();
+      this.grodorAccessories = undefined;
+      return;
+    }
+
+    if (!this.grodorAccessories) {
+      this.grodorAccessories = new RiggedGrodorAccessories(this, this.grodor);
+    } else {
+      this.grodorAccessories.setActor(this.grodor);
+    }
+    this.grodorAccessories.setEquipment(equipment);
   }
 
   private playEventPose(event: DungeonRunEvent): void {
@@ -1206,19 +1361,19 @@ export class DungeonScene extends Phaser.Scene {
     if ((event.goldDelta ?? 0) > 0 || (event.lifeDelta ?? 0) > 0) {
       this.grodor.playVictory();
       this.publishPoseReport(event.id, ANIMATION_KEYS.grodorVictory);
-      this.returnToIdleAfterPose(event.id);
+      this.returnToIdleAfterPose(event.id, DUNGEON_POSE_RETURN_DELAY_MS.victory);
     } else if ((event.lifeDelta ?? 0) < 0) {
       this.grodor.playHurt();
       this.publishPoseReport(event.id, ANIMATION_KEYS.grodorHurt);
-      this.returnToIdleAfterPose(event.id);
+      this.returnToIdleAfterPose(event.id, DUNGEON_POSE_RETURN_DELAY_MS.hurt);
     } else {
       this.grodor.playIdle();
       this.publishPoseReport(event.id, ANIMATION_KEYS.grodorIdle);
     }
   }
 
-  private returnToIdleAfterPose(eventId: string): void {
-    this.time.delayedCall(850, () => {
+  private returnToIdleAfterPose(eventId: string, delayMs: number): void {
+    this.time.delayedCall(delayMs, () => {
       if (!this.grodor || getDungeonRunState().life <= 0) {
         return;
       }
@@ -1954,6 +2109,7 @@ export class DungeonScene extends Phaser.Scene {
     this.grodor.setPosition(this.spawn.x, this.spawn.y);
     this.grodor.playIdle();
     this.grodor.setFlipX(false);
+    this.syncGrodorAccessories();
   }
 
   private publishMovementReport(doorName: string, status: "moving" | "reached" | "returned", path: TiledPoint[]): void {

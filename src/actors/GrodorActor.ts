@@ -42,6 +42,10 @@ export class GrodorActor {
     this.container.setPosition(x, y);
   }
 
+  destroy(): void {
+    this.container.destroy(true);
+  }
+
   setFlipX(flip: boolean): void {
     this.facingLeft = flip;
     this.container.setScale(flip ? -this.scale : this.scale, this.scale);

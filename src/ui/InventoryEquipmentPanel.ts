@@ -1,9 +1,24 @@
 import Phaser from "phaser";
 import { GrodorActor } from "../actors/GrodorActor";
+import { RiggedGrodorActor } from "../actors/RiggedGrodorActor";
 import { IMAGE_ASSETS, INVENTORY_ITEM_ASSETS, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
 import { GrodorEquipmentId } from "../data/equipmentDefinitions";
 import { GAME_TEXTS } from "../data/gameTexts";
 import { EquipmentSlotId, getEquipmentSlot, getItemDefinition } from "../data/itemDefinitions";
+import {
+  ATTACK_ONE_RIG_PROJECT_SAVE_PATH,
+  ATTACK_ONE_RIG_STORAGE_KEY,
+  FRONT_RIG_PROJECT_SAVE_PATH,
+  FRONT_RIG_STORAGE_KEY,
+  HURT_RIG_PROJECT_SAVE_PATH,
+  HURT_RIG_STORAGE_KEY,
+  SIDE_RIG_PROJECT_SAVE_PATH,
+  SIDE_RIG_STORAGE_KEY,
+  VICTORY_RIG_PROJECT_SAVE_PATH,
+  VICTORY_RIG_STORAGE_KEY
+} from "../rig/grodorRigDefinitions";
+import type { GrodorRigPresetInput } from "../rig/grodorRig";
+import { getGrodorDebugMode } from "../systems/grodorDebugMode";
 import {
   getCowardReflexCancelPercent,
   getDoorReadingPercent,
@@ -12,6 +27,7 @@ import {
   getTragicCardioPercent,
   PermanentUpgradeId
 } from "../systems/permanentUpgrades";
+import { assetPath } from "../utils/assetPath";
 import { createItemDescriptionBubble } from "./itemDescriptionBubble";
 
 const PANEL_DEPTH = 92;
@@ -61,6 +77,15 @@ const PASSIVE_SLOT_POSITIONS = [
 ];
 
 const CLOSE_BUTTON = { x: 1144, y: 55, hitSize: 94 };
+const INVENTORY_GRODOR_PREVIEW = {
+  x: WORLD_WIDTH / 2 - 154,
+  y: WORLD_HEIGHT / 2 + 142,
+  spriteScale: 1.08,
+  rigIdleScale: 0.4,
+  rigWalkScale: 0.51
+};
+
+type InventoryGrodorPreview = GrodorActor | RiggedGrodorActor;
 
 type EquippedItem = {
   id: GrodorEquipmentId;
@@ -81,10 +106,15 @@ export class InventoryEquipmentPanel {
   private readonly blocker: Phaser.GameObjects.Rectangle;
   private readonly panelBlocker: Phaser.GameObjects.Zone;
   private readonly container: Phaser.GameObjects.Container;
-  private readonly grodor: GrodorActor;
+  private readonly grodor: InventoryGrodorPreview;
   private itemDescriptionBubble?: Phaser.GameObjects.Container;
   private activeDescriptionKey?: string;
   private readonly handleEscape: (event: KeyboardEvent) => void;
+  private readonly updateRiggedGrodorPreview = (time: number): void => {
+    if (this.grodor instanceof RiggedGrodorActor) {
+      this.grodor.update(time / 1000);
+    }
+  };
 
   constructor(
     private readonly scene: Phaser.Scene,
@@ -117,11 +147,8 @@ export class InventoryEquipmentPanel {
       .setInteractive({ useHandCursor: true });
     closeHitZone.on("pointerdown", () => this.onClose());
 
-    this.grodor = new GrodorActor(scene, WORLD_WIDTH / 2 - 142, WORLD_HEIGHT / 2 + 142);
+    this.grodor = this.createGrodorPreview(equipment);
     this.grodor.container.setDepth(PANEL_DEPTH + 3);
-    this.grodor.container.setScale(1.08);
-    this.grodor.setEquipment(equipment);
-    this.grodor.playIdle();
 
     this.container.add([
       background,
@@ -139,6 +166,7 @@ export class InventoryEquipmentPanel {
       }
     };
     scene.input.keyboard?.on("keydown", this.handleEscape);
+    scene.events.on(Phaser.Scenes.Events.UPDATE, this.updateRiggedGrodorPreview);
 
     (window as unknown as { __inventoryEquipmentPanelReport?: unknown }).__inventoryEquipmentPanelReport = {
       equipment,
@@ -148,11 +176,87 @@ export class InventoryEquipmentPanel {
 
   destroy(): void {
     this.scene.input.keyboard?.off("keydown", this.handleEscape);
-    this.grodor.container.destroy(true);
+    this.scene.events.off(Phaser.Scenes.Events.UPDATE, this.updateRiggedGrodorPreview);
+    this.grodor.destroy();
     this.itemDescriptionBubble?.destroy();
     this.panelBlocker.destroy();
     this.container.destroy(true);
     this.blocker.destroy();
+  }
+
+  private createGrodorPreview(equipment: string[]): InventoryGrodorPreview {
+    if (getGrodorDebugMode() !== "rigV3") {
+      const actor = new GrodorActor(
+        this.scene,
+        INVENTORY_GRODOR_PREVIEW.x,
+        INVENTORY_GRODOR_PREVIEW.y
+      );
+      actor.container.setScale(INVENTORY_GRODOR_PREVIEW.spriteScale);
+      actor.setEquipment(equipment);
+      actor.playIdle();
+      return actor;
+    }
+
+    const actor = new RiggedGrodorActor(this.scene, {
+      x: INVENTORY_GRODOR_PREVIEW.x,
+      y: INVENTORY_GRODOR_PREVIEW.y,
+      depth: PANEL_DEPTH + 3,
+      idleScale: INVENTORY_GRODOR_PREVIEW.rigIdleScale,
+      walkScale: INVENTORY_GRODOR_PREVIEW.rigWalkScale
+    });
+    actor.setEquipment(equipment);
+    actor.playIdle();
+    void this.loadRiggedGrodorPresets(actor, equipment);
+    return actor;
+  }
+
+  private async loadRiggedGrodorPresets(actor: RiggedGrodorActor, equipment: string[]): Promise<void> {
+    const [idlePreset, walkPreset, victoryPreset, hurtPreset, attackOnePreset] = await Promise.all([
+      this.loadRigPreset(FRONT_RIG_STORAGE_KEY, FRONT_RIG_PROJECT_SAVE_PATH),
+      this.loadRigPreset(SIDE_RIG_STORAGE_KEY, SIDE_RIG_PROJECT_SAVE_PATH),
+      this.loadRigPreset(VICTORY_RIG_STORAGE_KEY, VICTORY_RIG_PROJECT_SAVE_PATH),
+      this.loadRigPreset(HURT_RIG_STORAGE_KEY, HURT_RIG_PROJECT_SAVE_PATH),
+      this.loadRigPreset(ATTACK_ONE_RIG_STORAGE_KEY, ATTACK_ONE_RIG_PROJECT_SAVE_PATH)
+    ]);
+
+    if (this.grodor !== actor) {
+      return;
+    }
+
+    if (idlePreset) {
+      actor.applyIdlePreset(idlePreset);
+    }
+    if (walkPreset) {
+      actor.applyWalkPreset(walkPreset);
+    }
+    if (victoryPreset) {
+      actor.applyVictoryPreset(victoryPreset);
+    }
+    if (hurtPreset) {
+      actor.applyHurtPreset(hurtPreset);
+    }
+    if (attackOnePreset) {
+      actor.applyAttackOnePreset(attackOnePreset);
+    }
+
+    actor.setEquipment(equipment);
+    actor.playIdle();
+  }
+
+  private async loadRigPreset(storageKey: string, projectPath: string): Promise<GrodorRigPresetInput | null> {
+    try {
+      const response = await fetch(`${assetPath(projectPath)}?v=${Date.now()}`);
+      return response.ok ? ((await response.json()) as GrodorRigPresetInput) : null;
+    } catch {
+      // Local editor storage remains a fallback for temporary work-in-progress presets.
+    }
+
+    try {
+      const saved = localStorage.getItem(storageKey);
+      return saved ? (JSON.parse(saved) as GrodorRigPresetInput) : null;
+    } catch {
+      return null;
+    }
   }
 
   private getEquippedItems(equipment: string[]): EquippedItem[] {
