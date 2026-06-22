@@ -9,3 +9,19 @@ tmp/
 .env
 .env.*
 !.env.example
+
+# Animation workshop / rig editor
+public/assets/sprites/grodor/rig/
+src/rig/
+src/generated/
+src/scenes/*Rig*Scene.ts
+src/actors/RiggedGrodorActor.ts
+src/actors/RiggedGrodorAccessories.ts
+src/systems/grodorDebugMode.ts
+scripts/scanRigStuffs.mjs
+docs/
+outputs/
+*.psd
+*.psb
+*.photopea
+*_debug_*.png
