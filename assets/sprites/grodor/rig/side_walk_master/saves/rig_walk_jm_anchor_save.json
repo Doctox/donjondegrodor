@@ -1,0 +1,1615 @@
+﻿{
+    "formatVersion":  1,
+    "rig":  "sideWalk",
+    "scale":  0.82,
+    "selected":  "arm_back_upper",
+    "selectedGroup":  [
+                          "arm_back_upper"
+                      ],
+    "animationEnabled":  false,
+    "secondaryMotionEnabled":  true,
+    "lockedWalkFrame":  0,
+    "layerOrder":  [
+                       "arm_back_upper",
+                       "arm_back_forearm",
+                       "hand_back",
+                       "glove_back",
+                       "torso",
+                       "belly",
+                       "leg_back",
+                       "shoe_back",
+                       "leg_front",
+                       "shoe_front",
+                       "underwear",
+                       "auto_side_ceinture_test",
+                       "auto_side_war_underwear_walk",
+                       "arm_front_upper",
+                       "arm_front_forearm",
+                       "hand_front",
+                       "auto_side_axe",
+                       "glove_front",
+                       "cape_side_collar",
+                       "head",
+                       "auto_side_tiny_helmet",
+                       "cape_side"
+                   ],
+    "anchors":  {
+                    "glove_back":  "hand_back",
+                    "glove_front":  "hand_front",
+                    "shoe_back":  "leg_back",
+                    "shoe_front":  "leg_front",
+                    "auto_side_tiny_helmet":  "head",
+                    "auto_side_ceinture_test":  "underwear",
+                    "auto_side_war_underwear_walk":  "underwear"
+                },
+    "offsets":  {
+                    "cape_side":  {
+                                      "x":  0,
+                                      "y":  -5
+                                  },
+                    "cape_side_collar":  {
+                                             "x":  0,
+                                             "y":  0
+                                         },
+                    "underwear":  {
+                                      "x":  0,
+                                      "y":  0
+                                  },
+                    "leg_back":  {
+                                     "x":  0,
+                                     "y":  0
+                                 },
+                    "shoe_back":  {
+                                      "x":  29,
+                                      "y":  58
+                                  },
+                    "leg_front":  {
+                                      "x":  0,
+                                      "y":  0
+                                  },
+                    "shoe_front":  {
+                                       "x":  7,
+                                       "y":  30
+                                   },
+                    "belly":  {
+                                  "x":  0,
+                                  "y":  0
+                              },
+                    "torso":  {
+                                  "x":  0,
+                                  "y":  0
+                              },
+                    "arm_back_upper":  {
+                                           "x":  0,
+                                           "y":  0
+                                       },
+                    "arm_back_forearm":  {
+                                             "x":  0,
+                                             "y":  0
+                                         },
+                    "hand_back":  {
+                                      "x":  0,
+                                      "y":  0
+                                  },
+                    "glove_back":  {
+                                       "x":  366,
+                                       "y":  80
+                                   },
+                    "head":  {
+                                 "x":  0,
+                                 "y":  0
+                             },
+                    "arm_front_upper":  {
+                                            "x":  -1,
+                                            "y":  0
+                                        },
+                    "arm_front_forearm":  {
+                                              "x":  -1,
+                                              "y":  0
+                                          },
+                    "hand_front":  {
+                                       "x":  -1,
+                                       "y":  0
+                                   },
+                    "glove_front":  {
+                                        "x":  -402,
+                                        "y":  85
+                                    },
+                    "auto_side_axe":  {
+                                          "x":  0,
+                                          "y":  142
+                                      },
+                    "auto_side_ceinture_test":  {
+                                                    "x":  -3,
+                                                    "y":  128
+                                                },
+                    "auto_side_tiny_helmet":  {
+                                                  "x":  1,
+                                                  "y":  -233
+                                              },
+                    "auto_side_war_underwear_walk":  {
+                                                         "x":  5,
+                                                         "y":  132
+                                                     }
+                },
+    "sizeAdjustments":  {
+                            "cape_side":  {
+                                              "scaleX":  1.1800000000000002,
+                                              "scaleY":  1.1500000000000001,
+                                              "rotation":  0
+                                          },
+                            "cape_side_collar":  {
+                                                     "scaleX":  1,
+                                                     "scaleY":  1,
+                                                     "rotation":  0
+                                                 },
+                            "underwear":  {
+                                              "scaleX":  1,
+                                              "scaleY":  1,
+                                              "rotation":  0
+                                          },
+                            "leg_back":  {
+                                             "scaleX":  1,
+                                             "scaleY":  1,
+                                             "rotation":  0
+                                         },
+                            "shoe_back":  {
+                                              "scaleX":  1.4500000000000004,
+                                              "scaleY":  1.4800000000000004,
+                                              "rotation":  36
+                                          },
+                            "leg_front":  {
+                                              "scaleX":  1,
+                                              "scaleY":  1,
+                                              "rotation":  0
+                                          },
+                            "shoe_front":  {
+                                               "scaleX":  1.6000000000000005,
+                                               "scaleY":  1.5700000000000005,
+                                               "rotation":  -34
+                                           },
+                            "belly":  {
+                                          "scaleX":  1,
+                                          "scaleY":  1,
+                                          "rotation":  0
+                                      },
+                            "torso":  {
+                                          "scaleX":  1,
+                                          "scaleY":  1,
+                                          "rotation":  0
+                                      },
+                            "arm_back_upper":  {
+                                                   "scaleX":  1,
+                                                   "scaleY":  1,
+                                                   "rotation":  0
+                                               },
+                            "arm_back_forearm":  {
+                                                     "scaleX":  1,
+                                                     "scaleY":  1,
+                                                     "rotation":  0
+                                                 },
+                            "hand_back":  {
+                                              "scaleX":  1,
+                                              "scaleY":  1,
+                                              "rotation":  0
+                                          },
+                            "glove_back":  {
+                                               "scaleX":  1.1500000000000001,
+                                               "scaleY":  1.1500000000000001,
+                                               "rotation":  4
+                                           },
+                            "head":  {
+                                         "scaleX":  1,
+                                         "scaleY":  1,
+                                         "rotation":  0
+                                     },
+                            "arm_front_upper":  {
+                                                    "scaleX":  1,
+                                                    "scaleY":  1,
+                                                    "rotation":  0
+                                                },
+                            "arm_front_forearm":  {
+                                                      "scaleX":  1,
+                                                      "scaleY":  1,
+                                                      "rotation":  0
+                                                  },
+                            "hand_front":  {
+                                               "scaleX":  1,
+                                               "scaleY":  1,
+                                               "rotation":  0
+                                           },
+                            "glove_front":  {
+                                                "scaleX":  1.2700000000000002,
+                                                "scaleY":  1.3300000000000003,
+                                                "rotation":  -8
+                                            },
+                            "auto_side_axe":  {
+                                                  "scaleX":  1,
+                                                  "scaleY":  1,
+                                                  "rotation":  0
+                                              },
+                            "auto_side_ceinture_test":  {
+                                                            "scaleX":  1.2400000000000002,
+                                                            "scaleY":  0.7599999999999998,
+                                                            "rotation":  0
+                                                        },
+                            "auto_side_tiny_helmet":  {
+                                                          "scaleX":  1.03,
+                                                          "scaleY":  0.8499999999999999,
+                                                          "rotation":  -4
+                                                      },
+                            "auto_side_war_underwear_walk":  {
+                                                                 "scaleX":  1,
+                                                                 "scaleY":  1,
+                                                                 "rotation":  0
+                                                             }
+                        },
+    "poseAdjustments":  [
+                            {
+                                "cape_side":  {
+                                                  "offset":  {
+                                                                 "x":  0,
+                                                                 "y":  0
+                                                             },
+                                                  "size":  {
+                                                               "scaleX":  1,
+                                                               "scaleY":  1,
+                                                               "rotation":  0
+                                                           }
+                                              },
+                                "cape_side_collar":  {
+                                                         "offset":  {
+                                                                        "x":  0,
+                                                                        "y":  0
+                                                                    },
+                                                         "size":  {
+                                                                      "scaleX":  1,
+                                                                      "scaleY":  1,
+                                                                      "rotation":  0
+                                                                  }
+                                                     },
+                                "underwear":  {
+                                                  "offset":  {
+                                                                 "x":  0,
+                                                                 "y":  0
+                                                             },
+                                                  "size":  {
+                                                               "scaleX":  1,
+                                                               "scaleY":  1,
+                                                               "rotation":  0
+                                                           }
+                                              },
+                                "leg_back":  {
+                                                 "offset":  {
+                                                                "x":  -12,
+                                                                "y":  8
+                                                            },
+                                                 "size":  {
+                                                              "scaleX":  1,
+                                                              "scaleY":  1,
+                                                              "rotation":  8
+                                                          }
+                                             },
+                                "shoe_back":  {
+                                                  "offset":  {
+                                                                 "x":  0,
+                                                                 "y":  0
+                                                             },
+                                                  "size":  {
+                                                               "scaleX":  1,
+                                                               "scaleY":  1,
+                                                               "rotation":  0
+                                                           }
+                                              },
+                                "leg_front":  {
+                                                  "offset":  {
+                                                                 "x":  9,
+                                                                 "y":  9
+                                                             },
+                                                  "size":  {
+                                                               "scaleX":  1,
+                                                               "scaleY":  1,
+                                                               "rotation":  -2
+                                                           }
+                                              },
+                                "shoe_front":  {
+                                                   "offset":  {
+                                                                  "x":  0,
+                                                                  "y":  0
+                                                              },
+                                                   "size":  {
+                                                                "scaleX":  1,
+                                                                "scaleY":  1,
+                                                                "rotation":  0
+                                                            }
+                                               },
+                                "belly":  {
+                                              "offset":  {
+                                                             "x":  0,
+                                                             "y":  0
+                                                         },
+                                              "size":  {
+                                                           "scaleX":  1,
+                                                           "scaleY":  1,
+                                                           "rotation":  0
+                                                       }
+                                          },
+                                "torso":  {
+                                              "offset":  {
+                                                             "x":  0,
+                                                             "y":  0
+                                                         },
+                                              "size":  {
+                                                           "scaleX":  1,
+                                                           "scaleY":  1,
+                                                           "rotation":  0
+                                                       }
+                                          },
+                                "arm_back_upper":  {
+                                                       "offset":  {
+                                                                      "x":  18,
+                                                                      "y":  -5
+                                                                  },
+                                                       "size":  {
+                                                                    "scaleX":  1,
+                                                                    "scaleY":  1,
+                                                                    "rotation":  14
+                                                                }
+                                                   },
+                                "arm_back_forearm":  {
+                                                         "offset":  {
+                                                                        "x":  18,
+                                                                        "y":  -5
+                                                                    },
+                                                         "size":  {
+                                                                      "scaleX":  1,
+                                                                      "scaleY":  1,
+                                                                      "rotation":  14
+                                                                  }
+                                                     },
+                                "hand_back":  {
+                                                  "offset":  {
+                                                                 "x":  18,
+                                                                 "y":  -5
+                                                             },
+                                                  "size":  {
+                                                               "scaleX":  1,
+                                                               "scaleY":  1,
+                                                               "rotation":  14
+                                                           }
+                                              },
+                                "glove_back":  {
+                                                   "offset":  {
+                                                                  "x":  0,
+                                                                  "y":  0
+                                                              },
+                                                   "size":  {
+                                                                "scaleX":  1,
+                                                                "scaleY":  1,
+                                                                "rotation":  0
+                                                            }
+                                               },
+                                "head":  {
+                                             "offset":  {
+                                                            "x":  0,
+                                                            "y":  0
+                                                        },
+                                             "size":  {
+                                                          "scaleX":  1,
+                                                          "scaleY":  1,
+                                                          "rotation":  0
+                                                      }
+                                         },
+                                "arm_front_upper":  {
+                                                        "offset":  {
+                                                                       "x":  -37,
+                                                                       "y":  -49
+                                                                   },
+                                                        "size":  {
+                                                                     "scaleX":  1,
+                                                                     "scaleY":  1,
+                                                                     "rotation":  -20
+                                                                 }
+                                                    },
+                                "arm_front_forearm":  {
+                                                          "offset":  {
+                                                                         "x":  -37,
+                                                                         "y":  -49
+                                                                     },
+                                                          "size":  {
+                                                                       "scaleX":  1,
+                                                                       "scaleY":  1,
+                                                                       "rotation":  -20
+                                                                   }
+                                                      },
+                                "hand_front":  {
+                                                   "offset":  {
+                                                                  "x":  -37,
+                                                                  "y":  -49
+                                                              },
+                                                   "size":  {
+                                                                "scaleX":  1,
+                                                                "scaleY":  1,
+                                                                "rotation":  -20
+                                                            }
+                                               },
+                                "glove_front":  {
+                                                    "offset":  {
+                                                                   "x":  0,
+                                                                   "y":  0
+                                                               },
+                                                    "size":  {
+                                                                 "scaleX":  1,
+                                                                 "scaleY":  1,
+                                                                 "rotation":  0
+                                                             }
+                                                },
+                                "auto_side_axe":  {
+                                                      "offset":  {
+                                                                     "x":  -230,
+                                                                     "y":  -59
+                                                                 },
+                                                      "size":  {
+                                                                   "scaleX":  0.5799999999999996,
+                                                                   "scaleY":  0.6099999999999997,
+                                                                   "rotation":  142
+                                                               }
+                                                  },
+                                "auto_side_ceinture_test":  {
+                                                                "offset":  {
+                                                                               "x":  0,
+                                                                               "y":  0
+                                                                           },
+                                                                "size":  {
+                                                                             "scaleX":  1,
+                                                                             "scaleY":  1,
+                                                                             "rotation":  0
+                                                                         }
+                                                            },
+                                "auto_side_tiny_helmet":  {
+                                                              "offset":  {
+                                                                             "x":  0,
+                                                                             "y":  0
+                                                                         },
+                                                              "size":  {
+                                                                           "scaleX":  1,
+                                                                           "scaleY":  1,
+                                                                           "rotation":  0
+                                                                       }
+                                                          },
+                                "auto_side_war_underwear_walk":  {
+                                                                     "offset":  {
+                                                                                    "x":  0,
+                                                                                    "y":  0
+                                                                                },
+                                                                     "size":  {
+                                                                                  "scaleX":  1,
+                                                                                  "scaleY":  1,
+                                                                                  "rotation":  0
+                                                                              }
+                                                                 }
+                            },
+                            {
+                                "cape_side":  {
+                                                  "offset":  {
+                                                                 "x":  0,
+                                                                 "y":  0
+                                                             },
+                                                  "size":  {
+                                                               "scaleX":  1,
+                                                               "scaleY":  1,
+                                                               "rotation":  0
+                                                           }
+                                              },
+                                "cape_side_collar":  {
+                                                         "offset":  {
+                                                                        "x":  0,
+                                                                        "y":  0
+                                                                    },
+                                                         "size":  {
+                                                                      "scaleX":  1,
+                                                                      "scaleY":  1,
+                                                                      "rotation":  0
+                                                                  }
+                                                     },
+                                "underwear":  {
+                                                  "offset":  {
+                                                                 "x":  0,
+                                                                 "y":  0
+                                                             },
+                                                  "size":  {
+                                                               "scaleX":  1,
+                                                               "scaleY":  1,
+                                                               "rotation":  0
+                                                           }
+                                              },
+                                "leg_back":  {
+                                                 "offset":  {
+                                                                "x":  -19,
+                                                                "y":  5
+                                                            },
+                                                 "size":  {
+                                                              "scaleX":  1,
+                                                              "scaleY":  1,
+                                                              "rotation":  -16
+                                                          }
+                                             },
+                                "shoe_back":  {
+                                                  "offset":  {
+                                                                 "x":  0,
+                                                                 "y":  0
+                                                             },
+                                                  "size":  {
+                                                               "scaleX":  1,
+                                                               "scaleY":  1,
+                                                               "rotation":  0
+                                                           }
+                                              },
+                                "leg_front":  {
+                                                  "offset":  {
+                                                                 "x":  45,
+                                                                 "y":  4
+                                                             },
+                                                  "size":  {
+                                                               "scaleX":  1,
+                                                               "scaleY":  1,
+                                                               "rotation":  26
+                                                           }
+                                              },
+                                "shoe_front":  {
+                                                   "offset":  {
+                                                                  "x":  0,
+                                                                  "y":  0
+                                                              },
+                                                   "size":  {
+                                                                "scaleX":  1,
+                                                                "scaleY":  1,
+                                                                "rotation":  0
+                                                            }
+                                               },
+                                "belly":  {
+                                              "offset":  {
+                                                             "x":  0,
+                                                             "y":  0
+                                                         },
+                                              "size":  {
+                                                           "scaleX":  1,
+                                                           "scaleY":  1,
+                                                           "rotation":  0
+                                                       }
+                                          },
+                                "torso":  {
+                                              "offset":  {
+                                                             "x":  0,
+                                                             "y":  0
+                                                         },
+                                              "size":  {
+                                                           "scaleX":  1,
+                                                           "scaleY":  1,
+                                                           "rotation":  0
+                                                       }
+                                          },
+                                "arm_back_upper":  {
+                                                       "offset":  {
+                                                                      "x":  56,
+                                                                      "y":  -50
+                                                                  },
+                                                       "size":  {
+                                                                    "scaleX":  1,
+                                                                    "scaleY":  1,
+                                                                    "rotation":  36
+                                                                }
+                                                   },
+                                "arm_back_forearm":  {
+                                                         "offset":  {
+                                                                        "x":  56,
+                                                                        "y":  -50
+                                                                    },
+                                                         "size":  {
+                                                                      "scaleX":  1,
+                                                                      "scaleY":  1,
+                                                                      "rotation":  36
+                                                                  }
+                                                     },
+                                "hand_back":  {
+                                                  "offset":  {
+                                                                 "x":  56,
+                                                                 "y":  -50
+                                                             },
+                                                  "size":  {
+                                                               "scaleX":  1,
+                                                               "scaleY":  1,
+                                                               "rotation":  36
+                                                           }
+                                              },
+                                "glove_back":  {
+                                                   "offset":  {
+                                                                  "x":  0,
+                                                                  "y":  0
+                                                              },
+                                                   "size":  {
+                                                                "scaleX":  1,
+                                                                "scaleY":  1,
+                                                                "rotation":  0
+                                                            }
+                                               },
+                                "head":  {
+                                             "offset":  {
+                                                            "x":  0,
+                                                            "y":  0
+                                                        },
+                                             "size":  {
+                                                          "scaleX":  1,
+                                                          "scaleY":  1,
+                                                          "rotation":  0
+                                                      }
+                                         },
+                                "arm_front_upper":  {
+                                                        "offset":  {
+                                                                       "x":  -133,
+                                                                       "y":  -82
+                                                                   },
+                                                        "size":  {
+                                                                     "scaleX":  1,
+                                                                     "scaleY":  1,
+                                                                     "rotation":  -54
+                                                                 }
+                                                    },
+                                "arm_front_forearm":  {
+                                                          "offset":  {
+                                                                         "x":  -133,
+                                                                         "y":  -82
+                                                                     },
+                                                          "size":  {
+                                                                       "scaleX":  1,
+                                                                       "scaleY":  1,
+                                                                       "rotation":  -54
+                                                                   }
+                                                      },
+                                "hand_front":  {
+                                                   "offset":  {
+                                                                  "x":  -133,
+                                                                  "y":  -82
+                                                              },
+                                                   "size":  {
+                                                                "scaleX":  1,
+                                                                "scaleY":  1,
+                                                                "rotation":  -54
+                                                            }
+                                               },
+                                "glove_front":  {
+                                                    "offset":  {
+                                                                   "x":  0,
+                                                                   "y":  0
+                                                               },
+                                                    "size":  {
+                                                                 "scaleX":  1,
+                                                                 "scaleY":  1,
+                                                                 "rotation":  0
+                                                             }
+                                                },
+                                "auto_side_axe":  {
+                                                      "offset":  {
+                                                                     "x":  -121,
+                                                                     "y":  31
+                                                                 },
+                                                      "size":  {
+                                                                   "scaleX":  0.6099999999999997,
+                                                                   "scaleY":  0.6699999999999997,
+                                                                   "rotation":  106
+                                                               }
+                                                  },
+                                "auto_side_ceinture_test":  {
+                                                                "offset":  {
+                                                                               "x":  0,
+                                                                               "y":  0
+                                                                           },
+                                                                "size":  {
+                                                                             "scaleX":  1,
+                                                                             "scaleY":  1,
+                                                                             "rotation":  0
+                                                                         }
+                                                            },
+                                "auto_side_tiny_helmet":  {
+                                                              "offset":  {
+                                                                             "x":  0,
+                                                                             "y":  0
+                                                                         },
+                                                              "size":  {
+                                                                           "scaleX":  1,
+                                                                           "scaleY":  1,
+                                                                           "rotation":  0
+                                                                       }
+                                                          },
+                                "auto_side_war_underwear_walk":  {
+                                                                     "offset":  {
+                                                                                    "x":  0,
+                                                                                    "y":  0
+                                                                                },
+                                                                     "size":  {
+                                                                                  "scaleX":  1,
+                                                                                  "scaleY":  1,
+                                                                                  "rotation":  0
+                                                                              }
+                                                                 }
+                            },
+                            {
+                                "cape_side":  {
+                                                  "offset":  {
+                                                                 "x":  0,
+                                                                 "y":  0
+                                                             },
+                                                  "size":  {
+                                                               "scaleX":  1,
+                                                               "scaleY":  1,
+                                                               "rotation":  0
+                                                           }
+                                              },
+                                "cape_side_collar":  {
+                                                         "offset":  {
+                                                                        "x":  0,
+                                                                        "y":  0
+                                                                    },
+                                                         "size":  {
+                                                                      "scaleX":  1,
+                                                                      "scaleY":  1,
+                                                                      "rotation":  0
+                                                                  }
+                                                     },
+                                "underwear":  {
+                                                  "offset":  {
+                                                                 "x":  0,
+                                                                 "y":  0
+                                                             },
+                                                  "size":  {
+                                                               "scaleX":  1,
+                                                               "scaleY":  1,
+                                                               "rotation":  0
+                                                           }
+                                              },
+                                "leg_back":  {
+                                                 "offset":  {
+                                                                "x":  -29,
+                                                                "y":  11
+                                                            },
+                                                 "size":  {
+                                                              "scaleX":  1,
+                                                              "scaleY":  1,
+                                                              "rotation":  -36
+                                                          }
+                                             },
+                                "shoe_back":  {
+                                                  "offset":  {
+                                                                 "x":  0,
+                                                                 "y":  0
+                                                             },
+                                                  "size":  {
+                                                               "scaleX":  1,
+                                                               "scaleY":  1,
+                                                               "rotation":  0
+                                                           }
+                                              },
+                                "leg_front":  {
+                                                  "offset":  {
+                                                                 "x":  45,
+                                                                 "y":  12
+                                                             },
+                                                  "size":  {
+                                                               "scaleX":  1,
+                                                               "scaleY":  1,
+                                                               "rotation":  34
+                                                           }
+                                              },
+                                "shoe_front":  {
+                                                   "offset":  {
+                                                                  "x":  0,
+                                                                  "y":  0
+                                                              },
+                                                   "size":  {
+                                                                "scaleX":  1,
+                                                                "scaleY":  1,
+                                                                "rotation":  0
+                                                            }
+                                               },
+                                "belly":  {
+                                              "offset":  {
+                                                             "x":  0,
+                                                             "y":  0
+                                                         },
+                                              "size":  {
+                                                           "scaleX":  1,
+                                                           "scaleY":  1,
+                                                           "rotation":  0
+                                                       }
+                                          },
+                                "torso":  {
+                                              "offset":  {
+                                                             "x":  0,
+                                                             "y":  0
+                                                         },
+                                              "size":  {
+                                                           "scaleX":  1,
+                                                           "scaleY":  1,
+                                                           "rotation":  0
+                                                       }
+                                          },
+                                "arm_back_upper":  {
+                                                       "offset":  {
+                                                                      "x":  5,
+                                                                      "y":  -1
+                                                                  },
+                                                       "size":  {
+                                                                    "scaleX":  1,
+                                                                    "scaleY":  1,
+                                                                    "rotation":  32
+                                                                }
+                                                   },
+                                "arm_back_forearm":  {
+                                                         "offset":  {
+                                                                        "x":  5,
+                                                                        "y":  -1
+                                                                    },
+                                                         "size":  {
+                                                                      "scaleX":  1,
+                                                                      "scaleY":  1,
+                                                                      "rotation":  32
+                                                                  }
+                                                     },
+                                "hand_back":  {
+                                                  "offset":  {
+                                                                 "x":  5,
+                                                                 "y":  -1
+                                                             },
+                                                  "size":  {
+                                                               "scaleX":  1,
+                                                               "scaleY":  1,
+                                                               "rotation":  32
+                                                           }
+                                              },
+                                "glove_back":  {
+                                                   "offset":  {
+                                                                  "x":  0,
+                                                                  "y":  0
+                                                              },
+                                                   "size":  {
+                                                                "scaleX":  1,
+                                                                "scaleY":  1,
+                                                                "rotation":  0
+                                                            }
+                                               },
+                                "head":  {
+                                             "offset":  {
+                                                            "x":  0,
+                                                            "y":  0
+                                                        },
+                                             "size":  {
+                                                          "scaleX":  1,
+                                                          "scaleY":  1,
+                                                          "rotation":  0
+                                                      }
+                                         },
+                                "arm_front_upper":  {
+                                                        "offset":  {
+                                                                       "x":  -207,
+                                                                       "y":  -68
+                                                                   },
+                                                        "size":  {
+                                                                     "scaleX":  1,
+                                                                     "scaleY":  1,
+                                                                     "rotation":  -78
+                                                                 }
+                                                    },
+                                "arm_front_forearm":  {
+                                                          "offset":  {
+                                                                         "x":  -207,
+                                                                         "y":  -68
+                                                                     },
+                                                          "size":  {
+                                                                       "scaleX":  1,
+                                                                       "scaleY":  1,
+                                                                       "rotation":  -78
+                                                                   }
+                                                      },
+                                "hand_front":  {
+                                                   "offset":  {
+                                                                  "x":  -207,
+                                                                  "y":  -68
+                                                              },
+                                                   "size":  {
+                                                                "scaleX":  1,
+                                                                "scaleY":  1,
+                                                                "rotation":  -78
+                                                            }
+                                               },
+                                "glove_front":  {
+                                                    "offset":  {
+                                                                   "x":  0,
+                                                                   "y":  0
+                                                               },
+                                                    "size":  {
+                                                                 "scaleX":  1,
+                                                                 "scaleY":  1,
+                                                                 "rotation":  0
+                                                             }
+                                                },
+                                "auto_side_axe":  {
+                                                      "offset":  {
+                                                                     "x":  -44,
+                                                                     "y":  50
+                                                                 },
+                                                      "size":  {
+                                                                   "scaleX":  0.6699999999999997,
+                                                                   "scaleY":  0.6999999999999997,
+                                                                   "rotation":  84
+                                                               }
+                                                  },
+                                "auto_side_ceinture_test":  {
+                                                                "offset":  {
+                                                                               "x":  0,
+                                                                               "y":  0
+                                                                           },
+                                                                "size":  {
+                                                                             "scaleX":  1,
+                                                                             "scaleY":  1,
+                                                                             "rotation":  0
+                                                                         }
+                                                            },
+                                "auto_side_tiny_helmet":  {
+                                                              "offset":  {
+                                                                             "x":  0,
+                                                                             "y":  0
+                                                                         },
+                                                              "size":  {
+                                                                           "scaleX":  1,
+                                                                           "scaleY":  1,
+                                                                           "rotation":  0
+                                                                       }
+                                                          },
+                                "auto_side_war_underwear_walk":  {
+                                                                     "offset":  {
+                                                                                    "x":  0,
+                                                                                    "y":  0
+                                                                                },
+                                                                     "size":  {
+                                                                                  "scaleX":  1,
+                                                                                  "scaleY":  1,
+                                                                                  "rotation":  0
+                                                                              }
+                                                                 }
+                            },
+                            {
+                                "cape_side":  {
+                                                  "offset":  {
+                                                                 "x":  0,
+                                                                 "y":  0
+                                                             },
+                                                  "size":  {
+                                                               "scaleX":  1,
+                                                               "scaleY":  1,
+                                                               "rotation":  0
+                                                           }
+                                              },
+                                "cape_side_collar":  {
+                                                         "offset":  {
+                                                                        "x":  0,
+                                                                        "y":  0
+                                                                    },
+                                                         "size":  {
+                                                                      "scaleX":  1,
+                                                                      "scaleY":  1,
+                                                                      "rotation":  0
+                                                                  }
+                                                     },
+                                "underwear":  {
+                                                  "offset":  {
+                                                                 "x":  0,
+                                                                 "y":  0
+                                                             },
+                                                  "size":  {
+                                                               "scaleX":  1,
+                                                               "scaleY":  1,
+                                                               "rotation":  0
+                                                           }
+                                              },
+                                "leg_back":  {
+                                                 "offset":  {
+                                                                "x":  24,
+                                                                "y":  26
+                                                            },
+                                                 "size":  {
+                                                              "scaleX":  1,
+                                                              "scaleY":  1,
+                                                              "rotation":  -60
+                                                          }
+                                             },
+                                "shoe_back":  {
+                                                  "offset":  {
+                                                                 "x":  0,
+                                                                 "y":  0
+                                                             },
+                                                  "size":  {
+                                                               "scaleX":  1,
+                                                               "scaleY":  1,
+                                                               "rotation":  0
+                                                           }
+                                              },
+                                "leg_front":  {
+                                                  "offset":  {
+                                                                 "x":  -27,
+                                                                 "y":  40
+                                                             },
+                                                  "size":  {
+                                                               "scaleX":  1,
+                                                               "scaleY":  1,
+                                                               "rotation":  74
+                                                           }
+                                              },
+                                "shoe_front":  {
+                                                   "offset":  {
+                                                                  "x":  0,
+                                                                  "y":  0
+                                                              },
+                                                   "size":  {
+                                                                "scaleX":  1,
+                                                                "scaleY":  1,
+                                                                "rotation":  0
+                                                            }
+                                               },
+                                "belly":  {
+                                              "offset":  {
+                                                             "x":  0,
+                                                             "y":  0
+                                                         },
+                                              "size":  {
+                                                           "scaleX":  1,
+                                                           "scaleY":  1,
+                                                           "rotation":  0
+                                                       }
+                                          },
+                                "torso":  {
+                                              "offset":  {
+                                                             "x":  0,
+                                                             "y":  0
+                                                         },
+                                              "size":  {
+                                                           "scaleX":  1,
+                                                           "scaleY":  1,
+                                                           "rotation":  0
+                                                       }
+                                          },
+                                "arm_back_upper":  {
+                                                       "offset":  {
+                                                                      "x":  133,
+                                                                      "y":  -33
+                                                                  },
+                                                       "size":  {
+                                                                    "scaleX":  1,
+                                                                    "scaleY":  1,
+                                                                    "rotation":  86
+                                                                }
+                                                   },
+                                "arm_back_forearm":  {
+                                                         "offset":  {
+                                                                        "x":  133,
+                                                                        "y":  -33
+                                                                    },
+                                                         "size":  {
+                                                                      "scaleX":  1,
+                                                                      "scaleY":  1,
+                                                                      "rotation":  86
+                                                                  }
+                                                     },
+                                "hand_back":  {
+                                                  "offset":  {
+                                                                 "x":  133,
+                                                                 "y":  -33
+                                                             },
+                                                  "size":  {
+                                                               "scaleX":  1,
+                                                               "scaleY":  1,
+                                                               "rotation":  86
+                                                           }
+                                              },
+                                "glove_back":  {
+                                                   "offset":  {
+                                                                  "x":  0,
+                                                                  "y":  0
+                                                              },
+                                                   "size":  {
+                                                                "scaleX":  1,
+                                                                "scaleY":  1,
+                                                                "rotation":  0
+                                                            }
+                                               },
+                                "head":  {
+                                             "offset":  {
+                                                            "x":  0,
+                                                            "y":  0
+                                                        },
+                                             "size":  {
+                                                          "scaleX":  1,
+                                                          "scaleY":  1,
+                                                          "rotation":  0
+                                                      }
+                                         },
+                                "arm_front_upper":  {
+                                                        "offset":  {
+                                                                       "x":  -303,
+                                                                       "y":  24
+                                                                   },
+                                                        "size":  {
+                                                                     "scaleX":  1,
+                                                                     "scaleY":  1,
+                                                                     "rotation":  -122
+                                                                 }
+                                                    },
+                                "arm_front_forearm":  {
+                                                          "offset":  {
+                                                                         "x":  -303,
+                                                                         "y":  24
+                                                                     },
+                                                          "size":  {
+                                                                       "scaleX":  1,
+                                                                       "scaleY":  1,
+                                                                       "rotation":  -122
+                                                                   }
+                                                      },
+                                "hand_front":  {
+                                                   "offset":  {
+                                                                  "x":  -303,
+                                                                  "y":  24
+                                                              },
+                                                   "size":  {
+                                                                "scaleX":  1,
+                                                                "scaleY":  1,
+                                                                "rotation":  -122
+                                                            }
+                                               },
+                                "glove_front":  {
+                                                    "offset":  {
+                                                                   "x":  0,
+                                                                   "y":  0
+                                                               },
+                                                    "size":  {
+                                                                 "scaleX":  1,
+                                                                 "scaleY":  1,
+                                                                 "rotation":  0
+                                                             }
+                                                },
+                                "auto_side_axe":  {
+                                                      "offset":  {
+                                                                     "x":  111,
+                                                                     "y":  -2
+                                                                 },
+                                                      "size":  {
+                                                                   "scaleX":  0.6999999999999997,
+                                                                   "scaleY":  0.6399999999999997,
+                                                                   "rotation":  46
+                                                               }
+                                                  },
+                                "auto_side_ceinture_test":  {
+                                                                "offset":  {
+                                                                               "x":  0,
+                                                                               "y":  0
+                                                                           },
+                                                                "size":  {
+                                                                             "scaleX":  1,
+                                                                             "scaleY":  1,
+                                                                             "rotation":  0
+                                                                         }
+                                                            },
+                                "auto_side_tiny_helmet":  {
+                                                              "offset":  {
+                                                                             "x":  0,
+                                                                             "y":  0
+                                                                         },
+                                                              "size":  {
+                                                                           "scaleX":  1,
+                                                                           "scaleY":  1,
+                                                                           "rotation":  0
+                                                                       }
+                                                          },
+                                "auto_side_war_underwear_walk":  {
+                                                                     "offset":  {
+                                                                                    "x":  0,
+                                                                                    "y":  0
+                                                                                },
+                                                                     "size":  {
+                                                                                  "scaleX":  1,
+                                                                                  "scaleY":  1,
+                                                                                  "rotation":  0
+                                                                              }
+                                                                 }
+                            },
+                            {
+                                "cape_side":  {
+                                                  "offset":  {
+                                                                 "x":  0,
+                                                                 "y":  0
+                                                             },
+                                                  "size":  {
+                                                               "scaleX":  1,
+                                                               "scaleY":  1,
+                                                               "rotation":  0
+                                                           }
+                                              },
+                                "cape_side_collar":  {
+                                                         "offset":  {
+                                                                        "x":  0,
+                                                                        "y":  0
+                                                                    },
+                                                         "size":  {
+                                                                      "scaleX":  1,
+                                                                      "scaleY":  1,
+                                                                      "rotation":  0
+                                                                  }
+                                                     },
+                                "underwear":  {
+                                                  "offset":  {
+                                                                 "x":  0,
+                                                                 "y":  0
+                                                             },
+                                                  "size":  {
+                                                               "scaleX":  1,
+                                                               "scaleY":  1,
+                                                               "rotation":  0
+                                                           }
+                                              },
+                                "leg_back":  {
+                                                 "offset":  {
+                                                                "x":  24,
+                                                                "y":  26
+                                                            },
+                                                 "size":  {
+                                                              "scaleX":  1,
+                                                              "scaleY":  1,
+                                                              "rotation":  -72
+                                                          }
+                                             },
+                                "shoe_back":  {
+                                                  "offset":  {
+                                                                 "x":  0,
+                                                                 "y":  0
+                                                             },
+                                                  "size":  {
+                                                               "scaleX":  1,
+                                                               "scaleY":  1,
+                                                               "rotation":  0
+                                                           }
+                                              },
+                                "leg_front":  {
+                                                  "offset":  {
+                                                                 "x":  -24,
+                                                                 "y":  76
+                                                             },
+                                                  "size":  {
+                                                               "scaleX":  1,
+                                                               "scaleY":  1,
+                                                               "rotation":  98
+                                                           }
+                                              },
+                                "shoe_front":  {
+                                                   "offset":  {
+                                                                  "x":  0,
+                                                                  "y":  0
+                                                              },
+                                                   "size":  {
+                                                                "scaleX":  1,
+                                                                "scaleY":  1,
+                                                                "rotation":  0
+                                                            }
+                                               },
+                                "belly":  {
+                                              "offset":  {
+                                                             "x":  0,
+                                                             "y":  0
+                                                         },
+                                              "size":  {
+                                                           "scaleX":  1,
+                                                           "scaleY":  1,
+                                                           "rotation":  0
+                                                       }
+                                          },
+                                "torso":  {
+                                              "offset":  {
+                                                             "x":  0,
+                                                             "y":  0
+                                                         },
+                                              "size":  {
+                                                           "scaleX":  1,
+                                                           "scaleY":  1,
+                                                           "rotation":  0
+                                                       }
+                                          },
+                                "arm_back_upper":  {
+                                                       "offset":  {
+                                                                      "x":  189,
+                                                                      "y":  142
+                                                                  },
+                                                       "size":  {
+                                                                    "scaleX":  1,
+                                                                    "scaleY":  1,
+                                                                    "rotation":  514
+                                                                }
+                                                   },
+                                "arm_back_forearm":  {
+                                                         "offset":  {
+                                                                        "x":  189,
+                                                                        "y":  142
+                                                                    },
+                                                         "size":  {
+                                                                      "scaleX":  1,
+                                                                      "scaleY":  1,
+                                                                      "rotation":  514
+                                                                  }
+                                                     },
+                                "hand_back":  {
+                                                  "offset":  {
+                                                                 "x":  189,
+                                                                 "y":  142
+                                                             },
+                                                  "size":  {
+                                                               "scaleX":  1,
+                                                               "scaleY":  1,
+                                                               "rotation":  514
+                                                           }
+                                              },
+                                "glove_back":  {
+                                                   "offset":  {
+                                                                  "x":  0,
+                                                                  "y":  0
+                                                              },
+                                                   "size":  {
+                                                                "scaleX":  1,
+                                                                "scaleY":  1,
+                                                                "rotation":  0
+                                                            }
+                                               },
+                                "head":  {
+                                             "offset":  {
+                                                            "x":  0,
+                                                            "y":  0
+                                                        },
+                                             "size":  {
+                                                          "scaleX":  1,
+                                                          "scaleY":  1,
+                                                          "rotation":  0
+                                                      }
+                                         },
+                                "arm_front_upper":  {
+                                                        "offset":  {
+                                                                       "x":  -301,
+                                                                       "y":  157
+                                                                   },
+                                                        "size":  {
+                                                                     "scaleX":  1,
+                                                                     "scaleY":  1,
+                                                                     "rotation":  -156
+                                                                 }
+                                                    },
+                                "arm_front_forearm":  {
+                                                          "offset":  {
+                                                                         "x":  -301,
+                                                                         "y":  157
+                                                                     },
+                                                          "size":  {
+                                                                       "scaleX":  1,
+                                                                       "scaleY":  1,
+                                                                       "rotation":  -156
+                                                                   }
+                                                      },
+                                "hand_front":  {
+                                                   "offset":  {
+                                                                  "x":  -301,
+                                                                  "y":  157
+                                                              },
+                                                   "size":  {
+                                                                "scaleX":  1,
+                                                                "scaleY":  1,
+                                                                "rotation":  -156
+                                                            }
+                                               },
+                                "glove_front":  {
+                                                    "offset":  {
+                                                                   "x":  0,
+                                                                   "y":  0
+                                                               },
+                                                    "size":  {
+                                                                 "scaleX":  1,
+                                                                 "scaleY":  1,
+                                                                 "rotation":  0
+                                                             }
+                                                },
+                                "auto_side_axe":  {
+                                                      "offset":  {
+                                                                     "x":  186,
+                                                                     "y":  -84
+                                                                 },
+                                                      "size":  {
+                                                                   "scaleX":  0.6999999999999997,
+                                                                   "scaleY":  0.6399999999999997,
+                                                                   "rotation":  22
+                                                               }
+                                                  },
+                                "auto_side_ceinture_test":  {
+                                                                "offset":  {
+                                                                               "x":  0,
+                                                                               "y":  0
+                                                                           },
+                                                                "size":  {
+                                                                             "scaleX":  1,
+                                                                             "scaleY":  1,
+                                                                             "rotation":  0
+                                                                         }
+                                                            },
+                                "auto_side_tiny_helmet":  {
+                                                              "offset":  {
+                                                                             "x":  0,
+                                                                             "y":  0
+                                                                         },
+                                                              "size":  {
+                                                                           "scaleX":  1,
+                                                                           "scaleY":  1,
+                                                                           "rotation":  0
+                                                                       }
+                                                          },
+                                "auto_side_war_underwear_walk":  {
+                                                                     "offset":  {
+                                                                                    "x":  0,
+                                                                                    "y":  0
+                                                                                },
+                                                                     "size":  {
+                                                                                  "scaleX":  1,
+                                                                                  "scaleY":  1,
+                                                                                  "rotation":  0
+                                                                              }
+                                                                 }
+                            }
+                        ],
+    "visibility":  {
+                       "cape_side":  true,
+                       "cape_side_collar":  true,
+                       "underwear":  true,
+                       "leg_back":  true,
+                       "shoe_back":  true,
+                       "leg_front":  true,
+                       "shoe_front":  true,
+                       "belly":  true,
+                       "torso":  true,
+                       "arm_back_upper":  true,
+                       "arm_back_forearm":  true,
+                       "hand_back":  true,
+                       "glove_back":  true,
+                       "head":  true,
+                       "arm_front_upper":  true,
+                       "arm_front_forearm":  true,
+                       "hand_front":  true,
+                       "glove_front":  true,
+                       "auto_side_axe":  true,
+                       "auto_side_ceinture_test":  false,
+                       "auto_side_tiny_helmet":  true,
+                       "auto_side_war_underwear_walk":  true
+                   },
+    "stuffAdjustments":  {
+                             "cape_side":  {
+                                               "offset":  {
+                                                              "x":  0,
+                                                              "y":  -5
+                                                          },
+                                               "size":  {
+                                                            "scaleX":  1.1800000000000002,
+                                                            "scaleY":  1.1500000000000001,
+                                                            "rotation":  0
+                                                        },
+                                               "visible":  true
+                                           },
+                             "cape_side_collar":  {
+                                                      "offset":  {
+                                                                     "x":  0,
+                                                                     "y":  0
+                                                                 },
+                                                      "size":  {
+                                                                   "scaleX":  1,
+                                                                   "scaleY":  1,
+                                                                   "rotation":  0
+                                                               },
+                                                      "visible":  true
+                                                  },
+                             "shoe_back":  {
+                                               "offset":  {
+                                                              "x":  29,
+                                                              "y":  58
+                                                          },
+                                               "size":  {
+                                                            "scaleX":  1.4500000000000004,
+                                                            "scaleY":  1.4800000000000004,
+                                                            "rotation":  36
+                                                        },
+                                               "visible":  true
+                                           },
+                             "shoe_front":  {
+                                                "offset":  {
+                                                               "x":  7,
+                                                               "y":  30
+                                                           },
+                                                "size":  {
+                                                             "scaleX":  1.6000000000000005,
+                                                             "scaleY":  1.5700000000000005,
+                                                             "rotation":  -34
+                                                         },
+                                                "visible":  true
+                                            },
+                             "glove_back":  {
+                                                "offset":  {
+                                                               "x":  366,
+                                                               "y":  80
+                                                           },
+                                                "size":  {
+                                                             "scaleX":  1.1500000000000001,
+                                                             "scaleY":  1.1500000000000001,
+                                                             "rotation":  4
+                                                         },
+                                                "visible":  true
+                                            },
+                             "glove_front":  {
+                                                 "offset":  {
+                                                                "x":  -402,
+                                                                "y":  85
+                                                            },
+                                                 "size":  {
+                                                              "scaleX":  1.2700000000000002,
+                                                              "scaleY":  1.3300000000000003,
+                                                              "rotation":  -8
+                                                          },
+                                                 "visible":  true
+                                             },
+                             "auto_side_axe":  {
+                                                   "offset":  {
+                                                                  "x":  0,
+                                                                  "y":  142
+                                                              },
+                                                   "size":  {
+                                                                "scaleX":  1,
+                                                                "scaleY":  1,
+                                                                "rotation":  0
+                                                            },
+                                                   "visible":  true
+                                               },
+                             "auto_side_ceinture_test":  {
+                                                             "offset":  {
+                                                                            "x":  -3,
+                                                                            "y":  128
+                                                                        },
+                                                             "size":  {
+                                                                          "scaleX":  1.2400000000000002,
+                                                                          "scaleY":  0.7599999999999998,
+                                                                          "rotation":  0
+                                                                      },
+                                                             "visible":  false
+                                                         },
+                             "auto_side_tiny_helmet":  {
+                                                           "offset":  {
+                                                                          "x":  1,
+                                                                          "y":  -233
+                                                                      },
+                                                           "size":  {
+                                                                        "scaleX":  1.03,
+                                                                        "scaleY":  0.8499999999999999,
+                                                                        "rotation":  -4
+                                                                    },
+                                                           "visible":  true
+                                                       },
+                             "auto_side_war_underwear_walk":  {
+                                                                  "offset":  {
+                                                                                 "x":  5,
+                                                                                 "y":  132
+                                                                             },
+                                                                  "size":  {
+                                                                               "scaleX":  1,
+                                                                               "scaleY":  1,
+                                                                               "rotation":  0
+                                                                           },
+                                                                  "visible":  true
+                                                              }
+                         }
+}

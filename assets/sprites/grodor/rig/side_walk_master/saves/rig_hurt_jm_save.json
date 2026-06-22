@@ -1,0 +1,1761 @@
+{
+  "formatVersion": 1,
+  "rig": "sideHurt",
+  "scale": 0.82,
+  "selected": "hurt_emote_star_mid",
+  "animationEnabled": false,
+  "secondaryMotionEnabled": true,
+  "lockedWalkFrame": 3,
+  "layerOrder": [
+    "hurt_arm_back_upper",
+    "hurt_arm_back_forearm",
+    "hurt_hand_back",
+    "glove_back",
+    "torso",
+    "belly",
+    "leg_back",
+    "shoe_back",
+    "leg_front",
+    "shoe_front",
+    "underwear",
+    "hurt_arm_front_upper",
+    "hurt_arm_front_forearm",
+    "hurt_hand_front",
+    "auto_side_ceinture_test",
+    "auto_side_war_underwear_walk",
+    "auto_side_axe",
+    "glove_front",
+    "cape_side_collar",
+    "head",
+    "hurt_head",
+    "auto_side_tiny_helmet",
+    "cape_side",
+    "hurt_emote",
+    "hurt_emote_star_mid",
+    "hurt_emote_star_small",
+    "hurt_emote_star_big"
+  ],
+  "anchors": {
+    "glove_back": "hurt_hand_back",
+    "glove_front": "hurt_hand_front",
+    "shoe_back": "leg_back",
+    "shoe_front": "leg_front",
+    "auto_side_tiny_helmet": "head",
+    "auto_side_ceinture_test": "underwear",
+    "auto_side_war_underwear_walk": "underwear"
+  },
+  "offsets": {
+    "cape_side": {
+      "x": -29,
+      "y": -5
+    },
+    "cape_side_collar": {
+      "x": -25,
+      "y": -6
+    },
+    "underwear": {
+      "x": 18,
+      "y": -14
+    },
+    "leg_back": {
+      "x": -7,
+      "y": -2
+    },
+    "shoe_back": {
+      "x": 29,
+      "y": 58
+    },
+    "leg_front": {
+      "x": 26,
+      "y": -41
+    },
+    "shoe_front": {
+      "x": 7,
+      "y": 30
+    },
+    "belly": {
+      "x": -15,
+      "y": -21
+    },
+    "torso": {
+      "x": -38,
+      "y": -20
+    },
+    "hurt_arm_back_upper": {
+      "x": -24,
+      "y": -30
+    },
+    "hurt_arm_back_forearm": {
+      "x": 0,
+      "y": 0
+    },
+    "hurt_hand_back": {
+      "x": 0,
+      "y": 0
+    },
+    "glove_back": {
+      "x": 400,
+      "y": 74
+    },
+    "head": {
+      "x": -68,
+      "y": -17
+    },
+    "hurt_head": {
+      "x": -65,
+      "y": -13
+    },
+    "hurt_arm_front_upper": {
+      "x": 2,
+      "y": 4
+    },
+    "hurt_arm_front_forearm": {
+      "x": 0,
+      "y": 0
+    },
+    "hurt_hand_front": {
+      "x": 0,
+      "y": 0
+    },
+    "glove_front": {
+      "x": -103,
+      "y": 81
+    },
+    "hurt_emote": {
+      "x": -129,
+      "y": 43
+    },
+    "hurt_emote_star_big": {
+      "x": 0,
+      "y": 0
+    },
+    "hurt_emote_star_small": {
+      "x": 0,
+      "y": 0
+    },
+    "hurt_emote_star_mid": {
+      "x": 0,
+      "y": 0
+    },
+    "auto_side_axe": {
+      "x": 497,
+      "y": 122
+    },
+    "auto_side_ceinture_test": {
+      "x": 6,
+      "y": 136
+    },
+    "auto_side_tiny_helmet": {
+      "x": 1,
+      "y": -233
+    },
+    "auto_side_war_underwear_walk": {
+      "x": 6,
+      "y": 132
+    }
+  },
+  "sizeAdjustments": {
+    "cape_side": {
+      "scaleX": 1,
+      "scaleY": 0.8499999999999999,
+      "rotation": -26
+    },
+    "cape_side_collar": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": -24
+    },
+    "underwear": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": -14
+    },
+    "leg_back": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": -90
+    },
+    "shoe_back": {
+      "scaleX": 1.4500000000000004,
+      "scaleY": 1.4800000000000004,
+      "rotation": 36
+    },
+    "leg_front": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": -22
+    },
+    "shoe_front": {
+      "scaleX": 1.6000000000000005,
+      "scaleY": 1.5700000000000005,
+      "rotation": -34
+    },
+    "belly": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": -14
+    },
+    "torso": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": -14
+    },
+    "hurt_arm_back_upper": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": -18
+    },
+    "hurt_arm_back_forearm": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
+    "hurt_hand_back": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
+    "glove_back": {
+      "scaleX": 1.12,
+      "scaleY": 1.1500000000000001,
+      "rotation": -40
+    },
+    "head": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": -20
+    },
+    "hurt_head": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": -20
+    },
+    "hurt_arm_front_upper": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": -2
+    },
+    "hurt_arm_front_forearm": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
+    "hurt_hand_front": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
+    "glove_front": {
+      "scaleX": 1.1500000000000001,
+      "scaleY": 1.2100000000000002,
+      "rotation": -392
+    },
+    "hurt_emote": {
+      "scaleX": 1.4500000000000004,
+      "scaleY": 1.3900000000000003,
+      "rotation": -4
+    },
+    "hurt_emote_star_big": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
+    "hurt_emote_star_small": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
+    "hurt_emote_star_mid": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
+    "auto_side_axe": {
+      "scaleX": 0.7299999999999998,
+      "scaleY": 0.7299999999999998,
+      "rotation": -44
+    },
+    "auto_side_ceinture_test": {
+      "scaleX": 1.12,
+      "scaleY": 0.7599999999999998,
+      "rotation": -4
+    },
+    "auto_side_tiny_helmet": {
+      "scaleX": 1.03,
+      "scaleY": 0.8499999999999999,
+      "rotation": -4
+    },
+    "auto_side_war_underwear_walk": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": -2
+    }
+  },
+  "poseAdjustments": [
+    {
+      "cape_side": {
+        "offset": {
+          "x": 39,
+          "y": -15
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1.3000000000000003,
+          "rotation": 20
+        }
+      },
+      "cape_side_collar": {
+        "offset": {
+          "x": 36,
+          "y": -8
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 18
+        }
+      },
+      "underwear": {
+        "offset": {
+          "x": 7,
+          "y": -1
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 10
+        }
+      },
+      "leg_back": {
+        "offset": {
+          "x": -13,
+          "y": -5
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 48
+        }
+      },
+      "shoe_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "leg_front": {
+        "offset": {
+          "x": 60,
+          "y": 27
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 52
+        }
+      },
+      "shoe_front": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "belly": {
+        "offset": {
+          "x": 31,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 10
+        }
+      },
+      "torso": {
+        "offset": {
+          "x": 46,
+          "y": -4
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 10
+        }
+      },
+      "hurt_arm_back_upper": {
+        "offset": {
+          "x": 14,
+          "y": -4
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 72
+        }
+      },
+      "hurt_arm_back_forearm": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_hand_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "glove_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "head": {
+        "offset": {
+          "x": 70,
+          "y": -6
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 16
+        }
+      },
+      "hurt_head": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_arm_front_upper": {
+        "offset": {
+          "x": -26,
+          "y": 50
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 52
+        }
+      },
+      "hurt_arm_front_forearm": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_hand_front": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "glove_front": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_emote": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_emote_star_big": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_emote_star_small": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_emote_star_mid": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_axe": {
+        "offset": {
+          "x": -346,
+          "y": -18
+        },
+        "size": {
+          "scaleX": 0.5799999999999996,
+          "scaleY": 0.6099999999999997,
+          "rotation": 54
+        }
+      },
+      "auto_side_ceinture_test": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_tiny_helmet": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_war_underwear_walk": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      }
+    },
+    {
+      "cape_side": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "cape_side_collar": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "underwear": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "leg_back": {
+        "offset": {
+          "x": -12,
+          "y": 8
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 44
+        }
+      },
+      "shoe_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "leg_front": {
+        "offset": {
+          "x": 44,
+          "y": 23
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 46
+        }
+      },
+      "shoe_front": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "belly": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "torso": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_arm_back_upper": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 50
+        }
+      },
+      "hurt_arm_back_forearm": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_hand_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "glove_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "head": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_head": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_arm_front_upper": {
+        "offset": {
+          "x": -29,
+          "y": 44
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 38
+        }
+      },
+      "hurt_arm_front_forearm": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_hand_front": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "glove_front": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_emote": {
+        "offset": {
+          "x": -29,
+          "y": 1
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -14
+        }
+      },
+      "hurt_emote_star_big": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_emote_star_small": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_emote_star_mid": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_axe": {
+        "offset": {
+          "x": -315,
+          "y": -28
+        },
+        "size": {
+          "scaleX": 0.5799999999999996,
+          "scaleY": 0.6099999999999997,
+          "rotation": 94
+        }
+      },
+      "auto_side_ceinture_test": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_tiny_helmet": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_war_underwear_walk": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      }
+    },
+    {
+      "cape_side": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "cape_side_collar": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "underwear": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "leg_back": {
+        "offset": {
+          "x": -12,
+          "y": 8
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 24
+        }
+      },
+      "shoe_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "leg_front": {
+        "offset": {
+          "x": 9,
+          "y": 9
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 14
+        }
+      },
+      "shoe_front": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "belly": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "torso": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_arm_back_upper": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 18
+        }
+      },
+      "hurt_arm_back_forearm": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_hand_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "glove_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "head": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_head": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_arm_front_upper": {
+        "offset": {
+          "x": 1,
+          "y": 18
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 14
+        }
+      },
+      "hurt_arm_front_forearm": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_hand_front": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "glove_front": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_emote": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_emote_star_big": {
+        "offset": {
+          "x": -110,
+          "y": 39
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_emote_star_small": {
+        "offset": {
+          "x": -134,
+          "y": 45
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_emote_star_mid": {
+        "offset": {
+          "x": -294,
+          "y": 21
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_axe": {
+        "offset": {
+          "x": -230,
+          "y": -81
+        },
+        "size": {
+          "scaleX": 0.5799999999999996,
+          "scaleY": 0.6099999999999997,
+          "rotation": 126
+        }
+      },
+      "auto_side_ceinture_test": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_tiny_helmet": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_war_underwear_walk": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      }
+    },
+    {
+      "cape_side": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "cape_side_collar": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "underwear": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "leg_back": {
+        "offset": {
+          "x": -12,
+          "y": 8
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 8
+        }
+      },
+      "shoe_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "leg_front": {
+        "offset": {
+          "x": 9,
+          "y": 9
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -2
+        }
+      },
+      "shoe_front": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "belly": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "torso": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_arm_back_upper": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_arm_back_forearm": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_hand_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "glove_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "head": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_head": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_arm_front_upper": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_arm_front_forearm": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_hand_front": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "glove_front": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_emote": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_emote_star_big": {
+        "offset": {
+          "x": -24,
+          "y": 9
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_emote_star_small": {
+        "offset": {
+          "x": -191,
+          "y": 52
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "hurt_emote_star_mid": {
+        "offset": {
+          "x": -220,
+          "y": 67
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_axe": {
+        "offset": {
+          "x": -230,
+          "y": -59
+        },
+        "size": {
+          "scaleX": 0.5799999999999996,
+          "scaleY": 0.6099999999999997,
+          "rotation": 142
+        }
+      },
+      "auto_side_ceinture_test": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_tiny_helmet": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_war_underwear_walk": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      }
+    }
+  ],
+  "poseVisibility": [
+    {
+      "cape_side": true,
+      "cape_side_collar": true,
+      "underwear": true,
+      "leg_back": true,
+      "shoe_back": true,
+      "leg_front": true,
+      "shoe_front": true,
+      "belly": true,
+      "torso": true,
+      "hurt_arm_back_upper": true,
+      "hurt_arm_back_forearm": true,
+      "hurt_hand_back": true,
+      "glove_back": true,
+      "head": true,
+      "hurt_head": false,
+      "hurt_arm_front_upper": true,
+      "hurt_arm_front_forearm": true,
+      "hurt_hand_front": true,
+      "glove_front": true,
+      "hurt_emote": false,
+      "hurt_emote_star_big": false,
+      "hurt_emote_star_small": false,
+      "hurt_emote_star_mid": false,
+      "auto_side_axe": true,
+      "auto_side_ceinture_test": false,
+      "auto_side_tiny_helmet": true,
+      "auto_side_war_underwear_walk": true
+    },
+    {
+      "cape_side": true,
+      "cape_side_collar": true,
+      "underwear": true,
+      "leg_back": true,
+      "shoe_back": true,
+      "leg_front": true,
+      "shoe_front": true,
+      "belly": true,
+      "torso": true,
+      "hurt_arm_back_upper": true,
+      "hurt_arm_back_forearm": true,
+      "hurt_hand_back": true,
+      "glove_back": true,
+      "head": false,
+      "hurt_head": true,
+      "hurt_arm_front_upper": true,
+      "hurt_arm_front_forearm": true,
+      "hurt_hand_front": true,
+      "glove_front": true,
+      "hurt_emote": false,
+      "hurt_emote_star_big": false,
+      "hurt_emote_star_small": false,
+      "hurt_emote_star_mid": false,
+      "auto_side_axe": true,
+      "auto_side_ceinture_test": false,
+      "auto_side_tiny_helmet": true,
+      "auto_side_war_underwear_walk": true
+    },
+    {
+      "cape_side": true,
+      "cape_side_collar": true,
+      "underwear": true,
+      "leg_back": true,
+      "shoe_back": true,
+      "leg_front": true,
+      "shoe_front": true,
+      "belly": true,
+      "torso": true,
+      "hurt_arm_back_upper": true,
+      "hurt_arm_back_forearm": true,
+      "hurt_hand_back": true,
+      "glove_back": true,
+      "head": false,
+      "hurt_head": true,
+      "hurt_arm_front_upper": true,
+      "hurt_arm_front_forearm": true,
+      "hurt_hand_front": true,
+      "glove_front": true,
+      "hurt_emote": true,
+      "hurt_emote_star_big": true,
+      "hurt_emote_star_small": true,
+      "hurt_emote_star_mid": true,
+      "auto_side_axe": true,
+      "auto_side_ceinture_test": false,
+      "auto_side_tiny_helmet": true,
+      "auto_side_war_underwear_walk": true
+    },
+    {
+      "cape_side": true,
+      "cape_side_collar": true,
+      "underwear": true,
+      "leg_back": true,
+      "shoe_back": true,
+      "leg_front": true,
+      "shoe_front": true,
+      "belly": true,
+      "torso": true,
+      "hurt_arm_back_upper": true,
+      "hurt_arm_back_forearm": true,
+      "hurt_hand_back": true,
+      "glove_back": true,
+      "head": false,
+      "hurt_head": true,
+      "hurt_arm_front_upper": true,
+      "hurt_arm_front_forearm": true,
+      "hurt_hand_front": true,
+      "glove_front": true,
+      "hurt_emote": true,
+      "hurt_emote_star_big": true,
+      "hurt_emote_star_small": true,
+      "hurt_emote_star_mid": true,
+      "auto_side_axe": true,
+      "auto_side_ceinture_test": false,
+      "auto_side_tiny_helmet": true,
+      "auto_side_war_underwear_walk": true
+    }
+  ],
+  "visibility": {
+    "cape_side": true,
+    "cape_side_collar": true,
+    "underwear": true,
+    "leg_back": true,
+    "shoe_back": true,
+    "leg_front": true,
+    "shoe_front": true,
+    "belly": true,
+    "torso": true,
+    "hurt_arm_back_upper": true,
+    "hurt_arm_back_forearm": true,
+    "hurt_hand_back": true,
+    "glove_back": true,
+    "head": false,
+    "hurt_head": true,
+    "hurt_arm_front_upper": true,
+    "hurt_arm_front_forearm": true,
+    "hurt_hand_front": true,
+    "glove_front": true,
+    "hurt_emote": true,
+    "hurt_emote_star_big": true,
+    "hurt_emote_star_small": true,
+    "hurt_emote_star_mid": true,
+    "auto_side_axe": true,
+    "auto_side_ceinture_test": false,
+    "auto_side_tiny_helmet": true,
+    "auto_side_war_underwear_walk": true
+  },
+  "stuffAdjustments": {
+    "cape_side": {
+      "offset": {
+        "x": -29,
+        "y": -5
+      },
+      "size": {
+        "scaleX": 1,
+        "scaleY": 0.8499999999999999,
+        "rotation": -26
+      },
+      "visible": true
+    },
+    "cape_side_collar": {
+      "offset": {
+        "x": -25,
+        "y": -6
+      },
+      "size": {
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": -24
+      },
+      "visible": true
+    },
+    "shoe_back": {
+      "offset": {
+        "x": 29,
+        "y": 58
+      },
+      "size": {
+        "scaleX": 1.4500000000000004,
+        "scaleY": 1.4800000000000004,
+        "rotation": 36
+      },
+      "visible": true
+    },
+    "shoe_front": {
+      "offset": {
+        "x": 7,
+        "y": 30
+      },
+      "size": {
+        "scaleX": 1.6000000000000005,
+        "scaleY": 1.5700000000000005,
+        "rotation": -34
+      },
+      "visible": true
+    },
+    "glove_back": {
+      "offset": {
+        "x": 400,
+        "y": 74
+      },
+      "size": {
+        "scaleX": 1.12,
+        "scaleY": 1.1500000000000001,
+        "rotation": -40
+      },
+      "visible": true
+    },
+    "glove_front": {
+      "offset": {
+        "x": -103,
+        "y": 81
+      },
+      "size": {
+        "scaleX": 1.1500000000000001,
+        "scaleY": 1.2100000000000002,
+        "rotation": -392
+      },
+      "visible": true
+    },
+    "auto_side_axe": {
+      "offset": {
+        "x": 497,
+        "y": 122
+      },
+      "size": {
+        "scaleX": 0.7299999999999998,
+        "scaleY": 0.7299999999999998,
+        "rotation": -44
+      },
+      "visible": true
+    },
+    "auto_side_ceinture_test": {
+      "offset": {
+        "x": 6,
+        "y": 136
+      },
+      "size": {
+        "scaleX": 1.12,
+        "scaleY": 0.7599999999999998,
+        "rotation": -4
+      },
+      "visible": false
+    },
+    "auto_side_tiny_helmet": {
+      "offset": {
+        "x": 1,
+        "y": -233
+      },
+      "size": {
+        "scaleX": 1.03,
+        "scaleY": 0.8499999999999999,
+        "rotation": -4
+      },
+      "visible": true
+    },
+    "auto_side_war_underwear_walk": {
+      "offset": {
+        "x": 6,
+        "y": 132
+      },
+      "size": {
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": -2
+      },
+      "visible": true
+    }
+  }
+}
