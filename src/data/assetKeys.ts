@@ -814,7 +814,120 @@ export const ANIMATION_KEYS = {
   grodorEmotionalPebbleVictory: "grodor_emotional_pebble_victory"
 } as const;
 
+const imageAssetsByKey = (...keys: Array<keyof typeof IMAGE_ASSETS>): AssetDefinition[] => keys.map((key) => IMAGE_ASSETS[key]);
+const imageAssetsByPrefix = (...prefixes: string[]): AssetDefinition[] =>
+  Object.entries(IMAGE_ASSETS)
+    .filter(([key]) => prefixes.some((prefix) => key.startsWith(prefix)))
+    .map(([, asset]) => asset);
+
+const GRODOR_ACTOR_IMAGES = imageAssetsByPrefix("grodor");
+const DUNGEON_HUD_IMAGES = imageAssetsByKey(
+  "dungeonHudCounterFrame",
+  "dungeonHudStatusPanelEmpty",
+  "dungeonHudHeartFrame",
+  "heartFull",
+  "heartEmpty",
+  "heartBrake",
+  "coinPouchFull",
+  "coinPouchEmpty",
+  "inventoryFull",
+  "inventoryEmpty",
+  "hudLife",
+  "hudAttempt",
+  "hudFloor",
+  "gold"
+);
+const INVENTORY_PANEL_IMAGES = imageAssetsByKey(
+  "inventoryEquipmentPanel",
+  "inventoryWindowFrameEmpty",
+  "inventoryEquipmentSlotEmpty",
+  "inventoryKeySlotEmpty",
+  "inventoryCloseButton",
+  "grodorHouseChestPanel"
+);
+const VILLAGE_HUD_IMAGES = imageAssetsByKey("villagePouchEmpty", "villagePouchFull", "villageInventoryEmpty", "villageInventoryFull");
+
 export const INTRO_PRELOAD_IMAGES = [IMAGE_ASSETS.introBackground, IMAGE_ASSETS.introLogo];
+export const CELL_PRELOAD_IMAGES = [
+  IMAGE_ASSETS.dungeonGeole,
+  IMAGE_ASSETS.dungeonInterior,
+  IMAGE_ASSETS.frameStory,
+  ...DUNGEON_HUD_IMAGES,
+  ...imageAssetsByPrefix("door")
+];
+export const CELL_PRELOAD_JSON = [JSON_ASSETS.dungeonMap];
+export const DUNGEON_PRELOAD_IMAGES = [
+  IMAGE_ASSETS.dungeonInterior,
+  IMAGE_ASSETS.dungeonChestOpen,
+  IMAGE_ASSETS.frameStory,
+  ...imageAssetsByPrefix("door"),
+  ...DUNGEON_HUD_IMAGES,
+  ...INVENTORY_PANEL_IMAGES,
+  ...imageAssetsByPrefix("passive"),
+  ...GRODOR_ACTOR_IMAGES,
+  ...Object.values(INVENTORY_ITEM_ASSETS)
+];
+export const DUNGEON_PRELOAD_JSON = [JSON_ASSETS.dungeonMap];
+export const VILLAGE_PRELOAD_IMAGES = [
+  IMAGE_ASSETS.villageBackground,
+  IMAGE_ASSETS.frameStory,
+  IMAGE_ASSETS.gold,
+  ...VILLAGE_HUD_IMAGES,
+  ...INVENTORY_PANEL_IMAGES,
+  ...GRODOR_ACTOR_IMAGES,
+  ...Object.values(INVENTORY_ITEM_ASSETS),
+  ...imageAssetsByPrefix("bank", "shop", "passive", "lootChestRarity")
+];
+export const VILLAGE_PRELOAD_JSON = [JSON_ASSETS.villageMap];
+export const TAVERN_PRELOAD_IMAGES = [IMAGE_ASSETS.tavernBackground, IMAGE_ASSETS.tavernDrinkBeer, IMAGE_ASSETS.frameStory, ...GRODOR_ACTOR_IMAGES];
+export const TAVERN_PRELOAD_JSON = [JSON_ASSETS.tavernMap];
+export const COMBAT_PRELOAD_IMAGES = [
+  ...imageAssetsByPrefix("combatArena", "rat", "skeleton", "guard"),
+  ...DUNGEON_HUD_IMAGES,
+  ...GRODOR_ACTOR_IMAGES
+];
+export const RESULT_PRELOAD_IMAGES = [...imageAssetsByPrefix("result"), IMAGE_ASSETS.frameStory];
+
+export const MINI_GAME_PRELOAD_IMAGES = {
+  loot_chest: [...imageAssetsByPrefix("lootChest"), ...Object.values(INVENTORY_ITEM_ASSETS)],
+  coin_flip: [...imageAssetsByPrefix("coinFlip"), ...imageAssetsByKey("bankDepositPanelEmpty", "bankMoneyStatusPanelEmpty")],
+  bonneteau: imageAssetsByPrefix("bonneteau"),
+  slot_machine: imageAssetsByPrefix("slotMachine"),
+  dodge_chest: imageAssetsByPrefix("dodgeChest"),
+  jump: [
+    ...imageAssetsByPrefix("jump"),
+    ...imageAssetsByKey(
+      "dungeonHudHeartFrame",
+      "heartFull",
+      "heartEmpty",
+      "heartBrake",
+      "grodorRun1",
+      "grodorRun2",
+      "grodorRun3",
+      "grodorJump2",
+      "grodorJump3",
+      "grodorJump5",
+      "grodorIdle",
+      "grodorDeath1",
+      "grodorDeath2",
+      "grodorVictory"
+    )
+  ],
+  arm_wrestling: [...imageAssetsByPrefix("armWrestling"), IMAGE_ASSETS.tapButton],
+  elevator: [...imageAssetsByPrefix("elevator"), IMAGE_ASSETS.tapButton]
+} satisfies Record<string, AssetDefinition[]>;
+
+export const MINI_GAME_PRELOAD_JSON: Record<string, AssetDefinition[]> = {
+  loot_chest: [],
+  coin_flip: [],
+  bonneteau: [],
+  slot_machine: [],
+  dodge_chest: [],
+  jump: [JSON_ASSETS.jumpRunnerSegment, JSON_ASSETS.jumpRunnerSegment02, JSON_ASSETS.jumpRunnerSegment03],
+  arm_wrestling: [],
+  elevator: []
+};
+
 export const PRELOAD_IMAGES = Object.values(IMAGE_ASSETS);
 export const PRELOAD_JSON = Object.values(JSON_ASSETS);
 export const INTRO_PRELOAD_AUDIO = [AUDIO_ASSETS.musicIntro];

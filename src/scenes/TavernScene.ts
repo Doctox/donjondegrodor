@@ -1,10 +1,11 @@
 import Phaser from "phaser";
-import { IMAGE_ASSETS, JSON_ASSETS, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
+import { IMAGE_ASSETS, JSON_ASSETS, TAVERN_PRELOAD_IMAGES, TAVERN_PRELOAD_JSON, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
 import { GAME_TEXTS } from "../data/gameTexts";
 import { GrodorActor } from "../actors/GrodorActor";
 import { getDungeonRunState, resetDungeonRunState } from "../systems/dungeonRunState";
 import { getMaxStartingEquipmentCount, getStartingLoadoutCount } from "../systems/metaProgression";
 import { playZoneMusic } from "../systems/audioManager";
+import { preloadImages, preloadTilemaps } from "../systems/scenePreload";
 import { setHudVisible } from "../ui/hud";
 import { setLetterboxBackdrop } from "../ui/letterboxBackdrop";
 import { createNineSlicePanel } from "../ui/nineSlicePanel";
@@ -34,6 +35,11 @@ export class TavernScene extends Phaser.Scene {
 
   constructor() {
     super("TavernScene");
+  }
+
+  preload(): void {
+    preloadImages(this, TAVERN_PRELOAD_IMAGES);
+    preloadTilemaps(this, TAVERN_PRELOAD_JSON);
   }
 
   create(): void {

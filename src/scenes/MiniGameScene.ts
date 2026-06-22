@@ -1,7 +1,8 @@
 import Phaser from "phaser";
-import { WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
+import { MINI_GAME_PRELOAD_IMAGES, MINI_GAME_PRELOAD_JSON, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
 import { GAME_TEXTS } from "../data/gameTexts";
 import { playZoneMusic } from "../systems/audioManager";
+import { preloadImages, preloadTilemaps } from "../systems/scenePreload";
 import { ArmWrestlingMiniGame } from "../minigames/armWrestlingMiniGame";
 import { BonneteauMiniGame } from "../minigames/bonneteauMiniGame";
 import { CoinFlipMiniGame } from "../minigames/coinFlipMiniGame";
@@ -35,6 +36,15 @@ export class MiniGameScene extends Phaser.Scene {
 
   constructor() {
     super("MiniGameScene");
+  }
+
+  init(data: MiniGameSceneData): void {
+    this.type = data.type ?? "loot_chest";
+  }
+
+  preload(): void {
+    preloadImages(this, MINI_GAME_PRELOAD_IMAGES[this.type] ?? MINI_GAME_PRELOAD_IMAGES.loot_chest);
+    preloadTilemaps(this, MINI_GAME_PRELOAD_JSON[this.type] ?? []);
   }
 
   create(data: MiniGameSceneData): void {

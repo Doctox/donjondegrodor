@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import { IMAGE_ASSETS, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
 import { GAME_TEXTS } from "../data/gameTexts";
+import { preloadImages } from "../systems/scenePreload";
 import { setHudVisible } from "../ui/hud";
 import { setLetterboxBackdrop } from "../ui/letterboxBackdrop";
 import { createNineSlicePanel, NineSliceConfig } from "../ui/nineSlicePanel";
@@ -41,6 +42,10 @@ const FRAME_SAMPLES: FrameSample[] = [
 export class NineSliceTestScene extends Phaser.Scene {
   constructor() {
     super("NineSliceTestScene");
+  }
+
+  preload(): void {
+    preloadImages(this, [IMAGE_ASSETS.dungeonInterior, IMAGE_ASSETS.frameStory]);
   }
 
   create(): void {

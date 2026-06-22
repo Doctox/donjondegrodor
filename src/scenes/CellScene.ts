@@ -1,9 +1,10 @@
 import Phaser from "phaser";
 import { IS_DEBUG_TOOLS_ENABLED } from "../config/debugConfig";
-import { IMAGE_ASSETS, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
+import { CELL_PRELOAD_IMAGES, CELL_PRELOAD_JSON, IMAGE_ASSETS, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
 import { addGrodorStat } from "../systems/grodorStats";
 import { playZoneMusic } from "../systems/audioManager";
 import { playSfx } from "../systems/sfxManager";
+import { preloadImages, preloadTilemaps } from "../systems/scenePreload";
 import { DungeonScene } from "./DungeonScene";
 
 type CellSceneData = {
@@ -48,6 +49,11 @@ export class CellScene extends DungeonScene {
       combatDebugRoute: false,
       summaryMode: "cell"
     });
+  }
+
+  preload(): void {
+    preloadImages(this, CELL_PRELOAD_IMAGES);
+    preloadTilemaps(this, CELL_PRELOAD_JSON);
   }
 
   create(data: CellSceneData = {}): void {

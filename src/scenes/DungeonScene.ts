@@ -1,6 +1,14 @@
 import Phaser from "phaser";
 import { IS_DEBUG_TOOLS_ENABLED } from "../config/debugConfig";
-import { ANIMATION_KEYS, IMAGE_ASSETS, JSON_ASSETS, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
+import {
+  ANIMATION_KEYS,
+  DUNGEON_PRELOAD_IMAGES,
+  DUNGEON_PRELOAD_JSON,
+  IMAGE_ASSETS,
+  JSON_ASSETS,
+  WORLD_HEIGHT,
+  WORLD_WIDTH
+} from "../data/assetKeys";
 import {
   addDungeonInventoryItem,
   applyDungeonFloorDelta,
@@ -60,6 +68,7 @@ import { InventoryPanel } from "../ui/InventoryPanel";
 import { InventoryEquipmentPanel } from "../ui/InventoryEquipmentPanel";
 import { showFloatingEffectSequence } from "../ui/floatingEffectText";
 import { GrodorActor } from "../actors/GrodorActor";
+import { preloadImages, preloadTilemaps } from "../systems/scenePreload";
 import { setLetterboxBackdrop } from "../ui/letterboxBackdrop";
 import { DungeonDebugController } from "./dungeon/DungeonDebugController";
 import { DungeonPanelFactory } from "./dungeon/DungeonPanelFactory";
@@ -185,6 +194,11 @@ export class DungeonScene extends Phaser.Scene {
       debugMenu: Boolean((options.debugMenu ?? DEFAULT_DUNGEON_OPTIONS.debugMenu) && IS_DEBUG_TOOLS_ENABLED),
       combatDebugRoute: Boolean((options.combatDebugRoute ?? DEFAULT_DUNGEON_OPTIONS.combatDebugRoute) && IS_DEBUG_TOOLS_ENABLED)
     };
+  }
+
+  preload(): void {
+    preloadImages(this, DUNGEON_PRELOAD_IMAGES);
+    preloadTilemaps(this, DUNGEON_PRELOAD_JSON);
   }
 
   create(data: DungeonSceneData = {}): void {

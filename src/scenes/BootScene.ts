@@ -1,11 +1,5 @@
 import Phaser from "phaser";
-import {
-  INTRO_PRELOAD_IMAGES,
-  PRELOAD_IMAGES,
-  PRELOAD_JSON,
-  WORLD_HEIGHT,
-  WORLD_WIDTH
-} from "../data/assetKeys";
+import { INTRO_PRELOAD_IMAGES, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
 import { IS_DEBUG_TOOLS_ENABLED } from "../config/debugConfig";
 import { GAME_TEXTS } from "../data/gameTexts";
 import { mountHud, setHudVisible } from "../ui/hud";
@@ -21,12 +15,7 @@ export class BootScene extends Phaser.Scene {
     this.sceneParam = IS_DEBUG_TOOLS_ENABLED ? new URLSearchParams(window.location.search).get("scene") : null;
     this.createLoadingFeedback();
 
-    const needsFullPreload = Boolean(this.sceneParam && this.sceneParam !== "intro");
-    const imageAssets = needsFullPreload ? PRELOAD_IMAGES : INTRO_PRELOAD_IMAGES;
-    imageAssets.forEach((asset) => this.load.image(asset.key, asset.path));
-    if (needsFullPreload) {
-      PRELOAD_JSON.forEach((asset) => this.load.tilemapTiledJSON(asset.key, asset.path));
-    }
+    INTRO_PRELOAD_IMAGES.forEach((asset) => this.load.image(asset.key, asset.path));
   }
 
   create(): void {

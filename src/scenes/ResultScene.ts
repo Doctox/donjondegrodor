@@ -1,10 +1,11 @@
 import Phaser from "phaser";
-import { IMAGE_ASSETS, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
+import { IMAGE_ASSETS, RESULT_PRELOAD_IMAGES, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
 import { GAME_TEXTS } from "../data/gameTexts";
 import { resetDungeonAttemptCounter, resetDungeonRunState } from "../systems/dungeonRunState";
 import { calculateCurrentGrodorRunScore, getCurrentGrodorRunStats, GrodorScore } from "../systems/grodorStats";
 import { playZoneMusic, stopZoneMusic } from "../systems/audioManager";
 import { playSfx } from "../systems/sfxManager";
+import { preloadImages } from "../systems/scenePreload";
 import { hasDiscoveredVillage } from "../systems/villageDiscovery";
 import { createNineSlicePanel } from "../ui/nineSlicePanel";
 import { setHudVisible } from "../ui/hud";
@@ -57,6 +58,10 @@ const VICTORY_BUTTON = {
 export class ResultScene extends Phaser.Scene {
   constructor() {
     super("ResultScene");
+  }
+
+  preload(): void {
+    preloadImages(this, RESULT_PRELOAD_IMAGES);
   }
 
   create(data: ResultSceneData = {}): void {

@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { IMAGE_ASSETS, PRELOAD_IMAGES, PRELOAD_JSON, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
+import { CELL_PRELOAD_IMAGES, CELL_PRELOAD_JSON, IMAGE_ASSETS, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
 import { GAME_TEXTS } from "../data/gameTexts";
 import { playZoneMusic } from "../systems/audioManager";
 import { resetGameState } from "../systems/gameState";
@@ -58,7 +58,7 @@ export class IntroScene extends Phaser.Scene {
       ease: "Cubic.easeOut",
       onComplete: () => this.enableStartInput()
     });
-    this.loadGameplayAssetsInBackground();
+    this.loadCellAssetsInBackground();
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.input.off("pointerdown", this.handlePointerDown);
@@ -173,16 +173,16 @@ export class IntroScene extends Phaser.Scene {
     return `${textureKey}-${side}`;
   }
 
-  private loadGameplayAssetsInBackground(): void {
+  private loadCellAssetsInBackground(): void {
     let queuedAssets = 0;
-    PRELOAD_IMAGES.forEach((asset) => {
+    CELL_PRELOAD_IMAGES.forEach((asset) => {
       if (this.textures.exists(asset.key)) {
         return;
       }
       this.load.image(asset.key, asset.path);
       queuedAssets += 1;
     });
-    PRELOAD_JSON.forEach((asset) => {
+    CELL_PRELOAD_JSON.forEach((asset) => {
       if (this.cache.tilemap.exists(asset.key)) {
         return;
       }

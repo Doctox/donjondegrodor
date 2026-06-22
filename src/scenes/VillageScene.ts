@@ -1,7 +1,15 @@
 import Phaser from "phaser";
 import { GrodorActor } from "../actors/GrodorActor";
 import { IS_DEBUG_TOOLS_ENABLED } from "../config/debugConfig";
-import { IMAGE_ASSETS, INVENTORY_ITEM_ASSETS, JSON_ASSETS, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
+import {
+  IMAGE_ASSETS,
+  INVENTORY_ITEM_ASSETS,
+  JSON_ASSETS,
+  VILLAGE_PRELOAD_IMAGES,
+  VILLAGE_PRELOAD_JSON,
+  WORLD_HEIGHT,
+  WORLD_WIDTH
+} from "../data/assetKeys";
 import { CombatResult } from "../data/combatResults";
 import {
   publishGrodorHouseReport,
@@ -53,6 +61,7 @@ import {
 import { getPermanentUpgrades } from "../systems/permanentUpgrades";
 import { playZoneMusic } from "../systems/audioManager";
 import { playSfx } from "../systems/sfxManager";
+import { preloadImages, preloadTilemaps } from "../systems/scenePreload";
 import { getInteractiveZones, getPathObjectNames, getPathPoints, getSpawnPoint, TiledPoint, TiledZone } from "../systems/tiledMap";
 import { markVillageDiscovered } from "../systems/villageDiscovery";
 import { setLetterboxBackdrop } from "../ui/letterboxBackdrop";
@@ -198,6 +207,11 @@ export class VillageScene extends Phaser.Scene {
 
   constructor() {
     super("VillageScene");
+  }
+
+  preload(): void {
+    preloadImages(this, VILLAGE_PRELOAD_IMAGES);
+    preloadTilemaps(this, VILLAGE_PRELOAD_JSON);
   }
 
   create(data: VillageSceneData = {}): void {

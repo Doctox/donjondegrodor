@@ -2,12 +2,13 @@ import Phaser from "phaser";
 import { GrodorActor } from "../actors/GrodorActor";
 import { MonsterActor } from "../actors/MonsterActor";
 import { IS_DEBUG_TOOLS_ENABLED } from "../config/debugConfig";
-import { IMAGE_ASSETS, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
+import { COMBAT_PRELOAD_IMAGES, IMAGE_ASSETS, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
 import { CombatResult } from "../data/combatResults";
 import { GAME_TEXTS } from "../data/gameTexts";
 import { getMonsterDefinition, isMonsterId, MonsterHitZone, MonsterId } from "../data/monsterDefinitions";
 import { playZoneMusic } from "../systems/audioManager";
 import { playSfx } from "../systems/sfxManager";
+import { preloadImages } from "../systems/scenePreload";
 import {
   applyHeartLossWithCowardReflex,
   applyMonsterDamageWithEquipment,
@@ -67,6 +68,10 @@ export class CombatScene extends Phaser.Scene {
 
   constructor() {
     super("CombatScene");
+  }
+
+  preload(): void {
+    preloadImages(this, COMBAT_PRELOAD_IMAGES);
   }
 
   create(data: CombatSceneData = {}): void {
