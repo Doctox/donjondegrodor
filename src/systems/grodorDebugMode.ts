@@ -3,22 +3,23 @@ import { IS_DEBUG_TOOLS_ENABLED } from "../config/debugConfig";
 export type GrodorDebugMode = "sprite" | "rigV3";
 
 const GRODOR_DEBUG_MODE_STORAGE_KEY = "grodor-debug-mode";
+const DEFAULT_GRODOR_MODE: GrodorDebugMode = "rigV3";
 
 export function getGrodorDebugMode(): GrodorDebugMode {
   if (!IS_DEBUG_TOOLS_ENABLED) {
-    return "sprite";
+    return DEFAULT_GRODOR_MODE;
   }
 
   try {
-    return localStorage.getItem(GRODOR_DEBUG_MODE_STORAGE_KEY) === "rigV3" ? "rigV3" : "sprite";
+    return localStorage.getItem(GRODOR_DEBUG_MODE_STORAGE_KEY) === "sprite" ? "sprite" : DEFAULT_GRODOR_MODE;
   } catch {
-    return "sprite";
+    return DEFAULT_GRODOR_MODE;
   }
 }
 
 export function setGrodorDebugMode(mode: GrodorDebugMode): GrodorDebugMode {
   if (!IS_DEBUG_TOOLS_ENABLED) {
-    return "sprite";
+    return DEFAULT_GRODOR_MODE;
   }
 
   try {

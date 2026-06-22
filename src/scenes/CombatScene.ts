@@ -96,10 +96,8 @@ export class CombatScene extends Phaser.Scene {
 
   preload(): void {
     preloadImages(this, COMBAT_PRELOAD_IMAGES);
-    if (IS_DEBUG_TOOLS_ENABLED) {
-      preloadRiggedGrodorActorAssets(this);
-      preloadRiggedGrodorAccessoryAssets(this);
-    }
+    preloadRiggedGrodorActorAssets(this);
+    preloadRiggedGrodorAccessoryAssets(this);
   }
 
   create(data: CombatSceneData = {}): void {

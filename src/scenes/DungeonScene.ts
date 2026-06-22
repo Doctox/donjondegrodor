@@ -225,10 +225,8 @@ export class DungeonScene extends Phaser.Scene {
   preload(): void {
     preloadImages(this, DUNGEON_PRELOAD_IMAGES);
     preloadTilemaps(this, DUNGEON_PRELOAD_JSON);
-    if (IS_DEBUG_TOOLS_ENABLED) {
-      preloadRiggedGrodorActorAssets(this);
-      preloadRiggedGrodorAccessoryAssets(this);
-    }
+    preloadRiggedGrodorActorAssets(this);
+    preloadRiggedGrodorAccessoryAssets(this);
   }
 
   create(data: DungeonSceneData = {}): void {

@@ -247,10 +247,8 @@ export class VillageScene extends Phaser.Scene {
   preload(): void {
     preloadImages(this, VILLAGE_PRELOAD_IMAGES);
     preloadTilemaps(this, VILLAGE_PRELOAD_JSON);
-    if (IS_DEBUG_TOOLS_ENABLED) {
-      preloadRiggedGrodorActorAssets(this);
-      preloadRiggedGrodorAccessoryAssets(this);
-    }
+    preloadRiggedGrodorActorAssets(this);
+    preloadRiggedGrodorAccessoryAssets(this);
   }
 
   create(data: VillageSceneData = {}): void {

@@ -4,7 +4,6 @@ import { GAME_TEXTS } from "../data/gameTexts";
 import { GrodorActor } from "../actors/GrodorActor";
 import { RiggedGrodorAccessories, preloadRiggedGrodorAccessoryAssets } from "../actors/RiggedGrodorAccessories";
 import { RiggedGrodorActor, preloadRiggedGrodorActorAssets } from "../actors/RiggedGrodorActor";
-import { IS_DEBUG_TOOLS_ENABLED } from "../config/debugConfig";
 import { getDungeonRunState, resetDungeonRunState } from "../systems/dungeonRunState";
 import { getMaxStartingEquipmentCount, getStartingLoadoutCount } from "../systems/metaProgression";
 import { playZoneMusic } from "../systems/audioManager";
@@ -65,10 +64,8 @@ export class TavernScene extends Phaser.Scene {
   preload(): void {
     preloadImages(this, TAVERN_PRELOAD_IMAGES);
     preloadTilemaps(this, TAVERN_PRELOAD_JSON);
-    if (IS_DEBUG_TOOLS_ENABLED) {
-      preloadRiggedGrodorActorAssets(this);
-      preloadRiggedGrodorAccessoryAssets(this);
-    }
+    preloadRiggedGrodorActorAssets(this);
+    preloadRiggedGrodorAccessoryAssets(this);
   }
 
   create(): void {
