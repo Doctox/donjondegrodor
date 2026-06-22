@@ -32,12 +32,29 @@ const CURSOR = {
   width: 82,
   height: 79
 };
-const CURSOR_SPEED = 3.9;
-const ANKLE_BALL_CURSOR_SPEED_MULTIPLIER = 0.78;
+const CURSOR_SPEED = 5.2;
+const ANKLE_BALL_CURSOR_SPEED_MULTIPLIER = 0.62;
 const RESULT_FLASHES = 6;
 const RESULT_FLASH_INTERVAL_MS = 150;
-const GREEN_LIMIT = 0.39;
-const ORANGE_LIMIT = 0.72;
+const PAINTED_ZONE_RATIOS = {
+  top: 0.074,
+  greenEnd: 0.305,
+  orangeEnd: 0.587,
+  bottom: 0.908
+};
+const PLAYABLE_TRACK_RATIOS = {
+  top: GAUGE.trackTopOffset / GAUGE.height,
+  bottom: 1 - GAUGE.trackBottomOffset / GAUGE.height
+};
+const GREEN_LIMIT = (PAINTED_ZONE_RATIOS.greenEnd - PLAYABLE_TRACK_RATIOS.top) / (PLAYABLE_TRACK_RATIOS.bottom - PLAYABLE_TRACK_RATIOS.top);
+const ORANGE_LIMIT = (PAINTED_ZONE_RATIOS.orangeEnd - PLAYABLE_TRACK_RATIOS.top) / (PLAYABLE_TRACK_RATIOS.bottom - PLAYABLE_TRACK_RATIOS.top);
+const RESULT_ZONE_HALO = {
+  xInset: 48,
+  radius: 16,
+  lineWidth: 8,
+  fillAlpha: 0.42,
+  strokeAlpha: 0.96
+};
 
 const ELEVATOR_ASSETS = [
   IMAGE_ASSETS.elevatorIdle,
@@ -61,6 +78,7 @@ export class ElevatorMiniGame implements MiniGameController {
   private tapHitZone?: Phaser.GameObjects.Zone;
   private countdownText?: Phaser.GameObjects.Text;
   private resultArrow?: Phaser.GameObjects.Image;
+  private resultHalo?: Phaser.GameObjects.Graphics;
   private exitHitZone?: Phaser.GameObjects.Zone;
   private exitHint?: Phaser.GameObjects.Text;
   private phase: ElevatorPhase = "loading";
@@ -264,6 +282,7 @@ export class ElevatorMiniGame implements MiniGameController {
     this.gauge?.setAlpha(0.86);
     this.tapButton?.setVisible(false);
     this.tapHitZone?.disableInteractive();
+    this.flashResultZone(result.outcome);
 
     if (result.outcome === "success") {
       this.host.getStatusText()?.setText("");
@@ -277,6 +296,47 @@ export class ElevatorMiniGame implements MiniGameController {
 
     this.host.scene.time.delayedCall(EXIT_UNLOCK_DELAY_MS, () => this.createExitHitZone(result));
     this.host.publishMiniGameReport();
+  }
+
+  private flashResultZone(outcome: MiniGameResult["outcome"]): void {
+    this.resultHalo?.destroy();
+    const zone = this.getResultZoneBounds(outcome);
+    const color = outcome === "success" ? 0x46ff77 : outcome === "failure" ? 0xff3d2e : 0xffb336;
+    const x = GAUGE.x - GAUGE.width / 2 + RESULT_ZONE_HALO.xInset;
+    const width = GAUGE.width - RESULT_ZONE_HALO.xInset * 2;
+
+    this.resultHalo = this.host.scene.add.graphics().setDepth(6);
+    this.resultHalo.fillStyle(color, RESULT_ZONE_HALO.fillAlpha);
+    this.resultHalo.lineStyle(RESULT_ZONE_HALO.lineWidth, color, RESULT_ZONE_HALO.strokeAlpha);
+    this.resultHalo.fillRoundedRect(x, zone.top, width, zone.height, RESULT_ZONE_HALO.radius);
+    this.resultHalo.strokeRoundedRect(x, zone.top, width, zone.height, RESULT_ZONE_HALO.radius);
+
+    this.host.scene.tweens.add({
+      targets: this.resultHalo,
+      alpha: 0.35,
+      duration: 170,
+      yoyo: true,
+      repeat: RESULT_FLASHES,
+      ease: "Sine.easeInOut"
+    });
+  }
+
+  private getResultZoneBounds(outcome: MiniGameResult["outcome"]): { top: number; height: number } {
+    const start =
+      outcome === "success"
+        ? PAINTED_ZONE_RATIOS.top
+        : outcome === "neutral"
+          ? PAINTED_ZONE_RATIOS.greenEnd
+          : PAINTED_ZONE_RATIOS.orangeEnd;
+    const end =
+      outcome === "success"
+        ? PAINTED_ZONE_RATIOS.greenEnd
+        : outcome === "neutral"
+          ? PAINTED_ZONE_RATIOS.orangeEnd
+          : PAINTED_ZONE_RATIOS.bottom;
+    const top = this.getGaugeYForImageRatio(start);
+    const bottom = this.getGaugeYForImageRatio(end);
+    return { top, height: Math.max(24, bottom - top) };
   }
 
   private flashResultArrow(textureKey: string): void {
@@ -376,8 +436,16 @@ export class ElevatorMiniGame implements MiniGameController {
   }
 
   private getCursorY(): number {
+    return this.getCursorYForPosition(this.cursorPosition);
+  }
+
+  private getCursorYForPosition(position: number): number {
     const top = GAUGE.y - GAUGE.height / 2 + GAUGE.trackTopOffset;
     const bottom = GAUGE.y + GAUGE.height / 2 - GAUGE.trackBottomOffset;
-    return Phaser.Math.Linear(top, bottom, this.cursorPosition);
+    return Phaser.Math.Linear(top, bottom, Phaser.Math.Clamp(position, 0, 1));
+  }
+
+  private getGaugeYForImageRatio(ratio: number): number {
+    return GAUGE.y - GAUGE.height / 2 + GAUGE.height * Phaser.Math.Clamp(ratio, 0, 1);
   }
 }

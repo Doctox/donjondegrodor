@@ -799,7 +799,15 @@ export class DungeonScene extends Phaser.Scene {
       return;
     }
 
-    this.returnFromMiniGameToSpawn(() => this.applyMiniGameResult(result));
+    this.returnFromMiniGameToSpawn(() => {
+      if (this.shouldDelayMiniGameHurtPose(result)) {
+        this.grodor?.playIdle();
+        this.time.delayedCall(180, () => this.applyMiniGameResult(result));
+        return;
+      }
+
+      this.applyMiniGameResult(result);
+    });
   }
 
   private isMiniGameResultFatal(result: MiniGameResult): boolean {
@@ -809,6 +817,10 @@ export class DungeonScene extends Phaser.Scene {
 
     const lifeLoss = Math.max(0, Math.abs(Math.min(0, Math.trunc(result.lifeDelta ?? 0))));
     return lifeLoss > 0 && getDungeonRunState().life - lifeLoss <= 0;
+  }
+
+  private shouldDelayMiniGameHurtPose(result: MiniGameResult): boolean {
+    return (result.lifeDelta ?? 0) < 0 || (result.maxLifeLoss ?? 0) > 0 || (result.floorDelta ?? 0) > 0;
   }
 
   private returnFromMiniGameToSpawn(onComplete: () => void): void {

@@ -19,12 +19,20 @@ import {
 
 const RUN_SPEED = 660;
 const ANKLE_BALL_RUN_SPEED_MULTIPLIER = 0.88;
-const GRAVITY = 1720;
-const JUMP_VELOCITY = 610;
+const GRAVITY = 1900;
+const JUMP_VELOCITY = 740;
+const ANKLE_BALL_JUMP_VELOCITY_MULTIPLIER = 0.94;
 const LANDING_SNAP = 8;
 const FLOOR_EDGE_MARGIN = 0;
 const HAZARD_EDGE_MARGIN = 28;
 const HAZARD_TRIGGER_DEPTH_RATIO = 0.68;
+const SPIKE_01_DEADZONE_X_OFFSET = -5;
+const GRODOR_HAZARD_HITBOX = {
+  width: 150,
+  height: 120,
+  offsetX: -30,
+  bottomOffset: 12
+};
 const WATER_SLIDE_SPEED = 820;
 const TIMED_SPIKE_INTERVAL_MS = 760;
 const TIMED_SPIKE_REVEAL_DISTANCE = 400;
@@ -225,6 +233,7 @@ export class JumpMiniGame implements MiniGameController {
       isWaterSliding: this.isWaterSliding,
       ankleBallActive: this.hasAnkleBall(),
       runSpeed: Math.round(this.getRunSpeed()),
+      jumpVelocity: Math.round(this.getJumpVelocity()),
       timedSpikesActive: this.timedSpikesActive,
       jumpPose: this.jumpPose,
       spawnGrodor: this.spawnStart ? { x: Math.round(this.spawnStart.x), y: Math.round(this.spawnStart.y) } : undefined,
@@ -233,6 +242,7 @@ export class JumpMiniGame implements MiniGameController {
         x: Math.round(this.position.x),
         y: Math.round(this.position.y)
       },
+      hazardHitbox: this.getGrodorHazardHitbox(),
       verticalVelocity: Math.round(this.verticalVelocity)
     };
   }
@@ -391,7 +401,7 @@ export class JumpMiniGame implements MiniGameController {
 
     this.isGrounded = false;
     this.jumpUsed = true;
-    this.verticalVelocity = -JUMP_VELOCITY;
+    this.verticalVelocity = -this.getJumpVelocity();
     this.setJumpButtonEnabled(false);
     this.playJumpTakeoff();
     this.host.scene.time.delayedCall(JUMP_AIR_DELAY_MS, () => this.playJumpAir());
@@ -402,6 +412,10 @@ export class JumpMiniGame implements MiniGameController {
 
   private getRunSpeed(): number {
     return this.hasAnkleBall() ? RUN_SPEED * ANKLE_BALL_RUN_SPEED_MULTIPLIER : RUN_SPEED;
+  }
+
+  private getJumpVelocity(): number {
+    return this.hasAnkleBall() ? JUMP_VELOCITY * ANKLE_BALL_JUMP_VELOCITY_MULTIPLIER : JUMP_VELOCITY;
   }
 
   private hasAnkleBall(): boolean {
@@ -876,7 +890,7 @@ export class JumpMiniGame implements MiniGameController {
     }
 
     const map = this.host.scene.make.tilemap({ key: segment.map.key });
-    const hazards = this.readRectLayer(map, "hazards");
+    const hazards = this.readRectLayer(map, "hazards").map((hazard) => this.adjustHazardDeadzone(hazard));
     this.markers = this.readPointLayer(map, "markers");
     this.floors = this.readRectLayer(map, "collision");
     this.waterZones = hazards.filter((region) => region.name.includes("water"));
@@ -903,7 +917,7 @@ export class JumpMiniGame implements MiniGameController {
   private loadGeneratedSegment(segment: GeneratedJumpSegment): void {
     this.markers = segment.markers.map((marker) => ({ ...marker }));
     this.floors = segment.floors.map((floor) => ({ ...floor }));
-    const hazards = segment.hazards.map((hazard) => ({ ...hazard }));
+    const hazards = segment.hazards.map((hazard) => this.adjustHazardDeadzone(hazard));
     this.waterZones = hazards.filter((region) => region.name.includes("water"));
     this.timedSpikeZones = hazards.filter((region) => region.name.includes("death_zone_spike_01"));
     this.deathZones = hazards.filter(
@@ -970,6 +984,17 @@ export class JumpMiniGame implements MiniGameController {
     return this.markers.find((marker) => marker.name === name);
   }
 
+  private adjustHazardDeadzone(hazard: RectRegion): RectRegion {
+    if (!hazard.name.includes("death_zone_spike_01")) {
+      return { ...hazard };
+    }
+
+    return {
+      ...hazard,
+      x: hazard.x + SPIKE_01_DEADZONE_X_OFFSET
+    };
+  }
+
   private findLandingFloor(x: number, y: number): RectRegion | undefined {
     return this.floors.find(
       (floor) =>
@@ -993,12 +1018,38 @@ export class JumpMiniGame implements MiniGameController {
       return false;
     }
 
-    return activeDeathZones.some(
-      (deathZone) =>
-        this.position.x >= deathZone.x + HAZARD_EDGE_MARGIN &&
-        this.position.x <= deathZone.x + deathZone.width - HAZARD_EDGE_MARGIN &&
-        this.position.y >= deathZone.y + deathZone.height * HAZARD_TRIGGER_DEPTH_RATIO &&
-        this.position.y <= deathZone.y + deathZone.height + 8
+    const grodorHitbox = this.getGrodorHazardHitbox();
+    return activeDeathZones.some((deathZone) => this.rectsOverlap(grodorHitbox, this.getHazardTriggerBox(deathZone)));
+  }
+
+  private getGrodorHazardHitbox(): RectRegion {
+    const bottom = this.position.y - GRODOR_HAZARD_HITBOX.bottomOffset;
+    return {
+      name: "grodor_hazard_hitbox",
+      x: this.position.x - GRODOR_HAZARD_HITBOX.width / 2 + GRODOR_HAZARD_HITBOX.offsetX,
+      y: bottom - GRODOR_HAZARD_HITBOX.height,
+      width: GRODOR_HAZARD_HITBOX.width,
+      height: GRODOR_HAZARD_HITBOX.height
+    };
+  }
+
+  private getHazardTriggerBox(deathZone: RectRegion): RectRegion {
+    const triggerY = deathZone.y + deathZone.height * HAZARD_TRIGGER_DEPTH_RATIO;
+    return {
+      name: `${deathZone.name}_trigger`,
+      x: deathZone.x + HAZARD_EDGE_MARGIN,
+      y: triggerY,
+      width: Math.max(0, deathZone.width - HAZARD_EDGE_MARGIN * 2),
+      height: Math.max(0, deathZone.y + deathZone.height + 8 - triggerY)
+    };
+  }
+
+  private rectsOverlap(first: RectRegion, second: RectRegion): boolean {
+    return (
+      first.x < second.x + second.width &&
+      first.x + first.width > second.x &&
+      first.y < second.y + second.height &&
+      first.y + first.height > second.y
     );
   }
 
@@ -1090,8 +1141,7 @@ export class JumpMiniGame implements MiniGameController {
     });
 
     this.deathZones.forEach((deathZone) => {
-      const triggerY = deathZone.y + deathZone.height * HAZARD_TRIGGER_DEPTH_RATIO;
-      const triggerHeight = Math.max(0, deathZone.y + deathZone.height - triggerY);
+      const triggerBox = this.getHazardTriggerBox(deathZone);
       graphics.fillStyle(0xff2b2b, 0.18);
       graphics.lineStyle(3, 0xff2b2b, 0.95);
       graphics.fillRect(deathZone.x, deathZone.y, deathZone.width, deathZone.height);
@@ -1099,13 +1149,12 @@ export class JumpMiniGame implements MiniGameController {
 
       graphics.fillStyle(0xff00ff, 0.22);
       graphics.lineStyle(2, 0xff00ff, 0.95);
-      graphics.fillRect(deathZone.x + HAZARD_EDGE_MARGIN, triggerY, Math.max(0, deathZone.width - HAZARD_EDGE_MARGIN * 2), triggerHeight);
-      graphics.strokeRect(deathZone.x + HAZARD_EDGE_MARGIN, triggerY, Math.max(0, deathZone.width - HAZARD_EDGE_MARGIN * 2), triggerHeight);
+      graphics.fillRect(triggerBox.x, triggerBox.y, triggerBox.width, triggerBox.height);
+      graphics.strokeRect(triggerBox.x, triggerBox.y, triggerBox.width, triggerBox.height);
     });
 
     this.timedSpikeZones.forEach((deathZone) => {
-      const triggerY = deathZone.y + deathZone.height * HAZARD_TRIGGER_DEPTH_RATIO;
-      const triggerHeight = Math.max(0, deathZone.y + deathZone.height - triggerY);
+      const triggerBox = this.getHazardTriggerBox(deathZone);
       graphics.fillStyle(this.timedSpikesActive ? 0xff2b2b : 0x777777, this.timedSpikesActive ? 0.2 : 0.12);
       graphics.lineStyle(3, this.timedSpikesActive ? 0xff2b2b : 0xaaaaaa, 0.95);
       graphics.fillRect(deathZone.x, deathZone.y, deathZone.width, deathZone.height);
@@ -1114,8 +1163,8 @@ export class JumpMiniGame implements MiniGameController {
       if (this.timedSpikesActive) {
         graphics.fillStyle(0xff00ff, 0.22);
         graphics.lineStyle(2, 0xff00ff, 0.95);
-        graphics.fillRect(deathZone.x + HAZARD_EDGE_MARGIN, triggerY, Math.max(0, deathZone.width - HAZARD_EDGE_MARGIN * 2), triggerHeight);
-        graphics.strokeRect(deathZone.x + HAZARD_EDGE_MARGIN, triggerY, Math.max(0, deathZone.width - HAZARD_EDGE_MARGIN * 2), triggerHeight);
+        graphics.fillRect(triggerBox.x, triggerBox.y, triggerBox.width, triggerBox.height);
+        graphics.strokeRect(triggerBox.x, triggerBox.y, triggerBox.width, triggerBox.height);
       }
     });
 
@@ -1130,6 +1179,12 @@ export class JumpMiniGame implements MiniGameController {
     graphics.lineStyle(2, 0x000000, 0.95);
     graphics.fillCircle(this.position.x, this.position.y, 7);
     graphics.strokeCircle(this.position.x, this.position.y, 11);
+
+    const grodorHitbox = this.getGrodorHazardHitbox();
+    graphics.fillStyle(0x44ff88, 0.2);
+    graphics.lineStyle(3, 0x44ff88, 0.95);
+    graphics.fillRect(grodorHitbox.x, grodorHitbox.y, grodorHitbox.width, grodorHitbox.height);
+    graphics.strokeRect(grodorHitbox.x, grodorHitbox.y, grodorHitbox.width, grodorHitbox.height);
   }
 
   private getDebugGraphics(): Phaser.GameObjects.Graphics {

@@ -31,10 +31,8 @@ const BUBBLE = {
   paddingBottom: 135
 };
 const SUCCESS_GOLD = 10;
-const COUNTDOWN_VALUES = [3, 2, 1, 0];
-const COUNTDOWN_INTERVAL_MS = 520;
 
-type DodgeChestPhase = "countdown" | "running" | "success" | "failure";
+type DodgeChestPhase = "ready" | "running" | "success" | "failure";
 
 export class DodgeChestMiniGame implements MiniGameController {
   private background?: Phaser.GameObjects.Image;
@@ -42,12 +40,11 @@ export class DodgeChestMiniGame implements MiniGameController {
   private bubbleHitZone?: Phaser.GameObjects.Zone;
   private missHitZone?: Phaser.GameObjects.Zone;
   private timeoutEvent?: Phaser.Time.TimerEvent;
-  private countdownText?: Phaser.GameObjects.Text;
   private currentBubble = 0;
   private targetBubbles = 0;
   private currentBubbleFrame = 1;
   private currentBubbleTimeoutMs = 0;
-  private phase: DodgeChestPhase = "countdown";
+  private phase: DodgeChestPhase = "ready";
   private exitHitZone?: Phaser.GameObjects.Zone;
   private exitHint?: Phaser.GameObjects.Text;
   private exitHintTimer?: Phaser.Time.TimerEvent;
@@ -59,8 +56,8 @@ export class DodgeChestMiniGame implements MiniGameController {
       .image(DISPLAY.x, DISPLAY.y, IMAGE_ASSETS.dodgeChestOpen.key)
       .setDisplaySize(DISPLAY.width, DISPLAY.height)
       .setDepth(3);
-    this.host.getStatusText()?.setText("");
-    this.startCountdown();
+    this.host.getStatusText()?.setText(GAME_TEXTS.miniGames.dodgeChest.intro);
+    this.createStartBubble();
   }
 
   getReportState(): Record<string, unknown> {
@@ -74,13 +71,11 @@ export class DodgeChestMiniGame implements MiniGameController {
   }
 
   private startSequence(): void {
-    if (this.host.getCompleted() || this.phase !== "countdown") {
+    if (this.host.getCompleted() || this.phase !== "ready") {
       return;
     }
 
     this.phase = "running";
-    this.countdownText?.destroy();
-    this.countdownText = undefined;
     this.targetBubbles = Phaser.Math.Between(BUBBLE.minCount, BUBBLE.maxCount);
     this.background?.setTexture(IMAGE_ASSETS.dodgeChestDodge.key);
     this.createMissHitZone();
@@ -88,35 +83,36 @@ export class DodgeChestMiniGame implements MiniGameController {
     this.spawnNextBubble();
   }
 
-  private startCountdown(): void {
-    this.countdownText = this.host.scene.add
-      .text(WORLD_WIDTH / 2, WORLD_HEIGHT / 2, "", {
-        fontFamily: "Georgia, serif",
-        fontSize: "126px",
-        color: "#fff1c2",
-        stroke: "#120d0a",
-        strokeThickness: 10
-      })
-      .setOrigin(0.5)
-      .setDepth(9);
+  private createStartBubble(): void {
+    this.clearBubble();
+    this.currentBubbleFrame = Phaser.Math.Between(1, 6);
+    this.currentBubbleTimeoutMs = 0;
+    this.bubbleImage = this.host.scene.add
+      .image(WORLD_WIDTH / 2, WORLD_HEIGHT / 2, this.getFrameTexture(this.currentBubbleFrame, "ok"))
+      .setDisplaySize(BUBBLE.size, BUBBLE.size)
+      .setDepth(6);
+    this.bubbleHitZone = this.host.scene.add
+      .zone(WORLD_WIDTH / 2, WORLD_HEIGHT / 2, BUBBLE.hitSize, BUBBLE.hitSize)
+      .setDepth(9)
+      .setInteractive({ useHandCursor: true });
+    this.bubbleHitZone.once("pointerdown", () => this.launchFromStartBubble());
+    this.host.setStep(0);
+    this.host.publishMiniGameReport();
+  }
 
-    let index = 0;
-    const tick = (): void => {
-      const value = COUNTDOWN_VALUES[index];
-      this.host.setStep(index);
-      this.countdownText?.setText(String(value));
-      this.host.publishMiniGameReport();
-      index += 1;
+  private launchFromStartBubble(): void {
+    if (this.host.getCompleted() || this.phase !== "ready") {
+      return;
+    }
 
-      if (index < COUNTDOWN_VALUES.length) {
-        this.host.scene.time.delayedCall(COUNTDOWN_INTERVAL_MS, tick);
-        return;
-      }
-
-      this.host.scene.time.delayedCall(COUNTDOWN_INTERVAL_MS, () => this.startSequence());
-    };
-
-    tick();
+    this.bubbleHitZone?.destroy();
+    this.bubbleHitZone = undefined;
+    this.bubbleImage?.setTexture(this.getFrameTexture(this.currentBubbleFrame, "break"));
+    this.host.getStatusText()?.setText("");
+    this.host.scene.time.delayedCall(BUBBLE.burstMs, () => {
+      this.clearBubble();
+      this.startSequence();
+    });
   }
 
   private spawnNextBubble(): void {
