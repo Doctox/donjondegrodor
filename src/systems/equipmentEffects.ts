@@ -197,10 +197,11 @@ export function applyEquipmentMaxLifeToState(source: DungeonRunState, previousEq
   const nextBonus = getWarUnderwearMaxLifeBonus(source.equipment);
   const baseMaxLife = Math.max(BASE_MAX_LIFE, source.maxLife - previousBonus);
   const maxLife = Math.min(RUN_MAX_LIFE_CAP, baseMaxLife + nextBonus);
+  const gainedMaxLife = Math.max(0, maxLife - source.maxLife);
   return {
     ...source,
     maxLife,
-    life: Math.min(source.life, maxLife)
+    life: Math.min(source.life + gainedMaxLife, maxLife)
   };
 }
 
