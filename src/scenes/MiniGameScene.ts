@@ -24,6 +24,7 @@ export type { BonneteauIssue, MiniGameResult, MiniGameSceneData, MiniGameType } 
 export class MiniGameScene extends Phaser.Scene {
   private type: MiniGameType = "loot_chest";
   private ownedInventory: string[] = [];
+  private equipment: string[] = [];
   private carriedGold = 0;
   private life = 0;
   private maxLife = 0;
@@ -51,6 +52,7 @@ export class MiniGameScene extends Phaser.Scene {
     playZoneMusic(this, "dungeon");
     this.type = data.type;
     this.ownedInventory = [...(data.ownedInventory ?? [])];
+    this.equipment = [...(data.equipment ?? [])];
     this.carriedGold = Math.max(0, Math.trunc(data.carriedGold ?? 0));
     this.maxLife = Math.max(0, Math.trunc(data.maxLife ?? 0));
     this.life = Math.max(0, Math.min(this.maxLife, Math.trunc(data.life ?? this.maxLife)));
@@ -167,6 +169,7 @@ export class MiniGameScene extends Phaser.Scene {
       getRarityText: () => this.rarityText,
       getCarriedGold: () => this.carriedGold,
       getOwnedInventory: () => [...this.ownedInventory],
+      getEquipment: () => [...this.equipment],
       getLife: () => this.life,
       getMaxLife: () => this.maxLife,
       getStep: () => this.step,

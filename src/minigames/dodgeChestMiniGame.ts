@@ -5,6 +5,7 @@ import {
   MiniGameHost,
   MiniGameResult
 } from "./miniGameTypes";
+import { hasQuarterHourCape } from "./timingEquipmentEffects";
 
 const DISPLAY = {
   x: WORLD_WIDTH / 2,
@@ -31,6 +32,8 @@ const BUBBLE = {
   paddingBottom: 135
 };
 const SUCCESS_GOLD = 10;
+const SABLIER_FELE_ITEM_ID = "sablier_fele";
+const SABLIER_FELE_TIMEOUT_MULTIPLIER = 1.12;
 
 type DodgeChestPhase = "ready" | "running" | "success" | "failure";
 
@@ -48,6 +51,7 @@ export class DodgeChestMiniGame implements MiniGameController {
   private exitHitZone?: Phaser.GameObjects.Zone;
   private exitHint?: Phaser.GameObjects.Text;
   private exitHintTimer?: Phaser.Time.TimerEvent;
+  private quarterHourCapeUsed = false;
 
   constructor(private readonly host: MiniGameHost) {}
 
@@ -66,7 +70,10 @@ export class DodgeChestMiniGame implements MiniGameController {
       currentBubble: this.currentBubble,
       targetBubbles: this.targetBubbles,
       currentBubbleFrame: this.currentBubbleFrame,
-      currentBubbleTimeoutMs: this.currentBubbleTimeoutMs
+      currentBubbleTimeoutMs: this.currentBubbleTimeoutMs,
+      sablierFeleActive: this.hasSablierFele(),
+      quarterHourCapeActive: this.hasQuarterHourCape(),
+      quarterHourCapeUsed: this.quarterHourCapeUsed
     };
   }
 
@@ -129,7 +136,9 @@ export class DodgeChestMiniGame implements MiniGameController {
     this.currentBubble += 1;
     this.host.setStep(this.currentBubble);
     this.currentBubbleFrame = Phaser.Math.Between(1, 6);
-    this.currentBubbleTimeoutMs = Phaser.Math.Between(BUBBLE.minTimeoutMs, BUBBLE.maxTimeoutMs);
+    this.currentBubbleTimeoutMs = Math.round(
+      Phaser.Math.Between(BUBBLE.minTimeoutMs, BUBBLE.maxTimeoutMs) * this.getBubbleTimeoutMultiplier()
+    );
     const position = this.pickBubblePosition();
     this.bubbleImage = this.host.scene.add
       .image(position.x, position.y, this.getFrameTexture(this.currentBubbleFrame, "ok"))
@@ -179,6 +188,10 @@ export class DodgeChestMiniGame implements MiniGameController {
   }
 
   private fail(): void {
+    if (this.tryUseQuarterHourCape()) {
+      return;
+    }
+
     const result: MiniGameResult = {
       type: "dodge_chest",
       outcome: "failure",
@@ -186,6 +199,30 @@ export class DodgeChestMiniGame implements MiniGameController {
       dodgeChestFrame: this.currentBubbleFrame
     };
     this.finish(result, "failure");
+  }
+
+  private tryUseQuarterHourCape(): boolean {
+    if (this.phase !== "running" || this.quarterHourCapeUsed || !this.hasQuarterHourCape() || this.host.getCompleted()) {
+      return false;
+    }
+
+    this.quarterHourCapeUsed = true;
+    this.timeoutEvent?.remove(false);
+    this.timeoutEvent = undefined;
+    this.bubbleHitZone?.destroy();
+    this.bubbleHitZone = undefined;
+    this.bubbleImage?.setTexture(this.getFrameTexture(this.currentBubbleFrame, "break"));
+    this.host.getRarityText()?.setText(GAME_TEXTS.itemEffects.quarterHourCapeDelay);
+    this.host.publishMiniGameReport();
+    this.host.scene.time.delayedCall(BUBBLE.burstMs, () => {
+      if (this.phase !== "running" || this.host.getCompleted()) {
+        return;
+      }
+      this.clearBubble();
+      this.createMissHitZone();
+      this.spawnNextBubble();
+    });
+    return true;
   }
 
   private finish(result: MiniGameResult, outcome: "success" | "failure"): void {
@@ -301,5 +338,17 @@ export class DodgeChestMiniGame implements MiniGameController {
     } satisfies Record<1 | 2 | 3 | 4 | 5 | 6, Record<"ok" | "break", string>>;
 
     return byFrame[frameIndex][state];
+  }
+
+  private getBubbleTimeoutMultiplier(): number {
+    return this.hasSablierFele() ? SABLIER_FELE_TIMEOUT_MULTIPLIER : 1;
+  }
+
+  private hasSablierFele(): boolean {
+    return this.host.getEquipment().includes(SABLIER_FELE_ITEM_ID);
+  }
+
+  private hasQuarterHourCape(): boolean {
+    return hasQuarterHourCape(this.host.getEquipment());
   }
 }

@@ -58,6 +58,96 @@ export const AUTO_FRONT_STUFF_LAYERS = [
   }
 },
   {
+  id: "auto_front_cape_quart_heure_face_bas",
+  label: "Cape Quart Heure Face Bas",
+  kind: "stuff",
+  file: "stuff/cape_quart_heure_face_bas.png",
+  canvas: {
+    width: 808,
+    height: 611
+  },
+  pivot: {
+    x: 404,
+    y: 305.5
+  },
+  basePosition: {
+    x: 0,
+    y: -360
+  }
+},
+  {
+  id: "auto_front_cape_quart_heure_face_haut",
+  label: "Cape Quart Heure Face Haut",
+  kind: "stuff",
+  file: "stuff/cape_quart_heure_face_haut.png",
+  canvas: {
+    width: 808,
+    height: 611
+  },
+  pivot: {
+    x: 404,
+    y: 305.5
+  },
+  basePosition: {
+    x: 0,
+    y: -360
+  }
+},
+  {
+  id: "auto_front_moufles_reflexion_left",
+  label: "Moufles Reflexion Left",
+  kind: "stuff",
+  file: "stuff/moufles_reflexion_left.png",
+  canvas: {
+    width: 632,
+    height: 829
+  },
+  pivot: {
+    x: 316,
+    y: 414.5
+  },
+  basePosition: {
+    x: 0,
+    y: -360
+  }
+},
+  {
+  id: "auto_front_moufles_reflexion_right",
+  label: "Moufles Reflexion Right",
+  kind: "stuff",
+  file: "stuff/moufles_reflexion_right.png",
+  canvas: {
+    width: 667,
+    height: 867
+  },
+  pivot: {
+    x: 333.5,
+    y: 433.5
+  },
+  basePosition: {
+    x: 0,
+    y: -360
+  }
+},
+  {
+  id: "auto_front_sablier_fele",
+  label: "Sablier Fele",
+  kind: "stuff",
+  file: "stuff/sablier_fele.png",
+  canvas: {
+    width: 415,
+    height: 544
+  },
+  pivot: {
+    x: 207.5,
+    y: 272
+  },
+  basePosition: {
+    x: 0,
+    y: -360
+  }
+},
+  {
   id: "auto_front_sandale_droite",
   label: "Sandale Droite",
   kind: "stuff",
@@ -151,6 +241,42 @@ export const AUTO_SIDE_STUFF_LAYERS = [
   }
 },
   {
+  id: "auto_side_cape_quart_heure_profil_bas",
+  label: "Cape Quart Heure Profil Bas",
+  kind: "stuff",
+  file: "stuff/cape_quart_heure_profil_bas.png",
+  canvas: {
+    width: 597,
+    height: 512
+  },
+  pivot: {
+    x: 298.5,
+    y: 256
+  },
+  basePosition: {
+    x: 0,
+    y: -360
+  }
+},
+  {
+  id: "auto_side_cape_quart_heure_profil_haut",
+  label: "Cape Quart Heure Profil Haut",
+  kind: "stuff",
+  file: "stuff/cape_quart_heure_profil_haut.png",
+  canvas: {
+    width: 597,
+    height: 512
+  },
+  pivot: {
+    x: 298.5,
+    y: 256
+  },
+  basePosition: {
+    x: 0,
+    y: -360
+  }
+},
+  {
   id: "auto_side_ceinture_test",
   label: "Ceinture Test",
   kind: "stuff",
@@ -162,6 +288,42 @@ export const AUTO_SIDE_STUFF_LAYERS = [
   pivot: {
     x: 125,
     y: 83.5
+  },
+  basePosition: {
+    x: 0,
+    y: -360
+  }
+},
+  {
+  id: "auto_side_moufles_reflexion_back",
+  label: "Moufles Reflexion Back",
+  kind: "stuff",
+  file: "stuff/moufles_reflexion_back.png",
+  canvas: {
+    width: 997,
+    height: 778
+  },
+  pivot: {
+    x: 498.5,
+    y: 389
+  },
+  basePosition: {
+    x: 0,
+    y: -360
+  }
+},
+  {
+  id: "auto_side_moufles_reflexion_front",
+  label: "Moufles Reflexion Front",
+  kind: "stuff",
+  file: "stuff/moufles_reflexion_front.png",
+  canvas: {
+    width: 970,
+    height: 824
+  },
+  pivot: {
+    x: 485,
+    y: 412
   },
   basePosition: {
     x: 0,

@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import { GAME_TEXTS } from "../data/gameTexts";
+import { getEquipmentSlot } from "../data/itemDefinitions";
 import { MONSTER_LIST, MonsterId } from "../data/monsterDefinitions";
 import { isJumpHitboxDebugEnabled, toggleJumpHitboxDebug } from "../minigames/jumpDebugConfig";
 import { DungeonRunState } from "../systems/dungeonRunState";
@@ -22,13 +23,16 @@ type EventOption = {
 
 const OPTIONS: EquipmentOption[] = [
   { label: GAME_TEXTS.debug.equipmentLabels.cape, item: "too_long_cape" },
+  { label: GAME_TEXTS.debug.equipmentLabels.quarterHourCape, item: "quarter_hour_cape" },
   { label: GAME_TEXTS.debug.equipmentLabels.slip, item: "war_underwear" },
   { label: GAME_TEXTS.debug.equipmentLabels.sandals, item: "panic_sandals" },
   { label: GAME_TEXTS.debug.equipmentLabels.medallion, item: "almost_hero_medallion" },
+  { label: GAME_TEXTS.debug.equipmentLabels.sablierFele, item: "sablier_fele" },
   { label: GAME_TEXTS.debug.equipmentLabels.helmet, item: "tiny_helmet" },
   { label: GAME_TEXTS.debug.equipmentLabels.ankleBall, item: "ankle_ball" },
   { label: GAME_TEXTS.debug.equipmentLabels.axe, item: "axe" },
   { label: GAME_TEXTS.debug.equipmentLabels.gloves, item: "sticky_gloves" },
+  { label: GAME_TEXTS.debug.equipmentLabels.mittens, item: "moufles_reflexion" },
   { label: GAME_TEXTS.debug.equipmentLabels.pebble, item: "emotional_pebble" }
 ];
 
@@ -165,9 +169,10 @@ export class DungeonDebugMenu {
   }
 
   private toggleEquipment(item: string): void {
+    const slot = getEquipmentSlot(item);
     const nextEquipment = this.currentEquipment.includes(item)
       ? this.currentEquipment.filter((equippedItem) => equippedItem !== item)
-      : [...this.currentEquipment, item];
+      : [...this.currentEquipment.filter((equippedItem) => !slot || getEquipmentSlot(equippedItem) !== slot), item];
     this.onEquipmentChange(nextEquipment);
   }
 

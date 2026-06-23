@@ -42,10 +42,14 @@ const COMPANION_IDLE_OFFSET = { x: -116, y: -8 };
 const COMPANION_WALK_TRAIL = 112;
 const COMPANION_SCALE = 0.28;
 const TETHERED_GRODOR_ANCHOR = { x: -36, y: -4 };
-const TETHERED_IDLE_OFFSET = { x: -218, y: 18 };
-const TETHERED_WALK_TRAIL = 190;
+const TETHERED_IDLE_OFFSET = { x: -118, y: 12 };
+const TETHERED_WALK_TRAIL = 60;
 const TETHERED_BALL_SCALE = 0.24;
 const TETHERED_CHAIN_HEIGHT = 22;
+
+type RiggedGrodorAccessoryConfig = {
+  scaleMultiplier?: number;
+};
 
 export function preloadRiggedGrodorAccessoryAssets(scene: Phaser.Scene): void {
   scene.load.image(COMPANION_ASSETS.pebble.key, assetPath(COMPANION_ASSETS.pebble.path));
@@ -69,7 +73,8 @@ export class RiggedGrodorAccessories {
 
   constructor(
     private readonly scene: Phaser.Scene,
-    private actor: RiggedGrodorActor
+    private actor: RiggedGrodorActor,
+    private readonly config: RiggedGrodorAccessoryConfig = {}
   ) {
     this.createCompanion();
     this.createTethered();
@@ -103,21 +108,33 @@ export class RiggedGrodorAccessories {
 
   private createCompanion(): void {
     this.companion = this.scene.add
-      .image(this.actor.x + COMPANION_IDLE_OFFSET.x, this.actor.y + COMPANION_IDLE_OFFSET.y, COMPANION_ASSETS.pebble.key)
+      .image(
+        this.actor.x + this.scale(COMPANION_IDLE_OFFSET.x),
+        this.actor.y + this.scale(COMPANION_IDLE_OFFSET.y),
+        COMPANION_ASSETS.pebble.key
+      )
       .setOrigin(0.5, 0.78)
-      .setScale(COMPANION_SCALE)
-      .setDepth(13)
+      .setScale(this.scale(COMPANION_SCALE))
+      .setDepth(this.actor.container.depth + 1)
       .setVisible(false);
   }
 
   private createTethered(): void {
     const anchor = this.getTetheredAnchor();
-    this.tetheredChain = this.scene.add.image(anchor.x, anchor.y, TETHERED_ASSETS.chain.key).setOrigin(0, 0.5).setDepth(11).setVisible(false);
+    this.tetheredChain = this.scene.add
+      .image(anchor.x, anchor.y, TETHERED_ASSETS.chain.key)
+      .setOrigin(0, 0.5)
+      .setDepth(this.actor.container.depth - 1)
+      .setVisible(false);
     this.tetheredBall = this.scene.add
-      .image(this.actor.x + TETHERED_IDLE_OFFSET.x, this.actor.y + TETHERED_IDLE_OFFSET.y, TETHERED_ASSETS.ball.key)
+      .image(
+        this.actor.x + this.scale(TETHERED_IDLE_OFFSET.x),
+        this.actor.y + this.scale(TETHERED_IDLE_OFFSET.y),
+        TETHERED_ASSETS.ball.key
+      )
       .setOrigin(0.5, 0.86)
-      .setScale(TETHERED_BALL_SCALE)
-      .setDepth(13)
+      .setScale(this.scale(TETHERED_BALL_SCALE))
+      .setDepth(this.actor.container.depth + 1)
       .setVisible(false);
   }
 
@@ -125,14 +142,14 @@ export class RiggedGrodorAccessories {
     const companionVisible = this.equipment.has(COMPANION_ITEM_ID);
     this.companion?.setVisible(companionVisible);
     if (companionVisible && this.companion) {
-      this.companion.setPosition(this.actor.x + COMPANION_IDLE_OFFSET.x, this.actor.y + COMPANION_IDLE_OFFSET.y);
+      this.companion.setPosition(this.actor.x + this.scale(COMPANION_IDLE_OFFSET.x), this.actor.y + this.scale(COMPANION_IDLE_OFFSET.y));
     }
 
     const tetheredVisible = this.equipment.has(TETHERED_ITEM_ID);
     this.tetheredBall?.setVisible(tetheredVisible);
     this.tetheredChain?.setVisible(tetheredVisible);
     if (tetheredVisible && this.tetheredBall) {
-      this.tetheredBall.setPosition(this.actor.x + TETHERED_IDLE_OFFSET.x, this.actor.y + TETHERED_IDLE_OFFSET.y);
+      this.tetheredBall.setPosition(this.actor.x + this.scale(TETHERED_IDLE_OFFSET.x), this.actor.y + this.scale(TETHERED_IDLE_OFFSET.y));
       this.updateTetheredChain();
     }
   }
@@ -148,9 +165,9 @@ export class RiggedGrodorAccessories {
     }
     this.lastCompanionGrodorX = this.actor.x;
 
-    const trail = moving ? -this.companionFacing * COMPANION_WALK_TRAIL : COMPANION_IDLE_OFFSET.x;
+    const trail = moving ? -this.companionFacing * this.scale(COMPANION_WALK_TRAIL) : this.scale(COMPANION_IDLE_OFFSET.x);
     const targetX = this.actor.x + trail;
-    const targetY = this.actor.y + COMPANION_IDLE_OFFSET.y + Math.sin(time * 3.4) * (moving ? 2 : 5);
+    const targetY = this.actor.y + this.scale(COMPANION_IDLE_OFFSET.y) + Math.sin(time * 3.4) * this.scale(moving ? 2 : 5);
     const previousX = this.companion.x;
     const lerp = moving ? 0.075 : 0.12;
     this.companion.setPosition(
@@ -177,9 +194,9 @@ export class RiggedGrodorAccessories {
     this.lastTetheredGrodorX = this.actor.x;
 
     const anchor = this.getTetheredAnchor();
-    const targetX = moving ? anchor.x - this.tetheredFacing * TETHERED_WALK_TRAIL : this.actor.x + TETHERED_IDLE_OFFSET.x;
-    const groundY = this.actor.y + TETHERED_IDLE_OFFSET.y;
-    const targetY = groundY - Math.abs(Math.sin(time * 5.4)) * (moving ? 2 : 0.5);
+    const targetX = moving ? anchor.x - this.tetheredFacing * this.scale(TETHERED_WALK_TRAIL) : this.actor.x + this.scale(TETHERED_IDLE_OFFSET.x);
+    const groundY = this.actor.y + this.scale(TETHERED_IDLE_OFFSET.y);
+    const targetY = groundY - Math.abs(Math.sin(time * 5.4)) * this.scale(moving ? 2 : 0.5);
     const previousX = this.tetheredBall.x;
     const lerp = moving ? 0.045 : 0.075;
     this.tetheredBall.setPosition(
@@ -194,7 +211,7 @@ export class RiggedGrodorAccessories {
   }
 
   private getTetheredAnchor(): Phaser.Math.Vector2 {
-    return new Phaser.Math.Vector2(this.actor.x + TETHERED_GRODOR_ANCHOR.x, this.actor.y + TETHERED_GRODOR_ANCHOR.y);
+    return new Phaser.Math.Vector2(this.actor.x + this.scale(TETHERED_GRODOR_ANCHOR.x), this.actor.y + this.scale(TETHERED_GRODOR_ANCHOR.y));
   }
 
   private updateTetheredChain(anchor = this.getTetheredAnchor()): void {
@@ -202,11 +219,15 @@ export class RiggedGrodorAccessories {
       return;
     }
 
-    const end = new Phaser.Math.Vector2(this.tetheredBall.x, this.tetheredBall.y - 12);
+    const end = new Phaser.Math.Vector2(this.tetheredBall.x, this.tetheredBall.y - this.scale(12));
     const distance = Phaser.Math.Distance.Between(anchor.x, anchor.y, end.x, end.y);
     this.tetheredChain
       .setPosition(anchor.x, anchor.y)
       .setRotation(Phaser.Math.Angle.Between(anchor.x, anchor.y, end.x, end.y))
-      .setDisplaySize(Math.max(24, distance), TETHERED_CHAIN_HEIGHT);
+      .setDisplaySize(Math.max(this.scale(24), distance), this.scale(TETHERED_CHAIN_HEIGHT));
+  }
+
+  private scale(value: number): number {
+    return value * (this.config.scaleMultiplier ?? 1);
   }
 }

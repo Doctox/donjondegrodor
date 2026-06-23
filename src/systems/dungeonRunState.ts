@@ -48,6 +48,8 @@ export type DungeonRunEvent = {
   goldDelta?: number;
   lifeDelta?: number;
   floorDelta?: number;
+  effectMessages: string[];
+  brokenItems: string[];
   state: DungeonRunState;
 };
 
@@ -249,6 +251,8 @@ export function resolveDoorEvent(id: string, random: () => number = Math.random)
   let goldDelta = getGoldDelta(definition, random);
   let lifeDelta = definition.lifeDelta ?? 0;
   let floorDelta = definition.floorDelta ?? 0;
+  const effectMessages: string[] = [];
+  const brokenItems: string[] = [];
   let effectLabel =
     definition.id === "gain_gold_random" ? GAME_TEXTS.dungeonEvents.gainGoldRandom.effectLabel(goldDelta) : definition.effectLabel;
 
@@ -256,6 +260,7 @@ export function resolveDoorEvent(id: string, random: () => number = Math.random)
     const goldResult = applyGoldGainWithEquipment(goldDelta, random);
     goldDelta = goldResult.totalGold;
     if (goldResult.effectMessages.length > 0) {
+      effectMessages.push(...goldResult.effectMessages);
       effectLabel = combineEffectMessages([effectLabel, ...goldResult.effectMessages]);
     }
   }
@@ -264,6 +269,8 @@ export function resolveDoorEvent(id: string, random: () => number = Math.random)
     const lossResult = applyHeartLossWithCowardReflex(Math.abs(lifeDelta), "dungeon_event", random);
     lifeDelta = -lossResult.finalLoss;
     if (lossResult.effectMessages.length > 0) {
+      effectMessages.push(...lossResult.effectMessages);
+      brokenItems.push(...lossResult.brokenItems);
       effectLabel = combineEffectMessages([effectLabel, ...lossResult.effectMessages]);
     }
   } else if (lifeDelta > 0) {
@@ -279,6 +286,8 @@ export function resolveDoorEvent(id: string, random: () => number = Math.random)
     state = floorResult.state;
     floorDelta = floorResult.floorDelta;
     if (floorResult.effectMessages.length > 0) {
+      effectMessages.push(...floorResult.effectMessages);
+      brokenItems.push(...floorResult.brokenItems);
       const baseFloorEffect =
         originalFloorDelta > 0 && floorDelta < 0 ? GAME_TEXTS.dungeonEvents.floorDown.effectLabel : effectLabel;
       effectLabel = combineEffectMessages([baseFloorEffect, ...floorResult.effectMessages]);
@@ -307,6 +316,8 @@ export function resolveDoorEvent(id: string, random: () => number = Math.random)
     goldDelta,
     lifeDelta,
     floorDelta,
+    effectMessages,
+    brokenItems,
     state: getDungeonRunState()
   };
 }

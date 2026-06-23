@@ -522,6 +522,14 @@ export const IMAGE_ASSETS = {
     key: "inventory-item-almost-hero-medallion",
     path: assetPath("/assets/ui/inventory/items/almost_hero_medallion.png")
   },
+  inventoryItemSablierFele: {
+    key: "inventory-item-sablier-fele",
+    path: assetPath("/assets/ui/inventory/items/sablier_fele.png")
+  },
+  inventoryItemQuarterHourCape: {
+    key: "inventory-item-quarter-hour-cape",
+    path: assetPath("/assets/ui/inventory/items/cape_quart_heure.png")
+  },
   inventoryItemAnkleBall: { key: "inventory-item-ankle-ball", path: assetPath("/assets/ui/inventory/items/ankle_ball.png") },
   inventoryItemAxe: { key: "inventory-item-axe", path: assetPath("/assets/ui/inventory/items/axe.png") },
   inventoryItemEmotionalPebble: {
@@ -530,6 +538,10 @@ export const IMAGE_ASSETS = {
   },
   inventoryItemPanicSandals: { key: "inventory-item-panic-sandals", path: assetPath("/assets/ui/inventory/items/panic_sandals.png") },
   inventoryItemStickyGloves: { key: "inventory-item-sticky-gloves", path: assetPath("/assets/ui/inventory/items/sticky_gloves.png") },
+  inventoryItemMouflesReflexion: {
+    key: "inventory-item-moufles-reflexion",
+    path: assetPath("/assets/ui/inventory/items/moufles_reflexion.png")
+  },
   inventoryItemTinyHelmet: { key: "inventory-item-tiny-helmet", path: assetPath("/assets/ui/inventory/items/tiny_helmet.png") },
   inventoryItemTooLongCape: { key: "inventory-item-too-long-cape", path: assetPath("/assets/ui/inventory/items/too_long_cape.png") },
   inventoryItemWarUnderwear: { key: "inventory-item-war-underwear", path: assetPath("/assets/ui/inventory/items/war_underwear.png") },
@@ -730,11 +742,14 @@ export const IMAGE_ASSETS = {
 
 export const INVENTORY_ITEM_ASSETS = {
   almost_hero_medallion: IMAGE_ASSETS.inventoryItemAlmostHeroMedallion,
+  sablier_fele: IMAGE_ASSETS.inventoryItemSablierFele,
+  quarter_hour_cape: IMAGE_ASSETS.inventoryItemQuarterHourCape,
   ankle_ball: IMAGE_ASSETS.inventoryItemAnkleBall,
   axe: IMAGE_ASSETS.inventoryItemAxe,
   emotional_pebble: IMAGE_ASSETS.inventoryItemEmotionalPebble,
   panic_sandals: IMAGE_ASSETS.inventoryItemPanicSandals,
   sticky_gloves: IMAGE_ASSETS.inventoryItemStickyGloves,
+  moufles_reflexion: IMAGE_ASSETS.inventoryItemMouflesReflexion,
   tiny_helmet: IMAGE_ASSETS.inventoryItemTinyHelmet,
   too_long_cape: IMAGE_ASSETS.inventoryItemTooLongCape,
   war_underwear: IMAGE_ASSETS.inventoryItemWarUnderwear

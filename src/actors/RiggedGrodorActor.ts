@@ -86,6 +86,10 @@ const RIG_EQUIPMENT_LAYER_MAP: Record<string, { front: readonly string[]; side: 
     front: ["cape_back", "cape_collar"],
     side: ["cape_side", "cape_side_collar"]
   },
+  quarter_hour_cape: {
+    front: ["auto_front_cape_quart_heure_face_bas", "auto_front_cape_quart_heure_face_haut"],
+    side: ["auto_side_cape_quart_heure_profil_bas", "auto_side_cape_quart_heure_profil_haut"]
+  },
   axe: {
     front: ["auto_front_axe"],
     side: ["auto_side_axe"]
@@ -93,6 +97,10 @@ const RIG_EQUIPMENT_LAYER_MAP: Record<string, { front: readonly string[]; side: 
   sticky_gloves: {
     front: ["glove_left", "glove_right"],
     side: ["glove_back", "glove_front"]
+  },
+  moufles_reflexion: {
+    front: ["auto_front_moufles_reflexion_left", "auto_front_moufles_reflexion_right"],
+    side: ["auto_side_moufles_reflexion_back", "auto_side_moufles_reflexion_front"]
   },
   panic_sandals: {
     front: ["auto_front_sandale_droite", "auto_front_sandale_gauche"],
@@ -108,6 +116,10 @@ const RIG_EQUIPMENT_LAYER_MAP: Record<string, { front: readonly string[]; side: 
   },
   almost_hero_medallion: {
     front: ["auto_front_almost_hero_medallion"],
+    side: []
+  },
+  sablier_fele: {
+    front: ["auto_front_sablier_fele"],
     side: []
   }
 };
@@ -850,7 +862,7 @@ export class RiggedGrodorActor {
   }
 
   private attackOneParentId(id: string, frame: number): string | undefined {
-    if (id === "glove_front" || id === "auto_side_axe") {
+    if (id === "glove_front" || id === "auto_side_moufles_reflexion_front" || id === "auto_side_axe") {
       const poseVisibility = this.attackOne.preset.poseVisibility?.[frame] ?? this.attackOne.preset.visibility;
       const candidates = ["attack_front_hand_over", "attack_front_arm", "attack_front_shoulder_over"];
       return candidates.find((candidateId) => poseVisibility?.[candidateId] ?? this.attackOne.presetVisibility.get(candidateId) ?? true) ?? this.attackOne.preset.anchors[id];

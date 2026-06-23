@@ -3,6 +3,7 @@ import { IMAGE_ASSETS, WORLD_HEIGHT, WORLD_WIDTH } from "../data/assetKeys";
 import { GAME_TEXTS } from "../data/gameTexts";
 import { getDungeonRunState } from "../systems/dungeonRunState";
 import { MiniGameController, MiniGameHost, MiniGameResult } from "./miniGameTypes";
+import { hasQuarterHourCape } from "./timingEquipmentEffects";
 
 const DISPLAY = {
   x: WORLD_WIDTH / 2,
@@ -86,6 +87,7 @@ export class ElevatorMiniGame implements MiniGameController {
   private cursorDirection = 1;
   private assetsReady = false;
   private result?: MiniGameResult;
+  private quarterHourCapeUsed = false;
 
   constructor(private readonly host: MiniGameHost) {}
 
@@ -132,6 +134,8 @@ export class ElevatorMiniGame implements MiniGameController {
       cursorPosition: Number(this.cursorPosition.toFixed(3)),
       cursorDirection: this.cursorDirection,
       ankleBallActive: this.hasAnkleBall(),
+      quarterHourCapeActive: this.hasQuarterHourCape(),
+      quarterHourCapeUsed: this.quarterHourCapeUsed,
       cursorSpeed: Number(this.getCursorSpeed().toFixed(2)),
       result: this.result
     };
@@ -241,13 +245,11 @@ export class ElevatorMiniGame implements MiniGameController {
     }
 
     if (this.cursorPosition <= ORANGE_LIMIT) {
-      const maxLoss = Math.min(5, this.host.getCarriedGold());
-      const goldLoss = maxLoss > 0 ? Phaser.Math.Between(1, maxLoss) : 0;
-      this.finish({
-        type: "elevator",
-        outcome: "neutral",
-        goldLoss
-      });
+      this.finish(this.createNeutralResult());
+      return;
+    }
+
+    if (this.tryUseQuarterHourCape()) {
       return;
     }
 
@@ -258,12 +260,37 @@ export class ElevatorMiniGame implements MiniGameController {
     });
   }
 
+  private createNeutralResult(): MiniGameResult {
+    const maxLoss = Math.min(5, this.host.getCarriedGold());
+    const goldLoss = maxLoss > 0 ? Phaser.Math.Between(1, maxLoss) : 0;
+    return {
+      type: "elevator",
+      outcome: "neutral",
+      goldLoss
+    };
+  }
+
+  private tryUseQuarterHourCape(): boolean {
+    if (this.quarterHourCapeUsed || !this.hasQuarterHourCape()) {
+      return false;
+    }
+
+    this.quarterHourCapeUsed = true;
+    this.host.getRarityText()?.setText(GAME_TEXTS.itemEffects.quarterHourCapeDelay);
+    this.finish(this.createNeutralResult());
+    return true;
+  }
+
   private getCursorSpeed(): number {
     return this.hasAnkleBall() ? CURSOR_SPEED * ANKLE_BALL_CURSOR_SPEED_MULTIPLIER : CURSOR_SPEED;
   }
 
   private hasAnkleBall(): boolean {
     return getDungeonRunState().equipment.includes("ankle_ball");
+  }
+
+  private hasQuarterHourCape(): boolean {
+    return hasQuarterHourCape(this.host.getEquipment());
   }
 
   private finish(result: MiniGameResult): void {

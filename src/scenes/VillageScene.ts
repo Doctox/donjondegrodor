@@ -165,6 +165,7 @@ const VILLAGE_GRODOR_V3_SCALE = {
   idle: 0.19,
   walk: 0.245
 };
+const VILLAGE_GRODOR_V3_ACCESSORY_SCALE_MULTIPLIER = VILLAGE_GRODOR_V3_SCALE.idle / 0.205;
 const HOUSE_GRODOR_PREVIEW_SCALE = {
   sprite: 0.82,
   rigIdle: 0.32,
@@ -621,7 +622,9 @@ export class VillageScene extends Phaser.Scene {
     }
 
     if (!this.grodorAccessories) {
-      this.grodorAccessories = new RiggedGrodorAccessories(this, this.grodor);
+      this.grodorAccessories = new RiggedGrodorAccessories(this, this.grodor, {
+        scaleMultiplier: VILLAGE_GRODOR_V3_ACCESSORY_SCALE_MULTIPLIER
+      });
     } else {
       this.grodorAccessories.setActor(this.grodor);
     }

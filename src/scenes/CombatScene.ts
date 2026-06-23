@@ -65,6 +65,7 @@ const COMBAT_GRODOR_V3_SCALE = {
   idle: 0.52,
   walk: 0.67
 };
+const COMBAT_GRODOR_V3_ACCESSORY_SCALE_MULTIPLIER = COMBAT_GRODOR_V3_SCALE.idle / 0.205;
 const COMBAT_MONSTER_SCALE_MULTIPLIER = 1.48;
 
 export class CombatScene extends Phaser.Scene {
@@ -237,7 +238,9 @@ export class CombatScene extends Phaser.Scene {
     }
 
     if (!this.grodorAccessories) {
-      this.grodorAccessories = new RiggedGrodorAccessories(this, this.grodor);
+      this.grodorAccessories = new RiggedGrodorAccessories(this, this.grodor, {
+        scaleMultiplier: COMBAT_GRODOR_V3_ACCESSORY_SCALE_MULTIPLIER
+      });
     } else {
       this.grodorAccessories.setActor(this.grodor);
     }

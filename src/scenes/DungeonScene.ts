@@ -491,6 +491,8 @@ export class DungeonScene extends Phaser.Scene {
           if (event.state.life <= 0) {
             this.handleDoorEventDeath(event);
           } else {
+            this.playItemBreakSfx(event.brokenItems);
+            this.showGrodorEffectMessages(event.effectMessages);
             this.showEventPanel(doorName, event);
           }
         }
@@ -789,6 +791,7 @@ export class DungeonScene extends Phaser.Scene {
     this.scene.launch("MiniGameScene", {
       type: miniGameType,
       ownedInventory: getDungeonRunState().inventory,
+      equipment: getDungeonRunState().equipment,
       carriedGold: getDungeonRunState().carriedGold,
       life: getDungeonRunState().life,
       maxLife: getDungeonRunState().maxLife
@@ -1393,6 +1396,8 @@ export class DungeonScene extends Phaser.Scene {
     this.awaitingContinue = true;
     this.setDungeonCombatLock(true);
     this.grodor?.playDeath();
+    this.playItemBreakSfx(event.brokenItems);
+    this.showGrodorEffectMessages(event.effectMessages);
     this.setStatus(GAME_TEXTS.dungeon.runEndedStatus);
     this.addDeathStats();
     publishDungeonDeathResetReport({
@@ -1468,7 +1473,7 @@ export class DungeonScene extends Phaser.Scene {
 
   private showEventPanel(doorName: string, event: DungeonRunEvent): void {
     this.eventPanel?.destroy();
-    this.eventPanel = new DungeonPanelFactory(this).createEventPanel(event, () => this.continueRun());
+    this.eventPanel = new DungeonPanelFactory(this).createEventPanel(event, () => this.continueRun(event.effectMessages));
 
     publishDungeonEventReport({
       doorName,

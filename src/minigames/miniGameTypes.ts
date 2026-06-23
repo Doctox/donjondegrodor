@@ -36,6 +36,7 @@ export type MiniGameResult = {
 export type MiniGameSceneData = {
   type: MiniGameType;
   ownedInventory?: string[];
+  equipment?: string[];
   carriedGold?: number;
   life?: number;
   maxLife?: number;
@@ -47,6 +48,7 @@ export type MiniGameHost = {
   getRarityText: () => Phaser.GameObjects.Text | undefined;
   getCarriedGold: () => number;
   getOwnedInventory: () => string[];
+  getEquipment: () => string[];
   getLife: () => number;
   getMaxLife: () => number;
   getStep: () => number;

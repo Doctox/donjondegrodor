@@ -46,6 +46,7 @@ const TAVERN_GRODOR_V3_SCALE = {
   idle: 0.27,
   walk: 0.348
 };
+const TAVERN_GRODOR_V3_ACCESSORY_SCALE_MULTIPLIER = TAVERN_GRODOR_V3_SCALE.idle / 0.205;
 
 export class TavernScene extends Phaser.Scene {
   private map?: Phaser.Tilemaps.Tilemap;
@@ -191,7 +192,9 @@ export class TavernScene extends Phaser.Scene {
     }
 
     if (!this.grodorAccessories) {
-      this.grodorAccessories = new RiggedGrodorAccessories(this, this.grodor);
+      this.grodorAccessories = new RiggedGrodorAccessories(this, this.grodor, {
+        scaleMultiplier: TAVERN_GRODOR_V3_ACCESSORY_SCALE_MULTIPLIER
+      });
     } else {
       this.grodorAccessories.setActor(this.grodor);
     }

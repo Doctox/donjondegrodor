@@ -6,6 +6,7 @@ import {
   MiniGameHost,
   MiniGameResult
 } from "./miniGameTypes";
+import { QUARTER_HOUR_CAPE_ARM_WRESTLING_RESCUE_GAUGE, hasQuarterHourCape } from "./timingEquipmentEffects";
 
 const DISPLAY = {
   x: WORLD_WIDTH / 2,
@@ -21,6 +22,9 @@ const PLAYER_WIN_THRESHOLD = 100;
 const ENEMY_WIN_THRESHOLD = -100;
 const EXIT_UNLOCK_DELAY_MS = 2000;
 const EXIT_HINT_MS = 4000;
+const MOUFLES_REFLEXION_ITEM_ID = "moufles_reflexion";
+const MOUFLES_REFLEXION_ENEMY_PRESSURE_MULTIPLIER = 0.9;
+const MOUFLES_REFLEXION_FEEDBACK_MS = 1500;
 const TAP_BUTTON = {
   x: WORLD_WIDTH / 2,
   y: 904,
@@ -110,6 +114,7 @@ export class ArmWrestlingMiniGame implements MiniGameController {
   private exitHitZone?: Phaser.GameObjects.Zone;
   private exitHint?: Phaser.GameObjects.Text;
   private exitHintTimer?: Phaser.Time.TimerEvent;
+  private quarterHourCapeUsed = false;
 
   constructor(private readonly host: MiniGameHost) {}
 
@@ -149,7 +154,10 @@ export class ArmWrestlingMiniGame implements MiniGameController {
       nextEnemyTapMs: Math.round(this.nextEnemyTapMs),
       difficulty: this.difficulty,
       elapsedMs: Math.round(this.elapsedMs),
-      currentFrame: this.currentFrame
+      currentFrame: this.currentFrame,
+      mouflesReflexionActive: this.hasMouflesReflexion(),
+      quarterHourCapeActive: this.hasQuarterHourCape(),
+      quarterHourCapeUsed: this.quarterHourCapeUsed
     };
   }
 
@@ -265,6 +273,7 @@ export class ArmWrestlingMiniGame implements MiniGameController {
     this.host.getStatusText()?.setText("");
     this.host.getRarityText()?.setText("");
     this.setFrame(IMAGE_ASSETS.armWrestlingIdle.key);
+    this.showMouflesReflexionFeedback();
     this.host.publishMiniGameReport();
   }
 
@@ -277,7 +286,7 @@ export class ArmWrestlingMiniGame implements MiniGameController {
     this.visualElapsedMs += delta;
     const difficultyConfig = this.getDifficultyConfig();
     this.gauge = Phaser.Math.Clamp(
-      this.gauge - (difficultyConfig.enemyPressurePerSecond * delta) / 1000,
+      this.gauge - (this.getEnemyPressurePerSecond(difficultyConfig) * delta) / 1000,
       ENEMY_WIN_THRESHOLD,
       PLAYER_WIN_THRESHOLD
     );
@@ -293,7 +302,15 @@ export class ArmWrestlingMiniGame implements MiniGameController {
       this.host.publishMiniGameReport();
     }
 
-    if (this.gauge <= ENEMY_WIN_THRESHOLD || this.elapsedMs >= GAME_DURATION_MS) {
+    if (this.gauge <= ENEMY_WIN_THRESHOLD) {
+      if (this.tryUseQuarterHourCape()) {
+        return;
+      }
+      this.finish(false);
+      return;
+    }
+
+    if (this.elapsedMs >= GAME_DURATION_MS) {
       this.finish(this.gauge >= difficultyConfig.finalSuccessGauge);
     }
   }
@@ -338,6 +355,49 @@ export class ArmWrestlingMiniGame implements MiniGameController {
 
   private getDifficultyConfig(): ArmWrestlingDifficultyConfig {
     return DIFFICULTY_CONFIGS[this.difficulty];
+  }
+
+  private getEnemyPressurePerSecond(config: ArmWrestlingDifficultyConfig): number {
+    return config.enemyPressurePerSecond * this.getEnemyPressureMultiplier();
+  }
+
+  private getEnemyPressureMultiplier(): number {
+    return this.hasMouflesReflexion() ? MOUFLES_REFLEXION_ENEMY_PRESSURE_MULTIPLIER : 1;
+  }
+
+  private hasMouflesReflexion(): boolean {
+    return this.host.getEquipment().includes(MOUFLES_REFLEXION_ITEM_ID);
+  }
+
+  private hasQuarterHourCape(): boolean {
+    return hasQuarterHourCape(this.host.getEquipment());
+  }
+
+  private tryUseQuarterHourCape(): boolean {
+    if (this.quarterHourCapeUsed || !this.hasQuarterHourCape() || this.host.getCompleted()) {
+      return false;
+    }
+
+    this.quarterHourCapeUsed = true;
+    this.gauge = QUARTER_HOUR_CAPE_ARM_WRESTLING_RESCUE_GAUGE;
+    this.host.getRarityText()?.setText(GAME_TEXTS.itemEffects.quarterHourCapeDelay);
+    this.updateEffortFrame();
+    this.host.publishMiniGameReport();
+    return true;
+  }
+
+  private showMouflesReflexionFeedback(): void {
+    if (!this.hasMouflesReflexion()) {
+      return;
+    }
+
+    const rarityText = this.host.getRarityText();
+    rarityText?.setText(GAME_TEXTS.itemEffects.mouflesReflexionFatigue);
+    this.host.scene.time.delayedCall(MOUFLES_REFLEXION_FEEDBACK_MS, () => {
+      if (this.phase === "running" && rarityText?.text === GAME_TEXTS.itemEffects.mouflesReflexionFatigue) {
+        rarityText.setText("");
+      }
+    });
   }
 
   private updateEffortFrame(): void {

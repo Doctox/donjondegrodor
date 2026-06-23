@@ -52,6 +52,17 @@ export const ITEM_DEFINITIONS = {
     shopDiscoverable: true,
     description: GAME_TEXTS.items.descriptions.tooLongCape
   },
+  quarter_hour_cape: {
+    id: "quarter_hour_cape",
+    name: GAME_TEXTS.items.quarterHourCape,
+    kind: "equipment",
+    equipmentId: "quarter_hour_cape",
+    equipmentSlot: "cape",
+    rarity: "legendary",
+    lootable: true,
+    shopDiscoverable: true,
+    description: GAME_TEXTS.items.descriptions.quarterHourCape
+  },
   war_underwear: {
     id: "war_underwear",
     name: GAME_TEXTS.items.warUnderwear,
@@ -84,6 +95,17 @@ export const ITEM_DEFINITIONS = {
     lootable: true,
     shopDiscoverable: true,
     description: GAME_TEXTS.items.descriptions.almostHeroMedallion
+  },
+  sablier_fele: {
+    id: "sablier_fele",
+    name: GAME_TEXTS.items.sablierFele,
+    kind: "equipment",
+    equipmentId: "sablier_fele",
+    equipmentSlot: "amulet",
+    rarity: "rare",
+    lootable: true,
+    shopDiscoverable: true,
+    description: GAME_TEXTS.items.descriptions.sablierFele
   },
   tiny_helmet: {
     id: "tiny_helmet",
@@ -128,6 +150,17 @@ export const ITEM_DEFINITIONS = {
     lootable: true,
     shopDiscoverable: true,
     description: GAME_TEXTS.items.descriptions.stickyGloves
+  },
+  moufles_reflexion: {
+    id: "moufles_reflexion",
+    name: GAME_TEXTS.items.mouflesReflexion,
+    kind: "equipment",
+    equipmentId: "moufles_reflexion",
+    equipmentSlot: "gloves",
+    rarity: "epic",
+    lootable: true,
+    shopDiscoverable: true,
+    description: GAME_TEXTS.items.descriptions.mouflesReflexion
   },
   emotional_pebble: {
     id: "emotional_pebble",

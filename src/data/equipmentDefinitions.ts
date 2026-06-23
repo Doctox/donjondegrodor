@@ -3,13 +3,16 @@ import { ANIMATION_KEYS, IMAGE_ASSETS } from "./assetKeys";
 export type GrodorPose = "idle" | "walk" | "attack" | "hurt" | "victory" | "death";
 export type GrodorEquipmentId =
   | "too_long_cape"
+  | "quarter_hour_cape"
   | "war_underwear"
   | "panic_sandals"
   | "almost_hero_medallion"
+  | "sablier_fele"
   | "tiny_helmet"
   | "ankle_ball"
   | "axe"
   | "sticky_gloves"
+  | "moufles_reflexion"
   | "emotional_pebble";
 
 export type GrodorEquipmentDefinition = {
@@ -25,7 +28,22 @@ export type GrodorEquipmentDefinition = {
   fallbackTexture: string;
 };
 
-export const GRODOR_EQUIPMENT_DEFINITIONS = {
+const GRODOR_EQUIPMENT_IDS = new Set<GrodorEquipmentId>([
+  "too_long_cape",
+  "quarter_hour_cape",
+  "war_underwear",
+  "panic_sandals",
+  "almost_hero_medallion",
+  "sablier_fele",
+  "tiny_helmet",
+  "ankle_ball",
+  "axe",
+  "sticky_gloves",
+  "moufles_reflexion",
+  "emotional_pebble"
+]);
+
+export const GRODOR_EQUIPMENT_DEFINITIONS: Partial<Record<GrodorEquipmentId, GrodorEquipmentDefinition>> = {
   too_long_cape: {
     id: "too_long_cape",
     layerOrder: 20,
@@ -562,7 +580,7 @@ export const GRODOR_EQUIPMENT_DEFINITIONS = {
     ],
     fallbackTexture: IMAGE_ASSETS.grodorEmotionalPebbleIdle.key
   }
-} satisfies Record<GrodorEquipmentId, GrodorEquipmentDefinition>;
+};
 
 export const GRODOR_EQUIPMENT_LIST = Object.values(GRODOR_EQUIPMENT_DEFINITIONS);
 
@@ -571,5 +589,5 @@ export function getGrodorEquipmentDefinition(id: string): GrodorEquipmentDefinit
 }
 
 export function isGrodorEquipmentId(id: string): id is GrodorEquipmentId {
-  return id in GRODOR_EQUIPMENT_DEFINITIONS;
+  return GRODOR_EQUIPMENT_IDS.has(id as GrodorEquipmentId);
 }

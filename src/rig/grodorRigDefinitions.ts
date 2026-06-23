@@ -5,13 +5,15 @@ export const FRONT_RIG_PATH = "/assets/sprites/grodor/rig/front_master";
 export const SIDE_RIG_PATH = "/assets/sprites/grodor/rig/side_walk_master";
 
 export const FRONT_RIG_STORAGE_KEY = "grodor-rig-debug-front-master-v1";
-export const SIDE_RIG_STORAGE_KEY = "grodor-rig-debug-side-walk-master-v2";
-export const HURT_RIG_STORAGE_KEY = "grodor-rig-debug-side-hurt-master-v2";
-export const ATTACK_ONE_RIG_STORAGE_KEY = "grodor-rig-debug-side-attack-1-master-v5";
+export const SIDE_RIG_STORAGE_KEY = "grodor-rig-debug-side-walk-master-v8";
+export const HURT_RIG_STORAGE_KEY = "grodor-rig-debug-side-hurt-master-v8";
+export const ATTACK_RIG_STORAGE_KEY = "grodor-rig-debug-side-attack-guard-v7";
+export const ATTACK_ONE_RIG_STORAGE_KEY = "grodor-rig-debug-side-attack-1-master-v11";
 export const VICTORY_RIG_STORAGE_KEY = "grodor-rig-debug-front-victory-v1";
 export const FRONT_RIG_PROJECT_SAVE_PATH = "/assets/sprites/grodor/rig/front_master/saves/rig_idle_jm_anchor_save.json";
 export const SIDE_RIG_PROJECT_SAVE_PATH = "/assets/sprites/grodor/rig/side_walk_master/saves/rig_walk_jm_anchor_save.json";
 export const HURT_RIG_PROJECT_SAVE_PATH = "/assets/sprites/grodor/rig/side_walk_master/saves/rig_hurt_jm_save.json";
+export const ATTACK_RIG_PROJECT_SAVE_PATH = "/assets/sprites/grodor/rig/side_walk_master/saves/rig_attack_guard_jm_save.json";
 export const ATTACK_ONE_RIG_PROJECT_SAVE_PATH = "/assets/sprites/grodor/rig/side_walk_master/saves/rig_attack_1_jm_save.json";
 export const VICTORY_RIG_PROJECT_SAVE_PATH = "/assets/sprites/grodor/rig/front_master/saves/rig_victory_jm_save.json";
 
@@ -146,6 +148,76 @@ export const SIDE_RIG_LAYERS: GrodorRigLayerDefinition[] = [
   { id: "arm_front_upper", label: "Epaule avant", file: "side_arm_front_upper.png" },
   { id: "arm_front_forearm", label: "Av-bras avant", file: "side_arm_front_forearm.png" },
   { id: "hand_front", label: "Main avant", file: "side_hand_front.png" },
+  {
+    id: "glove_front",
+    label: "Gant avant",
+    kind: "stuff",
+    file: "stuff/test_glove_front.png",
+    canvas: { width: 168, height: 109 },
+    pivot: { x: 140, y: 54 },
+    basePosition: { x: 230, y: -452 },
+    baseScale: 0.62
+  },
+  ...AUTO_SIDE_STUFF_LAYERS
+];
+
+export const ATTACK_RIG_LAYERS: GrodorRigLayerDefinition[] = [
+  { id: "cape_side", label: "Cape cote", kind: "stuff", file: "stuff/cape_trop_longue_profil_bas.png" },
+  { id: "cape_side_collar", label: "Col cape cote", kind: "stuff", file: "stuff/cape_trop_longue_profil_haut.png" },
+  { id: "underwear", label: "Slip", file: "side_underwear.png" },
+  { id: "leg_back", label: "Jambe arriere", file: "side_leg_back.png" },
+  {
+    id: "shoe_back",
+    label: "Chauss. arriere",
+    kind: "stuff",
+    file: "stuff/test_shoe_back.png",
+    canvas: { width: 498, height: 646 },
+    pivot: { x: 250, y: 590 },
+    basePosition: { x: -176, y: -78 },
+    baseScale: 0.18
+  },
+  { id: "leg_front", label: "Jambe avant", file: "side_leg_front.png" },
+  {
+    id: "shoe_front",
+    label: "Chauss. avant",
+    kind: "stuff",
+    file: "stuff/test_shoe_front.png",
+    canvas: { width: 498, height: 646 },
+    pivot: { x: 250, y: 590 },
+    basePosition: { x: 172, y: -78 },
+    baseScale: 0.18
+  },
+  { id: "belly", label: "Ventre", file: "side_belly.png" },
+  { id: "torso", label: "Torse", file: "side_torso.png" },
+  {
+    id: "hand_back",
+    label: "Bras arriere attack",
+    file: "attack/attack_arm_back.png",
+    canvas: { width: 181, height: 149 },
+    pivot: { x: 38, y: 42 },
+    basePosition: { x: -58, y: -492 },
+    baseScale: 1
+  },
+  {
+    id: "glove_back",
+    label: "Gant arriere",
+    kind: "stuff",
+    file: "stuff/test_glove_back.png",
+    canvas: { width: 168, height: 109 },
+    pivot: { x: 28, y: 54 },
+    basePosition: { x: -190, y: -452 },
+    baseScale: 0.62
+  },
+  { id: "head", label: "Tete", file: "side_head.png" },
+  {
+    id: "hand_front",
+    label: "Bras avant attack",
+    file: "attack/attack_arm_front.png",
+    canvas: { width: 221, height: 150 },
+    pivot: { x: 38, y: 42 },
+    basePosition: { x: 106, y: -492 },
+    baseScale: 1
+  },
   {
     id: "glove_front",
     label: "Gant avant",
@@ -426,13 +498,22 @@ export const ATTACK_ONE_RIG_PIVOTS = {
   attack_front_arm: { x: 38, y: 42 }
 } satisfies Record<string, { x: number; y: number }>;
 
+export const ATTACK_RIG_PIVOTS = {
+  ...SIDE_RIG_PIVOTS,
+  hand_back: { x: 38, y: 42 },
+  hand_front: { x: 38, y: 42 }
+} satisfies Record<string, { x: number; y: number }>;
+
 export const FRONT_RIG_ANCHORS = {
   belt_test: "front_belt",
   glove_right: "arm_right",
   glove_left: "arm_left",
+  auto_front_moufles_reflexion_left: "arm_right",
+  auto_front_moufles_reflexion_right: "arm_left",
   cape_back: "torso",
   cape_collar: "torso",
   auto_front_almost_hero_medallion: "torso",
+  auto_front_sablier_fele: "torso",
   auto_front_axe: "arm_right",
   auto_front_sandale_droite: "foot_right",
   auto_front_sandale_gauche: "foot_left",
@@ -443,6 +524,8 @@ export const FRONT_RIG_ANCHORS = {
 export const SIDE_RIG_ANCHORS = {
   glove_back: "hand_back",
   glove_front: "hand_front",
+  auto_side_moufles_reflexion_back: "hand_back",
+  auto_side_moufles_reflexion_front: "hand_front",
   shoe_back: "leg_back",
   shoe_front: "leg_front",
   auto_side_tiny_helmet: "head",
@@ -457,6 +540,8 @@ export const HURT_RIG_ANCHORS = {
   hurt_hand_front: "hurt_arm_front_forearm",
   glove_back: "hurt_hand_back",
   glove_front: "hurt_hand_front",
+  auto_side_moufles_reflexion_back: "hurt_hand_back",
+  auto_side_moufles_reflexion_front: "hurt_hand_front",
   shoe_back: "leg_back",
   shoe_front: "leg_front",
   auto_side_tiny_helmet: "head",
@@ -471,7 +556,22 @@ export const ATTACK_ONE_RIG_ANCHORS = {
   attack_front_hand_over: "attack_front_shoulder_over",
   glove_back: "hand_back",
   glove_front: "attack_front_hand_over",
+  auto_side_moufles_reflexion_back: "hand_back",
+  auto_side_moufles_reflexion_front: "attack_front_hand_over",
   auto_side_axe: "attack_front_hand_over",
+  shoe_back: "leg_back",
+  shoe_front: "leg_front",
+  auto_side_tiny_helmet: "head",
+  auto_side_ceinture_test: "underwear",
+  auto_side_war_underwear_walk: "underwear"
+} satisfies Record<string, string>;
+
+export const ATTACK_RIG_ANCHORS = {
+  glove_back: "hand_back",
+  glove_front: "hand_front",
+  auto_side_moufles_reflexion_back: "hand_back",
+  auto_side_moufles_reflexion_front: "hand_front",
+  auto_side_axe: "hand_front",
   shoe_back: "leg_back",
   shoe_front: "leg_front",
   auto_side_tiny_helmet: "head",
