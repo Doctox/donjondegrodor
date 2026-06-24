@@ -11,6 +11,7 @@ import { ElevatorMiniGame } from "../minigames/elevatorMiniGame";
 import { JumpMiniGame } from "../minigames/jumpMiniGame";
 import { LootChestMiniGame } from "../minigames/lootChestMiniGame";
 import { SlotMachineMiniGame } from "../minigames/slotMachineMiniGame";
+import { TugOfWarMiniGame } from "../minigames/tugOfWarMiniGame";
 import {
   MiniGameController,
   MiniGameHost,
@@ -80,6 +81,7 @@ export class MiniGameScene extends Phaser.Scene {
       this.type !== "dodge_chest" &&
       this.type !== "jump" &&
       this.type !== "arm_wrestling" &&
+      this.type !== "tug_of_war" &&
       this.type !== "elevator"
     ) {
       this.add
@@ -105,6 +107,7 @@ export class MiniGameScene extends Phaser.Scene {
           this.type === "dodge_chest" ||
           this.type === "jump" ||
           this.type === "arm_wrestling" ||
+          this.type === "tug_of_war" ||
           this.type === "elevator"
           ? ""
           : this.getMiniGameIntro(),
@@ -154,6 +157,9 @@ export class MiniGameScene extends Phaser.Scene {
     }
     if (this.type === "arm_wrestling") {
       return new ArmWrestlingMiniGame(host);
+    }
+    if (this.type === "tug_of_war") {
+      return new TugOfWarMiniGame(host);
     }
     if (this.type === "elevator") {
       return new ElevatorMiniGame(host);
@@ -249,6 +255,9 @@ export class MiniGameScene extends Phaser.Scene {
     if (this.type === "arm_wrestling") {
       return GAME_TEXTS.miniGames.armWrestling.title;
     }
+    if (this.type === "tug_of_war") {
+      return GAME_TEXTS.miniGames.tugOfWar.title;
+    }
     if (this.type === "elevator") {
       return GAME_TEXTS.miniGames.elevator.title;
     }
@@ -274,6 +283,9 @@ export class MiniGameScene extends Phaser.Scene {
     }
     if (this.type === "arm_wrestling") {
       return GAME_TEXTS.miniGames.armWrestling.intro;
+    }
+    if (this.type === "tug_of_war") {
+      return GAME_TEXTS.miniGames.tugOfWar.intro;
     }
     if (this.type === "elevator") {
       return GAME_TEXTS.miniGames.elevator.intro;

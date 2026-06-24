@@ -190,8 +190,8 @@ export function preloadRiggedGrodorActorAssets(scene: Phaser.Scene, keyPrefix = 
 }
 
 export class RiggedGrodorActor {
-  private readonly idleSceneScale: number;
-  private readonly walkSceneScale: number;
+  private idleSceneScale: number;
+  private walkSceneScale: number;
   private readonly front: RuntimeLayerState;
   private readonly side: RuntimeLayerState;
   private readonly hurt: RuntimeLayerState;
@@ -502,6 +502,29 @@ export class RiggedGrodorActor {
     if (this.mode === "walk" || this.mode === "hurt" || this.mode === "attack1") {
       this.applyContainerScale(this.mode === "hurt" ? this.hurt : this.mode === "attack1" ? this.attackOne : this.side, this.walkSceneScale, flip);
     }
+  }
+
+  setSceneScales(scales: { idleScale?: number; walkScale?: number }): void {
+    if (typeof scales.idleScale === "number") {
+      this.idleSceneScale = scales.idleScale;
+    }
+    if (typeof scales.walkScale === "number") {
+      this.walkSceneScale = scales.walkScale;
+    }
+
+    if (this.mode === "idle") {
+      this.applyContainerScale(this.front, this.idleSceneScale, false);
+      return;
+    }
+    if (this.mode === "hurt") {
+      this.applyContainerScale(this.hurt, this.walkSceneScale, this.facingLeft);
+      return;
+    }
+    if (this.mode === "attack1") {
+      this.applyContainerScale(this.attackOne, this.walkSceneScale, this.facingLeft);
+      return;
+    }
+    this.applyContainerScale(this.side, this.walkSceneScale, this.facingLeft);
   }
 
   playIdle(): void {

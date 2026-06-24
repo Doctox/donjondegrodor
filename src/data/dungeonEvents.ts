@@ -35,6 +35,7 @@ export type DungeonEventId =
   | "dodge_chest"
   | "jump"
   | "arm_wrestling"
+  | "tug_of_war"
   | "elevator";
 
 export type DungeonEventDefinition = {
@@ -320,6 +321,14 @@ export const DUNGEON_EVENTS = {
     title: GAME_TEXTS.dungeonEvents.armWrestling.title,
     message: GAME_TEXTS.dungeonEvents.armWrestling.message,
     effectLabel: GAME_TEXTS.dungeonEvents.armWrestling.effectLabel,
+    kind: "minigame"
+  },
+  tug_of_war: {
+    id: "tug_of_war",
+    weight: 2,
+    title: GAME_TEXTS.dungeonEvents.tugOfWar.title,
+    message: GAME_TEXTS.dungeonEvents.tugOfWar.message,
+    effectLabel: GAME_TEXTS.dungeonEvents.tugOfWar.effectLabel,
     kind: "minigame"
   },
   elevator: {

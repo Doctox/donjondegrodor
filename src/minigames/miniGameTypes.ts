@@ -8,6 +8,7 @@ export type MiniGameType =
   | "dodge_chest"
   | "jump"
   | "arm_wrestling"
+  | "tug_of_war"
   | "elevator";
 export type BonneteauIssue = "grodor" | "gold" | "skull" | "pierced_pouch";
 export type SlotMachineSymbol = "grodor" | "gold" | "skull" | "pouch";

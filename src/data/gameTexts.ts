@@ -197,6 +197,14 @@ export const GAME_TEXTS = {
       failure: "Grodor plie le bras: -1 coeur max.",
       exitHint: "Clique pour retourner a la tour"
     },
+    tugOfWar: {
+      title: "Tir a la corde",
+      intro: "Grodor attrape la corde. Le boss a l'air beaucoup trop serein.",
+      countdown: (value: number) => `${value}`,
+      success: "Grodor tire le boss !",
+      failure: "Le boss reprend la corde.",
+      exitHint: "Clique pour retourner a la tour"
+    },
     elevator: {
       title: "Ascenseur douteux",
       intro: "Le gardien de l'ascenseur tend la main vers le levier.",
@@ -520,6 +528,7 @@ export const GAME_TEXTS = {
       dodgeChest: "Coffre Esquive",
       jump: "Course au saut",
       armWrestling: "Bras de fer",
+      tugOfWar: "Tir a la corde",
       elevator: "Ascenseur"
     },
     equipmentUpdated: "Equipement debug mis a jour.",
@@ -682,6 +691,11 @@ export const GAME_TEXTS = {
     armWrestling: {
       title: "Bras de fer",
       message: "Un costaud defie Grodor dans un duel de coudes douteux.",
+      effectLabel: "Mini-jeu"
+    },
+    tugOfWar: {
+      title: "Tir a la corde",
+      message: "Un boss attrape une corde et invite Grodor a tirer.",
       effectLabel: "Mini-jeu"
     },
     elevator: {

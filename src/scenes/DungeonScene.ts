@@ -785,6 +785,7 @@ export class DungeonScene extends Phaser.Scene {
       event.id === "dodge_chest" ||
       event.id === "jump" ||
       event.id === "arm_wrestling" ||
+      event.id === "tug_of_war" ||
       event.id === "elevator"
         ? event.id
         : "loot_chest";
@@ -1130,6 +1131,10 @@ export class DungeonScene extends Phaser.Scene {
           this.grodor?.playVictory();
         } else if (heartDelta < 0) {
           this.grodor?.playHurt();
+        } else if ((result.goldDelta ?? 0) > 0) {
+          this.grodor?.playVictory();
+        } else if ((result.goldLoss ?? 0) > 0) {
+          this.grodor?.playHurt();
         } else if ((result.floorDelta ?? 0) < 0) {
           this.grodor?.playVictory();
         } else if ((result.floorDelta ?? 0) > 0) {
@@ -1148,6 +1153,10 @@ export class DungeonScene extends Phaser.Scene {
       if (heartDelta > 0) {
         this.grodor?.playVictory();
       } else if (heartDelta < 0) {
+        this.grodor?.playHurt();
+      } else if ((result.goldDelta ?? 0) > 0) {
+        this.grodor?.playVictory();
+      } else if ((result.goldLoss ?? 0) > 0) {
         this.grodor?.playHurt();
       } else if ((result.floorDelta ?? 0) < 0) {
         this.grodor?.playVictory();

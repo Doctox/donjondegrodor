@@ -1,0 +1,330 @@
+{
+  "version": 1,
+  "selected": "bras_back",
+  "selectedGroup": [],
+  "animationEnabled": false,
+  "lockedPose": 3,
+  "layerOrder": [
+    "bras_back",
+    "dos",
+    "bas_du_corp",
+    "haut_du_corp",
+    "bras_front"
+  ],
+  "offsets": {
+    "dos": {
+      "x": 120,
+      "y": 0
+    },
+    "bas_du_corp": {
+      "x": -240,
+      "y": 10
+    },
+    "haut_du_corp": {
+      "x": -110,
+      "y": -170
+    },
+    "bras_back": {
+      "x": -660,
+      "y": -206
+    },
+    "bras_front": {
+      "x": 6,
+      "y": -170
+    }
+  },
+  "sizes": {
+    "dos": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
+    "bas_du_corp": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
+    "haut_du_corp": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 1
+    },
+    "bras_back": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 4
+    },
+    "bras_front": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 15
+    }
+  },
+  "poseAdjustments": [
+    {
+      "dos": {
+        "offset": {
+          "x": -346,
+          "y": 64
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 10
+        }
+      },
+      "bas_du_corp": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "haut_du_corp": {
+        "offset": {
+          "x": -92,
+          "y": -58
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -27
+        }
+      },
+      "bras_back": {
+        "offset": {
+          "x": -48,
+          "y": 56
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -26
+        }
+      },
+      "bras_front": {
+        "offset": {
+          "x": -42,
+          "y": -2
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -28
+        }
+      }
+    },
+    {
+      "dos": {
+        "offset": {
+          "x": -346,
+          "y": 64
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 10
+        }
+      },
+      "bas_du_corp": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "haut_du_corp": {
+        "offset": {
+          "x": -54,
+          "y": -48
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -19
+        }
+      },
+      "bras_back": {
+        "offset": {
+          "x": -24,
+          "y": 38
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -19
+        }
+      },
+      "bras_front": {
+        "offset": {
+          "x": -38,
+          "y": -2
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -13
+        }
+      }
+    },
+    {
+      "dos": {
+        "offset": {
+          "x": -352,
+          "y": 42
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "bas_du_corp": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "haut_du_corp": {
+        "offset": {
+          "x": 20,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "bras_back": {
+        "offset": {
+          "x": 68,
+          "y": 20
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -23
+        }
+      },
+      "bras_front": {
+        "offset": {
+          "x": 48,
+          "y": 20
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -5
+        }
+      }
+    },
+    {
+      "dos": {
+        "offset": {
+          "x": -354,
+          "y": 30
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "bas_du_corp": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "haut_du_corp": {
+        "offset": {
+          "x": 48,
+          "y": 12
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 9
+        }
+      },
+      "bras_back": {
+        "offset": {
+          "x": 104,
+          "y": 6
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -14
+        }
+      },
+      "bras_front": {
+        "offset": {
+          "x": 46,
+          "y": 22
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -1
+        }
+      }
+    }
+  ],
+  "visibility": {
+    "dos": true,
+    "bas_du_corp": true,
+    "haut_du_corp": true,
+    "bras_back": true,
+    "bras_front": true
+  },
+  "poseVisibility": [
+    {
+      "dos": true,
+      "bas_du_corp": true,
+      "haut_du_corp": true,
+      "bras_back": true,
+      "bras_front": true
+    },
+    {
+      "dos": true,
+      "bas_du_corp": true,
+      "haut_du_corp": true,
+      "bras_back": true,
+      "bras_front": true
+    },
+    {
+      "dos": true,
+      "bas_du_corp": true,
+      "haut_du_corp": true,
+      "bras_back": true,
+      "bras_front": true
+    },
+    {
+      "dos": false,
+      "bas_du_corp": true,
+      "haut_du_corp": true,
+      "bras_back": true,
+      "bras_front": true
+    }
+  ]
+}

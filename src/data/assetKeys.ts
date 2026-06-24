@@ -676,6 +676,10 @@ export const IMAGE_ASSETS = {
   armWrestlingEnemy1: { key: "arm-wrestling-enemy-1", path: assetPath("/assets/minigames/arm_wrestling/enemy_1.png") },
   armWrestlingEnemy2: { key: "arm-wrestling-enemy-2", path: assetPath("/assets/minigames/arm_wrestling/enemy_2.png") },
   armWrestlingPlayerLose: { key: "arm-wrestling-player-lose", path: assetPath("/assets/minigames/arm_wrestling/player_lose.png") },
+  tugOfWarBackground: { key: "tug-of-war-background", path: assetPath("/assets/minigames/tug_of_war/terrain/background.png") },
+  tugOfWarRope: { key: "tug-of-war-rope", path: assetPath("/assets/minigames/tug_of_war/terrain/corde.png") },
+  tugOfWarFlag: { key: "tug-of-war-flag", path: assetPath("/assets/minigames/tug_of_war/terrain/fanion.png") },
+  tugOfWarBossLoose: { key: "tug-of-war-boss-loose", path: assetPath("/assets/minigames/tug_of_war/boss/boss_loose.png") },
   elevatorIdle: { key: "elevator-idle", path: assetPath("/assets/minigames/elevator/elevator_idle.png") },
   elevatorWin: { key: "elevator-win", path: assetPath("/assets/minigames/elevator/elevator_win.png") },
   elevatorNeutral: { key: "elevator-neutral", path: assetPath("/assets/minigames/elevator/elevator_neutral.png") },
@@ -761,7 +765,10 @@ export const JSON_ASSETS = {
   tavernMap: { key: "tavern-map", path: assetPath("/assets/village/tavern/tavern_grodor.json") },
   jumpRunnerSegment: { key: "jump-runner-segment", path: assetPath("/assets/minigames/jump/runner_segment_01.json") },
   jumpRunnerSegment02: { key: "jump-runner-segment-02", path: assetPath("/assets/minigames/jump/runner_segment_02.json") },
-  jumpRunnerSegment03: { key: "jump-runner-segment-03", path: assetPath("/assets/minigames/jump/runner_segment_03.json") }
+  jumpRunnerSegment03: { key: "jump-runner-segment-03", path: assetPath("/assets/minigames/jump/runner_segment_03.json") },
+  tugOfWarTerrain: { key: "tug-of-war-terrain", path: assetPath("/assets/minigames/tug_of_war/saves/terrain_jm_save.json") },
+  tugOfWarGrodor: { key: "tug-of-war-grodor", path: assetPath("/assets/minigames/tug_of_war/saves/grodor_tug_jm_save.json") },
+  tugOfWarBoss: { key: "tug-of-war-boss", path: assetPath("/assets/minigames/tug_of_war/saves/boss_tug_jm_save.json") }
 } satisfies Record<string, AssetDefinition>;
 
 export const ANIMATION_KEYS = {
@@ -929,6 +936,7 @@ export const MINI_GAME_PRELOAD_IMAGES = {
     )
   ],
   arm_wrestling: [...imageAssetsByPrefix("armWrestling"), IMAGE_ASSETS.tapButton],
+  tug_of_war: [...imageAssetsByPrefix("tugOfWar"), IMAGE_ASSETS.tapButton],
   elevator: [...imageAssetsByPrefix("elevator"), IMAGE_ASSETS.tapButton]
 } satisfies Record<string, AssetDefinition[]>;
 
@@ -940,6 +948,7 @@ export const MINI_GAME_PRELOAD_JSON: Record<string, AssetDefinition[]> = {
   dodge_chest: [],
   jump: [JSON_ASSETS.jumpRunnerSegment, JSON_ASSETS.jumpRunnerSegment02, JSON_ASSETS.jumpRunnerSegment03],
   arm_wrestling: [],
+  tug_of_war: [JSON_ASSETS.tugOfWarTerrain, JSON_ASSETS.tugOfWarGrodor, JSON_ASSETS.tugOfWarBoss],
   elevator: []
 };
 
