@@ -166,6 +166,25 @@ const VILLAGE_GRODOR_V3_SCALE = {
   walk: 0.245
 };
 const VILLAGE_GRODOR_V3_ACCESSORY_SCALE_MULTIPLIER = VILLAGE_GRODOR_V3_SCALE.idle / 0.205;
+const VILLAGE_RESOURCE_HUD = {
+  x: 20,
+  y: 72,
+  width: 337,
+  height: 110,
+  pouchX: 114,
+  pouchY: 123,
+  goldTextX: 153,
+  goldTextY: 123,
+  inventoryX: 279,
+  inventoryY: 128,
+  inventoryHitWidth: 92,
+  inventoryHitHeight: 78,
+  iconScale: 0.38
+};
+const VILLAGE_RESOURCE_ICON_ORIGINS = {
+  pouch: { x: 1566 / 1920, y: 219 / 1080 },
+  inventory: { x: 1767 / 1920, y: 219 / 1080 }
+};
 const HOUSE_GRODOR_PREVIEW_SCALE = {
   sprite: 0.82,
   rigIdle: 0.32,
@@ -227,6 +246,7 @@ export class VillageScene extends Phaser.Scene {
   private moving = false;
   private activeBuilding?: VillageBuildingId;
   private panel?: Phaser.GameObjects.Container;
+  private villageResourcePanel?: Phaser.GameObjects.Image;
   private villagePouchOverlay?: Phaser.GameObjects.Image;
   private villageInventoryOverlay?: Phaser.GameObjects.Image;
   private villageGoldBubble?: Phaser.GameObjects.Ellipse;
@@ -327,6 +347,7 @@ export class VillageScene extends Phaser.Scene {
     this.activeBuilding = undefined;
     this.fromTavern = false;
     this.panel = undefined;
+    this.villageResourcePanel = undefined;
     this.villagePouchOverlay = undefined;
     this.villageInventoryOverlay = undefined;
     this.villageGoldBubble = undefined;
@@ -343,17 +364,20 @@ export class VillageScene extends Phaser.Scene {
   }
 
   private createVillageHudOverlays(): void {
-    this.villagePouchOverlay = this.add
-      .image(0, 0, IMAGE_ASSETS.villagePouchEmpty.key)
+    this.villageResourcePanel = this.add
+      .image(VILLAGE_RESOURCE_HUD.x, VILLAGE_RESOURCE_HUD.y, IMAGE_ASSETS.dungeonPoInventoryFrame.key)
       .setOrigin(0)
-      .setDisplaySize(WORLD_WIDTH, WORLD_HEIGHT)
+      .setDisplaySize(VILLAGE_RESOURCE_HUD.width, VILLAGE_RESOURCE_HUD.height)
       .setDepth(55);
-    this.villageGoldBubble = this.add.ellipse(126, 214, 62, 42, 0x090604, 0.82).setDepth(57);
-    this.villageGoldBubble.setStrokeStyle(2, 0xf0c071, 0.95);
+    this.villagePouchOverlay = this.add
+      .image(VILLAGE_RESOURCE_HUD.pouchX, VILLAGE_RESOURCE_HUD.pouchY, IMAGE_ASSETS.coinPouchEmpty.key)
+      .setOrigin(VILLAGE_RESOURCE_ICON_ORIGINS.pouch.x, VILLAGE_RESOURCE_ICON_ORIGINS.pouch.y)
+      .setScale(VILLAGE_RESOURCE_HUD.iconScale)
+      .setDepth(56);
     this.villageGoldText = this.add
-      .text(126, 212, "0", {
+      .text(VILLAGE_RESOURCE_HUD.goldTextX, VILLAGE_RESOURCE_HUD.goldTextY, "0", {
         fontFamily: "Georgia, serif",
-        fontSize: "27px",
+        fontSize: "34px",
         color: "#fff1c2",
         align: "center",
         stroke: "#120d0a",
@@ -375,12 +399,17 @@ export class VillageScene extends Phaser.Scene {
       .setOrigin(0.5)
       .setDepth(58);
     this.villageInventoryOverlay = this.add
-      .image(0, 0, IMAGE_ASSETS.villageInventoryEmpty.key)
-      .setOrigin(0)
-      .setDisplaySize(WORLD_WIDTH, WORLD_HEIGHT)
+      .image(VILLAGE_RESOURCE_HUD.inventoryX, VILLAGE_RESOURCE_HUD.inventoryY, IMAGE_ASSETS.inventoryEmpty.key)
+      .setOrigin(VILLAGE_RESOURCE_ICON_ORIGINS.inventory.x, VILLAGE_RESOURCE_ICON_ORIGINS.inventory.y)
+      .setScale(VILLAGE_RESOURCE_HUD.iconScale)
       .setDepth(56);
     this.inventoryHitZone = this.add
-      .zone(338, 140, 150, 150)
+      .zone(
+        VILLAGE_RESOURCE_HUD.inventoryX,
+        VILLAGE_RESOURCE_HUD.inventoryY,
+        VILLAGE_RESOURCE_HUD.inventoryHitWidth,
+        VILLAGE_RESOURCE_HUD.inventoryHitHeight
+      )
       .setDepth(59)
       .setInteractive({ useHandCursor: true });
     this.inventoryHitZone.on("pointerdown", () => this.openInventoryPanel());
@@ -390,16 +419,15 @@ export class VillageScene extends Phaser.Scene {
     const state = getDungeonRunState();
     const hasCarriedEquipment = this.getVillageDisplayedEquipment().length > 0;
     this.villagePouchOverlay?.setTexture(
-      state.carriedGold > 0 ? IMAGE_ASSETS.villagePouchFull.key : IMAGE_ASSETS.villagePouchEmpty.key
+      state.carriedGold > 0 ? IMAGE_ASSETS.coinPouchFull.key : IMAGE_ASSETS.coinPouchEmpty.key
     );
-    this.villageGoldBubble?.setVisible(state.carriedGold > 0);
-    this.villageGoldText?.setVisible(state.carriedGold > 0);
+    this.villageGoldText?.setVisible(true);
     this.villageGoldText?.setText(String(state.carriedGold));
     this.villageBankGoldBubble?.setVisible(state.bankGold > 0);
     this.villageBankGoldText?.setVisible(state.bankGold > 0);
     this.villageBankGoldText?.setText(String(state.bankGold));
     this.villageInventoryOverlay?.setTexture(
-      state.inventory.length > 0 || hasCarriedEquipment ? IMAGE_ASSETS.villageInventoryFull.key : IMAGE_ASSETS.villageInventoryEmpty.key
+      state.inventory.length > 0 || hasCarriedEquipment ? IMAGE_ASSETS.inventoryFull.key : IMAGE_ASSETS.inventoryEmpty.key
     );
     this.updateVillageDebugMenu();
   }
@@ -699,10 +727,11 @@ export class VillageScene extends Phaser.Scene {
     if (!visible) {
       this.closeInventoryPanel();
     }
+    this.villageResourcePanel?.setVisible(visible);
     this.villagePouchOverlay?.setVisible(visible);
     this.villageInventoryOverlay?.setVisible(visible);
     this.villageGoldBubble?.setVisible(visible && getDungeonRunState().carriedGold > 0);
-    this.villageGoldText?.setVisible(visible && getDungeonRunState().carriedGold > 0);
+    this.villageGoldText?.setVisible(visible);
     this.villageBankGoldBubble?.setVisible(visible && getDungeonRunState().bankGold > 0);
     this.villageBankGoldText?.setVisible(visible && getDungeonRunState().bankGold > 0);
     this.debugMenu?.setVisible(visible);

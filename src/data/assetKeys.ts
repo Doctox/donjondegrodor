@@ -501,6 +501,10 @@ export const IMAGE_ASSETS = {
     key: "dungeon-hud-status-panel-empty",
     path: assetPath("/assets/ui/dungeon/dungeon_hud_status_panel_empty.png")
   },
+  dungeonPoInventoryFrame: {
+    key: "dungeon-po-inventory-frame",
+    path: assetPath("/assets/ui/dungeon/cadre_po_inv.png")
+  },
   dungeonHudHeartFrame: {
     key: "dungeon-hud-heart-frame",
     path: assetPath("/assets/ui/dungeon/hud_coeur.png")
@@ -880,7 +884,17 @@ const INVENTORY_PANEL_IMAGES = imageAssetsByKey(
   "inventoryCloseButton",
   "grodorHouseChestPanel"
 );
-const VILLAGE_HUD_IMAGES = imageAssetsByKey("villagePouchEmpty", "villagePouchFull", "villageInventoryEmpty", "villageInventoryFull");
+const VILLAGE_HUD_IMAGES = imageAssetsByKey(
+  "dungeonPoInventoryFrame",
+  "coinPouchEmpty",
+  "coinPouchFull",
+  "inventoryEmpty",
+  "inventoryFull",
+  "villagePouchEmpty",
+  "villagePouchFull",
+  "villageInventoryEmpty",
+  "villageInventoryFull"
+);
 
 export const INTRO_PRELOAD_IMAGES = [IMAGE_ASSETS.introBackground, IMAGE_ASSETS.introLogo];
 export const CELL_PRELOAD_IMAGES = [
