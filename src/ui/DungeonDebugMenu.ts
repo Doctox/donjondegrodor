@@ -18,7 +18,17 @@ type CombatOption = {
 
 type EventOption = {
   label: string;
-  id: "loot_chest" | "coin_flip" | "bonneteau" | "slot_machine" | "dodge_chest" | "jump" | "arm_wrestling" | "tug_of_war" | "elevator";
+  id:
+    | "loot_chest"
+    | "coin_flip"
+    | "bonneteau"
+    | "slot_machine"
+    | "dodge_chest"
+    | "jump"
+    | "arm_wrestling"
+    | "tug_of_war"
+    | "elevator"
+    | "batonnets";
 };
 
 const OPTIONS: EquipmentOption[] = [
@@ -47,7 +57,8 @@ const EVENT_OPTIONS: EventOption[] = [
   { label: GAME_TEXTS.debug.miniGameLabels.jump, id: "jump" },
   { label: GAME_TEXTS.debug.miniGameLabels.armWrestling, id: "arm_wrestling" },
   { label: GAME_TEXTS.debug.miniGameLabels.tugOfWar, id: "tug_of_war" },
-  { label: GAME_TEXTS.debug.miniGameLabels.elevator, id: "elevator" }
+  { label: GAME_TEXTS.debug.miniGameLabels.elevator, id: "elevator" },
+  { label: GAME_TEXTS.debug.miniGameLabels.batonnets, id: "batonnets" }
 ];
 
 type DebugSubmenu = "stuff" | "combat" | "grodor" | "events";
@@ -102,7 +113,7 @@ export class DungeonDebugMenu {
     infoButton.on("pointerout", () => infoBackground.setFillStyle(0x120d0a, 0.84));
     infoButton.on("pointerdown", () => this.togglePanel());
 
-    const background = scene.add.rectangle(0, 0, 292, 458, 0x120d0a, 0.76).setOrigin(0);
+    const background = scene.add.rectangle(0, 0, 292, 510, 0x120d0a, 0.76).setOrigin(0);
     background.setStrokeStyle(2, 0xe0b46e, 0.85);
 
     const title = scene.add.text(14, 12, GAME_TEXTS.debug.title, this.textStyle(22, "#fff1c2"));

@@ -4,6 +4,7 @@ import { GAME_TEXTS } from "../data/gameTexts";
 import { playZoneMusic } from "../systems/audioManager";
 import { preloadImages, preloadTilemaps } from "../systems/scenePreload";
 import { ArmWrestlingMiniGame } from "../minigames/armWrestlingMiniGame";
+import { BatonnetsMiniGame } from "../minigames/batonnetsMiniGame";
 import { BonneteauMiniGame } from "../minigames/bonneteauMiniGame";
 import { CoinFlipMiniGame } from "../minigames/coinFlipMiniGame";
 import { DodgeChestMiniGame } from "../minigames/dodgeChestMiniGame";
@@ -82,7 +83,8 @@ export class MiniGameScene extends Phaser.Scene {
       this.type !== "jump" &&
       this.type !== "arm_wrestling" &&
       this.type !== "tug_of_war" &&
-      this.type !== "elevator"
+      this.type !== "elevator" &&
+      this.type !== "batonnets"
     ) {
       this.add
         .text(WORLD_WIDTH / 2, 158, this.getMiniGameTitle(), {
@@ -108,7 +110,8 @@ export class MiniGameScene extends Phaser.Scene {
           this.type === "jump" ||
           this.type === "arm_wrestling" ||
           this.type === "tug_of_war" ||
-          this.type === "elevator"
+          this.type === "elevator" ||
+          this.type === "batonnets"
           ? ""
           : this.getMiniGameIntro(),
         {
@@ -163,6 +166,9 @@ export class MiniGameScene extends Phaser.Scene {
     }
     if (this.type === "elevator") {
       return new ElevatorMiniGame(host);
+    }
+    if (this.type === "batonnets") {
+      return new BatonnetsMiniGame(host);
     }
 
     return new LootChestMiniGame(host);
@@ -261,6 +267,9 @@ export class MiniGameScene extends Phaser.Scene {
     if (this.type === "elevator") {
       return GAME_TEXTS.miniGames.elevator.title;
     }
+    if (this.type === "batonnets") {
+      return GAME_TEXTS.miniGames.batonnets.title;
+    }
 
     return GAME_TEXTS.miniGames.lootChest.title;
   }
@@ -289,6 +298,9 @@ export class MiniGameScene extends Phaser.Scene {
     }
     if (this.type === "elevator") {
       return GAME_TEXTS.miniGames.elevator.intro;
+    }
+    if (this.type === "batonnets") {
+      return GAME_TEXTS.miniGames.batonnets.intro;
     }
 
     return GAME_TEXTS.miniGames.lootChest.clickInstruction;

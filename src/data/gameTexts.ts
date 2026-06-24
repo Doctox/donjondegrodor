@@ -220,6 +220,13 @@ export const GAME_TEXTS = {
       floorDown: (amount: number) => `Ascenseur: -${amount} etage(s).`,
       floorUp: (amount: number) => `Ascenseur: +${amount} etage(s).`,
       exitHint: "Clique pour retourner a la tour"
+    },
+    batonnets: {
+      title: "Jeu des batonnets",
+      intro: "Le garde pose des batonnets. Celui qui prend le dernier perd.",
+      success: "Le garde prend le dernier batonnet: +3 a +8 PO.",
+      failure: "Grodor prend le dernier batonnet: -3 a -8 PO.",
+      exitHint: "Clique pour retourner a la tour"
     }
   },
   result: {
@@ -529,7 +536,8 @@ export const GAME_TEXTS = {
       jump: "Course au saut",
       armWrestling: "Bras de fer",
       tugOfWar: "Tir a la corde",
-      elevator: "Ascenseur"
+      elevator: "Ascenseur",
+      batonnets: "Batonnets"
     },
     equipmentUpdated: "Equipement debug mis a jour.",
     grodorRecovered: "Debug: Grodor recupere 1 coeur.",
@@ -701,6 +709,11 @@ export const GAME_TEXTS = {
     elevator: {
       title: "Ascenseur douteux",
       message: "Un ascenseur a levier attend Grodor.",
+      effectLabel: "Mini-jeu"
+    },
+    batonnets: {
+      title: "Jeu des batonnets",
+      message: "Un garde propose un jeu simple. C'est souvent mauvais signe.",
       effectLabel: "Mini-jeu"
     }
   },

@@ -691,6 +691,18 @@ export const IMAGE_ASSETS = {
     path: assetPath("/assets/minigames/elevator/fleche_bas_verte.png")
   },
   elevatorArrowUpRed: { key: "elevator-arrow-up-red", path: assetPath("/assets/minigames/elevator/fleche_haut_rouge.png") },
+  batonnetsBackground: {
+    key: "rig-mj-batonnets-background",
+    path: assetPath("/assets/minigames/batonnets/terrain/background_table.png")
+  },
+  batonnetsTable: {
+    key: "rig-mj-batonnets-table",
+    path: assetPath("/assets/minigames/batonnets/terrain/table_batonnet.png")
+  },
+  batonnetsStick: { key: "rig-mj-batonnets-batonnet", path: assetPath("/assets/minigames/batonnets/terrain/batonnet.png") },
+  batonnetsButton1: { key: "rig-mj-batonnets-button-1", path: assetPath("/assets/minigames/batonnets/terrain/1.png") },
+  batonnetsButton2: { key: "rig-mj-batonnets-button-2", path: assetPath("/assets/minigames/batonnets/terrain/2.png") },
+  batonnetsButton3: { key: "rig-mj-batonnets-button-3", path: assetPath("/assets/minigames/batonnets/terrain/3.png") },
   jumpRunnerScene: { key: "jump-runner-scene", path: assetPath("/assets/minigames/jump/runner_segment_01.png") },
   jumpRunnerScene02: { key: "jump-runner-scene-02", path: assetPath("/assets/minigames/jump/runner_segment_02.png") },
   jumpRunnerScene03: { key: "jump-runner-scene-03", path: assetPath("/assets/minigames/jump/runner_segment_03.png") },
@@ -768,7 +780,8 @@ export const JSON_ASSETS = {
   jumpRunnerSegment03: { key: "jump-runner-segment-03", path: assetPath("/assets/minigames/jump/runner_segment_03.json") },
   tugOfWarTerrain: { key: "tug-of-war-terrain", path: assetPath("/assets/minigames/tug_of_war/saves/terrain_jm_save.json") },
   tugOfWarGrodor: { key: "tug-of-war-grodor", path: assetPath("/assets/minigames/tug_of_war/saves/grodor_tug_jm_save.json") },
-  tugOfWarBoss: { key: "tug-of-war-boss", path: assetPath("/assets/minigames/tug_of_war/saves/boss_tug_jm_save.json") }
+  tugOfWarBoss: { key: "tug-of-war-boss", path: assetPath("/assets/minigames/tug_of_war/saves/boss_tug_jm_save.json") },
+  batonnetsTerrain: { key: "batonnets-terrain", path: assetPath("/assets/minigames/batonnets/saves/terrain_jm_save.json") }
 } satisfies Record<string, AssetDefinition>;
 
 export const ANIMATION_KEYS = {
@@ -937,7 +950,8 @@ export const MINI_GAME_PRELOAD_IMAGES = {
   ],
   arm_wrestling: [...imageAssetsByPrefix("armWrestling"), IMAGE_ASSETS.tapButton],
   tug_of_war: [...imageAssetsByPrefix("tugOfWar"), IMAGE_ASSETS.tapButton],
-  elevator: [...imageAssetsByPrefix("elevator"), IMAGE_ASSETS.tapButton]
+  elevator: [...imageAssetsByPrefix("elevator"), IMAGE_ASSETS.tapButton],
+  batonnets: imageAssetsByPrefix("batonnets")
 } satisfies Record<string, AssetDefinition[]>;
 
 export const MINI_GAME_PRELOAD_JSON: Record<string, AssetDefinition[]> = {
@@ -949,7 +963,8 @@ export const MINI_GAME_PRELOAD_JSON: Record<string, AssetDefinition[]> = {
   jump: [JSON_ASSETS.jumpRunnerSegment, JSON_ASSETS.jumpRunnerSegment02, JSON_ASSETS.jumpRunnerSegment03],
   arm_wrestling: [],
   tug_of_war: [JSON_ASSETS.tugOfWarTerrain, JSON_ASSETS.tugOfWarGrodor, JSON_ASSETS.tugOfWarBoss],
-  elevator: []
+  elevator: [],
+  batonnets: [JSON_ASSETS.batonnetsTerrain]
 };
 
 export const PRELOAD_IMAGES = Object.values(IMAGE_ASSETS);

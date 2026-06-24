@@ -36,7 +36,8 @@ export type DungeonEventId =
   | "jump"
   | "arm_wrestling"
   | "tug_of_war"
-  | "elevator";
+  | "elevator"
+  | "batonnets";
 
 export type DungeonEventDefinition = {
   id: DungeonEventId;
@@ -337,6 +338,14 @@ export const DUNGEON_EVENTS = {
     title: GAME_TEXTS.dungeonEvents.elevator.title,
     message: GAME_TEXTS.dungeonEvents.elevator.message,
     effectLabel: GAME_TEXTS.dungeonEvents.elevator.effectLabel,
+    kind: "minigame"
+  },
+  batonnets: {
+    id: "batonnets",
+    weight: 2,
+    title: GAME_TEXTS.dungeonEvents.batonnets.title,
+    message: GAME_TEXTS.dungeonEvents.batonnets.message,
+    effectLabel: GAME_TEXTS.dungeonEvents.batonnets.effectLabel,
     kind: "minigame"
   }
 } satisfies Record<DungeonEventId, DungeonEventDefinition>;

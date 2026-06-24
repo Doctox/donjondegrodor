@@ -786,7 +786,8 @@ export class DungeonScene extends Phaser.Scene {
       event.id === "jump" ||
       event.id === "arm_wrestling" ||
       event.id === "tug_of_war" ||
-      event.id === "elevator"
+      event.id === "elevator" ||
+      event.id === "batonnets"
         ? event.id
         : "loot_chest";
     this.scene.launch("MiniGameScene", {
