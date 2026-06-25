@@ -116,6 +116,7 @@ const initialState: DungeonRunState = {
 };
 
 let state: DungeonRunState = cloneState(initialState);
+let lastResolvedDoorEventFamilyId: DungeonEventId | undefined;
 
 export function getRunFloorRange(wins: number): { min: number; max: number } {
   if (wins < 10) {
@@ -156,6 +157,7 @@ export function resetDungeonRunState(
   const preservedEquipment = options.preserveInventoryEquipment ? normalizeEquipmentBySlot(state.equipment) : normalizeEquipmentBySlot(startingLoadoutItems);
   const preservedCarriedGold = options.preserveCarriedGold ? state.carriedGold : 0;
   resetCurrentGrodorRunStats();
+  lastResolvedDoorEventFamilyId = undefined;
   state = createNewRunState(state.wins, state.bankGold, attempt, options.random);
   if (options.preserveInventoryEquipment || options.useStartingLoadout) {
     const previousEquipment = state.equipment;
@@ -182,6 +184,7 @@ export function resetDungeonRunState(
 export function resetDungeonProgressDebug(): DungeonRunState {
   saveBankGold(0);
   resetCurrentGrodorRunStats();
+  lastResolvedDoorEventFamilyId = undefined;
   state = createNewRunState(0, 0, 0);
   return getDungeonRunState();
 }
@@ -248,6 +251,7 @@ export function pickRandomDoorEventId(random: () => number = Math.random): Dunge
 export function resolveDoorEvent(id: string, random: () => number = Math.random): DungeonRunEvent {
   const baseDefinition = getDungeonEventDefinition(id) ?? getDungeonEventDefinition("nothing")!;
   const definition = baseDefinition.id === "combat" ? pickRandomCombatDefinition(random) : baseDefinition;
+  lastResolvedDoorEventFamilyId = getDoorEventFamilyId(baseDefinition);
   let goldDelta = getGoldDelta(definition, random);
   let lifeDelta = definition.lifeDelta ?? 0;
   let floorDelta = definition.floorDelta ?? 0;
@@ -891,7 +895,11 @@ function parseInventoryParam(
 }
 
 function pickWeightedDungeonEvent(random: () => number): DungeonEventDefinition {
-  const eligibleEvents = DUNGEON_EVENT_LIST.filter(isDungeonEventAvailable);
+  const allEligibleEvents = DUNGEON_EVENT_LIST.filter(isDungeonEventAvailable);
+  const eligibleEvents =
+    allEligibleEvents.length > 1
+      ? allEligibleEvents.filter((event) => getDoorEventFamilyId(event) !== lastResolvedDoorEventFamilyId)
+      : allEligibleEvents;
   const totalWeight = eligibleEvents.reduce((total, event) => total + event.weight, 0);
   if (totalWeight <= 0) {
     return getDungeonEventDefinition("nothing")!;
@@ -911,6 +919,10 @@ function pickWeightedDungeonEvent(random: () => number): DungeonEventDefinition 
 
 function isDungeonEventAvailable(event: DungeonEventDefinition): boolean {
   return event.id !== "coin_flip" || state.carriedGold > 0;
+}
+
+function getDoorEventFamilyId(event: DungeonEventDefinition): DungeonEventId {
+  return event.kind === "combat" ? "combat" : event.id;
 }
 
 function getGoldDelta(definition: DungeonEventDefinition, random: () => number): number {
