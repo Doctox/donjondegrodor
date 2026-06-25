@@ -1,0 +1,235 @@
+{
+  "version": 1,
+  "layers": [
+    {
+      "id": "background",
+      "label": "Background",
+      "key": "rig-mj-tug-terrain-background",
+      "path": "/assets/minigames/tug_of_war/terrain/background.png",
+      "defaultX": 960,
+      "defaultY": 604,
+      "defaultWidth": 1540,
+      "defaultHeight": 867,
+      "defaultVisible": true
+    },
+    {
+      "id": "boss_tug",
+      "label": "Boss anime",
+      "key": "",
+      "path": "",
+      "defaultX": 1580,
+      "defaultY": 814,
+      "defaultWidth": 390,
+      "defaultHeight": 520,
+      "defaultVisible": true
+    },
+    {
+      "id": "grodor_tug",
+      "label": "Grodor anime",
+      "key": "",
+      "path": "",
+      "defaultX": 320,
+      "defaultY": 890,
+      "defaultWidth": 320,
+      "defaultHeight": 460,
+      "defaultVisible": true
+    },
+    {
+      "id": "tugRope",
+      "label": "Corde base",
+      "key": "rig-mj-tug-terrain-rope",
+      "path": "/assets/minigames/tug_of_war/terrain/corde.png",
+      "defaultX": 960,
+      "defaultY": 874,
+      "defaultWidth": 1420,
+      "defaultHeight": 106,
+      "defaultVisible": true
+    },
+    {
+      "id": "grodor_tug_front_arm",
+      "label": "Bras avant Grodor",
+      "key": "",
+      "path": "",
+      "defaultX": 320,
+      "defaultY": 890,
+      "defaultWidth": 320,
+      "defaultHeight": 460,
+      "defaultVisible": true
+    },
+    {
+      "id": "grodor_victory",
+      "label": "Grodor victory",
+      "key": "",
+      "path": "",
+      "defaultX": 320,
+      "defaultY": 890,
+      "defaultWidth": 320,
+      "defaultHeight": 460,
+      "defaultVisible": true
+    },
+    {
+      "id": "grodor_hurt",
+      "label": "Grodor hurt",
+      "key": "",
+      "path": "",
+      "defaultX": 320,
+      "defaultY": 890,
+      "defaultWidth": 320,
+      "defaultHeight": 460,
+      "defaultVisible": true
+    },
+    {
+      "id": "tugFlag",
+      "label": "Fanion corde",
+      "key": "rig-mj-tug-terrain-flag",
+      "path": "/assets/minigames/tug_of_war/terrain/fanion.png",
+      "defaultX": 960,
+      "defaultY": 806,
+      "defaultWidth": 92,
+      "defaultHeight": 116,
+      "defaultVisible": true
+    },
+    {
+      "id": "boss_tug_front_arm",
+      "label": "Bras avant Boss",
+      "key": "",
+      "path": "",
+      "defaultX": 1580,
+      "defaultY": 814,
+      "defaultWidth": 390,
+      "defaultHeight": 520,
+      "defaultVisible": true
+    },
+    {
+      "id": "bossLoose",
+      "label": "Boss loose",
+      "key": "rig-mj-tug-terrain-boss-loose",
+      "path": "/assets/minigames/tug_of_war/boss/boss_loose.png",
+      "defaultX": 1580,
+      "defaultY": 822,
+      "defaultWidth": 310,
+      "defaultHeight": 568,
+      "defaultVisible": true
+    }
+  ],
+  "selected": "grodor_hurt",
+  "selectedGroup": [],
+  "layerOrder": [
+    "background",
+    "boss_tug",
+    "grodor_tug",
+    "tugRope",
+    "grodor_tug_front_arm",
+    "grodor_victory",
+    "grodor_hurt",
+    "tugFlag",
+    "boss_tug_front_arm",
+    "bossLoose"
+  ],
+  "offsets": {
+    "background": {
+      "x": 0,
+      "y": 0
+    },
+    "grodor_tug": {
+      "x": 150,
+      "y": -66
+    },
+    "grodor_tug_front_arm": {
+      "x": 0,
+      "y": 0
+    },
+    "grodor_victory": {
+      "x": 50,
+      "y": -70
+    },
+    "grodor_hurt": {
+      "x": 2,
+      "y": 8
+    },
+    "tugRope": {
+      "x": 30,
+      "y": -240
+    },
+    "tugFlag": {
+      "x": 2,
+      "y": -158
+    },
+    "boss_tug": {
+      "x": -2,
+      "y": -164
+    },
+    "bossLoose": {
+      "x": -100,
+      "y": -182
+    },
+    "boss_tug_front_arm": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  "sizes": {
+    "background": {
+      "scaleX": 1.06,
+      "scaleY": 0.9099999999999999,
+      "rotation": 0
+    },
+    "grodor_tug": {
+      "scaleX": 2.0800000000000005,
+      "scaleY": 2.0800000000000005,
+      "rotation": 0
+    },
+    "grodor_tug_front_arm": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
+    "grodor_victory": {
+      "scaleX": 2.1999999999999997,
+      "scaleY": 2.17,
+      "rotation": 0
+    },
+    "grodor_hurt": {
+      "scaleX": 2.14,
+      "scaleY": 2.17,
+      "rotation": -22
+    },
+    "tugRope": {
+      "scaleX": 1,
+      "scaleY": 0.3099999999999994,
+      "rotation": -1
+    },
+    "tugFlag": {
+      "scaleX": 1.09,
+      "scaleY": 0.39999999999999947,
+      "rotation": 0
+    },
+    "boss_tug": {
+      "scaleX": 0.94,
+      "scaleY": 0.94,
+      "rotation": -4
+    },
+    "bossLoose": {
+      "scaleX": 0.7599999999999998,
+      "scaleY": 0.7599999999999998,
+      "rotation": 0
+    },
+    "boss_tug_front_arm": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    }
+  },
+  "visibility": {
+    "background": true,
+    "grodor_tug": true,
+    "grodor_tug_front_arm": true,
+    "grodor_victory": true,
+    "grodor_hurt": true,
+    "tugRope": true,
+    "tugFlag": true,
+    "boss_tug": true,
+    "bossLoose": true,
+    "boss_tug_front_arm": true
+  }
+}

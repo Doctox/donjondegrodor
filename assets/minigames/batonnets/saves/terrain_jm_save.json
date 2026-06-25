@@ -1,0 +1,610 @@
+{
+  "version": 1,
+  "layers": [
+    {
+      "id": "background",
+      "label": "Background",
+      "key": "rig-mj-batonnets-background",
+      "path": "/assets/minigames/batonnets/terrain/background_table.png",
+      "x": 960,
+      "y": 604,
+      "width": 1540,
+      "height": 866,
+      "visible": true
+    },
+    {
+      "id": "table",
+      "label": "Table",
+      "key": "rig-mj-batonnets-table",
+      "path": "/assets/minigames/batonnets/terrain/table_batonnet.png",
+      "x": 960,
+      "y": 726,
+      "width": 800,
+      "height": 290,
+      "visible": true
+    },
+    {
+      "id": "batonnet_01",
+      "label": "Batonnet 1",
+      "key": "rig-mj-batonnets-batonnet",
+      "path": "/assets/minigames/batonnets/terrain/batonnet.png",
+      "x": 748,
+      "y": 590,
+      "width": 28,
+      "height": 170,
+      "visible": true,
+      "rotation": -12
+    },
+    {
+      "id": "batonnet_02",
+      "label": "Batonnet 2",
+      "key": "rig-mj-batonnets-batonnet",
+      "path": "/assets/minigames/batonnets/terrain/batonnet.png",
+      "x": 796,
+      "y": 597,
+      "width": 28,
+      "height": 170,
+      "visible": true,
+      "rotation": -8
+    },
+    {
+      "id": "batonnet_03",
+      "label": "Batonnet 3",
+      "key": "rig-mj-batonnets-batonnet",
+      "path": "/assets/minigames/batonnets/terrain/batonnet.png",
+      "x": 844,
+      "y": 590,
+      "width": 28,
+      "height": 170,
+      "visible": true,
+      "rotation": -4
+    },
+    {
+      "id": "batonnet_04",
+      "label": "Batonnet 4",
+      "key": "rig-mj-batonnets-batonnet",
+      "path": "/assets/minigames/batonnets/terrain/batonnet.png",
+      "x": 892,
+      "y": 597,
+      "width": 28,
+      "height": 170,
+      "visible": true,
+      "rotation": 0
+    },
+    {
+      "id": "batonnet_05",
+      "label": "Batonnet 5",
+      "key": "rig-mj-batonnets-batonnet",
+      "path": "/assets/minigames/batonnets/terrain/batonnet.png",
+      "x": 940,
+      "y": 590,
+      "width": 28,
+      "height": 170,
+      "visible": true,
+      "rotation": 4
+    },
+    {
+      "id": "batonnet_06",
+      "label": "Batonnet 6",
+      "key": "rig-mj-batonnets-batonnet",
+      "path": "/assets/minigames/batonnets/terrain/batonnet.png",
+      "x": 988,
+      "y": 597,
+      "width": 28,
+      "height": 170,
+      "visible": true,
+      "rotation": 8
+    },
+    {
+      "id": "batonnet_07",
+      "label": "Batonnet 7",
+      "key": "rig-mj-batonnets-batonnet",
+      "path": "/assets/minigames/batonnets/terrain/batonnet.png",
+      "x": 1036,
+      "y": 590,
+      "width": 28,
+      "height": 170,
+      "visible": true,
+      "rotation": 12
+    },
+    {
+      "id": "batonnet_08",
+      "label": "Batonnet 8",
+      "key": "rig-mj-batonnets-batonnet",
+      "path": "/assets/minigames/batonnets/terrain/batonnet.png",
+      "x": 770,
+      "y": 656,
+      "width": 28,
+      "height": 170,
+      "visible": true,
+      "rotation": -12
+    },
+    {
+      "id": "batonnet_09",
+      "label": "Batonnet 9",
+      "key": "rig-mj-batonnets-batonnet",
+      "path": "/assets/minigames/batonnets/terrain/batonnet.png",
+      "x": 818,
+      "y": 663,
+      "width": 28,
+      "height": 170,
+      "visible": true,
+      "rotation": -8
+    },
+    {
+      "id": "batonnet_10",
+      "label": "Batonnet 10",
+      "key": "rig-mj-batonnets-batonnet",
+      "path": "/assets/minigames/batonnets/terrain/batonnet.png",
+      "x": 866,
+      "y": 656,
+      "width": 28,
+      "height": 170,
+      "visible": true,
+      "rotation": -4
+    },
+    {
+      "id": "batonnet_11",
+      "label": "Batonnet 11",
+      "key": "rig-mj-batonnets-batonnet",
+      "path": "/assets/minigames/batonnets/terrain/batonnet.png",
+      "x": 914,
+      "y": 663,
+      "width": 28,
+      "height": 170,
+      "visible": true,
+      "rotation": 0
+    },
+    {
+      "id": "batonnet_12",
+      "label": "Batonnet 12",
+      "key": "rig-mj-batonnets-batonnet",
+      "path": "/assets/minigames/batonnets/terrain/batonnet.png",
+      "x": 962,
+      "y": 656,
+      "width": 28,
+      "height": 170,
+      "visible": true,
+      "rotation": 4
+    },
+    {
+      "id": "batonnet_13",
+      "label": "Batonnet 13",
+      "key": "rig-mj-batonnets-batonnet",
+      "path": "/assets/minigames/batonnets/terrain/batonnet.png",
+      "x": 1010,
+      "y": 663,
+      "width": 28,
+      "height": 170,
+      "visible": true,
+      "rotation": 8
+    },
+    {
+      "id": "batonnet_14",
+      "label": "Batonnet 14",
+      "key": "rig-mj-batonnets-batonnet",
+      "path": "/assets/minigames/batonnets/terrain/batonnet.png",
+      "x": 1058,
+      "y": 656,
+      "width": 28,
+      "height": 170,
+      "visible": true,
+      "rotation": 12
+    },
+    {
+      "id": "batonnet_15",
+      "label": "Batonnet 15",
+      "key": "rig-mj-batonnets-batonnet",
+      "path": "/assets/minigames/batonnets/terrain/batonnet.png",
+      "x": 792,
+      "y": 722,
+      "width": 28,
+      "height": 170,
+      "visible": true,
+      "rotation": -12
+    },
+    {
+      "id": "batonnet_16",
+      "label": "Batonnet 16",
+      "key": "rig-mj-batonnets-batonnet",
+      "path": "/assets/minigames/batonnets/terrain/batonnet.png",
+      "x": 840,
+      "y": 729,
+      "width": 28,
+      "height": 170,
+      "visible": true,
+      "rotation": -8
+    },
+    {
+      "id": "batonnet_17",
+      "label": "Batonnet 17",
+      "key": "rig-mj-batonnets-batonnet",
+      "path": "/assets/minigames/batonnets/terrain/batonnet.png",
+      "x": 888,
+      "y": 722,
+      "width": 28,
+      "height": 170,
+      "visible": true,
+      "rotation": -4
+    },
+    {
+      "id": "batonnet_18",
+      "label": "Batonnet 18",
+      "key": "rig-mj-batonnets-batonnet",
+      "path": "/assets/minigames/batonnets/terrain/batonnet.png",
+      "x": 936,
+      "y": 729,
+      "width": 28,
+      "height": 170,
+      "visible": true,
+      "rotation": 0
+    },
+    {
+      "id": "batonnet_19",
+      "label": "Batonnet 19",
+      "key": "rig-mj-batonnets-batonnet",
+      "path": "/assets/minigames/batonnets/terrain/batonnet.png",
+      "x": 984,
+      "y": 722,
+      "width": 28,
+      "height": 170,
+      "visible": true,
+      "rotation": 4
+    },
+    {
+      "id": "batonnet_20",
+      "label": "Batonnet 20",
+      "key": "rig-mj-batonnets-batonnet",
+      "path": "/assets/minigames/batonnets/terrain/batonnet.png",
+      "x": 1032,
+      "y": 729,
+      "width": 28,
+      "height": 170,
+      "visible": true,
+      "rotation": 8
+    },
+    {
+      "id": "batonnet_21",
+      "label": "Batonnet 21",
+      "key": "rig-mj-batonnets-batonnet",
+      "path": "/assets/minigames/batonnets/terrain/batonnet.png",
+      "x": 1080,
+      "y": 722,
+      "width": 28,
+      "height": 170,
+      "visible": true,
+      "rotation": 12
+    },
+    {
+      "id": "button_take_1",
+      "label": "Bouton 1",
+      "key": "rig-mj-batonnets-button-1",
+      "path": "/assets/minigames/batonnets/terrain/1.png",
+      "x": 778,
+      "y": 888,
+      "width": 104,
+      "height": 106,
+      "visible": true
+    },
+    {
+      "id": "button_take_2",
+      "label": "Bouton 2",
+      "key": "rig-mj-batonnets-button-2",
+      "path": "/assets/minigames/batonnets/terrain/2.png",
+      "x": 960,
+      "y": 888,
+      "width": 104,
+      "height": 106,
+      "visible": true
+    },
+    {
+      "id": "button_take_3",
+      "label": "Bouton 3",
+      "key": "rig-mj-batonnets-button-3",
+      "path": "/assets/minigames/batonnets/terrain/3.png",
+      "x": 1142,
+      "y": 888,
+      "width": 104,
+      "height": 106,
+      "visible": true
+    }
+  ],
+  "selected": "button_take_3",
+  "selectedGroup": [
+    "button_take_3"
+  ],
+  "layerOrder": [
+    "background",
+    "table",
+    "batonnet_01",
+    "batonnet_02",
+    "batonnet_03",
+    "batonnet_04",
+    "batonnet_05",
+    "batonnet_06",
+    "batonnet_07",
+    "batonnet_08",
+    "batonnet_09",
+    "batonnet_10",
+    "batonnet_11",
+    "batonnet_12",
+    "batonnet_13",
+    "batonnet_14",
+    "batonnet_15",
+    "batonnet_16",
+    "batonnet_17",
+    "batonnet_18",
+    "batonnet_19",
+    "batonnet_20",
+    "batonnet_21",
+    "button_take_1",
+    "button_take_2",
+    "button_take_3"
+  ],
+  "offsets": {
+    "background": {
+      "x": 0,
+      "y": 0
+    },
+    "table": {
+      "x": 0,
+      "y": -209
+    },
+    "button_take_1": {
+      "x": -103,
+      "y": -141
+    },
+    "button_take_2": {
+      "x": -3,
+      "y": -141
+    },
+    "button_take_3": {
+      "x": 107,
+      "y": -141
+    },
+    "batonnet_01": {
+      "x": -154,
+      "y": -105
+    },
+    "batonnet_02": {
+      "x": -164,
+      "y": -111
+    },
+    "batonnet_03": {
+      "x": -175,
+      "y": -103
+    },
+    "batonnet_04": {
+      "x": -187,
+      "y": -111
+    },
+    "batonnet_05": {
+      "x": -198,
+      "y": -103
+    },
+    "batonnet_06": {
+      "x": -209,
+      "y": -111
+    },
+    "batonnet_07": {
+      "x": -220,
+      "y": -104
+    },
+    "batonnet_08": {
+      "x": 82,
+      "y": -168
+    },
+    "batonnet_09": {
+      "x": 71,
+      "y": -176
+    },
+    "batonnet_10": {
+      "x": 60,
+      "y": -167
+    },
+    "batonnet_11": {
+      "x": 48,
+      "y": -175
+    },
+    "batonnet_12": {
+      "x": 37,
+      "y": -167
+    },
+    "batonnet_13": {
+      "x": 27,
+      "y": -173
+    },
+    "batonnet_14": {
+      "x": 15,
+      "y": -167
+    },
+    "batonnet_15": {
+      "x": 318,
+      "y": -234
+    },
+    "batonnet_16": {
+      "x": 307,
+      "y": -240
+    },
+    "batonnet_17": {
+      "x": 296,
+      "y": -233
+    },
+    "batonnet_18": {
+      "x": 286,
+      "y": -240
+    },
+    "batonnet_19": {
+      "x": 275,
+      "y": -231
+    },
+    "batonnet_20": {
+      "x": 265,
+      "y": -239
+    },
+    "batonnet_21": {
+      "x": 253,
+      "y": -234
+    }
+  },
+  "sizes": {
+    "background": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
+    "table": {
+      "scaleX": 1.2600000000000002,
+      "scaleY": 1.2700000000000002,
+      "rotation": 0
+    },
+    "button_take_1": {
+      "scaleX": 0.7899999999999998,
+      "scaleY": 0.7899999999999998,
+      "rotation": 0
+    },
+    "button_take_2": {
+      "scaleX": 0.7899999999999998,
+      "scaleY": 0.7899999999999998,
+      "rotation": 0
+    },
+    "button_take_3": {
+      "scaleX": 0.7899999999999998,
+      "scaleY": 0.7899999999999998,
+      "rotation": 0
+    },
+    "batonnet_01": {
+      "scaleX": 1.03,
+      "scaleY": 1.3300000000000003,
+      "rotation": 0
+    },
+    "batonnet_02": {
+      "scaleX": 1.03,
+      "scaleY": 1.3300000000000003,
+      "rotation": 0
+    },
+    "batonnet_03": {
+      "scaleX": 1.03,
+      "scaleY": 1.3300000000000003,
+      "rotation": -1
+    },
+    "batonnet_04": {
+      "scaleX": 1.03,
+      "scaleY": 1.3300000000000003,
+      "rotation": -2
+    },
+    "batonnet_05": {
+      "scaleX": 1.03,
+      "scaleY": 1.3300000000000003,
+      "rotation": -2
+    },
+    "batonnet_06": {
+      "scaleX": 1.03,
+      "scaleY": 1.3300000000000003,
+      "rotation": -2
+    },
+    "batonnet_07": {
+      "scaleX": 1.03,
+      "scaleY": 1.3300000000000003,
+      "rotation": -2
+    },
+    "batonnet_08": {
+      "scaleX": 1.03,
+      "scaleY": 1.3300000000000003,
+      "rotation": -3
+    },
+    "batonnet_09": {
+      "scaleX": 1.03,
+      "scaleY": 1.3300000000000003,
+      "rotation": -3
+    },
+    "batonnet_10": {
+      "scaleX": 1.03,
+      "scaleY": 1.3300000000000003,
+      "rotation": -4
+    },
+    "batonnet_11": {
+      "scaleX": 1.03,
+      "scaleY": 1.3300000000000003,
+      "rotation": -4
+    },
+    "batonnet_12": {
+      "scaleX": 1.03,
+      "scaleY": 1.3300000000000003,
+      "rotation": -5
+    },
+    "batonnet_13": {
+      "scaleX": 1.03,
+      "scaleY": 1.3300000000000003,
+      "rotation": -6
+    },
+    "batonnet_14": {
+      "scaleX": 1.03,
+      "scaleY": 1.3300000000000003,
+      "rotation": -6
+    },
+    "batonnet_15": {
+      "scaleX": 1.03,
+      "scaleY": 1.3300000000000003,
+      "rotation": -6
+    },
+    "batonnet_16": {
+      "scaleX": 1.03,
+      "scaleY": 1.3300000000000003,
+      "rotation": -7
+    },
+    "batonnet_17": {
+      "scaleX": 1.03,
+      "scaleY": 1.3300000000000003,
+      "rotation": -7
+    },
+    "batonnet_18": {
+      "scaleX": 1.03,
+      "scaleY": 1.3300000000000003,
+      "rotation": -8
+    },
+    "batonnet_19": {
+      "scaleX": 1.03,
+      "scaleY": 1.3300000000000003,
+      "rotation": -8
+    },
+    "batonnet_20": {
+      "scaleX": 1.03,
+      "scaleY": 1.3300000000000003,
+      "rotation": -9
+    },
+    "batonnet_21": {
+      "scaleX": 1.03,
+      "scaleY": 1.3300000000000003,
+      "rotation": -10
+    }
+  },
+  "visibility": {
+    "background": true,
+    "table": true,
+    "button_take_1": true,
+    "button_take_2": true,
+    "button_take_3": true,
+    "batonnet_01": true,
+    "batonnet_02": true,
+    "batonnet_03": true,
+    "batonnet_04": true,
+    "batonnet_05": true,
+    "batonnet_06": true,
+    "batonnet_07": true,
+    "batonnet_08": true,
+    "batonnet_09": true,
+    "batonnet_10": true,
+    "batonnet_11": true,
+    "batonnet_12": true,
+    "batonnet_13": true,
+    "batonnet_14": true,
+    "batonnet_15": true,
+    "batonnet_16": true,
+    "batonnet_17": true,
+    "batonnet_18": true,
+    "batonnet_19": true,
+    "batonnet_20": true,
+    "batonnet_21": true
+  }
+}

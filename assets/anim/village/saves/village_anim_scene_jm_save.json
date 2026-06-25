@@ -1,0 +1,114 @@
+{
+  "version": 1,
+  "selected": "smoke_4",
+  "actors": {
+    "bird_1": {
+      "x": 1742,
+      "y": 56,
+      "scaleX": 0.3099999999999994,
+      "scaleY": 0.48999999999999955,
+      "rotation": 0,
+      "visible": true,
+      "alpha": 1
+    },
+    "bird_2": {
+      "x": 1688,
+      "y": 104,
+      "scaleX": 0.25,
+      "scaleY": 0.4,
+      "rotation": 0,
+      "visible": true,
+      "alpha": 1
+    },
+    "bird_3": {
+      "x": 1586,
+      "y": 78,
+      "scaleX": 0.22,
+      "scaleY": 0.34,
+      "rotation": 0,
+      "visible": true,
+      "alpha": 1
+    },
+    "bird_4": {
+      "x": 1735,
+      "y": 148,
+      "scaleX": 0.27,
+      "scaleY": 0.42,
+      "rotation": 0,
+      "visible": true,
+      "alpha": 1
+    },
+    "bird_5": {
+      "x": 1654,
+      "y": 52,
+      "scaleX": 0.2,
+      "scaleY": 0.32,
+      "rotation": 0,
+      "visible": true,
+      "alpha": 1
+    },
+    "bird_6": {
+      "x": 1652,
+      "y": 162,
+      "scaleX": 0.23,
+      "scaleY": 0.36,
+      "rotation": 0,
+      "visible": true,
+      "alpha": 1
+    },
+    "bird_7": {
+      "x": 1592,
+      "y": 148,
+      "scaleX": 0.18,
+      "scaleY": 0.28,
+      "rotation": 0,
+      "visible": true,
+      "alpha": 1
+    },
+    "fisher": {
+      "x": 96,
+      "y": 662,
+      "scaleX": 0.2899999999999999,
+      "scaleY": 0.2899999999999999,
+      "rotation": 0,
+      "visible": true,
+      "alpha": 1
+    },
+    "smoke_2": {
+      "x": 1014,
+      "y": 294,
+      "scaleX": 0.12,
+      "scaleY": 0.12,
+      "rotation": 0,
+      "visible": true,
+      "alpha": 0.45
+    },
+    "smoke_3": {
+      "x": 1426,
+      "y": 318,
+      "scaleX": 0.1,
+      "scaleY": 0.1,
+      "rotation": 0,
+      "visible": true,
+      "alpha": 0.38
+    },
+    "smoke_4": {
+      "x": 1272,
+      "y": 268,
+      "scaleX": 0.11,
+      "scaleY": 0.11,
+      "rotation": 0,
+      "visible": true,
+      "alpha": 0.42
+    },
+    "smoke_5": {
+      "x": 1852,
+      "y": 398,
+      "scaleX": 0.1,
+      "scaleY": 0.1,
+      "rotation": 0,
+      "visible": true,
+      "alpha": 0.36
+    }
+  }
+}

@@ -3,11 +3,12 @@
   "rig": "frontVictory",
   "base": "frontIdle",
   "scale": 0.82,
-  "selected": "auto_front_axe",
+  "selected": "auto_front_sablier_fele",
   "selectedGroup": [],
   "animationEnabled": false,
   "lockedVictoryPose": 0,
   "layerOrder": [
+    "auto_front_cape_quart_heure_face_bas",
     "foot_left",
     "auto_front_sandale_gauche",
     "foot_right",
@@ -22,11 +23,15 @@
     "auto_front_axe",
     "arm_right",
     "glove_right",
+    "auto_front_moufles_reflexion_left",
     "arm_left",
     "glove_left",
+    "auto_front_moufles_reflexion_right",
     "torso",
     "cape_back",
     "cape_collar",
+    "auto_front_cape_quart_heure_face_haut",
+    "auto_front_sablier_fele",
     "auto_front_almost_hero_medallion",
     "head",
     "victory_smile_1",
@@ -45,7 +50,10 @@
     "auto_front_sandale_droite": "foot_right",
     "auto_front_sandale_gauche": "foot_left",
     "auto_front_tiny_helmet": "head",
-    "auto_front_war_underwear_face": "front_belt"
+    "auto_front_war_underwear_face": "front_belt",
+    "auto_front_sablier_fele": "torso",
+    "auto_front_moufles_reflexion_left": "arm_right",
+    "auto_front_moufles_reflexion_right": "arm_left"
   },
   "poseAdjustments": [
     {
@@ -247,6 +255,17 @@
           "rotation": 14
         }
       },
+      "auto_front_sablier_fele": {
+        "offset": {
+          "x": 0,
+          "y": -2
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
       "auto_front_sandale_droite": {
         "offset": {
           "x": 0,
@@ -314,6 +333,50 @@
         }
       },
       "victory_smile_3": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_front_moufles_reflexion_left": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_front_moufles_reflexion_right": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_front_cape_quart_heure_face_bas": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_front_cape_quart_heure_face_haut": {
         "offset": {
           "x": 0,
           "y": 0
@@ -524,6 +587,17 @@
           "rotation": 14
         }
       },
+      "auto_front_sablier_fele": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
       "auto_front_sandale_droite": {
         "offset": {
           "x": 0,
@@ -591,6 +665,50 @@
         }
       },
       "victory_smile_3": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_front_moufles_reflexion_left": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_front_moufles_reflexion_right": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_front_cape_quart_heure_face_bas": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_front_cape_quart_heure_face_haut": {
         "offset": {
           "x": 0,
           "y": 0
@@ -801,6 +919,17 @@
           "rotation": 296
         }
       },
+      "auto_front_sablier_fele": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
       "auto_front_sandale_droite": {
         "offset": {
           "x": 0,
@@ -868,6 +997,50 @@
         }
       },
       "victory_smile_3": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_front_moufles_reflexion_left": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_front_moufles_reflexion_right": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_front_cape_quart_heure_face_bas": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_front_cape_quart_heure_face_haut": {
         "offset": {
           "x": 0,
           "y": 0
@@ -1078,6 +1251,17 @@
           "rotation": 326
         }
       },
+      "auto_front_sablier_fele": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
       "auto_front_sandale_droite": {
         "offset": {
           "x": 0,
@@ -1154,6 +1338,50 @@
           "scaleY": 1,
           "rotation": 0
         }
+      },
+      "auto_front_moufles_reflexion_left": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_front_moufles_reflexion_right": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_front_cape_quart_heure_face_bas": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_front_cape_quart_heure_face_haut": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
       }
     }
   ],
@@ -1177,13 +1405,18 @@
       "head": true,
       "auto_front_almost_hero_medallion": true,
       "auto_front_axe": true,
+      "auto_front_sablier_fele": true,
       "auto_front_sandale_droite": true,
       "auto_front_sandale_gauche": true,
       "auto_front_tiny_helmet": true,
       "auto_front_war_underwear_face": true,
       "victory_smile_1": false,
       "victory_smile_2": false,
-      "victory_smile_3": false
+      "victory_smile_3": false,
+      "auto_front_moufles_reflexion_left": true,
+      "auto_front_moufles_reflexion_right": true,
+      "auto_front_cape_quart_heure_face_bas": true,
+      "auto_front_cape_quart_heure_face_haut": true
     },
     {
       "foot_left": true,
@@ -1204,13 +1437,18 @@
       "head": true,
       "auto_front_almost_hero_medallion": true,
       "auto_front_axe": true,
+      "auto_front_sablier_fele": true,
       "auto_front_sandale_droite": true,
       "auto_front_sandale_gauche": true,
       "auto_front_tiny_helmet": true,
       "auto_front_war_underwear_face": true,
       "victory_smile_1": true,
       "victory_smile_2": false,
-      "victory_smile_3": false
+      "victory_smile_3": false,
+      "auto_front_moufles_reflexion_left": true,
+      "auto_front_moufles_reflexion_right": true,
+      "auto_front_cape_quart_heure_face_bas": true,
+      "auto_front_cape_quart_heure_face_haut": true
     },
     {
       "foot_left": true,
@@ -1231,13 +1469,18 @@
       "head": true,
       "auto_front_almost_hero_medallion": true,
       "auto_front_axe": true,
+      "auto_front_sablier_fele": true,
       "auto_front_sandale_droite": true,
       "auto_front_sandale_gauche": true,
       "auto_front_tiny_helmet": true,
       "auto_front_war_underwear_face": true,
       "victory_smile_1": false,
       "victory_smile_2": true,
-      "victory_smile_3": false
+      "victory_smile_3": false,
+      "auto_front_moufles_reflexion_left": true,
+      "auto_front_moufles_reflexion_right": true,
+      "auto_front_cape_quart_heure_face_bas": true,
+      "auto_front_cape_quart_heure_face_haut": true
     },
     {
       "foot_left": true,
@@ -1258,13 +1501,18 @@
       "head": true,
       "auto_front_almost_hero_medallion": true,
       "auto_front_axe": true,
+      "auto_front_sablier_fele": true,
       "auto_front_sandale_droite": true,
       "auto_front_sandale_gauche": true,
       "auto_front_tiny_helmet": true,
       "auto_front_war_underwear_face": true,
       "victory_smile_1": false,
       "victory_smile_2": false,
-      "victory_smile_3": true
+      "victory_smile_3": true,
+      "auto_front_moufles_reflexion_left": true,
+      "auto_front_moufles_reflexion_right": true,
+      "auto_front_cape_quart_heure_face_bas": true,
+      "auto_front_cape_quart_heure_face_haut": true
     }
   ],
   "visibility": {
@@ -1286,12 +1534,107 @@
     "head": true,
     "auto_front_almost_hero_medallion": true,
     "auto_front_axe": true,
+    "auto_front_sablier_fele": true,
     "auto_front_sandale_droite": true,
     "auto_front_sandale_gauche": true,
     "auto_front_tiny_helmet": true,
     "auto_front_war_underwear_face": true,
     "victory_smile_1": false,
     "victory_smile_2": false,
-    "victory_smile_3": false
+    "victory_smile_3": false,
+    "auto_front_moufles_reflexion_left": true,
+    "auto_front_moufles_reflexion_right": true,
+    "auto_front_cape_quart_heure_face_bas": true,
+    "auto_front_cape_quart_heure_face_haut": true
+  },
+  "offsets": {
+    "auto_front_moufles_reflexion_left": {
+      "x": -202,
+      "y": 101
+    },
+    "auto_front_moufles_reflexion_right": {
+      "x": 211,
+      "y": 102
+    },
+    "auto_front_cape_quart_heure_face_bas": {
+      "x": -1,
+      "y": 61
+    },
+    "auto_front_cape_quart_heure_face_haut": {
+      "x": 3,
+      "y": 73
+    }
+  },
+  "sizeAdjustments": {
+    "auto_front_moufles_reflexion_left": {
+      "scaleX": 0.18999999999999936,
+      "scaleY": 0.18999999999999936,
+      "rotation": -8
+    },
+    "auto_front_moufles_reflexion_right": {
+      "scaleX": 0.15999999999999936,
+      "scaleY": 0.15999999999999936,
+      "rotation": -2
+    },
+    "auto_front_cape_quart_heure_face_bas": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
+    "auto_front_cape_quart_heure_face_haut": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    }
+  },
+  "stuffAdjustments": {
+    "auto_front_moufles_reflexion_left": {
+      "offset": {
+        "x": -202,
+        "y": 101
+      },
+      "size": {
+        "scaleX": 0.18999999999999936,
+        "scaleY": 0.18999999999999936,
+        "rotation": -8
+      },
+      "visible": true
+    },
+    "auto_front_moufles_reflexion_right": {
+      "offset": {
+        "x": 211,
+        "y": 102
+      },
+      "size": {
+        "scaleX": 0.15999999999999936,
+        "scaleY": 0.15999999999999936,
+        "rotation": -2
+      },
+      "visible": true
+    },
+    "auto_front_cape_quart_heure_face_bas": {
+      "offset": {
+        "x": -1,
+        "y": 61
+      },
+      "size": {
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      },
+      "visible": true
+    },
+    "auto_front_cape_quart_heure_face_haut": {
+      "offset": {
+        "x": 3,
+        "y": 73
+      },
+      "size": {
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      },
+      "visible": true
+    }
   }
 }

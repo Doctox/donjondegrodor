@@ -1,13 +1,15 @@
 {
   "formatVersion": 1,
-  "rig": "sideAttack1",
+  "rig": "sideWalk",
   "scale": 0.82,
-  "selected": "cape_side",
+  "selected": "arm_back_upper",
   "selectedGroup": [],
   "animationEnabled": false,
   "secondaryMotionEnabled": true,
-  "lockedWalkFrame": 3,
+  "lockedWalkFrame": 0,
   "layerOrder": [
+    "arm_back_upper",
+    "arm_back_forearm",
     "hand_back",
     "glove_back",
     "auto_side_moufles_reflexion_back",
@@ -20,31 +22,29 @@
     "underwear",
     "auto_side_ceinture_test",
     "auto_side_war_underwear_walk",
-    "attack_front_shoulder_over",
+    "arm_front_upper",
+    "arm_front_forearm",
+    "hand_front",
+    "auto_side_axe",
+    "glove_front",
+    "auto_side_moufles_reflexion_front",
     "cape_side_collar",
     "auto_side_cape_quart_heure_profil_haut",
     "head",
     "auto_side_tiny_helmet",
-    "attack_front_arm",
-    "attack_front_forearm_over",
-    "attack_front_hand_over",
-    "auto_side_axe",
-    "glove_front",
-    "auto_side_moufles_reflexion_front",
     "cape_side",
     "auto_side_cape_quart_heure_profil_bas"
   ],
   "anchors": {
     "glove_back": "hand_back",
-    "glove_front": "attack_front_hand_over",
-    "auto_side_axe": "attack_front_hand_over",
+    "glove_front": "hand_front",
+    "auto_side_moufles_reflexion_back": "hand_back",
+    "auto_side_moufles_reflexion_front": "hand_front",
     "shoe_back": "leg_back",
     "shoe_front": "leg_front",
     "auto_side_tiny_helmet": "head",
     "auto_side_ceinture_test": "underwear",
-    "auto_side_war_underwear_walk": "underwear",
-    "auto_side_moufles_reflexion_front": "attack_front_hand_over",
-    "auto_side_moufles_reflexion_back": "hand_back"
+    "auto_side_war_underwear_walk": "underwear"
   },
   "offsets": {
     "cape_side": {
@@ -83,61 +83,45 @@
       "x": 0,
       "y": 0
     },
+    "arm_back_upper": {
+      "x": 0,
+      "y": 0
+    },
+    "arm_back_forearm": {
+      "x": 0,
+      "y": 0
+    },
     "hand_back": {
       "x": 0,
       "y": 0
     },
     "glove_back": {
-      "x": 210,
-      "y": 21
+      "x": 366,
+      "y": 80
     },
     "head": {
       "x": 0,
       "y": 0
     },
-    "attack_front_shoulder_over": {
+    "arm_front_upper": {
       "x": -1,
       "y": 0
     },
-    "attack_front_forearm_over": {
+    "arm_front_forearm": {
       "x": -1,
       "y": 0
     },
-    "attack_front_hand_over": {
+    "hand_front": {
       "x": -1,
-      "y": 0
-    },
-    "attack_front_arm": {
-      "x": 0,
       "y": 0
     },
     "glove_front": {
-      "x": 33,
-      "y": 76
+      "x": -402,
+      "y": 85
     },
     "auto_side_axe": {
-      "x": 340,
-      "y": -61
-    },
-    "auto_side_ceinture_test": {
-      "x": -3,
-      "y": 128
-    },
-    "auto_side_tiny_helmet": {
-      "x": 1,
-      "y": -233
-    },
-    "auto_side_war_underwear_walk": {
-      "x": 5,
-      "y": 132
-    },
-    "auto_side_moufles_reflexion_back": {
-      "x": 75.047,
-      "y": -70.32
-    },
-    "auto_side_moufles_reflexion_front": {
-      "x": 222.317,
-      "y": -14.186
+      "x": 0,
+      "y": 142
     },
     "auto_side_cape_quart_heure_profil_bas": {
       "x": -214,
@@ -146,6 +130,26 @@
     "auto_side_cape_quart_heure_profil_haut": {
       "x": -202,
       "y": 111
+    },
+    "auto_side_ceinture_test": {
+      "x": -3,
+      "y": 128
+    },
+    "auto_side_moufles_reflexion_back": {
+      "x": 231.047,
+      "y": -11.32
+    },
+    "auto_side_moufles_reflexion_front": {
+      "x": -212.683,
+      "y": -5.186
+    },
+    "auto_side_tiny_helmet": {
+      "x": 1,
+      "y": -233
+    },
+    "auto_side_war_underwear_walk": {
+      "x": 5,
+      "y": 132
     }
   },
   "sizeAdjustments": {
@@ -194,37 +198,42 @@
       "scaleY": 1,
       "rotation": 0
     },
+    "arm_back_upper": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
+    "arm_back_forearm": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
     "hand_back": {
       "scaleX": 1,
       "scaleY": 1,
       "rotation": 0
     },
     "glove_back": {
-      "scaleX": 1.3300000000000003,
-      "scaleY": 1.3300000000000003,
-      "rotation": -58
+      "scaleX": 1.1500000000000001,
+      "scaleY": 1.1500000000000001,
+      "rotation": 4
     },
     "head": {
       "scaleX": 1,
       "scaleY": 1,
       "rotation": 0
     },
-    "attack_front_shoulder_over": {
+    "arm_front_upper": {
       "scaleX": 1,
       "scaleY": 1,
       "rotation": 0
     },
-    "attack_front_forearm_over": {
+    "arm_front_forearm": {
       "scaleX": 1,
       "scaleY": 1,
       "rotation": 0
     },
-    "attack_front_hand_over": {
-      "scaleX": 1,
-      "scaleY": 1,
-      "rotation": 0
-    },
-    "attack_front_arm": {
+    "hand_front": {
       "scaleX": 1,
       "scaleY": 1,
       "rotation": 0
@@ -232,37 +241,12 @@
     "glove_front": {
       "scaleX": 1.2700000000000002,
       "scaleY": 1.3300000000000003,
-      "rotation": -202
+      "rotation": -8
     },
     "auto_side_axe": {
-      "scaleX": 0.5799999999999996,
-      "scaleY": 0.6099999999999997,
-      "rotation": -34
-    },
-    "auto_side_ceinture_test": {
-      "scaleX": 1.2400000000000002,
-      "scaleY": 0.7599999999999998,
-      "rotation": 0
-    },
-    "auto_side_tiny_helmet": {
-      "scaleX": 1.03,
-      "scaleY": 0.8499999999999999,
-      "rotation": -4
-    },
-    "auto_side_war_underwear_walk": {
       "scaleX": 1,
       "scaleY": 1,
       "rotation": 0
-    },
-    "auto_side_moufles_reflexion_back": {
-      "scaleX": 0.15,
-      "scaleY": 0.15,
-      "rotation": -66
-    },
-    "auto_side_moufles_reflexion_front": {
-      "scaleX": 0.126,
-      "scaleY": 0.126,
-      "rotation": -18
     },
     "auto_side_cape_quart_heure_profil_bas": {
       "scaleX": 1,
@@ -273,6 +257,31 @@
       "scaleX": 1,
       "scaleY": 1,
       "rotation": 4
+    },
+    "auto_side_ceinture_test": {
+      "scaleX": 1.2400000000000002,
+      "scaleY": 0.7599999999999998,
+      "rotation": 0
+    },
+    "auto_side_moufles_reflexion_back": {
+      "scaleX": 0.13,
+      "scaleY": 0.13,
+      "rotation": -4
+    },
+    "auto_side_moufles_reflexion_front": {
+      "scaleX": 0.126,
+      "scaleY": 0.126,
+      "rotation": 176
+    },
+    "auto_side_tiny_helmet": {
+      "scaleX": 1.03,
+      "scaleY": 0.8499999999999999,
+      "rotation": -4
+    },
+    "auto_side_war_underwear_walk": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
     }
   },
   "poseAdjustments": [
@@ -301,19 +310,19 @@
       },
       "underwear": {
         "offset": {
-          "x": 0,
-          "y": 0
+          "x": -34.83610478437063,
+          "y": -23.389989516260357
         },
         "size": {
           "scaleX": 1,
           "scaleY": 1,
-          "rotation": 0
+          "rotation": -28
         }
       },
       "leg_back": {
         "offset": {
-          "x": -31,
-          "y": 6
+          "x": -24,
+          "y": -20
         },
         "size": {
           "scaleX": 1,
@@ -334,13 +343,13 @@
       },
       "leg_front": {
         "offset": {
-          "x": 35,
-          "y": 16
+          "x": 46,
+          "y": -24
         },
         "size": {
           "scaleX": 1,
           "scaleY": 1,
-          "rotation": 14
+          "rotation": 24
         }
       },
       "shoe_front": {
@@ -356,30 +365,8 @@
       },
       "belly": {
         "offset": {
-          "x": 0,
-          "y": 0
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0
-        }
-      },
-      "torso": {
-        "offset": {
-          "x": 0,
-          "y": 0
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0
-        }
-      },
-      "hand_back": {
-        "offset": {
-          "x": 114,
-          "y": 116
+          "x": -100.43497569348152,
+          "y": -22.492690220001805
         },
         "size": {
           "scaleX": 1,
@@ -387,32 +374,21 @@
           "rotation": -28
         }
       },
-      "glove_back": {
+      "torso": {
         "offset": {
-          "x": 0,
-          "y": 0
+          "x": -141.74847321863967,
+          "y": -12.19207839158696
         },
         "size": {
           "scaleX": 1,
           "scaleY": 1,
-          "rotation": 0
+          "rotation": -28
         }
       },
-      "head": {
+      "arm_back_upper": {
         "offset": {
-          "x": 0,
-          "y": 0
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0
-        }
-      },
-      "attack_front_shoulder_over": {
-        "offset": {
-          "x": -126,
-          "y": 73
+          "x": -129,
+          "y": -5
         },
         "size": {
           "scaleX": 1,
@@ -420,7 +396,29 @@
           "rotation": 2
         }
       },
-      "attack_front_forearm_over": {
+      "arm_back_forearm": {
+        "offset": {
+          "x": -129,
+          "y": -5
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 2
+        }
+      },
+      "hand_back": {
+        "offset": {
+          "x": -129,
+          "y": -5
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 2
+        }
+      },
+      "glove_back": {
         "offset": {
           "x": 0,
           "y": 0
@@ -431,51 +429,117 @@
           "rotation": 0
         }
       },
-      "attack_front_hand_over": {
+      "head": {
         "offset": {
-          "x": 0,
-          "y": 0
+          "x": -189.74689461144203,
+          "y": -2.283131731478761
         },
         "size": {
           "scaleX": 1,
           "scaleY": 1,
-          "rotation": 0
+          "rotation": -30
         }
       },
-      "attack_front_arm": {
+      "arm_front_upper": {
         "offset": {
-          "x": 0,
-          "y": 0
+          "x": -387.555852608137,
+          "y": 160.55093760588795
         },
         "size": {
           "scaleX": 1,
           "scaleY": 1,
-          "rotation": 0
+          "rotation": -164
+        }
+      },
+      "arm_front_forearm": {
+        "offset": {
+          "x": -387.555852608137,
+          "y": 160.55093760588795
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -164
+        }
+      },
+      "hand_front": {
+        "offset": {
+          "x": -387.555852608137,
+          "y": 160.55093760588795
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -164
         }
       },
       "glove_front": {
         "offset": {
-          "x": -35,
-          "y": -70
+          "x": 0,
+          "y": 0
         },
         "size": {
           "scaleX": 1,
           "scaleY": 1,
-          "rotation": -46
+          "rotation": 0
         }
       },
       "auto_side_axe": {
         "offset": {
-          "x": -80,
-          "y": -114
+          "x": -230,
+          "y": -59
+        },
+        "size": {
+          "scaleX": 0.5799999999999996,
+          "scaleY": 0.6099999999999997,
+          "rotation": 142
+        }
+      },
+      "auto_side_cape_quart_heure_profil_bas": {
+        "offset": {
+          "x": 0,
+          "y": 0
         },
         "size": {
           "scaleX": 1,
           "scaleY": 1,
-          "rotation": -40
+          "rotation": 0
+        }
+      },
+      "auto_side_cape_quart_heure_profil_haut": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
         }
       },
       "auto_side_ceinture_test": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_moufles_reflexion_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_moufles_reflexion_front": {
         "offset": {
           "x": 0,
           "y": 0
@@ -507,8 +571,10 @@
           "scaleY": 1,
           "rotation": 0
         }
-      },
-      "auto_side_moufles_reflexion_back": {
+      }
+    },
+    {
+      "cape_side": {
         "offset": {
           "x": 0,
           "y": 0
@@ -519,15 +585,202 @@
           "rotation": 0
         }
       },
-      "auto_side_moufles_reflexion_front": {
+      "cape_side_collar": {
         "offset": {
-          "x": -35,
-          "y": -70
+          "x": 0,
+          "y": 0
         },
         "size": {
           "scaleX": 1,
           "scaleY": 1,
-          "rotation": -46
+          "rotation": 0
+        }
+      },
+      "underwear": {
+        "offset": {
+          "x": 3.6743997450750996,
+          "y": -33.34225842555145
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "leg_back": {
+        "offset": {
+          "x": -24,
+          "y": -20
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -28
+        }
+      },
+      "shoe_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "leg_front": {
+        "offset": {
+          "x": 34,
+          "y": -3
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 24
+        }
+      },
+      "shoe_front": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "belly": {
+        "offset": {
+          "x": 3.6743997450752346,
+          "y": -33.34225842555139
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "torso": {
+        "offset": {
+          "x": 3.6743997450752204,
+          "y": -33.342258425551165
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "arm_back_upper": {
+        "offset": {
+          "x": 3,
+          "y": -62
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 22
+        }
+      },
+      "arm_back_forearm": {
+        "offset": {
+          "x": 3,
+          "y": -62
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 22
+        }
+      },
+      "hand_back": {
+        "offset": {
+          "x": 3,
+          "y": -62
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 22
+        }
+      },
+      "glove_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "head": {
+        "offset": {
+          "x": -6.031515481778754,
+          "y": -32.83405871334867
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -2
+        }
+      },
+      "arm_front_upper": {
+        "offset": {
+          "x": -286.60704588729266,
+          "y": 99.84029011101791
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -148
+        }
+      },
+      "arm_front_forearm": {
+        "offset": {
+          "x": -286.60704588729266,
+          "y": 99.84029011101791
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -148
+        }
+      },
+      "hand_front": {
+        "offset": {
+          "x": -286.60704588729266,
+          "y": 99.84029011101791
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -148
+        }
+      },
+      "glove_front": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_axe": {
+        "offset": {
+          "x": -230,
+          "y": -59
+        },
+        "size": {
+          "scaleX": 0.5799999999999996,
+          "scaleY": 0.6099999999999997,
+          "rotation": 142
         }
       },
       "auto_side_cape_quart_heure_profil_bas": {
@@ -551,153 +804,109 @@
           "scaleY": 1,
           "rotation": 0
         }
+      },
+      "auto_side_ceinture_test": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_moufles_reflexion_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_moufles_reflexion_front": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_tiny_helmet": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_war_underwear_walk": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
       }
     },
     {
       "cape_side": {
         "offset": {
-          "x": -91,
-          "y": 4
+          "x": 0,
+          "y": 0
         },
         "size": {
           "scaleX": 1,
           "scaleY": 1,
-          "rotation": -18
+          "rotation": 0
         }
       },
       "cape_side_collar": {
         "offset": {
-          "x": -83,
+          "x": 0,
           "y": 0
         },
         "size": {
           "scaleX": 1,
           "scaleY": 1,
-          "rotation": -18
+          "rotation": 0
         }
       },
       "underwear": {
         "offset": {
-          "x": 0,
-          "y": 0
+          "x": 16.247643396448936,
+          "y": -27.137383656571558
         },
         "size": {
           "scaleX": 1,
           "scaleY": 1,
-          "rotation": 0
+          "rotation": 10
         }
       },
       "leg_back": {
         "offset": {
-          "x": -31,
-          "y": 6
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": -28
-        }
-      },
-      "shoe_back": {
-        "offset": {
-          "x": 0,
-          "y": 0
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0
-        }
-      },
-      "leg_front": {
-        "offset": {
-          "x": 35,
-          "y": 16
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 14
-        }
-      },
-      "shoe_front": {
-        "offset": {
-          "x": 0,
-          "y": 0
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0
-        }
-      },
-      "belly": {
-        "offset": {
-          "x": -65,
-          "y": -12
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": -18
-        }
-      },
-      "torso": {
-        "offset": {
-          "x": 0,
-          "y": 0
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0
-        }
-      },
-      "hand_back": {
-        "offset": {
-          "x": 91,
-          "y": 116
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": -74
-        }
-      },
-      "glove_back": {
-        "offset": {
-          "x": 0,
-          "y": 0
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0
-        }
-      },
-      "head": {
-        "offset": {
-          "x": -125,
+          "x": 9,
           "y": -6
         },
         "size": {
           "scaleX": 1,
           "scaleY": 1,
-          "rotation": -20
+          "rotation": 2
         }
       },
-      "attack_front_shoulder_over": {
-        "offset": {
-          "x": -225,
-          "y": 79
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": -38
-        }
-      },
-      "attack_front_forearm_over": {
+      "shoe_back": {
         "offset": {
           "x": 0,
           "y": 0
@@ -708,7 +917,18 @@
           "rotation": 0
         }
       },
-      "attack_front_hand_over": {
+      "leg_front": {
+        "offset": {
+          "x": 34,
+          "y": -3
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 24
+        }
+      },
+      "shoe_front": {
         "offset": {
           "x": 0,
           "y": 0
@@ -719,7 +939,62 @@
           "rotation": 0
         }
       },
-      "attack_front_arm": {
+      "belly": {
+        "offset": {
+          "x": 38.69824319186229,
+          "y": -19.748913546508106
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 10
+        }
+      },
+      "torso": {
+        "offset": {
+          "x": 53.97928282655214,
+          "y": -18.411995811582244
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 10
+        }
+      },
+      "arm_back_upper": {
+        "offset": {
+          "x": 64,
+          "y": -62
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 26
+        }
+      },
+      "arm_back_forearm": {
+        "offset": {
+          "x": 64,
+          "y": -62
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 26
+        }
+      },
+      "hand_back": {
+        "offset": {
+          "x": 64,
+          "y": -62
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 26
+        }
+      },
+      "glove_back": {
         "offset": {
           "x": 0,
           "y": 0
@@ -728,31 +1003,119 @@
           "scaleX": 1,
           "scaleY": 1,
           "rotation": 0
+        }
+      },
+      "head": {
+        "offset": {
+          "x": 58.419802405962656,
+          "y": -16.614685256991265
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 8
+        }
+      },
+      "arm_front_upper": {
+        "offset": {
+          "x": -247.60969860784223,
+          "y": 120.81180891749398
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -148
+        }
+      },
+      "arm_front_forearm": {
+        "offset": {
+          "x": -247.60969860784223,
+          "y": 120.81180891749398
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -148
+        }
+      },
+      "hand_front": {
+        "offset": {
+          "x": -247.60969860784223,
+          "y": 120.81180891749398
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -148
         }
       },
       "glove_front": {
         "offset": {
-          "x": -35,
-          "y": -70
+          "x": 0,
+          "y": 0
         },
         "size": {
           "scaleX": 1,
           "scaleY": 1,
-          "rotation": -42
+          "rotation": 0
         }
       },
       "auto_side_axe": {
         "offset": {
-          "x": -77,
-          "y": -111
+          "x": -230,
+          "y": -59
+        },
+        "size": {
+          "scaleX": 0.5799999999999996,
+          "scaleY": 0.6099999999999997,
+          "rotation": 142
+        }
+      },
+      "auto_side_cape_quart_heure_profil_bas": {
+        "offset": {
+          "x": 0,
+          "y": 0
         },
         "size": {
           "scaleX": 1,
           "scaleY": 1,
-          "rotation": -44
+          "rotation": 0
+        }
+      },
+      "auto_side_cape_quart_heure_profil_haut": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
         }
       },
       "auto_side_ceinture_test": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_moufles_reflexion_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_moufles_reflexion_front": {
         "offset": {
           "x": 0,
           "y": 0
@@ -784,6 +1147,250 @@
           "scaleY": 1,
           "rotation": 0
         }
+      }
+    },
+    {
+      "cape_side": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "cape_side_collar": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "underwear": {
+        "offset": {
+          "x": 27.815145641501886,
+          "y": -26.914536732318652
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 22
+        }
+      },
+      "leg_back": {
+        "offset": {
+          "x": 9,
+          "y": -21
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 8
+        }
+      },
+      "shoe_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "leg_front": {
+        "offset": {
+          "x": 34,
+          "y": -3
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 24
+        }
+      },
+      "shoe_front": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "belly": {
+        "offset": {
+          "x": 75.00591546397283,
+          "y": -5.6900011392413035
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 22
+        }
+      },
+      "torso": {
+        "offset": {
+          "x": 107.97129568457297,
+          "y": 0.7178196588811261
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 22
+        }
+      },
+      "arm_back_upper": {
+        "offset": {
+          "x": 134,
+          "y": -58
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 32
+        }
+      },
+      "arm_back_forearm": {
+        "offset": {
+          "x": 134,
+          "y": -58
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 32
+        }
+      },
+      "hand_back": {
+        "offset": {
+          "x": 134,
+          "y": -58
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 32
+        }
+      },
+      "glove_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "head": {
+        "offset": {
+          "x": 128.77133203524963,
+          "y": 7.270104247497784
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 20
+        }
+      },
+      "arm_front_upper": {
+        "offset": {
+          "x": -212.37093243252428,
+          "y": 89.91923856897967
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -140
+        }
+      },
+      "arm_front_forearm": {
+        "offset": {
+          "x": -212.37093243252428,
+          "y": 89.91923856897967
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -140
+        }
+      },
+      "hand_front": {
+        "offset": {
+          "x": -212.37093243252428,
+          "y": 89.91923856897967
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": -140
+        }
+      },
+      "glove_front": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_axe": {
+        "offset": {
+          "x": -230,
+          "y": -59
+        },
+        "size": {
+          "scaleX": 0.5799999999999996,
+          "scaleY": 0.6099999999999997,
+          "rotation": 142
+        }
+      },
+      "auto_side_cape_quart_heure_profil_bas": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_cape_quart_heure_profil_haut": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_ceinture_test": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
       },
       "auto_side_moufles_reflexion_back": {
         "offset": {
@@ -798,35 +1405,35 @@
       },
       "auto_side_moufles_reflexion_front": {
         "offset": {
-          "x": -35,
-          "y": -70
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": -42
-        }
-      },
-      "auto_side_cape_quart_heure_profil_bas": {
-        "offset": {
-          "x": -91,
-          "y": 4
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": -18
-        }
-      },
-      "auto_side_cape_quart_heure_profil_haut": {
-        "offset": {
-          "x": -83,
+          "x": 0,
           "y": 0
         },
         "size": {
           "scaleX": 1,
           "scaleY": 1,
-          "rotation": -18
+          "rotation": 0
+        }
+      },
+      "auto_side_tiny_helmet": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_war_underwear_walk": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
         }
       }
     },
@@ -855,24 +1462,24 @@
       },
       "underwear": {
         "offset": {
-          "x": 0,
-          "y": 0
+          "x": 27.815145641501886,
+          "y": -26.914536732318652
         },
         "size": {
           "scaleX": 1,
           "scaleY": 1,
-          "rotation": 0
+          "rotation": 22
         }
       },
       "leg_back": {
         "offset": {
-          "x": -31,
-          "y": 6
+          "x": 9,
+          "y": -21
         },
         "size": {
           "scaleX": 1,
           "scaleY": 1,
-          "rotation": -28
+          "rotation": 8
         }
       },
       "shoe_back": {
@@ -888,8 +1495,52 @@
       },
       "leg_front": {
         "offset": {
-          "x": 35,
-          "y": 16
+          "x": 34,
+          "y": -3
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 24
+        }
+      },
+      "shoe_front": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "belly": {
+        "offset": {
+          "x": 75.00591546397283,
+          "y": -5.6900011392413035
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 22
+        }
+      },
+      "torso": {
+        "offset": {
+          "x": 107.97129568457297,
+          "y": 0.7178196588811261
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 22
+        }
+      },
+      "arm_back_upper": {
+        "offset": {
+          "x": 91,
+          "y": -8
         },
         "size": {
           "scaleX": 1,
@@ -897,48 +1548,26 @@
           "rotation": 14
         }
       },
-      "shoe_front": {
+      "arm_back_forearm": {
         "offset": {
-          "x": 0,
-          "y": 0
+          "x": 91,
+          "y": -8
         },
         "size": {
           "scaleX": 1,
           "scaleY": 1,
-          "rotation": 0
-        }
-      },
-      "belly": {
-        "offset": {
-          "x": 0,
-          "y": 0
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0
-        }
-      },
-      "torso": {
-        "offset": {
-          "x": 0,
-          "y": 0
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0
+          "rotation": 14
         }
       },
       "hand_back": {
         "offset": {
-          "x": 114,
-          "y": 116
+          "x": 91,
+          "y": -8
         },
         "size": {
           "scaleX": 1,
           "scaleY": 1,
-          "rotation": -28
+          "rotation": 14
         }
       },
       "glove_back": {
@@ -954,74 +1583,85 @@
       },
       "head": {
         "offset": {
-          "x": 0,
-          "y": 0
+          "x": 128.77133203524963,
+          "y": 7.270104247497784
         },
         "size": {
           "scaleX": 1,
           "scaleY": 1,
-          "rotation": 0
+          "rotation": 20
         }
       },
-      "attack_front_shoulder_over": {
+      "arm_front_upper": {
         "offset": {
-          "x": -145,
-          "y": 77
+          "x": -209.37093243252428,
+          "y": 123.91923856897967
         },
         "size": {
           "scaleX": 1,
           "scaleY": 1,
-          "rotation": -38
+          "rotation": -150
         }
       },
-      "attack_front_forearm_over": {
+      "arm_front_forearm": {
         "offset": {
-          "x": 0,
-          "y": 0
+          "x": -209.37093243252428,
+          "y": 123.91923856897967
         },
         "size": {
           "scaleX": 1,
           "scaleY": 1,
-          "rotation": 0
+          "rotation": -150
         }
       },
-      "attack_front_hand_over": {
+      "hand_front": {
         "offset": {
-          "x": 0,
-          "y": 0
+          "x": -209.37093243252428,
+          "y": 123.91923856897967
         },
         "size": {
           "scaleX": 1,
           "scaleY": 1,
-          "rotation": 0
-        }
-      },
-      "attack_front_arm": {
-        "offset": {
-          "x": -124,
-          "y": 114
-        },
-        "size": {
-          "scaleX": 1.06,
-          "scaleY": 1.06,
-          "rotation": -22
+          "rotation": -150
         }
       },
       "glove_front": {
         "offset": {
-          "x": 7,
-          "y": -84
+          "x": 0,
+          "y": 0
         },
         "size": {
           "scaleX": 1,
           "scaleY": 1,
-          "rotation": -16
+          "rotation": 0
         }
       },
       "auto_side_axe": {
         "offset": {
-          "x": -2,
-          "y": -99
+          "x": -230,
+          "y": -59
+        },
+        "size": {
+          "scaleX": 0.5799999999999996,
+          "scaleY": 0.6099999999999997,
+          "rotation": 142
+        }
+      },
+      "auto_side_cape_quart_heure_profil_bas": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_cape_quart_heure_profil_haut": {
+        "offset": {
+          "x": 0,
+          "y": 0
         },
         "size": {
           "scaleX": 1,
@@ -1030,6 +1670,28 @@
         }
       },
       "auto_side_ceinture_test": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_moufles_reflexion_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_moufles_reflexion_front": {
         "offset": {
           "x": 0,
           "y": 0
@@ -1061,466 +1723,36 @@
           "scaleY": 1,
           "rotation": 0
         }
-      },
-      "auto_side_moufles_reflexion_back": {
-        "offset": {
-          "x": 0,
-          "y": 0
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0
-        }
-      },
-      "auto_side_moufles_reflexion_front": {
-        "offset": {
-          "x": 7,
-          "y": -84
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": -16
-        }
-      },
-      "auto_side_cape_quart_heure_profil_bas": {
-        "offset": {
-          "x": 0,
-          "y": 0
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0
-        }
-      },
-      "auto_side_cape_quart_heure_profil_haut": {
-        "offset": {
-          "x": 0,
-          "y": 0
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0
-        }
       }
-    },
-    {
-      "cape_side": {
-        "offset": {
-          "x": 81,
-          "y": -4
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 26
-        }
-      },
-      "cape_side_collar": {
-        "offset": {
-          "x": 83,
-          "y": -4
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 26
-        }
-      },
-      "underwear": {
-        "offset": {
-          "x": 0,
-          "y": 0
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0
-        }
-      },
-      "leg_back": {
-        "offset": {
-          "x": 8,
-          "y": -23
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 20
-        }
-      },
-      "shoe_back": {
-        "offset": {
-          "x": 0,
-          "y": 0
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0
-        }
-      },
-      "leg_front": {
-        "offset": {
-          "x": 35,
-          "y": 12
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 26
-        }
-      },
-      "shoe_front": {
-        "offset": {
-          "x": 0,
-          "y": 0
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0
-        }
-      },
-      "belly": {
-        "offset": {
-          "x": 69,
-          "y": 0
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 20
-        }
-      },
-      "torso": {
-        "offset": {
-          "x": 0,
-          "y": 0
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0
-        }
-      },
-      "hand_back": {
-        "offset": {
-          "x": 94,
-          "y": 85
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 208
-        }
-      },
-      "glove_back": {
-        "offset": {
-          "x": 0,
-          "y": 0
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0
-        }
-      },
-      "head": {
-        "offset": {
-          "x": 120,
-          "y": 9
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 18
-        }
-      },
-      "attack_front_shoulder_over": {
-        "offset": {
-          "x": -145,
-          "y": 77
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": -38
-        }
-      },
-      "attack_front_forearm_over": {
-        "offset": {
-          "x": 0,
-          "y": 0
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0
-        }
-      },
-      "attack_front_hand_over": {
-        "offset": {
-          "x": 0,
-          "y": 0
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0
-        }
-      },
-      "attack_front_arm": {
-        "offset": {
-          "x": -49,
-          "y": 103
-        },
-        "size": {
-          "scaleX": 1.06,
-          "scaleY": 1.06,
-          "rotation": 16
-        }
-      },
-      "glove_front": {
-        "offset": {
-          "x": 9,
-          "y": -87
-        },
-        "size": {
-          "scaleX": 1.03,
-          "scaleY": 1.03,
-          "rotation": -12
-        }
-      },
-      "auto_side_axe": {
-        "offset": {
-          "x": 9,
-          "y": -93
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": -8
-        }
-      },
-      "auto_side_ceinture_test": {
-        "offset": {
-          "x": 0,
-          "y": 0
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0
-        }
-      },
-      "auto_side_tiny_helmet": {
-        "offset": {
-          "x": 0,
-          "y": 0
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0
-        }
-      },
-      "auto_side_war_underwear_walk": {
-        "offset": {
-          "x": 0,
-          "y": 0
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0
-        }
-      },
-      "auto_side_moufles_reflexion_back": {
-        "offset": {
-          "x": 0,
-          "y": 0
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0
-        }
-      },
-      "auto_side_moufles_reflexion_front": {
-        "offset": {
-          "x": 9,
-          "y": -87
-        },
-        "size": {
-          "scaleX": 1.03,
-          "scaleY": 1.03,
-          "rotation": -12
-        }
-      },
-      "auto_side_cape_quart_heure_profil_bas": {
-        "offset": {
-          "x": 81,
-          "y": -4
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 26
-        }
-      },
-      "auto_side_cape_quart_heure_profil_haut": {
-        "offset": {
-          "x": 83,
-          "y": -4
-        },
-        "size": {
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 26
-        }
-      }
-    }
-  ],
-  "poseVisibility": [
-    {
-      "cape_side": true,
-      "cape_side_collar": true,
-      "underwear": true,
-      "leg_back": true,
-      "shoe_back": true,
-      "leg_front": true,
-      "shoe_front": true,
-      "belly": true,
-      "torso": true,
-      "hand_back": true,
-      "glove_back": true,
-      "head": true,
-      "attack_front_shoulder_over": true,
-      "attack_front_forearm_over": true,
-      "attack_front_hand_over": true,
-      "attack_front_arm": false,
-      "glove_front": true,
-      "auto_side_axe": true,
-      "auto_side_ceinture_test": true,
-      "auto_side_tiny_helmet": true,
-      "auto_side_war_underwear_walk": true,
-      "auto_side_moufles_reflexion_back": true,
-      "auto_side_moufles_reflexion_front": true,
-      "auto_side_cape_quart_heure_profil_bas": true,
-      "auto_side_cape_quart_heure_profil_haut": true
-    },
-    {
-      "cape_side": true,
-      "cape_side_collar": true,
-      "underwear": true,
-      "leg_back": true,
-      "shoe_back": true,
-      "leg_front": true,
-      "shoe_front": true,
-      "belly": true,
-      "torso": true,
-      "hand_back": true,
-      "glove_back": true,
-      "head": true,
-      "attack_front_shoulder_over": true,
-      "attack_front_forearm_over": true,
-      "attack_front_hand_over": true,
-      "attack_front_arm": false,
-      "glove_front": true,
-      "auto_side_axe": true,
-      "auto_side_ceinture_test": true,
-      "auto_side_tiny_helmet": true,
-      "auto_side_war_underwear_walk": true,
-      "auto_side_moufles_reflexion_back": true,
-      "auto_side_moufles_reflexion_front": true,
-      "auto_side_cape_quart_heure_profil_bas": true,
-      "auto_side_cape_quart_heure_profil_haut": true
-    },
-    {
-      "cape_side": true,
-      "cape_side_collar": true,
-      "underwear": true,
-      "leg_back": true,
-      "shoe_back": true,
-      "leg_front": true,
-      "shoe_front": true,
-      "belly": true,
-      "torso": true,
-      "hand_back": true,
-      "glove_back": true,
-      "head": true,
-      "attack_front_shoulder_over": false,
-      "attack_front_forearm_over": false,
-      "attack_front_hand_over": false,
-      "attack_front_arm": true,
-      "glove_front": true,
-      "auto_side_axe": true,
-      "auto_side_ceinture_test": true,
-      "auto_side_tiny_helmet": true,
-      "auto_side_war_underwear_walk": true,
-      "auto_side_moufles_reflexion_back": true,
-      "auto_side_moufles_reflexion_front": true,
-      "auto_side_cape_quart_heure_profil_bas": true,
-      "auto_side_cape_quart_heure_profil_haut": true
-    },
-    {
-      "cape_side": true,
-      "cape_side_collar": true,
-      "underwear": true,
-      "leg_back": true,
-      "shoe_back": true,
-      "leg_front": true,
-      "shoe_front": true,
-      "belly": true,
-      "torso": true,
-      "hand_back": true,
-      "glove_back": true,
-      "head": true,
-      "attack_front_shoulder_over": false,
-      "attack_front_forearm_over": false,
-      "attack_front_hand_over": false,
-      "attack_front_arm": true,
-      "glove_front": true,
-      "auto_side_axe": true,
-      "auto_side_ceinture_test": true,
-      "auto_side_tiny_helmet": true,
-      "auto_side_war_underwear_walk": true,
-      "auto_side_moufles_reflexion_back": true,
-      "auto_side_moufles_reflexion_front": true,
-      "auto_side_cape_quart_heure_profil_bas": true,
-      "auto_side_cape_quart_heure_profil_haut": true
     }
   ],
   "visibility": {
-    "cape_side": true,
-    "cape_side_collar": true,
+    "cape_side": false,
+    "cape_side_collar": false,
     "underwear": true,
     "leg_back": true,
-    "shoe_back": true,
+    "shoe_back": false,
     "leg_front": true,
-    "shoe_front": true,
+    "shoe_front": false,
     "belly": true,
     "torso": true,
+    "arm_back_upper": true,
+    "arm_back_forearm": true,
     "hand_back": true,
-    "glove_back": true,
+    "glove_back": false,
     "head": true,
-    "attack_front_shoulder_over": true,
-    "attack_front_forearm_over": true,
-    "attack_front_hand_over": true,
-    "attack_front_arm": true,
-    "glove_front": true,
-    "auto_side_axe": true,
-    "auto_side_ceinture_test": true,
-    "auto_side_tiny_helmet": true,
-    "auto_side_war_underwear_walk": true,
-    "auto_side_moufles_reflexion_back": true,
-    "auto_side_moufles_reflexion_front": true,
-    "auto_side_cape_quart_heure_profil_bas": true,
-    "auto_side_cape_quart_heure_profil_haut": true
+    "arm_front_upper": true,
+    "arm_front_forearm": true,
+    "hand_front": true,
+    "glove_front": false,
+    "auto_side_axe": false,
+    "auto_side_cape_quart_heure_profil_bas": false,
+    "auto_side_cape_quart_heure_profil_haut": false,
+    "auto_side_ceinture_test": false,
+    "auto_side_moufles_reflexion_back": false,
+    "auto_side_moufles_reflexion_front": false,
+    "auto_side_tiny_helmet": false,
+    "auto_side_war_underwear_walk": false
   },
   "stuffAdjustments": {
     "cape_side": {
@@ -1533,7 +1765,7 @@
         "scaleY": 1.1500000000000001,
         "rotation": 0
       },
-      "visible": true
+      "visible": false
     },
     "cape_side_collar": {
       "offset": {
@@ -1545,7 +1777,7 @@
         "scaleY": 1,
         "rotation": 0
       },
-      "visible": true
+      "visible": false
     },
     "shoe_back": {
       "offset": {
@@ -1557,7 +1789,7 @@
         "scaleY": 1.4800000000000004,
         "rotation": 36
       },
-      "visible": true
+      "visible": false
     },
     "shoe_front": {
       "offset": {
@@ -1569,103 +1801,43 @@
         "scaleY": 1.5700000000000005,
         "rotation": -34
       },
-      "visible": true
+      "visible": false
     },
     "glove_back": {
       "offset": {
-        "x": 210,
-        "y": 21
+        "x": 366,
+        "y": 80
       },
       "size": {
-        "scaleX": 1.3300000000000003,
-        "scaleY": 1.3300000000000003,
-        "rotation": -58
+        "scaleX": 1.1500000000000001,
+        "scaleY": 1.1500000000000001,
+        "rotation": 4
       },
-      "visible": true
+      "visible": false
     },
     "glove_front": {
       "offset": {
-        "x": 33,
-        "y": 76
+        "x": -402,
+        "y": 85
       },
       "size": {
         "scaleX": 1.2700000000000002,
         "scaleY": 1.3300000000000003,
-        "rotation": -202
+        "rotation": -8
       },
-      "visible": true
+      "visible": false
     },
     "auto_side_axe": {
       "offset": {
-        "x": 340,
-        "y": -61
-      },
-      "size": {
-        "scaleX": 0.5799999999999996,
-        "scaleY": 0.6099999999999997,
-        "rotation": -34
-      },
-      "visible": true
-    },
-    "auto_side_ceinture_test": {
-      "offset": {
-        "x": -3,
-        "y": 128
-      },
-      "size": {
-        "scaleX": 1.2400000000000002,
-        "scaleY": 0.7599999999999998,
-        "rotation": 0
-      },
-      "visible": true
-    },
-    "auto_side_tiny_helmet": {
-      "offset": {
-        "x": 1,
-        "y": -233
-      },
-      "size": {
-        "scaleX": 1.03,
-        "scaleY": 0.8499999999999999,
-        "rotation": -4
-      },
-      "visible": true
-    },
-    "auto_side_war_underwear_walk": {
-      "offset": {
-        "x": 5,
-        "y": 132
+        "x": 0,
+        "y": 142
       },
       "size": {
         "scaleX": 1,
         "scaleY": 1,
         "rotation": 0
       },
-      "visible": true
-    },
-    "auto_side_moufles_reflexion_back": {
-      "offset": {
-        "x": 75.047,
-        "y": -70.32
-      },
-      "size": {
-        "scaleX": 0.15,
-        "scaleY": 0.15,
-        "rotation": -66
-      },
-      "visible": true
-    },
-    "auto_side_moufles_reflexion_front": {
-      "offset": {
-        "x": 222.317,
-        "y": -14.186
-      },
-      "size": {
-        "scaleX": 0.126,
-        "scaleY": 0.126,
-        "rotation": -18
-      },
-      "visible": true
+      "visible": false
     },
     "auto_side_cape_quart_heure_profil_bas": {
       "offset": {
@@ -1677,7 +1849,7 @@
         "scaleY": 1,
         "rotation": 6
       },
-      "visible": true
+      "visible": false
     },
     "auto_side_cape_quart_heure_profil_haut": {
       "offset": {
@@ -1689,7 +1861,67 @@
         "scaleY": 1,
         "rotation": 4
       },
-      "visible": true
+      "visible": false
+    },
+    "auto_side_ceinture_test": {
+      "offset": {
+        "x": -3,
+        "y": 128
+      },
+      "size": {
+        "scaleX": 1.2400000000000002,
+        "scaleY": 0.7599999999999998,
+        "rotation": 0
+      },
+      "visible": false
+    },
+    "auto_side_moufles_reflexion_back": {
+      "offset": {
+        "x": 231.047,
+        "y": -11.32
+      },
+      "size": {
+        "scaleX": 0.13,
+        "scaleY": 0.13,
+        "rotation": -4
+      },
+      "visible": false
+    },
+    "auto_side_moufles_reflexion_front": {
+      "offset": {
+        "x": -212.683,
+        "y": -5.186
+      },
+      "size": {
+        "scaleX": 0.126,
+        "scaleY": 0.126,
+        "rotation": 176
+      },
+      "visible": false
+    },
+    "auto_side_tiny_helmet": {
+      "offset": {
+        "x": 1,
+        "y": -233
+      },
+      "size": {
+        "scaleX": 1.03,
+        "scaleY": 0.8499999999999999,
+        "rotation": -4
+      },
+      "visible": false
+    },
+    "auto_side_war_underwear_walk": {
+      "offset": {
+        "x": 5,
+        "y": 132
+      },
+      "size": {
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      },
+      "visible": false
     }
   }
 }

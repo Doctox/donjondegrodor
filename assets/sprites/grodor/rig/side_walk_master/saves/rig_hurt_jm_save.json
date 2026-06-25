@@ -11,6 +11,7 @@
     "hurt_arm_back_forearm",
     "hurt_hand_back",
     "glove_back",
+    "auto_side_moufles_reflexion_back",
     "torso",
     "belly",
     "leg_back",
@@ -25,11 +26,14 @@
     "auto_side_war_underwear_walk",
     "auto_side_axe",
     "glove_front",
+    "auto_side_moufles_reflexion_front",
     "cape_side_collar",
+    "auto_side_cape_quart_heure_profil_haut",
     "head",
     "hurt_head",
     "auto_side_tiny_helmet",
     "cape_side",
+    "auto_side_cape_quart_heure_profil_bas",
     "hurt_emote",
     "hurt_emote_star_mid",
     "hurt_emote_star_small",
@@ -42,7 +46,9 @@
     "shoe_front": "leg_front",
     "auto_side_tiny_helmet": "head",
     "auto_side_ceinture_test": "underwear",
-    "auto_side_war_underwear_walk": "underwear"
+    "auto_side_war_underwear_walk": "underwear",
+    "auto_side_moufles_reflexion_front": "hurt_hand_front",
+    "auto_side_moufles_reflexion_back": "hurt_hand_back"
   },
   "offsets": {
     "cape_side": {
@@ -152,6 +158,22 @@
     "auto_side_war_underwear_walk": {
       "x": 6,
       "y": 132
+    },
+    "auto_side_moufles_reflexion_back": {
+      "x": 265.047,
+      "y": -17.32
+    },
+    "auto_side_moufles_reflexion_front": {
+      "x": 86.317,
+      "y": -9.186
+    },
+    "auto_side_cape_quart_heure_profil_bas": {
+      "x": -243,
+      "y": 132
+    },
+    "auto_side_cape_quart_heure_profil_haut": {
+      "x": -227,
+      "y": 105
     }
   },
   "sizeAdjustments": {
@@ -289,6 +311,26 @@
       "scaleX": 1,
       "scaleY": 1,
       "rotation": -2
+    },
+    "auto_side_moufles_reflexion_back": {
+      "scaleX": 0.127,
+      "scaleY": 0.13,
+      "rotation": -48
+    },
+    "auto_side_moufles_reflexion_front": {
+      "scaleX": 0.114,
+      "scaleY": 0.115,
+      "rotation": -208
+    },
+    "auto_side_cape_quart_heure_profil_bas": {
+      "scaleX": 0.847,
+      "scaleY": 0.739,
+      "rotation": -20
+    },
+    "auto_side_cape_quart_heure_profil_haut": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": -20
     }
   },
   "poseAdjustments": [
@@ -589,6 +631,50 @@
           "scaleY": 1,
           "rotation": 0
         }
+      },
+      "auto_side_moufles_reflexion_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_moufles_reflexion_front": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_cape_quart_heure_profil_bas": {
+        "offset": {
+          "x": 39,
+          "y": -15
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1.3000000000000003,
+          "rotation": 20
+        }
+      },
+      "auto_side_cape_quart_heure_profil_haut": {
+        "offset": {
+          "x": 36,
+          "y": -8
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 18
+        }
       }
     },
     {
@@ -879,6 +965,50 @@
         }
       },
       "auto_side_war_underwear_walk": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_moufles_reflexion_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_moufles_reflexion_front": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_cape_quart_heure_profil_bas": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_cape_quart_heure_profil_haut": {
         "offset": {
           "x": 0,
           "y": 0
@@ -1187,6 +1317,50 @@
           "scaleY": 1,
           "rotation": 0
         }
+      },
+      "auto_side_moufles_reflexion_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_moufles_reflexion_front": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_cape_quart_heure_profil_bas": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_cape_quart_heure_profil_haut": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
       }
     },
     {
@@ -1486,6 +1660,50 @@
           "scaleY": 1,
           "rotation": 0
         }
+      },
+      "auto_side_moufles_reflexion_back": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_moufles_reflexion_front": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_cape_quart_heure_profil_bas": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "auto_side_cape_quart_heure_profil_haut": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
       }
     }
   ],
@@ -1517,7 +1735,11 @@
       "auto_side_axe": true,
       "auto_side_ceinture_test": false,
       "auto_side_tiny_helmet": true,
-      "auto_side_war_underwear_walk": true
+      "auto_side_war_underwear_walk": true,
+      "auto_side_moufles_reflexion_back": true,
+      "auto_side_moufles_reflexion_front": true,
+      "auto_side_cape_quart_heure_profil_bas": true,
+      "auto_side_cape_quart_heure_profil_haut": true
     },
     {
       "cape_side": true,
@@ -1546,7 +1768,11 @@
       "auto_side_axe": true,
       "auto_side_ceinture_test": false,
       "auto_side_tiny_helmet": true,
-      "auto_side_war_underwear_walk": true
+      "auto_side_war_underwear_walk": true,
+      "auto_side_moufles_reflexion_back": true,
+      "auto_side_moufles_reflexion_front": true,
+      "auto_side_cape_quart_heure_profil_bas": true,
+      "auto_side_cape_quart_heure_profil_haut": true
     },
     {
       "cape_side": true,
@@ -1575,7 +1801,11 @@
       "auto_side_axe": true,
       "auto_side_ceinture_test": false,
       "auto_side_tiny_helmet": true,
-      "auto_side_war_underwear_walk": true
+      "auto_side_war_underwear_walk": true,
+      "auto_side_moufles_reflexion_back": true,
+      "auto_side_moufles_reflexion_front": true,
+      "auto_side_cape_quart_heure_profil_bas": true,
+      "auto_side_cape_quart_heure_profil_haut": true
     },
     {
       "cape_side": true,
@@ -1604,7 +1834,11 @@
       "auto_side_axe": true,
       "auto_side_ceinture_test": false,
       "auto_side_tiny_helmet": true,
-      "auto_side_war_underwear_walk": true
+      "auto_side_war_underwear_walk": true,
+      "auto_side_moufles_reflexion_back": true,
+      "auto_side_moufles_reflexion_front": true,
+      "auto_side_cape_quart_heure_profil_bas": true,
+      "auto_side_cape_quart_heure_profil_haut": true
     }
   ],
   "visibility": {
@@ -1634,7 +1868,11 @@
     "auto_side_axe": true,
     "auto_side_ceinture_test": false,
     "auto_side_tiny_helmet": true,
-    "auto_side_war_underwear_walk": true
+    "auto_side_war_underwear_walk": true,
+    "auto_side_moufles_reflexion_back": true,
+    "auto_side_moufles_reflexion_front": true,
+    "auto_side_cape_quart_heure_profil_bas": true,
+    "auto_side_cape_quart_heure_profil_haut": true
   },
   "stuffAdjustments": {
     "cape_side": {
@@ -1754,6 +1992,54 @@
         "scaleX": 1,
         "scaleY": 1,
         "rotation": -2
+      },
+      "visible": true
+    },
+    "auto_side_moufles_reflexion_back": {
+      "offset": {
+        "x": 265.047,
+        "y": -17.32
+      },
+      "size": {
+        "scaleX": 0.127,
+        "scaleY": 0.13,
+        "rotation": -48
+      },
+      "visible": true
+    },
+    "auto_side_moufles_reflexion_front": {
+      "offset": {
+        "x": 86.317,
+        "y": -9.186
+      },
+      "size": {
+        "scaleX": 0.114,
+        "scaleY": 0.115,
+        "rotation": -208
+      },
+      "visible": true
+    },
+    "auto_side_cape_quart_heure_profil_bas": {
+      "offset": {
+        "x": -243,
+        "y": 132
+      },
+      "size": {
+        "scaleX": 0.847,
+        "scaleY": 0.739,
+        "rotation": -20
+      },
+      "visible": true
+    },
+    "auto_side_cape_quart_heure_profil_haut": {
+      "offset": {
+        "x": -227,
+        "y": 105
+      },
+      "size": {
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": -20
       },
       "visible": true
     }
