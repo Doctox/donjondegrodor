@@ -47,6 +47,17 @@ export const IMAGE_ASSETS = {
   villagePouchFull: { key: "village-pouch-full", path: assetPath("/assets/village/ui/villagePouchFull.png") },
   villageInventoryEmpty: { key: "village-inventory-empty", path: assetPath("/assets/village/ui/villageInventoryEmpty.png") },
   villageInventoryFull: { key: "village-inventory-full", path: assetPath("/assets/village/ui/villageInventoryFull.png") },
+  villageBird1: { key: "village-bird-1", path: assetPath("/assets/village/animation/oiseau/bird_1.png") },
+  villageBird2: { key: "village-bird-2", path: assetPath("/assets/village/animation/oiseau/bird_2.png") },
+  villageBird3: { key: "village-bird-3", path: assetPath("/assets/village/animation/oiseau/bird_3.png") },
+  villageBird4: { key: "village-bird-4", path: assetPath("/assets/village/animation/oiseau/bird_4.png") },
+  villageBird5: { key: "village-bird-5", path: assetPath("/assets/village/animation/oiseau/bird_5.png") },
+  villageFisher1: { key: "village-fisher-1", path: assetPath("/assets/village/animation/pecheur/pecheur_1.png") },
+  villageFisher2: { key: "village-fisher-2", path: assetPath("/assets/village/animation/pecheur/pecheur_2.png") },
+  villageFisher3: { key: "village-fisher-3", path: assetPath("/assets/village/animation/pecheur/pecheur_3.png") },
+  villageFisher4: { key: "village-fisher-4", path: assetPath("/assets/village/animation/pecheur/pechaur_4.png") },
+  villageFisher5: { key: "village-fisher-5", path: assetPath("/assets/village/animation/pecheur/pecheur_5.png") },
+  villageSmoke: { key: "village-smoke", path: assetPath("/assets/village/animation/smoke.png") },
   bankBackground: { key: "bank-background", path: assetPath("/assets/village/bank/bank_background.webp") },
   bankDepositPanelEmpty: { key: "bank-deposit-panel-empty", path: assetPath("/assets/village/bank/bank_deposit_panel_empty.png") },
   bankMoneyStatusPanelEmpty: {
@@ -778,6 +789,8 @@ export const INVENTORY_ITEM_ASSETS = {
 export const JSON_ASSETS = {
   dungeonMap: { key: "dungeon-map", path: assetPath("/assets/tiled/dungeon/dungeon_map.json") },
   villageMap: { key: "village-map", path: assetPath("/assets/village/village_map.json") },
+  villageAnimScene: { key: "village-anim-scene", path: assetPath("/assets/anim/village/saves/village_anim_scene_jm_save.json") },
+  villageBirdRig: { key: "village-bird-rig", path: assetPath("/assets/anim/village/bird/saves/bird_jm_save.json") },
   tavernMap: { key: "tavern-map", path: assetPath("/assets/village/tavern/tavern_grodor.json") },
   jumpRunnerSegment: { key: "jump-runner-segment", path: assetPath("/assets/minigames/jump/runner_segment_01.json") },
   jumpRunnerSegment02: { key: "jump-runner-segment-02", path: assetPath("/assets/minigames/jump/runner_segment_02.json") },
@@ -895,6 +908,19 @@ const VILLAGE_HUD_IMAGES = imageAssetsByKey(
   "villageInventoryEmpty",
   "villageInventoryFull"
 );
+const VILLAGE_AMBIENT_IMAGES = imageAssetsByKey(
+  "villageBird1",
+  "villageBird2",
+  "villageBird3",
+  "villageBird4",
+  "villageBird5",
+  "villageFisher1",
+  "villageFisher2",
+  "villageFisher3",
+  "villageFisher4",
+  "villageFisher5",
+  "villageSmoke"
+);
 
 export const INTRO_PRELOAD_IMAGES = [IMAGE_ASSETS.introBackground, IMAGE_ASSETS.introLogo];
 export const CELL_PRELOAD_IMAGES = [
@@ -922,12 +948,14 @@ export const VILLAGE_PRELOAD_IMAGES = [
   IMAGE_ASSETS.frameStory,
   IMAGE_ASSETS.gold,
   ...VILLAGE_HUD_IMAGES,
+  ...VILLAGE_AMBIENT_IMAGES,
   ...INVENTORY_PANEL_IMAGES,
   ...GRODOR_ACTOR_IMAGES,
   ...Object.values(INVENTORY_ITEM_ASSETS),
   ...imageAssetsByPrefix("bank", "shop", "passive", "lootChestRarity")
 ];
 export const VILLAGE_PRELOAD_JSON = [JSON_ASSETS.villageMap];
+export const VILLAGE_PRELOAD_DATA_JSON = [JSON_ASSETS.villageAnimScene, JSON_ASSETS.villageBirdRig];
 export const TAVERN_PRELOAD_IMAGES = [IMAGE_ASSETS.tavernBackground, IMAGE_ASSETS.tavernDrinkBeer, IMAGE_ASSETS.frameStory, ...GRODOR_ACTOR_IMAGES];
 export const TAVERN_PRELOAD_JSON = [JSON_ASSETS.tavernMap];
 export const COMBAT_PRELOAD_IMAGES = [

@@ -17,6 +17,14 @@ export function preloadTilemaps(scene: Phaser.Scene, assets: AssetDefinition[]):
   });
 }
 
+export function preloadJson(scene: Phaser.Scene, assets: AssetDefinition[]): void {
+  uniqueAssets(assets).forEach((asset) => {
+    if (!scene.cache.json.exists(asset.key)) {
+      scene.load.json(asset.key, asset.path);
+    }
+  });
+}
+
 function uniqueAssets(assets: AssetDefinition[]): AssetDefinition[] {
   const seen = new Set<string>();
   return assets.filter((asset) => {

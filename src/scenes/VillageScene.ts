@@ -7,6 +7,7 @@ import {
   IMAGE_ASSETS,
   INVENTORY_ITEM_ASSETS,
   JSON_ASSETS,
+  VILLAGE_PRELOAD_DATA_JSON,
   VILLAGE_PRELOAD_IMAGES,
   VILLAGE_PRELOAD_JSON,
   WORLD_HEIGHT,
@@ -63,9 +64,10 @@ import {
 import { getPermanentUpgrades } from "../systems/permanentUpgrades";
 import { playZoneMusic } from "../systems/audioManager";
 import { playSfx } from "../systems/sfxManager";
-import { preloadImages, preloadTilemaps } from "../systems/scenePreload";
+import { preloadImages, preloadJson, preloadTilemaps } from "../systems/scenePreload";
 import { getInteractiveZones, getPathObjectNames, getPathPoints, getSpawnPoint, TiledPoint, TiledZone } from "../systems/tiledMap";
 import { markVillageDiscovered } from "../systems/villageDiscovery";
+import { VillageBirdFlock } from "../fx/VillageBirdFlock";
 import { setLetterboxBackdrop } from "../ui/letterboxBackdrop";
 import { createNineSlicePanel } from "../ui/nineSlicePanel";
 import { setHudVisible } from "../ui/hud";
@@ -258,6 +260,7 @@ export class VillageScene extends Phaser.Scene {
   private debugMenu?: DungeonDebugMenu;
   private shopPanel?: VillageShopPanel;
   private itemDescriptionBubble?: Phaser.GameObjects.Container;
+  private birdFlock?: VillageBirdFlock;
   private readonly importedCarriedShopItems = new Set<string>();
   private readonly zones = new Map<VillageBuildingId, Phaser.GameObjects.Zone>();
 
@@ -268,6 +271,7 @@ export class VillageScene extends Phaser.Scene {
   preload(): void {
     preloadImages(this, VILLAGE_PRELOAD_IMAGES);
     preloadTilemaps(this, VILLAGE_PRELOAD_JSON);
+    preloadJson(this, VILLAGE_PRELOAD_DATA_JSON);
     preloadRiggedGrodorActorAssets(this);
     preloadRiggedGrodorAccessoryAssets(this);
   }
@@ -291,6 +295,8 @@ export class VillageScene extends Phaser.Scene {
     this.currentLocation = this.fromDungeon ? "dungeon" : this.fromTavern ? "tavern" : DEFAULT_VILLAGE_LOCATION;
     this.map = this.make.tilemap({ key: JSON_ASSETS.villageMap.key });
     this.add.image(0, 0, IMAGE_ASSETS.villageBackground.key).setOrigin(0).setDisplaySize(WORLD_WIDTH, WORLD_HEIGHT);
+    this.birdFlock = new VillageBirdFlock(this);
+    this.birdFlock.create();
     this.cameras.main.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
     this.createVillageHudOverlays();
 
@@ -334,6 +340,7 @@ export class VillageScene extends Phaser.Scene {
     }
     this.inventoryPanel?.destroy();
     this.itemDescriptionBubble?.destroy();
+    this.birdFlock?.destroy();
     this.grodorAccessories?.destroy();
     this.grodor?.destroy();
     this.map = undefined;
@@ -359,6 +366,7 @@ export class VillageScene extends Phaser.Scene {
     this.debugMenu = undefined;
     this.shopPanel = undefined;
     this.itemDescriptionBubble = undefined;
+    this.birdFlock = undefined;
     this.importedCarriedShopItems.clear();
     this.zones.clear();
   }
