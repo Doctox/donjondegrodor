@@ -1,0 +1,391 @@
+{
+  "version": 1,
+  "selected": "button_feuille",
+  "selectedGroup": [],
+  "animationEnabled": true,
+  "lockedPose": null,
+  "layerOrder": [
+    "background",
+    "grodor_anim",
+    "boss_anim",
+    "grodor_caillou",
+    "grodor_feuille",
+    "grodor_hache",
+    "boss_caillou",
+    "boss_feuille",
+    "boss_hache",
+    "grodor_win",
+    "grodor_hurt",
+    "rat_ko",
+    "rat_victoire",
+    "button_caillou",
+    "button_feuille",
+    "button_hache"
+  ],
+  "offsets": {
+    "background": {
+      "x": 0,
+      "y": 0
+    },
+    "grodor_anim": {
+      "x": 110,
+      "y": 140
+    },
+    "boss_anim": {
+      "x": -160,
+      "y": 18
+    },
+    "grodor_caillou": {
+      "x": 428,
+      "y": -332
+    },
+    "grodor_feuille": {
+      "x": 284,
+      "y": -320
+    },
+    "grodor_hache": {
+      "x": 170,
+      "y": -320
+    },
+    "boss_caillou": {
+      "x": -212,
+      "y": -332
+    },
+    "boss_feuille": {
+      "x": -350,
+      "y": -320
+    },
+    "boss_hache": {
+      "x": -518,
+      "y": -320
+    },
+    "button_caillou": {
+      "x": -520,
+      "y": -620
+    },
+    "button_feuille": {
+      "x": -680,
+      "y": -366
+    },
+    "button_hache": {
+      "x": -840,
+      "y": -110
+    },
+    "grodor_win": {
+      "x": 100,
+      "y": 150
+    },
+    "grodor_hurt": {
+      "x": 210,
+      "y": 184
+    },
+    "rat_ko": {
+      "x": -240,
+      "y": -26
+    },
+    "rat_victoire": {
+      "x": -216,
+      "y": 18
+    }
+  },
+  "sizes": {
+    "background": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
+    "grodor_anim": {
+      "scaleX": 2.469999999999998,
+      "scaleY": 2.3799999999999986,
+      "rotation": 1
+    },
+    "boss_anim": {
+      "scaleX": 1.4500000000000004,
+      "scaleY": 1.4200000000000004,
+      "rotation": 0
+    },
+    "grodor_caillou": {
+      "scaleX": 0.8199999999999998,
+      "scaleY": 0.7899999999999998,
+      "rotation": 0
+    },
+    "grodor_feuille": {
+      "scaleX": 0.7599999999999998,
+      "scaleY": 0.7299999999999998,
+      "rotation": 0
+    },
+    "grodor_hache": {
+      "scaleX": 0.7599999999999998,
+      "scaleY": 0.8199999999999998,
+      "rotation": -5
+    },
+    "boss_caillou": {
+      "scaleX": 0.8199999999999998,
+      "scaleY": 0.7899999999999998,
+      "rotation": 0
+    },
+    "boss_feuille": {
+      "scaleX": 0.7299999999999998,
+      "scaleY": 0.7299999999999998,
+      "rotation": 0
+    },
+    "boss_hache": {
+      "scaleX": 0.7599999999999998,
+      "scaleY": 0.7599999999999998,
+      "rotation": 6
+    },
+    "button_caillou": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
+    "button_feuille": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
+    "button_hache": {
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotation": 0
+    },
+    "grodor_win": {
+      "scaleX": 1.9300000000000008,
+      "scaleY": 1.9300000000000008,
+      "rotation": 0
+    },
+    "grodor_hurt": {
+      "scaleX": 2.6799999999999966,
+      "scaleY": 2.7099999999999964,
+      "rotation": -43
+    },
+    "rat_ko": {
+      "scaleX": 1.3000000000000003,
+      "scaleY": 1.4800000000000004,
+      "rotation": 0
+    },
+    "rat_victoire": {
+      "scaleX": 1.09,
+      "scaleY": 0.7599999999999998,
+      "rotation": 0
+    }
+  },
+  "poseAdjustments": [
+    {
+      "background": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "grodor_anim": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "boss_anim": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "grodor_caillou": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "grodor_feuille": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "grodor_hache": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "boss_caillou": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "boss_feuille": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "boss_hache": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "button_caillou": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "button_feuille": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "button_hache": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "grodor_win": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "grodor_hurt": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "rat_ko": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      },
+      "rat_victoire": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "size": {
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0
+        }
+      }
+    }
+  ],
+  "visibility": {
+    "background": true,
+    "grodor_anim": true,
+    "boss_anim": true,
+    "grodor_caillou": true,
+    "grodor_feuille": true,
+    "grodor_hache": true,
+    "boss_caillou": true,
+    "boss_feuille": true,
+    "boss_hache": true,
+    "button_caillou": true,
+    "button_feuille": true,
+    "button_hache": true,
+    "grodor_win": false,
+    "grodor_hurt": false,
+    "rat_ko": false,
+    "rat_victoire": true
+  },
+  "poseVisibility": [
+    {
+      "background": true,
+      "grodor_anim": true,
+      "boss_anim": true,
+      "grodor_caillou": true,
+      "grodor_feuille": true,
+      "grodor_hache": true,
+      "boss_caillou": true,
+      "boss_feuille": true,
+      "boss_hache": true,
+      "button_caillou": true,
+      "button_feuille": true,
+      "button_hache": true,
+      "grodor_win": true,
+      "grodor_hurt": true,
+      "rat_ko": true,
+      "rat_victoire": true
+    }
+  ]
+}
