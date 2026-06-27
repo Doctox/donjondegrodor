@@ -1,0 +1,657 @@
+{
+  "version": 1,
+  "name": "Village vivant",
+  "type": "terrain",
+  "template": {
+    "kind": "terrainRig",
+    "label": "Terrain",
+    "description": "Scene village ambient reconstruite avec actorRefs Oiseau/Pecheur et fumees terrain."
+  },
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": {
+      "type": "grid",
+      "color": "#15181c",
+      "gridColor": "#2d3740",
+      "gridSize": 48
+    }
+  },
+  "frames": 1,
+  "selectedFrame": 0,
+  "selectedLayerId": "bird_2",
+  "layerOrder": [
+    "village_background",
+    "bird_1",
+    "bird_2",
+    "bird_3",
+    "bird_4",
+    "bird_5",
+    "bird_6",
+    "bird_7",
+    "fisher",
+    "nouvelle_toile_sans_nom_3",
+    "smoke_2",
+    "smoke_3",
+    "smoke_4",
+    "smoke_5"
+  ],
+  "layers": {
+    "village_background": {
+      "id": "village_background",
+      "label": "Village background",
+      "width": 1920,
+      "height": 1080,
+      "sourceLayerId": "village_background",
+      "locked": true,
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/village/village_background.png",
+        "assetKey": "village.ambient.background"
+      },
+      "assetPath": "projects/grodor/assets/village/village_background.png",
+      "assetKey": "village.ambient.background"
+    },
+    "bird_1": {
+      "id": "bird_1",
+      "label": "Actor: Oiseau 1",
+      "width": 317,
+      "height": 321,
+      "opacity": 1,
+      "actorRef": {
+        "type": "documentActor",
+        "actorDocumentId": "village-oiseau",
+        "actorPath": "/projects/grodor/documents/actors/village-oiseau.json",
+        "actorId": "village_oiseau",
+        "actorFamily": "villageActor",
+        "actorType": "frameAnimation",
+        "frameCount": 5,
+        "frameSequence": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          3,
+          2,
+          1
+        ],
+        "defaultScale": 1,
+        "origin": {
+          "x": 960,
+          "y": 540
+        },
+        "pivot": {
+          "x": 0,
+          "y": 0
+        },
+        "bounds": {
+          "x": 801.5,
+          "y": 379.5,
+          "width": 317,
+          "height": 321
+        },
+        "playback": "timeline",
+        "pausedFrame": 0,
+        "frameOffset": 0
+      }
+    },
+    "bird_2": {
+      "id": "bird_2",
+      "label": "Actor: Oiseau 2",
+      "width": 317,
+      "height": 321,
+      "opacity": 1,
+      "actorRef": {
+        "type": "documentActor",
+        "actorDocumentId": "village-oiseau",
+        "actorPath": "/projects/grodor/documents/actors/village-oiseau.json",
+        "actorId": "village_oiseau",
+        "actorFamily": "villageActor",
+        "actorType": "frameAnimation",
+        "frameCount": 5,
+        "frameSequence": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          3,
+          2,
+          1
+        ],
+        "defaultScale": 1,
+        "origin": {
+          "x": 960,
+          "y": 540
+        },
+        "pivot": {
+          "x": 0,
+          "y": 0
+        },
+        "bounds": {
+          "x": 801.5,
+          "y": 379.5,
+          "width": 317,
+          "height": 321
+        },
+        "playback": "timeline",
+        "pausedFrame": 0,
+        "frameOffset": 1
+      }
+    },
+    "bird_3": {
+      "id": "bird_3",
+      "label": "Actor: Oiseau 3",
+      "width": 317,
+      "height": 321,
+      "opacity": 1,
+      "actorRef": {
+        "type": "documentActor",
+        "actorDocumentId": "village-oiseau",
+        "actorPath": "/projects/grodor/documents/actors/village-oiseau.json",
+        "actorId": "village_oiseau",
+        "actorFamily": "villageActor",
+        "actorType": "frameAnimation",
+        "frameCount": 5,
+        "frameSequence": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          3,
+          2,
+          1
+        ],
+        "defaultScale": 1,
+        "origin": {
+          "x": 960,
+          "y": 540
+        },
+        "pivot": {
+          "x": 0,
+          "y": 0
+        },
+        "bounds": {
+          "x": 801.5,
+          "y": 379.5,
+          "width": 317,
+          "height": 321
+        },
+        "playback": "timeline",
+        "pausedFrame": 0,
+        "frameOffset": 2
+      }
+    },
+    "bird_4": {
+      "id": "bird_4",
+      "label": "Actor: Oiseau 4",
+      "width": 317,
+      "height": 321,
+      "opacity": 1,
+      "actorRef": {
+        "type": "documentActor",
+        "actorDocumentId": "village-oiseau",
+        "actorPath": "/projects/grodor/documents/actors/village-oiseau.json",
+        "actorId": "village_oiseau",
+        "actorFamily": "villageActor",
+        "actorType": "frameAnimation",
+        "frameCount": 5,
+        "frameSequence": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          3,
+          2,
+          1
+        ],
+        "defaultScale": 1,
+        "origin": {
+          "x": 960,
+          "y": 540
+        },
+        "pivot": {
+          "x": 0,
+          "y": 0
+        },
+        "bounds": {
+          "x": 801.5,
+          "y": 379.5,
+          "width": 317,
+          "height": 321
+        },
+        "playback": "timeline",
+        "pausedFrame": 0,
+        "frameOffset": 3
+      }
+    },
+    "bird_5": {
+      "id": "bird_5",
+      "label": "Actor: Oiseau 5",
+      "width": 317,
+      "height": 321,
+      "opacity": 1,
+      "actorRef": {
+        "type": "documentActor",
+        "actorDocumentId": "village-oiseau",
+        "actorPath": "/projects/grodor/documents/actors/village-oiseau.json",
+        "actorId": "village_oiseau",
+        "actorFamily": "villageActor",
+        "actorType": "frameAnimation",
+        "frameCount": 5,
+        "frameSequence": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          3,
+          2,
+          1
+        ],
+        "defaultScale": 1,
+        "origin": {
+          "x": 960,
+          "y": 540
+        },
+        "pivot": {
+          "x": 0,
+          "y": 0
+        },
+        "bounds": {
+          "x": 801.5,
+          "y": 379.5,
+          "width": 317,
+          "height": 321
+        },
+        "playback": "timeline",
+        "pausedFrame": 0,
+        "frameOffset": 4
+      }
+    },
+    "bird_6": {
+      "id": "bird_6",
+      "label": "Actor: Oiseau 6",
+      "width": 317,
+      "height": 321,
+      "opacity": 1,
+      "actorRef": {
+        "type": "documentActor",
+        "actorDocumentId": "village-oiseau",
+        "actorPath": "/projects/grodor/documents/actors/village-oiseau.json",
+        "actorId": "village_oiseau",
+        "actorFamily": "villageActor",
+        "actorType": "frameAnimation",
+        "frameCount": 5,
+        "frameSequence": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          3,
+          2,
+          1
+        ],
+        "defaultScale": 1,
+        "origin": {
+          "x": 960,
+          "y": 540
+        },
+        "pivot": {
+          "x": 0,
+          "y": 0
+        },
+        "bounds": {
+          "x": 801.5,
+          "y": 379.5,
+          "width": 317,
+          "height": 321
+        },
+        "playback": "timeline",
+        "pausedFrame": 0,
+        "frameOffset": 5
+      }
+    },
+    "bird_7": {
+      "id": "bird_7",
+      "label": "Actor: Oiseau 7",
+      "width": 317,
+      "height": 321,
+      "opacity": 1,
+      "actorRef": {
+        "type": "documentActor",
+        "actorDocumentId": "village-oiseau",
+        "actorPath": "/projects/grodor/documents/actors/village-oiseau.json",
+        "actorId": "village_oiseau",
+        "actorFamily": "villageActor",
+        "actorType": "frameAnimation",
+        "frameCount": 5,
+        "frameSequence": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          3,
+          2,
+          1
+        ],
+        "defaultScale": 1,
+        "origin": {
+          "x": 960,
+          "y": 540
+        },
+        "pivot": {
+          "x": 0,
+          "y": 0
+        },
+        "bounds": {
+          "x": 801.5,
+          "y": 379.5,
+          "width": 317,
+          "height": 321
+        },
+        "playback": "timeline",
+        "pausedFrame": 0,
+        "frameOffset": 6
+      }
+    },
+    "fisher": {
+      "id": "fisher",
+      "label": "Actor: Pecheur",
+      "width": 331,
+      "height": 649,
+      "opacity": 1,
+      "actorRef": {
+        "type": "documentActor",
+        "actorDocumentId": "village-pecheur",
+        "actorPath": "/projects/grodor/documents/actors/village-pecheur.json",
+        "actorId": "village_pecheur",
+        "actorFamily": "villageActor",
+        "actorType": "frameAnimation",
+        "frameCount": 5,
+        "frameSequence": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          0
+        ],
+        "defaultScale": 1,
+        "origin": {
+          "x": 960,
+          "y": 540
+        },
+        "pivot": {
+          "x": 0,
+          "y": 0
+        },
+        "bounds": {
+          "x": 794.5,
+          "y": 295.5,
+          "width": 331,
+          "height": 649
+        },
+        "playback": "timeline",
+        "pausedFrame": 0,
+        "frameOffset": 0
+      }
+    },
+    "smoke_2": {
+      "id": "smoke_2",
+      "label": "Fumee 2",
+      "width": 342,
+      "height": 602,
+      "sourceLayerId": "smoke_2",
+      "opacity": 0.45,
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/village/animation/smoke.png",
+        "assetKey": "village.ambient.smoke"
+      },
+      "assetPath": "projects/grodor/assets/village/animation/smoke.png",
+      "assetKey": "village.ambient.smoke"
+    },
+    "smoke_3": {
+      "id": "smoke_3",
+      "label": "Fumee 3",
+      "width": 342,
+      "height": 602,
+      "sourceLayerId": "smoke_3",
+      "opacity": 0.38,
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/village/animation/smoke.png",
+        "assetKey": "village.ambient.smoke"
+      },
+      "assetPath": "projects/grodor/assets/village/animation/smoke.png",
+      "assetKey": "village.ambient.smoke"
+    },
+    "smoke_4": {
+      "id": "smoke_4",
+      "label": "Fumee 4",
+      "width": 342,
+      "height": 602,
+      "sourceLayerId": "smoke_4",
+      "opacity": 0.42,
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/village/animation/smoke.png",
+        "assetKey": "village.ambient.smoke"
+      },
+      "assetPath": "projects/grodor/assets/village/animation/smoke.png",
+      "assetKey": "village.ambient.smoke"
+    },
+    "smoke_5": {
+      "id": "smoke_5",
+      "label": "Fumee 5",
+      "width": 342,
+      "height": 602,
+      "sourceLayerId": "smoke_5",
+      "opacity": 0.36,
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/village/animation/smoke.png",
+        "assetKey": "village.ambient.smoke"
+      },
+      "assetPath": "projects/grodor/assets/village/animation/smoke.png",
+      "assetKey": "village.ambient.smoke"
+    },
+    "nouvelle_toile_sans_nom_3": {
+      "id": "nouvelle_toile_sans_nom_3",
+      "label": "Jongleur",
+      "width": 398,
+      "height": 925,
+      "actorRef": {
+        "type": "documentActor",
+        "actorDocumentId": "nouvelle-toile-sans-nom-3",
+        "actorPath": "/projects/grodor/documents/created/nouvelle-toile-sans-nom-3.json",
+        "actorId": "nouvelle_toile_sans_nom_3",
+        "actorFamily": "villageActor",
+        "actorType": "frameAnimation",
+        "frameCount": 4,
+        "frameSequence": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "defaultScale": 1,
+        "origin": {
+          "x": 960,
+          "y": 540
+        },
+        "bounds": {
+          "x": 761,
+          "y": 77.5,
+          "width": 398,
+          "height": 925
+        },
+        "playback": "timeline",
+        "pausedFrame": 0,
+        "frameOffset": 0
+      }
+    }
+  },
+  "layerGroups": {},
+  "actor": {
+    "schema": "doctoxVillageAmbientScene.v1",
+    "sceneId": "village_ambient_scene",
+    "usage": "village_ambient",
+    "sourceProject": "Donjon de Grodor",
+    "sourcePreset": "public/assets/anim/village/saves/village_anim_scene_jm_save.json",
+    "sourceRuntime": "VillageBirdFlock",
+    "sourceRenderMethod": "Oiseaux/Pecheur sont des documentActor instances; fumees restent des layers PNG avec opacity du save.",
+    "actorRefs": {
+      "birds": "village-oiseau",
+      "fisher": "village-pecheur"
+    },
+    "birdInstances": [
+      "bird_1",
+      "bird_2",
+      "bird_3",
+      "bird_4",
+      "bird_5",
+      "bird_6",
+      "bird_7"
+    ],
+    "smokeLayers": [
+      "smoke_2",
+      "smoke_3",
+      "smoke_4",
+      "smoke_5"
+    ],
+    "sourceIssues": [
+      "Le runtime village anime aussi le vol des oiseaux et les boucles de fumees par tweens; ce document garde le placement/preview, pas le runtime jeu.",
+      "Les oiseaux utilisent l'actor Oiseau en plusieurs instances avec frameOffset par instance.",
+      "Les fumees restent des PNG terrain avec opacity; elles ne sont pas des actors."
+    ],
+    "importReady": true
+  },
+  "transforms": {
+    "0": {
+      "village_background": {
+        "x": 960,
+        "y": 540,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      },
+      "bird_1": {
+        "x": 1842,
+        "y": 64,
+        "scaleX": -0.2418,
+        "scaleY": 0.3822,
+        "rotation": 0
+      },
+      "bird_2": {
+        "x": 1848,
+        "y": 219,
+        "scaleX": -0.195,
+        "scaleY": 0.312,
+        "rotation": 0
+      },
+      "bird_3": {
+        "x": 1468,
+        "y": 86,
+        "scaleX": -0.1716,
+        "scaleY": 0.2652,
+        "rotation": 0
+      },
+      "bird_4": {
+        "x": 1727,
+        "y": 137,
+        "scaleX": -0.2106,
+        "scaleY": 0.3276,
+        "rotation": 0
+      },
+      "bird_5": {
+        "x": 1624,
+        "y": 50,
+        "scaleX": -0.156,
+        "scaleY": 0.2496,
+        "rotation": 0
+      },
+      "bird_6": {
+        "x": 1573,
+        "y": 209,
+        "scaleX": -0.1794,
+        "scaleY": 0.2808,
+        "rotation": 0
+      },
+      "bird_7": {
+        "x": 1592,
+        "y": 148,
+        "scaleX": -0.1404,
+        "scaleY": 0.2184,
+        "rotation": 0
+      },
+      "fisher": {
+        "x": 96,
+        "y": 638.8,
+        "scaleX": 0.29,
+        "scaleY": 0.29,
+        "rotation": 0
+      },
+      "nouvelle_toile_sans_nom_3": {
+        "x": 721,
+        "y": 487,
+        "scaleX": 0.15999999999999936,
+        "scaleY": 0.15999999999999936,
+        "rotation": 0
+      },
+      "smoke_2": {
+        "x": 1014,
+        "y": 294,
+        "scaleX": 0.12,
+        "scaleY": 0.12,
+        "rotation": 0
+      },
+      "smoke_3": {
+        "x": 1426,
+        "y": 318,
+        "scaleX": 0.1,
+        "scaleY": 0.1,
+        "rotation": 0
+      },
+      "smoke_4": {
+        "x": 1272,
+        "y": 268,
+        "scaleX": 0.11,
+        "scaleY": 0.11,
+        "rotation": 0
+      },
+      "smoke_5": {
+        "x": 1852,
+        "y": 398,
+        "scaleX": -0.1,
+        "scaleY": 0.1,
+        "rotation": 0
+      }
+    }
+  },
+  "visibility": {
+    "0": {
+      "village_background": true,
+      "bird_1": true,
+      "bird_2": true,
+      "bird_3": true,
+      "bird_4": true,
+      "bird_5": true,
+      "bird_6": true,
+      "bird_7": true,
+      "fisher": true,
+      "nouvelle_toile_sans_nom_3": true,
+      "smoke_2": true,
+      "smoke_3": true,
+      "smoke_4": true,
+      "smoke_5": true
+    }
+  },
+  "exportTarget": "generic"
+}

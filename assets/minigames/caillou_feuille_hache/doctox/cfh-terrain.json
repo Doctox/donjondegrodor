@@ -1,0 +1,598 @@
+{
+  "version": 1,
+  "name": "Caillou Feuille Hache - Terrain",
+  "type": "terrain",
+  "template": {
+    "kind": "terrainRig",
+    "label": "Terrain animation",
+    "description": "Terrain CFH reconstruit avec actors documentActor Grodor/Rat et layers de resultat separes."
+  },
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": {
+      "type": "grid",
+      "color": "#15181c",
+      "gridColor": "#2d3740",
+      "gridSize": 48
+    }
+  },
+  "frames": 1,
+  "selectedFrame": 0,
+  "selectedLayerId": "grodor_anim",
+  "layerOrder": [
+    "background",
+    "grodor_anim",
+    "boss_anim",
+    "grodor_caillou",
+    "grodor_feuille",
+    "grodor_hache",
+    "boss_caillou",
+    "boss_feuille",
+    "boss_hache",
+    "grodor_win",
+    "grodor_hurt",
+    "rat_ko",
+    "rat_victoire",
+    "button_caillou",
+    "button_feuille",
+    "button_hache"
+  ],
+  "layers": {
+    "background": {
+      "id": "background",
+      "label": "Background",
+      "sourceLayerId": "background",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/caillou_feuille_hache/terrain/background.png",
+        "assetKey": "cfh.terrain.background"
+      },
+      "assetPath": "projects/grodor/assets/minigames/caillou_feuille_hache/terrain/background.png",
+      "assetKey": "cfh.terrain.background",
+      "width": 1920,
+      "height": 1080
+    },
+    "grodor_anim": {
+      "id": "grodor_anim",
+      "label": "Actor: Grodor CFH",
+      "actorRef": {
+        "type": "documentActor",
+        "actorDocumentId": "grodor-cfh",
+        "actorPath": "/projects/grodor/documents/grodor-cfh-side.json",
+        "actorId": "grodor_cfh",
+        "actorFamily": "grodorActor",
+        "actorType": "miniGameActor",
+        "frameCount": 6,
+        "frameSequence": [
+          0,
+          1,
+          0,
+          1,
+          0,
+          2
+        ],
+        "defaultScale": 0.82,
+        "origin": {
+          "x": 960,
+          "y": 900
+        },
+        "pivot": {
+          "x": 261,
+          "y": 767
+        },
+        "bounds": {
+          "x": 617.014,
+          "y": 253.02,
+          "width": 641.993,
+          "height": 707.046
+        },
+        "playback": "timeline",
+        "pausedFrame": 0,
+        "frameOffset": 0,
+        "stuffVisibility": {
+          "cape_side": false,
+          "cape_side_collar": false,
+          "shoe_back": false,
+          "shoe_front": false,
+          "glove_back": false,
+          "glove_front": false,
+          "auto_side_axe": false,
+          "auto_side_cape_quart_heure_profil_bas": false,
+          "auto_side_cape_quart_heure_profil_haut": false,
+          "auto_side_ceinture_test": false,
+          "auto_side_moufles_reflexion_back": false,
+          "auto_side_moufles_reflexion_front": false,
+          "auto_side_tiny_helmet": false,
+          "auto_side_war_underwear_walk": false
+        }
+      },
+      "width": 642,
+      "height": 707
+    },
+    "boss_anim": {
+      "id": "boss_anim",
+      "label": "Actor: Rat CFH",
+      "actorRef": {
+        "type": "documentActor",
+        "actorDocumentId": "enemy-rat-cfh",
+        "actorPath": "/projects/grodor/documents/actors/enemy-rat-cfh.json",
+        "actorId": "rat_cfh",
+        "actorFamily": "enemyActor",
+        "actorType": "miniGameActor",
+        "frameCount": 3,
+        "frameSequence": [
+          0,
+          1,
+          0,
+          1,
+          0,
+          2
+        ],
+        "defaultScale": 1,
+        "origin": {
+          "x": 960,
+          "y": 620
+        },
+        "pivot": {
+          "x": 0,
+          "y": 0
+        },
+        "bounds": {
+          "x": 687.325,
+          "y": 295.997,
+          "width": 447.176,
+          "height": 648.005
+        },
+        "playback": "timeline",
+        "pausedFrame": 0,
+        "frameOffset": 0,
+        "stuffVisibility": {}
+      },
+      "width": 447,
+      "height": 648
+    },
+    "grodor_caillou": {
+      "id": "grodor_caillou",
+      "label": "Grodor choix caillou",
+      "sourceLayerId": "grodor_caillou",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/caillou_feuille_hache/objet/caillou.png",
+        "assetKey": "cfh.terrain.grodor_caillou"
+      },
+      "assetPath": "projects/grodor/assets/minigames/caillou_feuille_hache/objet/caillou.png",
+      "assetKey": "cfh.terrain.grodor_caillou",
+      "width": 527,
+      "height": 533
+    },
+    "grodor_feuille": {
+      "id": "grodor_feuille",
+      "label": "Grodor choix feuille",
+      "sourceLayerId": "grodor_feuille",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/caillou_feuille_hache/objet/feuille.png",
+        "assetKey": "cfh.terrain.grodor_feuille"
+      },
+      "assetPath": "projects/grodor/assets/minigames/caillou_feuille_hache/objet/feuille.png",
+      "assetKey": "cfh.terrain.grodor_feuille",
+      "width": 300,
+      "height": 849
+    },
+    "grodor_hache": {
+      "id": "grodor_hache",
+      "label": "Grodor choix hache",
+      "sourceLayerId": "grodor_hache",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/caillou_feuille_hache/objet/axe.png",
+        "assetKey": "cfh.terrain.grodor_hache"
+      },
+      "assetPath": "projects/grodor/assets/minigames/caillou_feuille_hache/objet/axe.png",
+      "assetKey": "cfh.terrain.grodor_hache",
+      "width": 157,
+      "height": 309
+    },
+    "boss_caillou": {
+      "id": "boss_caillou",
+      "label": "Rat choix caillou",
+      "sourceLayerId": "boss_caillou",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/caillou_feuille_hache/objet/caillou.png",
+        "assetKey": "cfh.terrain.boss_caillou"
+      },
+      "assetPath": "projects/grodor/assets/minigames/caillou_feuille_hache/objet/caillou.png",
+      "assetKey": "cfh.terrain.boss_caillou",
+      "width": 527,
+      "height": 533
+    },
+    "boss_feuille": {
+      "id": "boss_feuille",
+      "label": "Rat choix feuille",
+      "sourceLayerId": "boss_feuille",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/caillou_feuille_hache/objet/feuille.png",
+        "assetKey": "cfh.terrain.boss_feuille"
+      },
+      "assetPath": "projects/grodor/assets/minigames/caillou_feuille_hache/objet/feuille.png",
+      "assetKey": "cfh.terrain.boss_feuille",
+      "width": 300,
+      "height": 849
+    },
+    "boss_hache": {
+      "id": "boss_hache",
+      "label": "Rat choix hache",
+      "sourceLayerId": "boss_hache",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/caillou_feuille_hache/objet/axe.png",
+        "assetKey": "cfh.terrain.boss_hache"
+      },
+      "assetPath": "projects/grodor/assets/minigames/caillou_feuille_hache/objet/axe.png",
+      "assetKey": "cfh.terrain.boss_hache",
+      "width": 157,
+      "height": 309
+    },
+    "grodor_win": {
+      "id": "grodor_win",
+      "label": "Actor: Grodor Victory resultat",
+      "actorRef": {
+        "type": "documentActor",
+        "actorDocumentId": "grodor-victory",
+        "actorPath": "/projects/grodor/documents/grodor-victory-front.json",
+        "actorId": "grodor_victory",
+        "actorFamily": "grodorActor",
+        "actorType": "frontRig",
+        "frameCount": 4,
+        "frameSequence": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "defaultScale": 0.82,
+        "origin": {
+          "x": 960,
+          "y": 900
+        },
+        "pivot": {
+          "x": 261,
+          "y": 767
+        },
+        "bounds": {
+          "x": 589.661,
+          "y": 11.741,
+          "width": 701.619,
+          "height": 926.451
+        },
+        "playback": "timeline",
+        "pausedFrame": 0,
+        "frameOffset": 0,
+        "stuffVisibility": {
+          "auto_front_cape_quart_heure_face_bas": true,
+          "auto_front_moufles_reflexion_left": true,
+          "auto_front_moufles_reflexion_right": true,
+          "auto_front_sablier_fele": true,
+          "auto_front_sandale_gauche": true,
+          "auto_front_sandale_droite": true,
+          "belt_test": true,
+          "auto_front_war_underwear_face": true,
+          "auto_front_axe": true,
+          "glove_right": true,
+          "glove_left": true,
+          "auto_front_cape_quart_heure_face_haut": true,
+          "auto_front_almost_hero_medallion": true,
+          "auto_front_tiny_helmet": true
+        }
+      },
+      "width": 702,
+      "height": 926
+    },
+    "grodor_hurt": {
+      "id": "grodor_hurt",
+      "label": "Actor: Grodor Hurt resultat",
+      "actorRef": {
+        "type": "documentActor",
+        "actorDocumentId": "grodor-hurt",
+        "actorPath": "/projects/grodor/documents/grodor-hurt-side.json",
+        "actorId": "grodor_hurt",
+        "actorFamily": "grodorActor",
+        "actorType": "hurtRig",
+        "frameCount": 4,
+        "frameSequence": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "defaultScale": 0.82,
+        "origin": {
+          "x": 960,
+          "y": 900
+        },
+        "pivot": {
+          "x": 261,
+          "y": 767
+        },
+        "bounds": {
+          "x": 554.51,
+          "y": 197.913,
+          "width": 753.661,
+          "height": 791.529
+        },
+        "playback": "timeline",
+        "pausedFrame": 0,
+        "frameOffset": 0,
+        "stuffVisibility": {
+          "glove_back": true,
+          "auto_side_moufles_reflexion_back": true,
+          "shoe_back": true,
+          "shoe_front": true,
+          "auto_side_war_underwear_walk": true,
+          "auto_side_axe": true,
+          "glove_front": true,
+          "auto_side_moufles_reflexion_front": true,
+          "cape_side_collar": true,
+          "auto_side_cape_quart_heure_profil_haut": true,
+          "auto_side_tiny_helmet": true,
+          "cape_side": true,
+          "auto_side_cape_quart_heure_profil_bas": true
+        }
+      },
+      "width": 754,
+      "height": 792
+    },
+    "rat_ko": {
+      "id": "rat_ko",
+      "label": "Rat KO resultat",
+      "sourceLayerId": "rat_ko",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/sprites/monsters/rat/rat_ko.png",
+        "assetKey": "cfh.terrain.rat_ko"
+      },
+      "assetPath": "projects/grodor/assets/sprites/monsters/rat/rat_ko.png",
+      "assetKey": "cfh.terrain.rat_ko",
+      "width": 732,
+      "height": 769
+    },
+    "rat_victoire": {
+      "id": "rat_victoire",
+      "label": "Rat victoire resultat",
+      "sourceLayerId": "rat_victoire",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/sprites/monsters/rat/rat_victoire.png",
+        "assetKey": "cfh.terrain.rat_victoire"
+      },
+      "assetPath": "projects/grodor/assets/sprites/monsters/rat/rat_victoire.png",
+      "assetKey": "cfh.terrain.rat_victoire",
+      "width": 698,
+      "height": 936
+    },
+    "button_caillou": {
+      "id": "button_caillou",
+      "label": "Bouton Caillou",
+      "sourceLayerId": "button_caillou",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/caillou_feuille_hache/objet/button_caillou.png",
+        "assetKey": "cfh.terrain.button_caillou"
+      },
+      "assetPath": "projects/grodor/assets/minigames/caillou_feuille_hache/objet/button_caillou.png",
+      "assetKey": "cfh.terrain.button_caillou",
+      "width": 999,
+      "height": 996
+    },
+    "button_feuille": {
+      "id": "button_feuille",
+      "label": "Bouton Feuille",
+      "sourceLayerId": "button_feuille",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/caillou_feuille_hache/objet/feuille_button.png",
+        "assetKey": "cfh.terrain.button_feuille"
+      },
+      "assetPath": "projects/grodor/assets/minigames/caillou_feuille_hache/objet/feuille_button.png",
+      "assetKey": "cfh.terrain.button_feuille",
+      "width": 999,
+      "height": 996
+    },
+    "button_hache": {
+      "id": "button_hache",
+      "label": "Bouton Hache",
+      "sourceLayerId": "button_hache",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/caillou_feuille_hache/objet/hache_button.png",
+        "assetKey": "cfh.terrain.button_hache"
+      },
+      "assetPath": "projects/grodor/assets/minigames/caillou_feuille_hache/objet/hache_button.png",
+      "assetKey": "cfh.terrain.button_hache",
+      "width": 999,
+      "height": 996
+    }
+  },
+  "actor": {
+    "schema": "doctoxTerrainMiniGameCfh.v1",
+    "terrainId": "cfh_terrain",
+    "usage": "caillou_feuille_hache",
+    "sourceProject": "Donjon de Grodor",
+    "sourcePreset": "public/assets/minigames/caillou_feuille_hache/saves/terrain_jm_save.json",
+    "sourceRuntime": "caillouFeuilleHacheTerrainRuntime",
+    "sourceRenderMethod": "Runtime layerTransform avec fitToBackground 1920x1080. Grodor/Rat sont documentActor references, pas des layers exploses.",
+    "actorRefs": {
+      "grodor": "grodor-cfh",
+      "rat": "enemy-rat-cfh",
+      "grodorWin": "grodor-victory",
+      "grodorHurt": "grodor-hurt"
+    },
+    "roundStartVisibleLayers": [
+      "background",
+      "grodor_anim",
+      "boss_anim",
+      "button_caillou",
+      "button_feuille",
+      "button_hache"
+    ],
+    "terrainResultLayers": [
+      "grodor_caillou",
+      "grodor_feuille",
+      "grodor_hache",
+      "boss_caillou",
+      "boss_feuille",
+      "boss_hache",
+      "grodor_win",
+      "grodor_hurt",
+      "rat_ko",
+      "rat_victoire"
+    ],
+    "sourceIssues": [
+      "Le save terrain garde certains layers resultat visibles, mais le runtime resetRound les masque. Doctox ouvre donc en etat round pret.",
+      "grodor_caillou/grodor_feuille/grodor_hache et les equivalents Rat sont des layers terrain/resultat, pas des layers internes d'actor.",
+      "rat_ko et rat_victoire sont des layers resultat terrain, pas l'actor Rat CFH principal.",
+      "grodor_win et grodor_hurt sont references comme actors de resultat caches, sans dupliquer leurs layers internes."
+    ],
+    "importReady": true
+  },
+  "transforms": {
+    "0": {
+      "background": {
+        "x": 960,
+        "y": 540,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      },
+      "grodor_anim": {
+        "x": 588,
+        "y": 876,
+        "scaleX": 1.00776,
+        "scaleY": 0.97104,
+        "rotation": 1
+      },
+      "boss_anim": {
+        "x": 1284,
+        "y": 633.6,
+        "scaleX": 0.8004,
+        "scaleY": 0.78384,
+        "rotation": 0
+      },
+      "grodor_caillou": {
+        "x": 801.6,
+        "y": 489.6,
+        "scaleX": 0.29501,
+        "scaleY": 0.28458,
+        "rotation": 0
+      },
+      "grodor_feuille": {
+        "x": 796.8,
+        "y": 489.6,
+        "scaleX": 0.26752,
+        "scaleY": 0.25795,
+        "rotation": 0
+      },
+      "grodor_hache": {
+        "x": 828,
+        "y": 496.8,
+        "scaleX": 0.63898,
+        "scaleY": 0.68784,
+        "rotation": -5
+      },
+      "boss_caillou": {
+        "x": 1041.6,
+        "y": 489.6,
+        "scaleX": -0.29501,
+        "scaleY": 0.28458,
+        "rotation": 0
+      },
+      "boss_feuille": {
+        "x": 1044,
+        "y": 489.6,
+        "scaleX": -0.25696,
+        "scaleY": 0.25795,
+        "rotation": 0
+      },
+      "boss_hache": {
+        "x": 1010.4,
+        "y": 496.8,
+        "scaleX": -0.63898,
+        "scaleY": 0.63751,
+        "rotation": 6
+      },
+      "grodor_win": {
+        "x": 576,
+        "y": 876,
+        "scaleX": 0.78744,
+        "scaleY": 0.78744,
+        "rotation": 0
+      },
+      "grodor_hurt": {
+        "x": 708,
+        "y": 940.8,
+        "scaleX": 1.09344,
+        "scaleY": 1.10568,
+        "rotation": -43
+      },
+      "rat_ko": {
+        "x": 1188,
+        "y": 712.8,
+        "scaleX": 0.68197,
+        "scaleY": 0.60047,
+        "rotation": 0
+      },
+      "rat_victoire": {
+        "x": 1216.8,
+        "y": 633.6,
+        "scaleX": 0.56218,
+        "scaleY": 0.54369,
+        "rotation": 0
+      },
+      "button_caillou": {
+        "x": 144,
+        "y": 228,
+        "scaleX": 0.18018,
+        "scaleY": 0.18072,
+        "rotation": 0
+      },
+      "button_feuille": {
+        "x": 144,
+        "y": 532.8,
+        "scaleX": 0.18018,
+        "scaleY": 0.18072,
+        "rotation": 0
+      },
+      "button_hache": {
+        "x": 144,
+        "y": 840,
+        "scaleX": 0.18018,
+        "scaleY": 0.18072,
+        "rotation": 0
+      }
+    }
+  },
+  "visibility": {
+    "0": {
+      "background": true,
+      "grodor_anim": true,
+      "boss_anim": true,
+      "grodor_caillou": false,
+      "grodor_feuille": false,
+      "grodor_hache": false,
+      "boss_caillou": false,
+      "boss_feuille": false,
+      "boss_hache": false,
+      "grodor_win": false,
+      "grodor_hurt": false,
+      "rat_ko": false,
+      "rat_victoire": false,
+      "button_caillou": true,
+      "button_feuille": true,
+      "button_hache": true
+    }
+  },
+  "exportTarget": "generic"
+}

@@ -1,0 +1,1619 @@
+{
+  "version": 1,
+  "name": "Grodor Attack1",
+  "type": "side",
+  "template": {
+    "kind": "sideRig",
+    "label": "Animation",
+    "description": "Actor Grodor Attack1 reconstruit depuis le rendu pivot/anchor de l'atelier Grodor."
+  },
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": {
+      "type": "grid",
+      "color": "#15181c",
+      "gridColor": "#2d3740",
+      "gridSize": 48
+    }
+  },
+  "frames": 4,
+  "selectedFrame": 3,
+  "selectedLayerId": "pif_emote",
+  "layerOrder": [
+    "hand_back",
+    "glove_back",
+    "auto_side_moufles_reflexion_back",
+    "torso",
+    "belly",
+    "leg_back",
+    "shoe_back",
+    "leg_front",
+    "shoe_front",
+    "underwear",
+    "auto_side_ceinture_test",
+    "auto_side_war_underwear_walk",
+    "attack_front_shoulder_over",
+    "cape_side_collar",
+    "auto_side_cape_quart_heure_profil_haut",
+    "head",
+    "auto_side_tiny_helmet",
+    "attack_front_arm",
+    "attack_front_forearm_over",
+    "attack_front_hand_over",
+    "auto_side_axe",
+    "glove_front",
+    "auto_side_moufles_reflexion_front",
+    "cape_side",
+    "auto_side_cape_quart_heure_profil_bas",
+    "pif_emote"
+  ],
+  "layers": {
+    "hand_back": {
+      "id": "hand_back",
+      "label": "Bras arriere attack",
+      "width": 181,
+      "height": 149,
+      "classification": "body",
+      "sourceLayerId": "hand_back",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/attack/attack_arm_back.png",
+        "assetKey": "grodor.attack1.hand_back"
+      },
+      "assetPath": "projects/grodor/assets/grodor/side_walk_master/attack/attack_arm_back.png",
+      "assetKey": "grodor.attack1.hand_back"
+    },
+    "glove_back": {
+      "id": "glove_back",
+      "label": "Gant arriere",
+      "width": 168,
+      "height": 109,
+      "classification": "stuff",
+      "sourceLayerId": "glove_back",
+      "anchorParentId": "hand_back",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/test_glove_back.png",
+        "assetKey": "grodor.attack1.glove_back"
+      },
+      "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/test_glove_back.png",
+      "assetKey": "grodor.attack1.glove_back"
+    },
+    "auto_side_moufles_reflexion_back": {
+      "id": "auto_side_moufles_reflexion_back",
+      "label": "Moufles Reflexion Back",
+      "width": 997,
+      "height": 778,
+      "classification": "stuff",
+      "sourceLayerId": "auto_side_moufles_reflexion_back",
+      "anchorParentId": "hand_back",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/moufles_reflexion_back.png",
+        "assetKey": "grodor.attack1.auto_side_moufles_reflexion_back"
+      },
+      "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/moufles_reflexion_back.png",
+      "assetKey": "grodor.attack1.auto_side_moufles_reflexion_back"
+    },
+    "torso": {
+      "id": "torso",
+      "label": "Torse",
+      "width": 522,
+      "height": 767,
+      "classification": "body",
+      "sourceLayerId": "torso",
+      "anchorParentId": "belly",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_torso.png",
+        "assetKey": "grodor.attack1.torso"
+      },
+      "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_torso.png",
+      "assetKey": "grodor.attack1.torso"
+    },
+    "belly": {
+      "id": "belly",
+      "label": "Ventre",
+      "width": 522,
+      "height": 767,
+      "classification": "body",
+      "sourceLayerId": "belly",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_belly.png",
+        "assetKey": "grodor.attack1.belly"
+      },
+      "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_belly.png",
+      "assetKey": "grodor.attack1.belly"
+    },
+    "leg_back": {
+      "id": "leg_back",
+      "label": "Jambe arriere",
+      "width": 522,
+      "height": 767,
+      "classification": "body",
+      "sourceLayerId": "leg_back",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_leg_back.png",
+        "assetKey": "grodor.attack1.leg_back"
+      },
+      "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_leg_back.png",
+      "assetKey": "grodor.attack1.leg_back"
+    },
+    "shoe_back": {
+      "id": "shoe_back",
+      "label": "Chauss. arriere",
+      "width": 458,
+      "height": 288,
+      "classification": "stuff",
+      "sourceLayerId": "shoe_back",
+      "anchorParentId": "leg_back",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/test_shoe_back.png",
+        "assetKey": "grodor.attack1.shoe_back"
+      },
+      "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/test_shoe_back.png",
+      "assetKey": "grodor.attack1.shoe_back"
+    },
+    "leg_front": {
+      "id": "leg_front",
+      "label": "Jambe avant",
+      "width": 522,
+      "height": 767,
+      "classification": "body",
+      "sourceLayerId": "leg_front",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_leg_front.png",
+        "assetKey": "grodor.attack1.leg_front"
+      },
+      "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_leg_front.png",
+      "assetKey": "grodor.attack1.leg_front"
+    },
+    "shoe_front": {
+      "id": "shoe_front",
+      "label": "Chauss. avant",
+      "width": 458,
+      "height": 288,
+      "classification": "stuff",
+      "sourceLayerId": "shoe_front",
+      "anchorParentId": "leg_front",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/test_shoe_front.png",
+        "assetKey": "grodor.attack1.shoe_front"
+      },
+      "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/test_shoe_front.png",
+      "assetKey": "grodor.attack1.shoe_front"
+    },
+    "underwear": {
+      "id": "underwear",
+      "label": "Slip",
+      "width": 522,
+      "height": 767,
+      "classification": "body",
+      "sourceLayerId": "underwear",
+      "anchorParentId": "belly",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_underwear.png",
+        "assetKey": "grodor.attack1.underwear"
+      },
+      "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_underwear.png",
+      "assetKey": "grodor.attack1.underwear"
+    },
+    "auto_side_ceinture_test": {
+      "id": "auto_side_ceinture_test",
+      "label": "Ceinture Test",
+      "width": 250,
+      "height": 167,
+      "classification": "stuff",
+      "sourceLayerId": "auto_side_ceinture_test",
+      "anchorParentId": "underwear",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/ceinture_test.png",
+        "assetKey": "grodor.attack1.auto_side_ceinture_test"
+      },
+      "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/ceinture_test.png",
+      "assetKey": "grodor.attack1.auto_side_ceinture_test"
+    },
+    "auto_side_war_underwear_walk": {
+      "id": "auto_side_war_underwear_walk",
+      "label": "War Underwear Walk",
+      "width": 248,
+      "height": 118,
+      "classification": "stuff",
+      "sourceLayerId": "auto_side_war_underwear_walk",
+      "anchorParentId": "underwear",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/war_underwear_walk.png",
+        "assetKey": "grodor.attack1.auto_side_war_underwear_walk"
+      },
+      "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/war_underwear_walk.png",
+      "assetKey": "grodor.attack1.auto_side_war_underwear_walk"
+    },
+    "attack_front_shoulder_over": {
+      "id": "attack_front_shoulder_over",
+      "label": "Attack epaule avant",
+      "width": 219,
+      "height": 165,
+      "classification": "body",
+      "sourceLayerId": "attack_front_shoulder_over",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/attack/epaule_front_arm_attack.png",
+        "assetKey": "grodor.attack1.attack_front_shoulder_over"
+      },
+      "assetPath": "projects/grodor/assets/grodor/side_walk_master/attack/epaule_front_arm_attack.png",
+      "assetKey": "grodor.attack1.attack_front_shoulder_over"
+    },
+    "cape_side_collar": {
+      "id": "cape_side_collar",
+      "label": "Col cape cote",
+      "width": 522,
+      "height": 767,
+      "classification": "stuff",
+      "sourceLayerId": "cape_side_collar",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/cape_trop_longue_profil_haut.png",
+        "assetKey": "grodor.attack1.cape_side_collar"
+      },
+      "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/cape_trop_longue_profil_haut.png",
+      "assetKey": "grodor.attack1.cape_side_collar"
+    },
+    "auto_side_cape_quart_heure_profil_haut": {
+      "id": "auto_side_cape_quart_heure_profil_haut",
+      "label": "Cape Quart Heure Profil Haut",
+      "width": 597,
+      "height": 512,
+      "classification": "stuff",
+      "sourceLayerId": "auto_side_cape_quart_heure_profil_haut",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/cape_quart_heure_profil_haut.png",
+        "assetKey": "grodor.attack1.auto_side_cape_quart_heure_profil_haut"
+      },
+      "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/cape_quart_heure_profil_haut.png",
+      "assetKey": "grodor.attack1.auto_side_cape_quart_heure_profil_haut"
+    },
+    "head": {
+      "id": "head",
+      "label": "Tete",
+      "width": 522,
+      "height": 767,
+      "classification": "body",
+      "sourceLayerId": "head",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_head.png",
+        "assetKey": "grodor.attack1.head"
+      },
+      "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_head.png",
+      "assetKey": "grodor.attack1.head"
+    },
+    "auto_side_tiny_helmet": {
+      "id": "auto_side_tiny_helmet",
+      "label": "Tiny Helmet",
+      "width": 168,
+      "height": 144,
+      "classification": "stuff",
+      "sourceLayerId": "auto_side_tiny_helmet",
+      "anchorParentId": "head",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/tiny_helmet.png",
+        "assetKey": "grodor.attack1.auto_side_tiny_helmet"
+      },
+      "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/tiny_helmet.png",
+      "assetKey": "grodor.attack1.auto_side_tiny_helmet"
+    },
+    "attack_front_arm": {
+      "id": "attack_front_arm",
+      "label": "Bras avant attack complet",
+      "width": 285,
+      "height": 141,
+      "classification": "body",
+      "sourceLayerId": "attack_front_arm",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/attack/bras_front_arm_attack.png",
+        "assetKey": "grodor.attack1.attack_front_arm"
+      },
+      "assetPath": "projects/grodor/assets/grodor/side_walk_master/attack/bras_front_arm_attack.png",
+      "assetKey": "grodor.attack1.attack_front_arm"
+    },
+    "attack_front_forearm_over": {
+      "id": "attack_front_forearm_over",
+      "label": "Attack av-bras avant",
+      "width": 219,
+      "height": 165,
+      "classification": "body",
+      "sourceLayerId": "attack_front_forearm_over",
+      "anchorParentId": "attack_front_shoulder_over",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/attack/avantbras_front_arm_attack.png",
+        "assetKey": "grodor.attack1.attack_front_forearm_over"
+      },
+      "assetPath": "projects/grodor/assets/grodor/side_walk_master/attack/avantbras_front_arm_attack.png",
+      "assetKey": "grodor.attack1.attack_front_forearm_over"
+    },
+    "attack_front_hand_over": {
+      "id": "attack_front_hand_over",
+      "label": "Attack main avant",
+      "width": 219,
+      "height": 165,
+      "classification": "body",
+      "sourceLayerId": "attack_front_hand_over",
+      "anchorParentId": "attack_front_shoulder_over",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/attack/main_front_arm_attack.png",
+        "assetKey": "grodor.attack1.attack_front_hand_over"
+      },
+      "assetPath": "projects/grodor/assets/grodor/side_walk_master/attack/main_front_arm_attack.png",
+      "assetKey": "grodor.attack1.attack_front_hand_over"
+    },
+    "auto_side_axe": {
+      "id": "auto_side_axe",
+      "label": "Axe",
+      "width": 248,
+      "height": 436,
+      "classification": "stuff",
+      "sourceLayerId": "auto_side_axe",
+      "anchorParentId": "attack_front_hand_over",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/axe.png",
+        "assetKey": "grodor.attack1.auto_side_axe"
+      },
+      "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/axe.png",
+      "assetKey": "grodor.attack1.auto_side_axe"
+    },
+    "glove_front": {
+      "id": "glove_front",
+      "label": "Gant avant",
+      "width": 168,
+      "height": 109,
+      "classification": "stuff",
+      "sourceLayerId": "glove_front",
+      "anchorParentId": "attack_front_hand_over",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/test_glove_front.png",
+        "assetKey": "grodor.attack1.glove_front"
+      },
+      "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/test_glove_front.png",
+      "assetKey": "grodor.attack1.glove_front"
+    },
+    "auto_side_moufles_reflexion_front": {
+      "id": "auto_side_moufles_reflexion_front",
+      "label": "Moufles Reflexion Front",
+      "width": 970,
+      "height": 824,
+      "classification": "stuff",
+      "sourceLayerId": "auto_side_moufles_reflexion_front",
+      "anchorParentId": "attack_front_hand_over",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/moufles_reflexion_front.png",
+        "assetKey": "grodor.attack1.auto_side_moufles_reflexion_front"
+      },
+      "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/moufles_reflexion_front.png",
+      "assetKey": "grodor.attack1.auto_side_moufles_reflexion_front"
+    },
+    "cape_side": {
+      "id": "cape_side",
+      "label": "Cape cote",
+      "width": 522,
+      "height": 767,
+      "classification": "stuff",
+      "sourceLayerId": "cape_side",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/cape_trop_longue_profil_bas.png",
+        "assetKey": "grodor.attack1.cape_side"
+      },
+      "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/cape_trop_longue_profil_bas.png",
+      "assetKey": "grodor.attack1.cape_side"
+    },
+    "auto_side_cape_quart_heure_profil_bas": {
+      "id": "auto_side_cape_quart_heure_profil_bas",
+      "label": "Cape Quart Heure Profil Bas",
+      "width": 590,
+      "height": 451,
+      "classification": "stuff",
+      "sourceLayerId": "auto_side_cape_quart_heure_profil_bas",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/cape_quart_heure_profil_bas.png",
+        "assetKey": "grodor.attack1.auto_side_cape_quart_heure_profil_bas"
+      },
+      "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/cape_quart_heure_profil_bas.png",
+      "assetKey": "grodor.attack1.auto_side_cape_quart_heure_profil_bas"
+    },
+    "pif_emote": {
+      "id": "pif_emote",
+      "label": "pif_emote",
+      "width": 115,
+      "height": 77,
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/actors/grodor-attack1/pif-emote.png",
+        "assetKey": "grodor-attack1:pif-emote"
+      },
+      "assetPath": "projects/grodor/assets/actors/grodor-attack1/pif-emote.png",
+      "assetKey": "grodor-attack1:pif-emote"
+    }
+  },
+  "layerGroups": {
+    "belly": [
+      "torso",
+      "underwear"
+    ],
+    "attack_front_shoulder_over": [
+      "attack_front_forearm_over",
+      "attack_front_hand_over"
+    ],
+    "hand_back": [
+      "glove_back",
+      "auto_side_moufles_reflexion_back"
+    ],
+    "attack_front_hand_over": [
+      "glove_front",
+      "auto_side_moufles_reflexion_front",
+      "auto_side_axe"
+    ],
+    "leg_back": [
+      "shoe_back"
+    ],
+    "leg_front": [
+      "shoe_front"
+    ],
+    "head": [
+      "auto_side_tiny_helmet"
+    ],
+    "underwear": [
+      "auto_side_ceinture_test",
+      "auto_side_war_underwear_walk"
+    ]
+  },
+  "actor": {
+    "schema": "doctoxActorSideAttackRig.v1",
+    "actorId": "grodor_attack1",
+    "actorFamily": "grodorActor",
+    "actorType": "attackRig",
+    "sourceProject": "Donjon de Grodor",
+    "sourceRig": "sideAttack1",
+    "sourcePreset": "public/assets/sprites/grodor/rig/side_walk_master/saves/rig_attack_1_jm_save.json",
+    "sourceAssetRoot": "public/assets/sprites/grodor/rig/side_walk_master",
+    "sourceRenderMethod": "SideWalkRigDebugScene pivot-origin render converted to Doctox center-origin transforms.",
+    "frameCount": 4,
+    "poseCount": 4,
+    "frameSequence": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "poseFrameByDocumentFrame": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "defaultScale": 0.82,
+    "origin": {
+      "x": 960,
+      "y": 900
+    },
+    "pivot": {
+      "x": 261,
+      "y": 767
+    },
+    "bounds": {
+      "x": 542.21,
+      "y": 225.509,
+      "width": 735.347,
+      "height": 726.561
+    },
+    "bodyLayers": [
+      "hand_back",
+      "torso",
+      "belly",
+      "leg_back",
+      "leg_front",
+      "underwear",
+      "attack_front_shoulder_over",
+      "head",
+      "attack_front_arm",
+      "attack_front_forearm_over",
+      "attack_front_hand_over"
+    ],
+    "stuffLayers": [
+      "glove_back",
+      "auto_side_moufles_reflexion_back",
+      "shoe_back",
+      "shoe_front",
+      "auto_side_ceinture_test",
+      "auto_side_war_underwear_walk",
+      "cape_side_collar",
+      "auto_side_cape_quart_heure_profil_haut",
+      "auto_side_tiny_helmet",
+      "auto_side_axe",
+      "glove_front",
+      "auto_side_moufles_reflexion_front",
+      "cape_side",
+      "auto_side_cape_quart_heure_profil_bas"
+    ],
+    "helperLayers": [],
+    "anchors": {
+      "torso": "belly",
+      "underwear": "belly",
+      "attack_front_forearm_over": "attack_front_shoulder_over",
+      "attack_front_hand_over": "attack_front_shoulder_over",
+      "glove_back": "hand_back",
+      "glove_front": "attack_front_hand_over",
+      "auto_side_moufles_reflexion_back": "hand_back",
+      "auto_side_moufles_reflexion_front": "attack_front_hand_over",
+      "auto_side_axe": "attack_front_hand_over",
+      "shoe_back": "leg_back",
+      "shoe_front": "leg_front",
+      "auto_side_tiny_helmet": "head",
+      "auto_side_ceinture_test": "underwear",
+      "auto_side_war_underwear_walk": "underwear"
+    },
+    "dynamicParentRules": {
+      "attackFrontAttachments": {
+        "layers": [
+          "glove_front",
+          "auto_side_moufles_reflexion_front",
+          "auto_side_axe"
+        ],
+        "candidatesByPriority": [
+          "attack_front_hand_over",
+          "attack_front_arm",
+          "attack_front_shoulder_over"
+        ],
+        "sourceMethod": "AttackOneRigDebugScene.attackFrontAttachmentParentId"
+      }
+    },
+    "layerClassifications": {
+      "hand_back": {
+        "kind": "body",
+        "label": "Bras arriere attack",
+        "sourceLayerId": "hand_back",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/attack/attack_arm_back.png"
+      },
+      "glove_back": {
+        "kind": "stuff",
+        "label": "Gant arriere",
+        "sourceLayerId": "glove_back",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/test_glove_back.png",
+        "anchorParentId": "hand_back"
+      },
+      "auto_side_moufles_reflexion_back": {
+        "kind": "stuff",
+        "label": "Moufles Reflexion Back",
+        "sourceLayerId": "auto_side_moufles_reflexion_back",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/moufles_reflexion_back.png",
+        "anchorParentId": "hand_back"
+      },
+      "torso": {
+        "kind": "body",
+        "label": "Torse",
+        "sourceLayerId": "torso",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_torso.png",
+        "anchorParentId": "belly"
+      },
+      "belly": {
+        "kind": "body",
+        "label": "Ventre",
+        "sourceLayerId": "belly",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_belly.png"
+      },
+      "leg_back": {
+        "kind": "body",
+        "label": "Jambe arriere",
+        "sourceLayerId": "leg_back",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_leg_back.png"
+      },
+      "shoe_back": {
+        "kind": "stuff",
+        "label": "Chauss. arriere",
+        "sourceLayerId": "shoe_back",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/test_shoe_back.png",
+        "anchorParentId": "leg_back"
+      },
+      "leg_front": {
+        "kind": "body",
+        "label": "Jambe avant",
+        "sourceLayerId": "leg_front",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_leg_front.png"
+      },
+      "shoe_front": {
+        "kind": "stuff",
+        "label": "Chauss. avant",
+        "sourceLayerId": "shoe_front",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/test_shoe_front.png",
+        "anchorParentId": "leg_front"
+      },
+      "underwear": {
+        "kind": "body",
+        "label": "Slip",
+        "sourceLayerId": "underwear",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_underwear.png",
+        "anchorParentId": "belly"
+      },
+      "auto_side_ceinture_test": {
+        "kind": "stuff",
+        "label": "Ceinture Test",
+        "sourceLayerId": "auto_side_ceinture_test",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/ceinture_test.png",
+        "anchorParentId": "underwear"
+      },
+      "auto_side_war_underwear_walk": {
+        "kind": "stuff",
+        "label": "War Underwear Walk",
+        "sourceLayerId": "auto_side_war_underwear_walk",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/war_underwear_walk.png",
+        "anchorParentId": "underwear"
+      },
+      "attack_front_shoulder_over": {
+        "kind": "body",
+        "label": "Attack epaule avant",
+        "sourceLayerId": "attack_front_shoulder_over",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/attack/epaule_front_arm_attack.png"
+      },
+      "cape_side_collar": {
+        "kind": "stuff",
+        "label": "Col cape cote",
+        "sourceLayerId": "cape_side_collar",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/cape_trop_longue_profil_haut.png"
+      },
+      "auto_side_cape_quart_heure_profil_haut": {
+        "kind": "stuff",
+        "label": "Cape Quart Heure Profil Haut",
+        "sourceLayerId": "auto_side_cape_quart_heure_profil_haut",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/cape_quart_heure_profil_haut.png"
+      },
+      "head": {
+        "kind": "body",
+        "label": "Tete",
+        "sourceLayerId": "head",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_head.png"
+      },
+      "auto_side_tiny_helmet": {
+        "kind": "stuff",
+        "label": "Tiny Helmet",
+        "sourceLayerId": "auto_side_tiny_helmet",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/tiny_helmet.png",
+        "anchorParentId": "head"
+      },
+      "attack_front_arm": {
+        "kind": "body",
+        "label": "Bras avant attack complet",
+        "sourceLayerId": "attack_front_arm",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/attack/bras_front_arm_attack.png"
+      },
+      "attack_front_forearm_over": {
+        "kind": "body",
+        "label": "Attack av-bras avant",
+        "sourceLayerId": "attack_front_forearm_over",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/attack/avantbras_front_arm_attack.png",
+        "anchorParentId": "attack_front_shoulder_over"
+      },
+      "attack_front_hand_over": {
+        "kind": "body",
+        "label": "Attack main avant",
+        "sourceLayerId": "attack_front_hand_over",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/attack/main_front_arm_attack.png",
+        "anchorParentId": "attack_front_shoulder_over"
+      },
+      "auto_side_axe": {
+        "kind": "stuff",
+        "label": "Axe",
+        "sourceLayerId": "auto_side_axe",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/axe.png",
+        "anchorParentId": "attack_front_hand_over"
+      },
+      "glove_front": {
+        "kind": "stuff",
+        "label": "Gant avant",
+        "sourceLayerId": "glove_front",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/test_glove_front.png",
+        "anchorParentId": "attack_front_hand_over"
+      },
+      "auto_side_moufles_reflexion_front": {
+        "kind": "stuff",
+        "label": "Moufles Reflexion Front",
+        "sourceLayerId": "auto_side_moufles_reflexion_front",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/moufles_reflexion_front.png",
+        "anchorParentId": "attack_front_hand_over"
+      },
+      "cape_side": {
+        "kind": "stuff",
+        "label": "Cape cote",
+        "sourceLayerId": "cape_side",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/cape_trop_longue_profil_bas.png"
+      },
+      "auto_side_cape_quart_heure_profil_bas": {
+        "kind": "stuff",
+        "label": "Cape Quart Heure Profil Bas",
+        "sourceLayerId": "auto_side_cape_quart_heure_profil_bas",
+        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/cape_quart_heure_profil_bas.png"
+      }
+    },
+    "excludedLayers": [],
+    "sourceIssues": [
+      "Le rendu Grodor Attack1 utilise des origins/pivots par layer; Doctox stocke des transforms centre-equivalent par frame.",
+      "Les visibilites frame par frame viennent de poseVisibility dans le JSON source, notamment le switch bras avant decoupe/complet.",
+      "Les stuffs avant (hache, gant, reflet moufle) suivent le parent visuel actif de l'atelier Attack1: main decoupee, bras complet, puis epaule.",
+      "auto_side_ceinture_test est visible dans ce preset Attack1; il est garde pour QA JM au lieu d'etre supprime arbitrairement.",
+      "Attack1 est importe comme actor side en 4 poses source, sans interpolation temps reel."
+    ],
+    "importReady": true,
+    "assetBasePath": "projects/grodor/assets/actors/grodor-attack1",
+    "assetPipeline": "ActorsCreate dataUrl -> project assetPath",
+    "assetsMaterialized": 1
+  },
+  "transforms": {
+    "0": {
+      "hand_back": {
+        "x": 1056.442,
+        "y": 595,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": -28
+      },
+      "glove_back": {
+        "x": 1088.855,
+        "y": 568.068,
+        "scaleX": 0.67617,
+        "scaleY": 0.67617,
+        "rotation": -86
+      },
+      "auto_side_moufles_reflexion_back": {
+        "x": 1088.15,
+        "y": 568.092,
+        "scaleX": 0.08241,
+        "scaleY": 0.08241,
+        "rotation": -94
+      },
+      "torso": {
+        "x": 960,
+        "y": 585.53,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "belly": {
+        "x": 960,
+        "y": 585.53,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "leg_back": {
+        "x": 875.013,
+        "y": 595.079,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": -28
+      },
+      "shoe_back": {
+        "x": 911.942,
+        "y": 889.073,
+        "scaleX": 0.21402,
+        "scaleY": 0.21845,
+        "rotation": 8
+      },
+      "leg_front": {
+        "x": 1018.768,
+        "y": 597.308,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 14
+      },
+      "shoe_front": {
+        "x": 1084.994,
+        "y": 873.909,
+        "scaleX": 0.23616,
+        "scaleY": 0.23173,
+        "rotation": -20
+      },
+      "underwear": {
+        "x": 960,
+        "y": 585.53,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "auto_side_ceinture_test": {
+        "x": 957.54,
+        "y": 709.76,
+        "scaleX": 1.0168,
+        "scaleY": 0.6232,
+        "rotation": 0
+      },
+      "auto_side_war_underwear_walk": {
+        "x": 964.1,
+        "y": 713.04,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "attack_front_shoulder_over": {
+        "x": 1000.215,
+        "y": 591.656,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 2
+      },
+      "cape_side_collar": {
+        "x": 960,
+        "y": 585.53,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "auto_side_cape_quart_heure_profil_haut": {
+        "x": 794.36,
+        "y": 695.82,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 4
+      },
+      "head": {
+        "x": 960,
+        "y": 585.53,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "auto_side_tiny_helmet": {
+        "x": 960.82,
+        "y": 413.74,
+        "scaleX": 0.8446,
+        "scaleY": 0.697,
+        "rotation": -4
+      },
+      "attack_front_arm": {
+        "x": 1132.61,
+        "y": 519.93,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "attack_front_forearm_over": {
+        "x": 999.396,
+        "y": 591.627,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 2
+      },
+      "attack_front_hand_over": {
+        "x": 999.396,
+        "y": 591.627,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 2
+      },
+      "auto_side_axe": {
+        "x": 1069.394,
+        "y": 525.56,
+        "scaleX": 0.4756,
+        "scaleY": 0.5002,
+        "rotation": -72
+      },
+      "glove_front": {
+        "x": 1055.021,
+        "y": 564.411,
+        "scaleX": 0.64567,
+        "scaleY": 0.67617,
+        "rotation": -246
+      },
+      "auto_side_moufles_reflexion_front": {
+        "x": 1055.145,
+        "y": 565.114,
+        "scaleX": 0.09092,
+        "scaleY": 0.09712,
+        "rotation": -62
+      },
+      "cape_side": {
+        "x": 960,
+        "y": 587.149,
+        "scaleX": 0.9676,
+        "scaleY": 0.943,
+        "rotation": 0
+      },
+      "auto_side_cape_quart_heure_profil_bas": {
+        "x": 784.52,
+        "y": 713.04,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 6
+      },
+      "pif_emote": {
+        "x": 960,
+        "y": 540,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      }
+    },
+    "1": {
+      "hand_back": {
+        "x": 1024.544,
+        "y": 557.643,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": -74
+      },
+      "glove_back": {
+        "x": 1027.686,
+        "y": 515.619,
+        "scaleX": 0.67617,
+        "scaleY": 0.67617,
+        "rotation": -132
+      },
+      "auto_side_moufles_reflexion_back": {
+        "x": 1021.47,
+        "y": 515.349,
+        "scaleX": 0.09717,
+        "scaleY": 0.09348,
+        "rotation": -140
+      },
+      "torso": {
+        "x": 906.804,
+        "y": 583.726,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": -18
+      },
+      "belly": {
+        "x": 906.804,
+        "y": 583.726,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": -18
+      },
+      "leg_back": {
+        "x": 875.013,
+        "y": 595.079,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": -28
+      },
+      "shoe_back": {
+        "x": 911.942,
+        "y": 889.073,
+        "scaleX": 0.21402,
+        "scaleY": 0.21845,
+        "rotation": 8
+      },
+      "leg_front": {
+        "x": 1018.768,
+        "y": 597.308,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 14
+      },
+      "shoe_front": {
+        "x": 1084.994,
+        "y": 873.909,
+        "scaleX": 0.23616,
+        "scaleY": 0.23173,
+        "rotation": -20
+      },
+      "underwear": {
+        "x": 906.804,
+        "y": 583.726,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": -18
+      },
+      "auto_side_ceinture_test": {
+        "x": 942.853,
+        "y": 702.636,
+        "scaleX": 1.0168,
+        "scaleY": 0.6232,
+        "rotation": -18
+      },
+      "auto_side_war_underwear_walk": {
+        "x": 950.106,
+        "y": 703.728,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": -18
+      },
+      "attack_front_shoulder_over": {
+        "x": 928.247,
+        "y": 551.414,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": -38
+      },
+      "cape_side_collar": {
+        "x": 903.723,
+        "y": 583.664,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": -18
+      },
+      "auto_side_cape_quart_heure_profil_haut": {
+        "x": 786.98,
+        "y": 737.64,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": -14
+      },
+      "head": {
+        "x": 905.943,
+        "y": 583.924,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": -20
+      },
+      "auto_side_tiny_helmet": {
+        "x": 847.958,
+        "y": 422.214,
+        "scaleX": 0.8446,
+        "scaleY": 0.697,
+        "rotation": -24
+      },
+      "attack_front_arm": {
+        "x": 1132.61,
+        "y": 519.93,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "attack_front_forearm_over": {
+        "x": 927.601,
+        "y": 551.918,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": -38
+      },
+      "attack_front_hand_over": {
+        "x": 927.601,
+        "y": 551.918,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": -38
+      },
+      "auto_side_axe": {
+        "x": 942.209,
+        "y": 456.738,
+        "scaleX": 0.4756,
+        "scaleY": 0.5002,
+        "rotation": -116
+      },
+      "glove_front": {
+        "x": 955.161,
+        "y": 494.681,
+        "scaleX": 0.64567,
+        "scaleY": 0.67617,
+        "rotation": -282
+      },
+      "auto_side_moufles_reflexion_front": {
+        "x": 955.708,
+        "y": 494.905,
+        "scaleX": 0.08782,
+        "scaleY": 0.09092,
+        "rotation": -98
+      },
+      "cape_side": {
+        "x": 898.93,
+        "y": 588.283,
+        "scaleX": 0.9676,
+        "scaleY": 0.943,
+        "rotation": -18
+      },
+      "auto_side_cape_quart_heure_profil_bas": {
+        "x": 792.72,
+        "y": 767.16,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": -16
+      },
+      "pif_emote": {
+        "x": 960,
+        "y": 540,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      }
+    },
+    "2": {
+      "hand_back": {
+        "x": 1056.442,
+        "y": 595,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": -28
+      },
+      "glove_back": {
+        "x": 1088.855,
+        "y": 568.068,
+        "scaleX": 0.67617,
+        "scaleY": 0.67617,
+        "rotation": -86
+      },
+      "auto_side_moufles_reflexion_back": {
+        "x": 1084.145,
+        "y": 569.293,
+        "scaleX": 0.08979,
+        "scaleY": 0.0861,
+        "rotation": -94
+      },
+      "torso": {
+        "x": 960,
+        "y": 585.53,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "belly": {
+        "x": 960,
+        "y": 585.53,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "leg_back": {
+        "x": 875.013,
+        "y": 595.079,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": -28
+      },
+      "shoe_back": {
+        "x": 911.942,
+        "y": 889.073,
+        "scaleX": 0.21402,
+        "scaleY": 0.21845,
+        "rotation": 8
+      },
+      "leg_front": {
+        "x": 1018.768,
+        "y": 597.308,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 14
+      },
+      "shoe_front": {
+        "x": 1084.994,
+        "y": 873.909,
+        "scaleX": 0.23616,
+        "scaleY": 0.23173,
+        "rotation": -20
+      },
+      "underwear": {
+        "x": 960,
+        "y": 585.53,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "auto_side_ceinture_test": {
+        "x": 957.54,
+        "y": 709.76,
+        "scaleX": 1.0168,
+        "scaleY": 0.6232,
+        "rotation": 0
+      },
+      "auto_side_war_underwear_walk": {
+        "x": 964.1,
+        "y": 713.04,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "attack_front_shoulder_over": {
+        "x": 993.847,
+        "y": 549.774,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": -38
+      },
+      "cape_side_collar": {
+        "x": 960,
+        "y": 585.53,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "auto_side_cape_quart_heure_profil_haut": {
+        "x": 794.36,
+        "y": 694.18,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 4
+      },
+      "head": {
+        "x": 960,
+        "y": 585.53,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "auto_side_tiny_helmet": {
+        "x": 960.82,
+        "y": 413.74,
+        "scaleX": 0.8446,
+        "scaleY": 0.697,
+        "rotation": -4
+      },
+      "attack_front_arm": {
+        "x": 1038.737,
+        "y": 578.982,
+        "scaleX": 0.8692,
+        "scaleY": 0.8692,
+        "rotation": -22
+      },
+      "attack_front_forearm_over": {
+        "x": 993.201,
+        "y": 550.278,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": -38
+      },
+      "attack_front_hand_over": {
+        "x": 993.201,
+        "y": 550.278,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": -38
+      },
+      "auto_side_axe": {
+        "x": 1123.094,
+        "y": 491.934,
+        "scaleX": 0.50414,
+        "scaleY": 0.53021,
+        "rotation": -56
+      },
+      "glove_front": {
+        "x": 1106.681,
+        "y": 529.058,
+        "scaleX": 0.68441,
+        "scaleY": 0.71674,
+        "rotation": -240
+      },
+      "auto_side_moufles_reflexion_front": {
+        "x": 1106.152,
+        "y": 530.478,
+        "scaleX": 0.09638,
+        "scaleY": 0.09309,
+        "rotation": -56
+      },
+      "cape_side": {
+        "x": 960,
+        "y": 587.149,
+        "scaleX": 0.9676,
+        "scaleY": 0.943,
+        "rotation": 0
+      },
+      "auto_side_cape_quart_heure_profil_bas": {
+        "x": 797.64,
+        "y": 723.7,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 2
+      },
+      "pif_emote": {
+        "x": 960,
+        "y": 540,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      }
+    },
+    "3": {
+      "hand_back": {
+        "x": 964.021,
+        "y": 522.519,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 208
+      },
+      "glove_back": {
+        "x": 923.568,
+        "y": 510.708,
+        "scaleX": 0.67617,
+        "scaleY": 0.67617,
+        "rotation": 150
+      },
+      "auto_side_moufles_reflexion_back": {
+        "x": 926.402,
+        "y": 517.209,
+        "scaleX": 0.09717,
+        "scaleY": 0.09348,
+        "rotation": 142
+      },
+      "torso": {
+        "x": 1019.375,
+        "y": 577.058,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 20
+      },
+      "belly": {
+        "x": 1019.375,
+        "y": 577.058,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 20
+      },
+      "leg_back": {
+        "x": 1006.971,
+        "y": 581.025,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 20
+      },
+      "shoe_back": {
+        "x": 813.202,
+        "y": 805.188,
+        "scaleX": 0.21402,
+        "scaleY": 0.21845,
+        "rotation": 56
+      },
+      "leg_front": {
+        "x": 1044.155,
+        "y": 598.707,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 26
+      },
+      "shoe_front": {
+        "x": 1051.426,
+        "y": 883.033,
+        "scaleX": 0.23616,
+        "scaleY": 0.23173,
+        "rotation": -8
+      },
+      "underwear": {
+        "x": 1019.375,
+        "y": 577.058,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 20
+      },
+      "auto_side_ceinture_test": {
+        "x": 974.574,
+        "y": 692.955,
+        "scaleX": 1.0168,
+        "scaleY": 0.6232,
+        "rotation": 20
+      },
+      "auto_side_war_underwear_walk": {
+        "x": 979.617,
+        "y": 698.281,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 20
+      },
+      "attack_front_shoulder_over": {
+        "x": 993.847,
+        "y": 549.774,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": -38
+      },
+      "cape_side_collar": {
+        "x": 1011.345,
+        "y": 578.391,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 26
+      },
+      "auto_side_cape_quart_heure_profil_haut": {
+        "x": 827.16,
+        "y": 631.04,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 22
+      },
+      "head": {
+        "x": 1018.109,
+        "y": 575.879,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 18
+      },
+      "auto_side_tiny_helmet": {
+        "x": 1071.975,
+        "y": 412.75,
+        "scaleX": 0.8446,
+        "scaleY": 0.697,
+        "rotation": 14
+      },
+      "attack_front_arm": {
+        "x": 1087.225,
+        "y": 629.869,
+        "scaleX": 0.8692,
+        "scaleY": 0.8692,
+        "rotation": 16
+      },
+      "attack_front_forearm_over": {
+        "x": 993.201,
+        "y": 550.278,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": -38
+      },
+      "attack_front_hand_over": {
+        "x": 993.201,
+        "y": 550.278,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": -38
+      },
+      "auto_side_axe": {
+        "x": 1215.044,
+        "y": 620.857,
+        "scaleX": 0.50414,
+        "scaleY": 0.53021,
+        "rotation": -26
+      },
+      "glove_front": {
+        "x": 1175.92,
+        "y": 632.471,
+        "scaleX": 0.70494,
+        "scaleY": 0.73824,
+        "rotation": -198
+      },
+      "auto_side_moufles_reflexion_front": {
+        "x": 1174.868,
+        "y": 632.679,
+        "scaleX": 0.08981,
+        "scaleY": 0.09309,
+        "rotation": -14
+      },
+      "cape_side": {
+        "x": 1007.198,
+        "y": 579.432,
+        "scaleX": 0.9676,
+        "scaleY": 0.943,
+        "rotation": 26
+      },
+      "auto_side_cape_quart_heure_profil_bas": {
+        "x": 816.5,
+        "y": 654.82,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 22
+      },
+      "pif_emote": {
+        "x": 1578,
+        "y": 513,
+        "scaleX": 3.5799999999999907,
+        "scaleY": 3.5799999999999907,
+        "rotation": 0
+      }
+    }
+  },
+  "visibility": {
+    "0": {
+      "hand_back": true,
+      "glove_back": true,
+      "auto_side_moufles_reflexion_back": true,
+      "torso": true,
+      "belly": true,
+      "leg_back": true,
+      "shoe_back": true,
+      "leg_front": true,
+      "shoe_front": true,
+      "underwear": true,
+      "auto_side_ceinture_test": true,
+      "auto_side_war_underwear_walk": true,
+      "attack_front_shoulder_over": true,
+      "cape_side_collar": true,
+      "auto_side_cape_quart_heure_profil_haut": true,
+      "head": true,
+      "auto_side_tiny_helmet": true,
+      "attack_front_arm": false,
+      "attack_front_forearm_over": true,
+      "attack_front_hand_over": true,
+      "auto_side_axe": true,
+      "glove_front": true,
+      "auto_side_moufles_reflexion_front": true,
+      "cape_side": true,
+      "auto_side_cape_quart_heure_profil_bas": true,
+      "pif_emote": false
+    },
+    "1": {
+      "hand_back": true,
+      "glove_back": true,
+      "auto_side_moufles_reflexion_back": true,
+      "torso": true,
+      "belly": true,
+      "leg_back": true,
+      "shoe_back": true,
+      "leg_front": true,
+      "shoe_front": true,
+      "underwear": true,
+      "auto_side_ceinture_test": true,
+      "auto_side_war_underwear_walk": true,
+      "attack_front_shoulder_over": true,
+      "cape_side_collar": true,
+      "auto_side_cape_quart_heure_profil_haut": true,
+      "head": true,
+      "auto_side_tiny_helmet": true,
+      "attack_front_arm": false,
+      "attack_front_forearm_over": true,
+      "attack_front_hand_over": true,
+      "auto_side_axe": true,
+      "glove_front": true,
+      "auto_side_moufles_reflexion_front": true,
+      "cape_side": true,
+      "auto_side_cape_quart_heure_profil_bas": true,
+      "pif_emote": false
+    },
+    "2": {
+      "hand_back": true,
+      "glove_back": true,
+      "auto_side_moufles_reflexion_back": true,
+      "torso": true,
+      "belly": true,
+      "leg_back": true,
+      "shoe_back": true,
+      "leg_front": true,
+      "shoe_front": true,
+      "underwear": true,
+      "auto_side_ceinture_test": true,
+      "auto_side_war_underwear_walk": true,
+      "attack_front_shoulder_over": false,
+      "cape_side_collar": true,
+      "auto_side_cape_quart_heure_profil_haut": true,
+      "head": true,
+      "auto_side_tiny_helmet": true,
+      "attack_front_arm": true,
+      "attack_front_forearm_over": false,
+      "attack_front_hand_over": false,
+      "auto_side_axe": true,
+      "glove_front": true,
+      "auto_side_moufles_reflexion_front": true,
+      "cape_side": true,
+      "auto_side_cape_quart_heure_profil_bas": true,
+      "pif_emote": false
+    },
+    "3": {
+      "hand_back": true,
+      "glove_back": true,
+      "auto_side_moufles_reflexion_back": true,
+      "torso": true,
+      "belly": true,
+      "leg_back": true,
+      "shoe_back": true,
+      "leg_front": true,
+      "shoe_front": true,
+      "underwear": true,
+      "auto_side_ceinture_test": true,
+      "auto_side_war_underwear_walk": true,
+      "attack_front_shoulder_over": false,
+      "cape_side_collar": true,
+      "auto_side_cape_quart_heure_profil_haut": true,
+      "head": true,
+      "auto_side_tiny_helmet": true,
+      "attack_front_arm": true,
+      "attack_front_forearm_over": false,
+      "attack_front_hand_over": false,
+      "auto_side_axe": true,
+      "glove_front": true,
+      "auto_side_moufles_reflexion_front": true,
+      "cape_side": true,
+      "auto_side_cape_quart_heure_profil_bas": true,
+      "pif_emote": true
+    }
+  },
+  "exportTarget": "generic"
+}

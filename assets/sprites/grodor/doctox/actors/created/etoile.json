@@ -1,0 +1,268 @@
+{
+  "version": 1,
+  "name": "etoile",
+  "type": "animation",
+  "template": {
+    "kind": "animationRig",
+    "label": "Animation",
+    "description": "Animation enregistree depuis ActorsCreate."
+  },
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": {
+      "type": "grid",
+      "color": "#15181c",
+      "gridColor": "#2d3740",
+      "gridSize": 48
+    }
+  },
+  "frames": 4,
+  "selectedFrame": 1,
+  "selectedLayerId": "etoile_3",
+  "layerOrder": [
+    "etoile_1",
+    "etoile_2",
+    "etoile_3",
+    "etoile_4"
+  ],
+  "layers": {
+    "etoile_1": {
+      "id": "etoile_1",
+      "label": "etoile_1",
+      "width": 758,
+      "height": 389,
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/actors/nouvelle-toile-sans-nom-3-2/etoile-1.png",
+        "assetKey": "nouvelle-toile-sans-nom-3-2:etoile-1"
+      },
+      "assetPath": "projects/grodor/assets/actors/nouvelle-toile-sans-nom-3-2/etoile-1.png",
+      "assetKey": "nouvelle-toile-sans-nom-3-2:etoile-1"
+    },
+    "etoile_2": {
+      "id": "etoile_2",
+      "label": "etoile_2",
+      "width": 785,
+      "height": 365,
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/actors/nouvelle-toile-sans-nom-3-2/etoile-2.png",
+        "assetKey": "nouvelle-toile-sans-nom-3-2:etoile-2"
+      },
+      "assetPath": "projects/grodor/assets/actors/nouvelle-toile-sans-nom-3-2/etoile-2.png",
+      "assetKey": "nouvelle-toile-sans-nom-3-2:etoile-2"
+    },
+    "etoile_3": {
+      "id": "etoile_3",
+      "label": "etoile_3",
+      "width": 758,
+      "height": 408,
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/actors/nouvelle-toile-sans-nom-3-2/etoile-3.png",
+        "assetKey": "nouvelle-toile-sans-nom-3-2:etoile-3"
+      },
+      "assetPath": "projects/grodor/assets/actors/nouvelle-toile-sans-nom-3-2/etoile-3.png",
+      "assetKey": "nouvelle-toile-sans-nom-3-2:etoile-3"
+    },
+    "etoile_4": {
+      "id": "etoile_4",
+      "label": "etoile_4",
+      "width": 772,
+      "height": 398,
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/actors/nouvelle-toile-sans-nom-3-2/etoile-4.png",
+        "assetKey": "nouvelle-toile-sans-nom-3-2:etoile-4"
+      },
+      "assetPath": "projects/grodor/assets/actors/nouvelle-toile-sans-nom-3-2/etoile-4.png",
+      "assetKey": "nouvelle-toile-sans-nom-3-2:etoile-4"
+    }
+  },
+  "layerGroups": {},
+  "actor": {
+    "actorId": "etoile",
+    "actorType": "frameAnimation",
+    "source": "ActorsCreate",
+    "projectCategory": "Animation",
+    "frameCount": 4,
+    "frameSequence": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "bodyLayers": [
+      "etoile_1",
+      "etoile_2",
+      "etoile_3",
+      "etoile_4"
+    ],
+    "stuffLayers": [],
+    "helperLayers": [],
+    "bounds": {
+      "x": 567.5,
+      "y": 336,
+      "width": 785,
+      "height": 408
+    },
+    "origin": {
+      "x": 960,
+      "y": 540
+    },
+    "defaultScale": 1,
+    "assetBasePath": "projects/grodor/assets/actors/nouvelle-toile-sans-nom-3-2",
+    "assetPipeline": "ActorsCreate dataUrl -> project assetPath",
+    "assetsMaterialized": 4
+  },
+  "transforms": {
+    "0": {
+      "etoile_1": {
+        "x": 960,
+        "y": 540,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      },
+      "etoile_2": {
+        "x": 960,
+        "y": 540,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      },
+      "etoile_3": {
+        "x": 960,
+        "y": 540,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      },
+      "etoile_4": {
+        "x": 960,
+        "y": 540,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      }
+    },
+    "1": {
+      "etoile_1": {
+        "x": 960,
+        "y": 540,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      },
+      "etoile_2": {
+        "x": 960,
+        "y": 540,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      },
+      "etoile_3": {
+        "x": 960,
+        "y": 540,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      },
+      "etoile_4": {
+        "x": 960,
+        "y": 540,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      }
+    },
+    "2": {
+      "etoile_1": {
+        "x": 960,
+        "y": 540,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      },
+      "etoile_2": {
+        "x": 960,
+        "y": 540,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      },
+      "etoile_3": {
+        "x": 960,
+        "y": 540,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      },
+      "etoile_4": {
+        "x": 960,
+        "y": 540,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      }
+    },
+    "3": {
+      "etoile_1": {
+        "x": 960,
+        "y": 540,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      },
+      "etoile_2": {
+        "x": 960,
+        "y": 540,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      },
+      "etoile_3": {
+        "x": 960,
+        "y": 540,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      },
+      "etoile_4": {
+        "x": 960,
+        "y": 540,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      }
+    }
+  },
+  "visibility": {
+    "0": {
+      "etoile_1": true,
+      "etoile_2": false,
+      "etoile_3": false,
+      "etoile_4": false
+    },
+    "1": {
+      "etoile_1": false,
+      "etoile_2": true,
+      "etoile_3": false,
+      "etoile_4": false
+    },
+    "2": {
+      "etoile_1": false,
+      "etoile_2": false,
+      "etoile_3": true,
+      "etoile_4": false
+    },
+    "3": {
+      "etoile_1": false,
+      "etoile_2": false,
+      "etoile_3": false,
+      "etoile_4": true
+    }
+  },
+  "exportTarget": "generic"
+}

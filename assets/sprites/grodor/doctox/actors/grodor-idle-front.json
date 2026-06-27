@@ -1,0 +1,995 @@
+{
+  "version": 1,
+  "name": "Grodor Idle",
+  "type": "face",
+  "template": {
+    "kind": "faceRig",
+    "label": "Face animation",
+    "description": "Actor Grodor Idle front reconstruit depuis le preset front master de l'atelier Grodor."
+  },
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": {
+      "type": "grid",
+      "color": "#15181c",
+      "gridColor": "#2d3740",
+      "gridSize": 48
+    }
+  },
+  "frames": 1,
+  "selectedFrame": 0,
+  "selectedLayerId": "auto_front_almost_hero_medallion",
+  "layerOrder": [
+    "auto_front_cape_quart_heure_face_bas",
+    "foot_left",
+    "auto_front_sandale_gauche",
+    "foot_right",
+    "auto_front_sandale_droite",
+    "leg_right",
+    "leg_left",
+    "pelvis",
+    "front_belt",
+    "belly",
+    "belt_test",
+    "auto_front_war_underwear_face",
+    "torso",
+    "auto_front_axe",
+    "arm_right",
+    "glove_right",
+    "auto_front_moufles_reflexion_left",
+    "arm_left",
+    "glove_left",
+    "auto_front_moufles_reflexion_right",
+    "cape_back",
+    "cape_collar",
+    "auto_front_cape_quart_heure_face_haut",
+    "auto_front_sablier_fele",
+    "auto_front_almost_hero_medallion",
+    "head",
+    "auto_front_tiny_helmet"
+  ],
+  "layers": {
+    "auto_front_cape_quart_heure_face_bas": {
+      "id": "auto_front_cape_quart_heure_face_bas",
+      "label": "Cape Quart Heure Face Bas",
+      "classification": "stuff",
+      "sourceLayerId": "auto_front_cape_quart_heure_face_bas",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/cape_quart_heure_face_bas.png",
+        "assetKey": "grodor.idle.auto_front_cape_quart_heure_face_bas"
+      },
+      "assetPath": "projects/grodor/assets/grodor/front_master/stuff/cape_quart_heure_face_bas.png",
+      "assetKey": "grodor.idle.auto_front_cape_quart_heure_face_bas",
+      "width": 808,
+      "height": 611
+    },
+    "foot_left": {
+      "id": "foot_left",
+      "label": "Pied gauche",
+      "classification": "body",
+      "sourceLayerId": "foot_left",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/front_master/front_foot_left.png",
+        "assetKey": "grodor.idle.foot_left"
+      },
+      "assetPath": "projects/grodor/assets/grodor/front_master/front_foot_left.png",
+      "assetKey": "grodor.idle.foot_left",
+      "width": 522,
+      "height": 767
+    },
+    "auto_front_sandale_gauche": {
+      "id": "auto_front_sandale_gauche",
+      "label": "Sandale Gauche",
+      "classification": "stuff",
+      "sourceLayerId": "auto_front_sandale_gauche",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/sandale_gauche.png",
+        "assetKey": "grodor.idle.auto_front_sandale_gauche"
+      },
+      "assetPath": "projects/grodor/assets/grodor/front_master/stuff/sandale_gauche.png",
+      "assetKey": "grodor.idle.auto_front_sandale_gauche",
+      "width": 150,
+      "height": 67,
+      "anchorParentId": "foot_left"
+    },
+    "foot_right": {
+      "id": "foot_right",
+      "label": "Pied droit",
+      "classification": "body",
+      "sourceLayerId": "foot_right",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/front_master/front_foot_right.png",
+        "assetKey": "grodor.idle.foot_right"
+      },
+      "assetPath": "projects/grodor/assets/grodor/front_master/front_foot_right.png",
+      "assetKey": "grodor.idle.foot_right",
+      "width": 522,
+      "height": 767
+    },
+    "auto_front_sandale_droite": {
+      "id": "auto_front_sandale_droite",
+      "label": "Sandale Droite",
+      "classification": "stuff",
+      "sourceLayerId": "auto_front_sandale_droite",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/sandale_droite.png",
+        "assetKey": "grodor.idle.auto_front_sandale_droite"
+      },
+      "assetPath": "projects/grodor/assets/grodor/front_master/stuff/sandale_droite.png",
+      "assetKey": "grodor.idle.auto_front_sandale_droite",
+      "width": 150,
+      "height": 67,
+      "anchorParentId": "foot_right"
+    },
+    "leg_right": {
+      "id": "leg_right",
+      "label": "Jambe droite",
+      "classification": "body",
+      "sourceLayerId": "leg_right",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/front_master/front_leg_right.png",
+        "assetKey": "grodor.idle.leg_right"
+      },
+      "assetPath": "projects/grodor/assets/grodor/front_master/front_leg_right.png",
+      "assetKey": "grodor.idle.leg_right",
+      "width": 522,
+      "height": 767
+    },
+    "leg_left": {
+      "id": "leg_left",
+      "label": "Jambe gauche",
+      "classification": "body",
+      "sourceLayerId": "leg_left",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/front_master/front_leg_left.png",
+        "assetKey": "grodor.idle.leg_left"
+      },
+      "assetPath": "projects/grodor/assets/grodor/front_master/front_leg_left.png",
+      "assetKey": "grodor.idle.leg_left",
+      "width": 522,
+      "height": 767
+    },
+    "pelvis": {
+      "id": "pelvis",
+      "label": "Bas du corps",
+      "classification": "body",
+      "sourceLayerId": "pelvis",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/front_master/front_pelvis.png",
+        "assetKey": "grodor.idle.pelvis"
+      },
+      "assetPath": "projects/grodor/assets/grodor/front_master/front_pelvis.png",
+      "assetKey": "grodor.idle.pelvis",
+      "width": 522,
+      "height": 767
+    },
+    "front_belt": {
+      "id": "front_belt",
+      "label": "Raccord ventre",
+      "classification": "body",
+      "sourceLayerId": "front_belt",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/front_master/front_belt.png",
+        "assetKey": "grodor.idle.front_belt"
+      },
+      "assetPath": "projects/grodor/assets/grodor/front_master/front_belt.png",
+      "assetKey": "grodor.idle.front_belt",
+      "width": 522,
+      "height": 767
+    },
+    "belly": {
+      "id": "belly",
+      "label": "Ventre",
+      "classification": "body",
+      "sourceLayerId": "belly",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/front_master/front_belly.png",
+        "assetKey": "grodor.idle.belly"
+      },
+      "assetPath": "projects/grodor/assets/grodor/front_master/front_belly.png",
+      "assetKey": "grodor.idle.belly",
+      "width": 522,
+      "height": 767
+    },
+    "belt_test": {
+      "id": "belt_test",
+      "label": "Ceinture test",
+      "classification": "stuff",
+      "sourceLayerId": "belt_test",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/ceinture_test.png",
+        "assetKey": "grodor.idle.belt_test"
+      },
+      "assetPath": "projects/grodor/assets/grodor/front_master/stuff/ceinture_test.png",
+      "assetKey": "grodor.idle.belt_test",
+      "width": 383,
+      "height": 240,
+      "anchorParentId": "front_belt"
+    },
+    "auto_front_war_underwear_face": {
+      "id": "auto_front_war_underwear_face",
+      "label": "War Underwear Face",
+      "classification": "stuff",
+      "sourceLayerId": "auto_front_war_underwear_face",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/war_underwear_face.png",
+        "assetKey": "grodor.idle.auto_front_war_underwear_face"
+      },
+      "assetPath": "projects/grodor/assets/grodor/front_master/stuff/war_underwear_face.png",
+      "assetKey": "grodor.idle.auto_front_war_underwear_face",
+      "width": 382,
+      "height": 170,
+      "anchorParentId": "front_belt"
+    },
+    "torso": {
+      "id": "torso",
+      "label": "Haut du corps",
+      "classification": "body",
+      "sourceLayerId": "torso",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/front_master/front_torso.png",
+        "assetKey": "grodor.idle.torso"
+      },
+      "assetPath": "projects/grodor/assets/grodor/front_master/front_torso.png",
+      "assetKey": "grodor.idle.torso",
+      "width": 522,
+      "height": 767
+    },
+    "auto_front_axe": {
+      "id": "auto_front_axe",
+      "label": "Axe",
+      "classification": "stuff",
+      "sourceLayerId": "auto_front_axe",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/axe.png",
+        "assetKey": "grodor.idle.auto_front_axe"
+      },
+      "assetPath": "projects/grodor/assets/grodor/front_master/stuff/axe.png",
+      "assetKey": "grodor.idle.auto_front_axe",
+      "width": 248,
+      "height": 436,
+      "anchorParentId": "arm_right"
+    },
+    "arm_right": {
+      "id": "arm_right",
+      "label": "Bras droit",
+      "classification": "body",
+      "sourceLayerId": "arm_right",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/front_master/front_arm_right.png",
+        "assetKey": "grodor.idle.arm_right"
+      },
+      "assetPath": "projects/grodor/assets/grodor/front_master/front_arm_right.png",
+      "assetKey": "grodor.idle.arm_right",
+      "width": 522,
+      "height": 767
+    },
+    "glove_right": {
+      "id": "glove_right",
+      "label": "Gant droit",
+      "classification": "stuff",
+      "sourceLayerId": "glove_right",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/test_glove_right.png",
+        "assetKey": "grodor.idle.glove_right"
+      },
+      "assetPath": "projects/grodor/assets/grodor/front_master/stuff/test_glove_right.png",
+      "assetKey": "grodor.idle.glove_right",
+      "width": 109,
+      "height": 159,
+      "anchorParentId": "arm_right"
+    },
+    "auto_front_moufles_reflexion_left": {
+      "id": "auto_front_moufles_reflexion_left",
+      "label": "Moufles Reflexion Left",
+      "classification": "stuff",
+      "sourceLayerId": "auto_front_moufles_reflexion_left",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/moufles_reflexion_left.png",
+        "assetKey": "grodor.idle.auto_front_moufles_reflexion_left"
+      },
+      "assetPath": "projects/grodor/assets/grodor/front_master/stuff/moufles_reflexion_left.png",
+      "assetKey": "grodor.idle.auto_front_moufles_reflexion_left",
+      "width": 632,
+      "height": 829,
+      "anchorParentId": "arm_right"
+    },
+    "arm_left": {
+      "id": "arm_left",
+      "label": "Bras gauche",
+      "classification": "body",
+      "sourceLayerId": "arm_left",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/front_master/front_arm_left.png",
+        "assetKey": "grodor.idle.arm_left"
+      },
+      "assetPath": "projects/grodor/assets/grodor/front_master/front_arm_left.png",
+      "assetKey": "grodor.idle.arm_left",
+      "width": 522,
+      "height": 767
+    },
+    "glove_left": {
+      "id": "glove_left",
+      "label": "Gant gauche",
+      "classification": "stuff",
+      "sourceLayerId": "glove_left",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/test_glove_left.png",
+        "assetKey": "grodor.idle.glove_left"
+      },
+      "assetPath": "projects/grodor/assets/grodor/front_master/stuff/test_glove_left.png",
+      "assetKey": "grodor.idle.glove_left",
+      "width": 109,
+      "height": 159,
+      "anchorParentId": "arm_left"
+    },
+    "auto_front_moufles_reflexion_right": {
+      "id": "auto_front_moufles_reflexion_right",
+      "label": "Moufles Reflexion Right",
+      "classification": "stuff",
+      "sourceLayerId": "auto_front_moufles_reflexion_right",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/moufles_reflexion_right.png",
+        "assetKey": "grodor.idle.auto_front_moufles_reflexion_right"
+      },
+      "assetPath": "projects/grodor/assets/grodor/front_master/stuff/moufles_reflexion_right.png",
+      "assetKey": "grodor.idle.auto_front_moufles_reflexion_right",
+      "width": 667,
+      "height": 867,
+      "anchorParentId": "arm_left"
+    },
+    "cape_back": {
+      "id": "cape_back",
+      "label": "Cape dos",
+      "classification": "stuff",
+      "sourceLayerId": "cape_back",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/cape_trop_longue_face_bas.png",
+        "assetKey": "grodor.idle.cape_back"
+      },
+      "assetPath": "projects/grodor/assets/grodor/front_master/stuff/cape_trop_longue_face_bas.png",
+      "assetKey": "grodor.idle.cape_back",
+      "width": 522,
+      "height": 767,
+      "anchorParentId": "torso"
+    },
+    "cape_collar": {
+      "id": "cape_collar",
+      "label": "Col cape",
+      "classification": "stuff",
+      "sourceLayerId": "cape_collar",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/cape_trop_longue_face_haut.png",
+        "assetKey": "grodor.idle.cape_collar"
+      },
+      "assetPath": "projects/grodor/assets/grodor/front_master/stuff/cape_trop_longue_face_haut.png",
+      "assetKey": "grodor.idle.cape_collar",
+      "width": 522,
+      "height": 767,
+      "anchorParentId": "torso"
+    },
+    "auto_front_cape_quart_heure_face_haut": {
+      "id": "auto_front_cape_quart_heure_face_haut",
+      "label": "Cape Quart Heure Face Haut",
+      "classification": "stuff",
+      "sourceLayerId": "auto_front_cape_quart_heure_face_haut",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/cape_quart_heure_face_haut.png",
+        "assetKey": "grodor.idle.auto_front_cape_quart_heure_face_haut"
+      },
+      "assetPath": "projects/grodor/assets/grodor/front_master/stuff/cape_quart_heure_face_haut.png",
+      "assetKey": "grodor.idle.auto_front_cape_quart_heure_face_haut",
+      "width": 808,
+      "height": 611
+    },
+    "auto_front_sablier_fele": {
+      "id": "auto_front_sablier_fele",
+      "label": "Sablier Fele",
+      "classification": "stuff",
+      "sourceLayerId": "auto_front_sablier_fele",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/sablier_fele.png",
+        "assetKey": "grodor.idle.auto_front_sablier_fele"
+      },
+      "assetPath": "projects/grodor/assets/grodor/front_master/stuff/sablier_fele.png",
+      "assetKey": "grodor.idle.auto_front_sablier_fele",
+      "width": 415,
+      "height": 544,
+      "anchorParentId": "torso"
+    },
+    "auto_front_almost_hero_medallion": {
+      "id": "auto_front_almost_hero_medallion",
+      "label": "Almost Hero Medallion",
+      "classification": "stuff",
+      "sourceLayerId": "auto_front_almost_hero_medallion",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/almost_hero_medallion.png",
+        "assetKey": "grodor.idle.auto_front_almost_hero_medallion"
+      },
+      "assetPath": "projects/grodor/assets/grodor/front_master/stuff/almost_hero_medallion.png",
+      "assetKey": "grodor.idle.auto_front_almost_hero_medallion",
+      "width": 300,
+      "height": 400,
+      "anchorParentId": "torso"
+    },
+    "head": {
+      "id": "head",
+      "label": "Tete",
+      "classification": "body",
+      "sourceLayerId": "head",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/front_master/front_head.png",
+        "assetKey": "grodor.idle.head"
+      },
+      "assetPath": "projects/grodor/assets/grodor/front_master/front_head.png",
+      "assetKey": "grodor.idle.head",
+      "width": 522,
+      "height": 767
+    },
+    "auto_front_tiny_helmet": {
+      "id": "auto_front_tiny_helmet",
+      "label": "Tiny Helmet",
+      "classification": "stuff",
+      "sourceLayerId": "auto_front_tiny_helmet",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/tiny_helmet.png",
+        "assetKey": "grodor.idle.auto_front_tiny_helmet"
+      },
+      "assetPath": "projects/grodor/assets/grodor/front_master/stuff/tiny_helmet.png",
+      "assetKey": "grodor.idle.auto_front_tiny_helmet",
+      "width": 250,
+      "height": 167,
+      "anchorParentId": "head"
+    }
+  },
+  "layerGroups": {
+    "front_belt": [
+      "belt_test",
+      "auto_front_war_underwear_face"
+    ],
+    "arm_right": [
+      "glove_right",
+      "auto_front_moufles_reflexion_left",
+      "auto_front_axe"
+    ],
+    "arm_left": [
+      "glove_left",
+      "auto_front_moufles_reflexion_right"
+    ],
+    "torso": [
+      "cape_back",
+      "cape_collar",
+      "auto_front_almost_hero_medallion",
+      "auto_front_sablier_fele"
+    ],
+    "foot_right": [
+      "auto_front_sandale_droite"
+    ],
+    "foot_left": [
+      "auto_front_sandale_gauche"
+    ],
+    "head": [
+      "auto_front_tiny_helmet"
+    ]
+  },
+  "actor": {
+    "schema": "doctoxActorFaceIdleRig.v1",
+    "actorId": "grodor_idle",
+    "actorFamily": "grodorActor",
+    "actorType": "frontRig",
+    "sourceProject": "Donjon de Grodor",
+    "sourceRig": "frontIdle",
+    "sourcePreset": "public/assets/sprites/grodor/rig/front_master/saves/rig_idle_jm_anchor_save.json",
+    "sourceAssetRoot": "public/assets/sprites/grodor/rig/front_master",
+    "sourceRenderMethod": "RigDebugScene front idle base offsets/sizes converted to Doctox center-origin transforms.",
+    "frameCount": 1,
+    "poseCount": 1,
+    "frameSequence": [
+      0
+    ],
+    "poseFrameByDocumentFrame": [
+      0
+    ],
+    "defaultScale": 0.82,
+    "origin": {
+      "x": 960,
+      "y": 900
+    },
+    "pivot": {
+      "x": 261,
+      "y": 767
+    },
+    "bounds": {
+      "x": 628.72,
+      "y": 205.058,
+      "width": 662.56,
+      "height": 708.472
+    },
+    "bodyLayers": [
+      "foot_left",
+      "foot_right",
+      "leg_right",
+      "leg_left",
+      "pelvis",
+      "front_belt",
+      "belly",
+      "torso",
+      "arm_right",
+      "arm_left",
+      "head"
+    ],
+    "stuffLayers": [
+      "auto_front_cape_quart_heure_face_bas",
+      "auto_front_sandale_gauche",
+      "auto_front_sandale_droite",
+      "belt_test",
+      "auto_front_war_underwear_face",
+      "auto_front_axe",
+      "glove_right",
+      "auto_front_moufles_reflexion_left",
+      "glove_left",
+      "auto_front_moufles_reflexion_right",
+      "cape_back",
+      "cape_collar",
+      "auto_front_cape_quart_heure_face_haut",
+      "auto_front_sablier_fele",
+      "auto_front_almost_hero_medallion",
+      "auto_front_tiny_helmet"
+    ],
+    "helperLayers": [],
+    "anchors": {
+      "belt_test": "front_belt",
+      "glove_right": "arm_right",
+      "glove_left": "arm_left",
+      "auto_front_moufles_reflexion_left": "arm_right",
+      "auto_front_moufles_reflexion_right": "arm_left",
+      "cape_back": "torso",
+      "cape_collar": "torso",
+      "auto_front_almost_hero_medallion": "torso",
+      "auto_front_sablier_fele": "torso",
+      "auto_front_axe": "arm_right",
+      "auto_front_sandale_droite": "foot_right",
+      "auto_front_sandale_gauche": "foot_left",
+      "auto_front_tiny_helmet": "head",
+      "auto_front_war_underwear_face": "front_belt"
+    },
+    "layerClassifications": {
+      "auto_front_cape_quart_heure_face_bas": {
+        "kind": "stuff",
+        "label": "Cape Quart Heure Face Bas",
+        "sourceLayerId": "auto_front_cape_quart_heure_face_bas",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/cape_quart_heure_face_bas.png"
+      },
+      "foot_left": {
+        "kind": "body",
+        "label": "Pied gauche",
+        "sourceLayerId": "foot_left",
+        "assetPath": "projects/grodor/assets/grodor/front_master/front_foot_left.png"
+      },
+      "auto_front_sandale_gauche": {
+        "kind": "stuff",
+        "label": "Sandale Gauche",
+        "sourceLayerId": "auto_front_sandale_gauche",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/sandale_gauche.png",
+        "anchorParentId": "foot_left"
+      },
+      "foot_right": {
+        "kind": "body",
+        "label": "Pied droit",
+        "sourceLayerId": "foot_right",
+        "assetPath": "projects/grodor/assets/grodor/front_master/front_foot_right.png"
+      },
+      "auto_front_sandale_droite": {
+        "kind": "stuff",
+        "label": "Sandale Droite",
+        "sourceLayerId": "auto_front_sandale_droite",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/sandale_droite.png",
+        "anchorParentId": "foot_right"
+      },
+      "leg_right": {
+        "kind": "body",
+        "label": "Jambe droite",
+        "sourceLayerId": "leg_right",
+        "assetPath": "projects/grodor/assets/grodor/front_master/front_leg_right.png"
+      },
+      "leg_left": {
+        "kind": "body",
+        "label": "Jambe gauche",
+        "sourceLayerId": "leg_left",
+        "assetPath": "projects/grodor/assets/grodor/front_master/front_leg_left.png"
+      },
+      "pelvis": {
+        "kind": "body",
+        "label": "Bas du corps",
+        "sourceLayerId": "pelvis",
+        "assetPath": "projects/grodor/assets/grodor/front_master/front_pelvis.png"
+      },
+      "front_belt": {
+        "kind": "body",
+        "label": "Raccord ventre",
+        "sourceLayerId": "front_belt",
+        "assetPath": "projects/grodor/assets/grodor/front_master/front_belt.png"
+      },
+      "belly": {
+        "kind": "body",
+        "label": "Ventre",
+        "sourceLayerId": "belly",
+        "assetPath": "projects/grodor/assets/grodor/front_master/front_belly.png"
+      },
+      "belt_test": {
+        "kind": "stuff",
+        "label": "Ceinture test",
+        "sourceLayerId": "belt_test",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/ceinture_test.png",
+        "anchorParentId": "front_belt"
+      },
+      "auto_front_war_underwear_face": {
+        "kind": "stuff",
+        "label": "War Underwear Face",
+        "sourceLayerId": "auto_front_war_underwear_face",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/war_underwear_face.png",
+        "anchorParentId": "front_belt"
+      },
+      "torso": {
+        "kind": "body",
+        "label": "Haut du corps",
+        "sourceLayerId": "torso",
+        "assetPath": "projects/grodor/assets/grodor/front_master/front_torso.png"
+      },
+      "auto_front_axe": {
+        "kind": "stuff",
+        "label": "Axe",
+        "sourceLayerId": "auto_front_axe",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/axe.png",
+        "anchorParentId": "arm_right"
+      },
+      "arm_right": {
+        "kind": "body",
+        "label": "Bras droit",
+        "sourceLayerId": "arm_right",
+        "assetPath": "projects/grodor/assets/grodor/front_master/front_arm_right.png"
+      },
+      "glove_right": {
+        "kind": "stuff",
+        "label": "Gant droit",
+        "sourceLayerId": "glove_right",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/test_glove_right.png",
+        "anchorParentId": "arm_right"
+      },
+      "auto_front_moufles_reflexion_left": {
+        "kind": "stuff",
+        "label": "Moufles Reflexion Left",
+        "sourceLayerId": "auto_front_moufles_reflexion_left",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/moufles_reflexion_left.png",
+        "anchorParentId": "arm_right"
+      },
+      "arm_left": {
+        "kind": "body",
+        "label": "Bras gauche",
+        "sourceLayerId": "arm_left",
+        "assetPath": "projects/grodor/assets/grodor/front_master/front_arm_left.png"
+      },
+      "glove_left": {
+        "kind": "stuff",
+        "label": "Gant gauche",
+        "sourceLayerId": "glove_left",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/test_glove_left.png",
+        "anchorParentId": "arm_left"
+      },
+      "auto_front_moufles_reflexion_right": {
+        "kind": "stuff",
+        "label": "Moufles Reflexion Right",
+        "sourceLayerId": "auto_front_moufles_reflexion_right",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/moufles_reflexion_right.png",
+        "anchorParentId": "arm_left"
+      },
+      "cape_back": {
+        "kind": "stuff",
+        "label": "Cape dos",
+        "sourceLayerId": "cape_back",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/cape_trop_longue_face_bas.png",
+        "anchorParentId": "torso"
+      },
+      "cape_collar": {
+        "kind": "stuff",
+        "label": "Col cape",
+        "sourceLayerId": "cape_collar",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/cape_trop_longue_face_haut.png",
+        "anchorParentId": "torso"
+      },
+      "auto_front_cape_quart_heure_face_haut": {
+        "kind": "stuff",
+        "label": "Cape Quart Heure Face Haut",
+        "sourceLayerId": "auto_front_cape_quart_heure_face_haut",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/cape_quart_heure_face_haut.png"
+      },
+      "auto_front_sablier_fele": {
+        "kind": "stuff",
+        "label": "Sablier Fele",
+        "sourceLayerId": "auto_front_sablier_fele",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/sablier_fele.png",
+        "anchorParentId": "torso"
+      },
+      "auto_front_almost_hero_medallion": {
+        "kind": "stuff",
+        "label": "Almost Hero Medallion",
+        "sourceLayerId": "auto_front_almost_hero_medallion",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/almost_hero_medallion.png",
+        "anchorParentId": "torso"
+      },
+      "head": {
+        "kind": "body",
+        "label": "Tete",
+        "sourceLayerId": "head",
+        "assetPath": "projects/grodor/assets/grodor/front_master/front_head.png"
+      },
+      "auto_front_tiny_helmet": {
+        "kind": "stuff",
+        "label": "Tiny Helmet",
+        "sourceLayerId": "auto_front_tiny_helmet",
+        "assetPath": "projects/grodor/assets/grodor/front_master/stuff/tiny_helmet.png",
+        "anchorParentId": "head"
+      }
+    },
+    "excludedLayers": [],
+    "sourceIssues": [
+      "Idle est le rig front de base; il reste separe des actors side.",
+      "Le preset source active animationEnabled pour une respiration procedurale dans RigDebugScene.",
+      "Doctox bake ici une frame stable; Play/Stop ne change pas encore la respiration Idle."
+    ],
+    "importReady": true
+  },
+  "transforms": {
+    "0": {
+      "auto_front_cape_quart_heure_face_bas": {
+        "x": 960,
+        "y": 644.16,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "foot_left": {
+        "x": 960,
+        "y": 585.53,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "auto_front_sandale_gauche": {
+        "x": 1044.46,
+        "y": 873.76,
+        "scaleX": 0.8446,
+        "scaleY": 0.7954,
+        "rotation": 0
+      },
+      "foot_right": {
+        "x": 960,
+        "y": 585.53,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "auto_front_sandale_droite": {
+        "x": 878.82,
+        "y": 872.94,
+        "scaleX": 0.8692,
+        "scaleY": 0.7708,
+        "rotation": 0
+      },
+      "leg_right": {
+        "x": 960,
+        "y": 585.53,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "leg_left": {
+        "x": 960,
+        "y": 585.53,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "pelvis": {
+        "x": 960,
+        "y": 585.53,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "front_belt": {
+        "x": 960,
+        "y": 585.53,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "belly": {
+        "x": 960,
+        "y": 585.53,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "belt_test": {
+        "x": 960,
+        "y": 678.6,
+        "scaleX": 0.81672,
+        "scaleY": 0.48708,
+        "rotation": 0
+      },
+      "auto_front_war_underwear_face": {
+        "x": 960,
+        "y": 686.8,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "torso": {
+        "x": 960,
+        "y": 585.53,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "auto_front_axe": {
+        "x": 791.9,
+        "y": 737.64,
+        "scaleX": 0.5248,
+        "scaleY": 0.5248,
+        "rotation": 66
+      },
+      "arm_right": {
+        "x": 960,
+        "y": 585.53,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "glove_right": {
+        "x": 786.16,
+        "y": 676.228,
+        "scaleX": 0.82066,
+        "scaleY": 0.87379,
+        "rotation": 0
+      },
+      "auto_front_moufles_reflexion_left": {
+        "x": 789.44,
+        "y": 683.52,
+        "scaleX": 0.1558,
+        "scaleY": 0.1312,
+        "rotation": 0
+      },
+      "arm_left": {
+        "x": 960,
+        "y": 585.53,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "glove_left": {
+        "x": 1136.3,
+        "y": 672.514,
+        "scaleX": 0.87379,
+        "scaleY": 0.85608,
+        "rotation": 0
+      },
+      "auto_front_moufles_reflexion_right": {
+        "x": 1134.66,
+        "y": 681.06,
+        "scaleX": 0.1312,
+        "scaleY": 0.1312,
+        "rotation": 0
+      },
+      "cape_back": {
+        "x": 960,
+        "y": 585.53,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "cape_collar": {
+        "x": 960,
+        "y": 585.53,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "auto_front_cape_quart_heure_face_haut": {
+        "x": 960,
+        "y": 663.02,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "auto_front_sablier_fele": {
+        "x": 960,
+        "y": 522.8,
+        "scaleX": 0.1804,
+        "scaleY": 0.1558,
+        "rotation": 0
+      },
+      "auto_front_almost_hero_medallion": {
+        "x": 958.36,
+        "y": 503.94,
+        "scaleX": 0.3034,
+        "scaleY": 0.3034,
+        "rotation": 0
+      },
+      "head": {
+        "x": 960,
+        "y": 585.53,
+        "scaleX": 0.82,
+        "scaleY": 0.82,
+        "rotation": 0
+      },
+      "auto_front_tiny_helmet": {
+        "x": 960,
+        "y": 269.42,
+        "scaleX": 0.7954,
+        "scaleY": 0.7708,
+        "rotation": 0
+      }
+    }
+  },
+  "visibility": {
+    "0": {
+      "auto_front_cape_quart_heure_face_bas": true,
+      "foot_left": true,
+      "auto_front_sandale_gauche": true,
+      "foot_right": true,
+      "auto_front_sandale_droite": true,
+      "leg_right": true,
+      "leg_left": true,
+      "pelvis": true,
+      "front_belt": true,
+      "belly": true,
+      "belt_test": true,
+      "auto_front_war_underwear_face": true,
+      "torso": true,
+      "auto_front_axe": true,
+      "arm_right": true,
+      "glove_right": true,
+      "auto_front_moufles_reflexion_left": true,
+      "arm_left": true,
+      "glove_left": true,
+      "auto_front_moufles_reflexion_right": true,
+      "cape_back": true,
+      "cape_collar": true,
+      "auto_front_cape_quart_heure_face_haut": true,
+      "auto_front_sablier_fele": true,
+      "auto_front_almost_hero_medallion": true,
+      "head": true,
+      "auto_front_tiny_helmet": true
+    }
+  },
+  "exportTarget": "generic"
+}

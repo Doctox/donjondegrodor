@@ -1,0 +1,570 @@
+{
+  "version": 1,
+  "name": "Tir a la corde - Terrain",
+  "type": "terrain",
+  "template": {
+    "kind": "terrainRig",
+    "label": "Terrain animation",
+    "description": "Terrain Tug reconstruit avec actorRefs Grodor/Boss et overlays bras separes."
+  },
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": {
+      "type": "grid",
+      "color": "#15181c",
+      "gridColor": "#2d3740",
+      "gridSize": 48
+    }
+  },
+  "frames": 1,
+  "selectedFrame": 0,
+  "selectedLayerId": "grodor_tug",
+  "layerOrder": [
+    "background",
+    "boss_tug",
+    "grodor_tug",
+    "tugRope",
+    "grodor_tug_front_arm",
+    "grodor_victory",
+    "grodor_hurt",
+    "tugFlag",
+    "boss_tug_front_arm",
+    "bossLoose"
+  ],
+  "layers": {
+    "background": {
+      "id": "background",
+      "label": "Background",
+      "sourceLayerId": "background",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/tug_of_war/terrain/background.png",
+        "assetKey": "tug.terrain.background"
+      },
+      "assetPath": "projects/grodor/assets/minigames/tug_of_war/terrain/background.png",
+      "assetKey": "tug.terrain.background",
+      "width": 1672,
+      "height": 941
+    },
+    "boss_tug": {
+      "id": "boss_tug",
+      "label": "Actor: Boss Tug",
+      "actorRef": {
+        "type": "documentActor",
+        "actorDocumentId": "enemy-boss-tug",
+        "actorPath": "/projects/grodor/documents/actors/enemy-boss-tug.json",
+        "actorId": "boss_tug",
+        "actorFamily": "enemyActor",
+        "actorType": "miniGameActor",
+        "frameCount": 4,
+        "frameSequence": [
+          0,
+          1,
+          2,
+          3,
+          2,
+          1,
+          0
+        ],
+        "defaultScale": 1,
+        "origin": {
+          "x": 960,
+          "y": 620
+        },
+        "pivot": {
+          "x": 0,
+          "y": 0
+        },
+        "bounds": {
+          "x": 350.5,
+          "y": -1,
+          "width": 741.5,
+          "height": 1093
+        },
+        "playback": "timeline",
+        "pausedFrame": 0,
+        "frameOffset": 0,
+        "stuffVisibility": {},
+        "excludeLayerIds": [
+          "bras_front"
+        ]
+      },
+      "width": 742,
+      "height": 1093
+    },
+    "grodor_tug": {
+      "id": "grodor_tug",
+      "label": "Actor: Grodor Tug",
+      "actorRef": {
+        "type": "documentActor",
+        "actorDocumentId": "grodor-tug",
+        "actorPath": "/projects/grodor/documents/grodor-tug-side.json",
+        "actorId": "grodor_tug",
+        "actorFamily": "grodorActor",
+        "actorType": "miniGameActor",
+        "frameCount": 9,
+        "frameSequence": [
+          1,
+          2,
+          3,
+          4,
+          3,
+          2,
+          1,
+          0,
+          1
+        ],
+        "defaultScale": 0.82,
+        "origin": {
+          "x": 960,
+          "y": 900
+        },
+        "pivot": {
+          "x": 261,
+          "y": 767
+        },
+        "bounds": {
+          "x": 620.752,
+          "y": 231.865,
+          "width": 642.289,
+          "height": 670.636
+        },
+        "playback": "timeline",
+        "pausedFrame": 0,
+        "frameOffset": 0,
+        "stuffVisibility": {
+          "glove_back": false,
+          "auto_side_moufles_reflexion_back": false,
+          "shoe_back": false,
+          "shoe_front": false,
+          "auto_side_ceinture_test": false,
+          "auto_side_war_underwear_walk": false,
+          "auto_side_axe": false,
+          "glove_front": false,
+          "auto_side_moufles_reflexion_front": false,
+          "cape_side_collar": false,
+          "auto_side_cape_quart_heure_profil_haut": false,
+          "auto_side_tiny_helmet": false,
+          "cape_side": false,
+          "auto_side_cape_quart_heure_profil_bas": false
+        },
+        "excludeLayerIds": [
+          "arm_front_upper",
+          "arm_front_forearm",
+          "hand_front",
+          "glove_front"
+        ]
+      },
+      "width": 642,
+      "height": 671
+    },
+    "tugRope": {
+      "id": "tugRope",
+      "label": "Corde",
+      "sourceLayerId": "tugRope",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/tug_of_war/terrain/corde.png",
+        "assetKey": "tug.terrain.rope"
+      },
+      "assetPath": "projects/grodor/assets/minigames/tug_of_war/terrain/corde.png",
+      "assetKey": "tug.terrain.rope",
+      "width": 1727,
+      "height": 129
+    },
+    "grodor_tug_front_arm": {
+      "id": "grodor_tug_front_arm",
+      "label": "Actor: Grodor Tug bras avant",
+      "actorRef": {
+        "type": "documentActor",
+        "actorDocumentId": "grodor-tug",
+        "actorPath": "/projects/grodor/documents/grodor-tug-side.json",
+        "actorId": "grodor_tug",
+        "actorFamily": "grodorActor",
+        "actorType": "miniGameActor",
+        "frameCount": 9,
+        "frameSequence": [
+          1,
+          2,
+          3,
+          4,
+          3,
+          2,
+          1,
+          0,
+          1
+        ],
+        "defaultScale": 0.82,
+        "origin": {
+          "x": 960,
+          "y": 900
+        },
+        "pivot": {
+          "x": 261,
+          "y": 767
+        },
+        "bounds": {
+          "x": 620.752,
+          "y": 231.865,
+          "width": 642.289,
+          "height": 670.636
+        },
+        "playback": "timeline",
+        "pausedFrame": 0,
+        "frameOffset": 0,
+        "stuffVisibility": {
+          "glove_back": false,
+          "auto_side_moufles_reflexion_back": false,
+          "shoe_back": false,
+          "shoe_front": false,
+          "auto_side_ceinture_test": false,
+          "auto_side_war_underwear_walk": false,
+          "auto_side_axe": false,
+          "glove_front": false,
+          "auto_side_moufles_reflexion_front": false,
+          "cape_side_collar": false,
+          "auto_side_cape_quart_heure_profil_haut": false,
+          "auto_side_tiny_helmet": false,
+          "cape_side": false,
+          "auto_side_cape_quart_heure_profil_bas": false
+        },
+        "includeLayerIds": [
+          "arm_front_upper",
+          "arm_front_forearm",
+          "hand_front",
+          "glove_front"
+        ]
+      },
+      "width": 642,
+      "height": 671
+    },
+    "grodor_victory": {
+      "id": "grodor_victory",
+      "label": "Actor: Grodor Victory resultat",
+      "actorRef": {
+        "type": "documentActor",
+        "actorDocumentId": "grodor-victory",
+        "actorPath": "/projects/grodor/documents/grodor-victory-front.json",
+        "actorId": "grodor_victory",
+        "actorFamily": "grodorActor",
+        "actorType": "frontRig",
+        "frameCount": 4,
+        "frameSequence": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "defaultScale": 0.82,
+        "origin": {
+          "x": 960,
+          "y": 900
+        },
+        "pivot": {
+          "x": 261,
+          "y": 767
+        },
+        "bounds": {
+          "x": 589.661,
+          "y": 11.741,
+          "width": 701.619,
+          "height": 926.451
+        },
+        "playback": "timeline",
+        "pausedFrame": 0,
+        "frameOffset": 0,
+        "stuffVisibility": {
+          "auto_front_cape_quart_heure_face_bas": true,
+          "auto_front_moufles_reflexion_left": true,
+          "auto_front_moufles_reflexion_right": true,
+          "auto_front_sablier_fele": true,
+          "auto_front_sandale_gauche": true,
+          "auto_front_sandale_droite": true,
+          "belt_test": true,
+          "auto_front_war_underwear_face": true,
+          "auto_front_axe": true,
+          "glove_right": true,
+          "glove_left": true,
+          "auto_front_cape_quart_heure_face_haut": true,
+          "auto_front_almost_hero_medallion": true,
+          "auto_front_tiny_helmet": true
+        }
+      },
+      "width": 702,
+      "height": 926
+    },
+    "grodor_hurt": {
+      "id": "grodor_hurt",
+      "label": "Actor: Grodor Hurt resultat",
+      "actorRef": {
+        "type": "documentActor",
+        "actorDocumentId": "grodor-hurt",
+        "actorPath": "/projects/grodor/documents/grodor-hurt-side.json",
+        "actorId": "grodor_hurt",
+        "actorFamily": "grodorActor",
+        "actorType": "hurtRig",
+        "frameCount": 4,
+        "frameSequence": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "defaultScale": 0.82,
+        "origin": {
+          "x": 960,
+          "y": 900
+        },
+        "pivot": {
+          "x": 261,
+          "y": 767
+        },
+        "bounds": {
+          "x": 554.51,
+          "y": 197.913,
+          "width": 753.661,
+          "height": 791.529
+        },
+        "playback": "timeline",
+        "pausedFrame": 0,
+        "frameOffset": 0,
+        "stuffVisibility": {
+          "glove_back": true,
+          "auto_side_moufles_reflexion_back": true,
+          "shoe_back": true,
+          "shoe_front": true,
+          "auto_side_war_underwear_walk": true,
+          "auto_side_axe": true,
+          "glove_front": true,
+          "auto_side_moufles_reflexion_front": true,
+          "cape_side_collar": true,
+          "auto_side_cape_quart_heure_profil_haut": true,
+          "auto_side_tiny_helmet": true,
+          "cape_side": true,
+          "auto_side_cape_quart_heure_profil_bas": true
+        }
+      },
+      "width": 754,
+      "height": 792
+    },
+    "tugFlag": {
+      "id": "tugFlag",
+      "label": "Fanion",
+      "sourceLayerId": "tugFlag",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/tug_of_war/terrain/fanion.png",
+        "assetKey": "tug.terrain.flag"
+      },
+      "assetPath": "projects/grodor/assets/minigames/tug_of_war/terrain/fanion.png",
+      "assetKey": "tug.terrain.flag",
+      "width": 148,
+      "height": 186
+    },
+    "boss_tug_front_arm": {
+      "id": "boss_tug_front_arm",
+      "label": "Actor: Boss Tug bras avant",
+      "actorRef": {
+        "type": "documentActor",
+        "actorDocumentId": "enemy-boss-tug",
+        "actorPath": "/projects/grodor/documents/actors/enemy-boss-tug.json",
+        "actorId": "boss_tug",
+        "actorFamily": "enemyActor",
+        "actorType": "miniGameActor",
+        "frameCount": 4,
+        "frameSequence": [
+          0,
+          1,
+          2,
+          3,
+          2,
+          1,
+          0
+        ],
+        "defaultScale": 1,
+        "origin": {
+          "x": 960,
+          "y": 620
+        },
+        "pivot": {
+          "x": 0,
+          "y": 0
+        },
+        "bounds": {
+          "x": 350.5,
+          "y": -1,
+          "width": 741.5,
+          "height": 1093
+        },
+        "playback": "timeline",
+        "pausedFrame": 0,
+        "frameOffset": 0,
+        "stuffVisibility": {},
+        "includeLayerIds": [
+          "bras_front"
+        ]
+      },
+      "width": 742,
+      "height": 1093
+    },
+    "bossLoose": {
+      "id": "bossLoose",
+      "label": "Boss loose resultat",
+      "sourceLayerId": "bossLoose",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/tug_of_war/boss/boss_loose.png",
+        "assetKey": "tug.terrain.bossLoose"
+      },
+      "assetPath": "projects/grodor/assets/minigames/tug_of_war/boss/boss_loose.png",
+      "assetKey": "tug.terrain.bossLoose",
+      "width": 523,
+      "height": 957
+    }
+  },
+  "actor": {
+    "schema": "doctoxTerrainMiniGameTug.v1",
+    "terrainId": "tug_of_war_terrain",
+    "usage": "tug_of_war",
+    "sourceProject": "Donjon de Grodor",
+    "sourcePreset": "public/assets/minigames/tug_of_war/saves/terrain_jm_save.json",
+    "sourceRuntime": "tugOfWarTerrainRuntime",
+    "sourceRenderMethod": "Runtime direct 1920x1080. Grodor/Boss sont des documentActor references; les bras avant sont des actorRefs filtres includeLayerIds pour passer devant la corde.",
+    "actorRefs": {
+      "grodorTug": "grodor-tug",
+      "bossTug": "enemy-boss-tug",
+      "grodorVictory": "grodor-victory",
+      "grodorHurt": "grodor-hurt"
+    },
+    "frontOverlayRules": {
+      "grodor": {
+        "layerId": "grodor_tug_front_arm",
+        "sourceActorLayerId": "grodor_tug",
+        "includeLayerIds": [
+          "arm_front_upper",
+          "arm_front_forearm",
+          "hand_front",
+          "glove_front"
+        ]
+      },
+      "boss": {
+        "layerId": "boss_tug_front_arm",
+        "sourceActorLayerId": "boss_tug",
+        "includeLayerIds": [
+          "bras_front"
+        ]
+      }
+    },
+    "roundStartVisibleLayers": [
+      "background",
+      "boss_tug",
+      "grodor_tug",
+      "tugRope",
+      "grodor_tug_front_arm",
+      "tugFlag",
+      "boss_tug_front_arm"
+    ],
+    "terrainResultLayers": [
+      "grodor_victory",
+      "grodor_hurt",
+      "bossLoose"
+    ],
+    "sourceIssues": [
+      "Le save terrain marque les resultats visibles, mais le runtime les masque au depart. Doctox ouvre donc en etat round pret.",
+      "bossLoose est un layer resultat terrain, pas un layer interne de Boss Tug.",
+      "Les bras avant Grodor/Boss sont des actorRefs filtres, pas des copies de layers internes dans le terrain.",
+      "Ce document ne contient pas la logique jouable Tir a la corde; il sert au placement/preview propre dans DoctoxStudio."
+    ],
+    "importReady": true
+  },
+  "transforms": {
+    "0": {
+      "background": {
+        "x": 960,
+        "y": 540,
+        "scaleX": 1.14833,
+        "scaleY": 1.14772,
+        "rotation": 0
+      },
+      "boss_tug": {
+        "x": 1578,
+        "y": 650,
+        "scaleX": 0.4324,
+        "scaleY": 0.4324,
+        "rotation": -4
+      },
+      "grodor_tug": {
+        "x": 470,
+        "y": 824,
+        "scaleX": 0.7072,
+        "scaleY": 0.7072,
+        "rotation": 0
+      },
+      "tugRope": {
+        "x": 990,
+        "y": 616,
+        "scaleX": 0.82224,
+        "scaleY": 0.25473,
+        "rotation": -1
+      },
+      "grodor_tug_front_arm": {
+        "x": 470,
+        "y": 824,
+        "scaleX": 0.7072,
+        "scaleY": 0.7072,
+        "rotation": 0
+      },
+      "grodor_victory": {
+        "x": 370,
+        "y": 820,
+        "scaleX": 0.56341,
+        "scaleY": 0.55573,
+        "rotation": 0
+      },
+      "grodor_hurt": {
+        "x": 322,
+        "y": 898,
+        "scaleX": 0.69159,
+        "scaleY": 0.70128,
+        "rotation": -22
+      },
+      "tugFlag": {
+        "x": 962,
+        "y": 630,
+        "scaleX": 0.67757,
+        "scaleY": 0.24946,
+        "rotation": 0
+      },
+      "boss_tug_front_arm": {
+        "x": 1578,
+        "y": 650,
+        "scaleX": 0.4324,
+        "scaleY": 0.4324,
+        "rotation": -4
+      },
+      "bossLoose": {
+        "x": 1480,
+        "y": 640,
+        "scaleX": 0.45048,
+        "scaleY": 0.45108,
+        "rotation": 0
+      }
+    }
+  },
+  "visibility": {
+    "0": {
+      "background": true,
+      "boss_tug": true,
+      "grodor_tug": true,
+      "tugRope": true,
+      "grodor_tug_front_arm": true,
+      "grodor_victory": false,
+      "grodor_hurt": false,
+      "tugFlag": true,
+      "boss_tug_front_arm": true,
+      "bossLoose": false
+    }
+  },
+  "exportTarget": "generic"
+}

@@ -1,0 +1,617 @@
+{
+  "version": 1,
+  "name": "Batonnets - Terrain JM",
+  "type": "terrain",
+  "template": {
+    "kind": "terrainRig",
+    "label": "Terrain animation",
+    "description": "Import DoctoxStudio du terrain Batonnets JM depuis Grodor."
+  },
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": {
+      "type": "grid",
+      "color": "#15181c",
+      "gridColor": "#31404a",
+      "gridSize": 48
+    }
+  },
+  "frames": 1,
+  "selectedFrame": 0,
+  "selectedLayerId": "button_take_3",
+  "layerOrder": [
+    "background",
+    "table",
+    "batonnet_01",
+    "batonnet_02",
+    "batonnet_03",
+    "batonnet_04",
+    "batonnet_05",
+    "batonnet_06",
+    "batonnet_07",
+    "batonnet_08",
+    "batonnet_09",
+    "batonnet_10",
+    "batonnet_11",
+    "batonnet_12",
+    "batonnet_13",
+    "batonnet_14",
+    "batonnet_15",
+    "batonnet_16",
+    "batonnet_17",
+    "batonnet_18",
+    "batonnet_19",
+    "batonnet_20",
+    "batonnet_21",
+    "button_take_1",
+    "button_take_2",
+    "button_take_3"
+  ],
+  "layers": {
+    "background": {
+      "id": "background",
+      "label": "Background",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/background_table.png",
+        "assetKey": "rig-mj-batonnets-background"
+      },
+      "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/background_table.png",
+      "assetKey": "rig-mj-batonnets-background",
+      "width": 1920,
+      "height": 1081
+    },
+    "table": {
+      "id": "table",
+      "label": "Table",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/table_batonnet.png",
+        "assetKey": "rig-mj-batonnets-table"
+      },
+      "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/table_batonnet.png",
+      "assetKey": "rig-mj-batonnets-table",
+      "width": 719,
+      "height": 261
+    },
+    "batonnet_01": {
+      "id": "batonnet_01",
+      "label": "Batonnet 1",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+        "assetKey": "rig-mj-batonnets-batonnet"
+      },
+      "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+      "assetKey": "rig-mj-batonnets-batonnet",
+      "width": 23,
+      "height": 141
+    },
+    "batonnet_02": {
+      "id": "batonnet_02",
+      "label": "Batonnet 2",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+        "assetKey": "rig-mj-batonnets-batonnet"
+      },
+      "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+      "assetKey": "rig-mj-batonnets-batonnet",
+      "width": 23,
+      "height": 141
+    },
+    "batonnet_03": {
+      "id": "batonnet_03",
+      "label": "Batonnet 3",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+        "assetKey": "rig-mj-batonnets-batonnet"
+      },
+      "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+      "assetKey": "rig-mj-batonnets-batonnet",
+      "width": 23,
+      "height": 141
+    },
+    "batonnet_04": {
+      "id": "batonnet_04",
+      "label": "Batonnet 4",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+        "assetKey": "rig-mj-batonnets-batonnet"
+      },
+      "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+      "assetKey": "rig-mj-batonnets-batonnet",
+      "width": 23,
+      "height": 141
+    },
+    "batonnet_05": {
+      "id": "batonnet_05",
+      "label": "Batonnet 5",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+        "assetKey": "rig-mj-batonnets-batonnet"
+      },
+      "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+      "assetKey": "rig-mj-batonnets-batonnet",
+      "width": 23,
+      "height": 141
+    },
+    "batonnet_06": {
+      "id": "batonnet_06",
+      "label": "Batonnet 6",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+        "assetKey": "rig-mj-batonnets-batonnet"
+      },
+      "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+      "assetKey": "rig-mj-batonnets-batonnet",
+      "width": 23,
+      "height": 141
+    },
+    "batonnet_07": {
+      "id": "batonnet_07",
+      "label": "Batonnet 7",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+        "assetKey": "rig-mj-batonnets-batonnet"
+      },
+      "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+      "assetKey": "rig-mj-batonnets-batonnet",
+      "width": 23,
+      "height": 141
+    },
+    "batonnet_08": {
+      "id": "batonnet_08",
+      "label": "Batonnet 8",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+        "assetKey": "rig-mj-batonnets-batonnet"
+      },
+      "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+      "assetKey": "rig-mj-batonnets-batonnet",
+      "width": 23,
+      "height": 141
+    },
+    "batonnet_09": {
+      "id": "batonnet_09",
+      "label": "Batonnet 9",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+        "assetKey": "rig-mj-batonnets-batonnet"
+      },
+      "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+      "assetKey": "rig-mj-batonnets-batonnet",
+      "width": 23,
+      "height": 141
+    },
+    "batonnet_10": {
+      "id": "batonnet_10",
+      "label": "Batonnet 10",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+        "assetKey": "rig-mj-batonnets-batonnet"
+      },
+      "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+      "assetKey": "rig-mj-batonnets-batonnet",
+      "width": 23,
+      "height": 141
+    },
+    "batonnet_11": {
+      "id": "batonnet_11",
+      "label": "Batonnet 11",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+        "assetKey": "rig-mj-batonnets-batonnet"
+      },
+      "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+      "assetKey": "rig-mj-batonnets-batonnet",
+      "width": 23,
+      "height": 141
+    },
+    "batonnet_12": {
+      "id": "batonnet_12",
+      "label": "Batonnet 12",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+        "assetKey": "rig-mj-batonnets-batonnet"
+      },
+      "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+      "assetKey": "rig-mj-batonnets-batonnet",
+      "width": 23,
+      "height": 141
+    },
+    "batonnet_13": {
+      "id": "batonnet_13",
+      "label": "Batonnet 13",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+        "assetKey": "rig-mj-batonnets-batonnet"
+      },
+      "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+      "assetKey": "rig-mj-batonnets-batonnet",
+      "width": 23,
+      "height": 141
+    },
+    "batonnet_14": {
+      "id": "batonnet_14",
+      "label": "Batonnet 14",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+        "assetKey": "rig-mj-batonnets-batonnet"
+      },
+      "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+      "assetKey": "rig-mj-batonnets-batonnet",
+      "width": 23,
+      "height": 141
+    },
+    "batonnet_15": {
+      "id": "batonnet_15",
+      "label": "Batonnet 15",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+        "assetKey": "rig-mj-batonnets-batonnet"
+      },
+      "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+      "assetKey": "rig-mj-batonnets-batonnet",
+      "width": 23,
+      "height": 141
+    },
+    "batonnet_16": {
+      "id": "batonnet_16",
+      "label": "Batonnet 16",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+        "assetKey": "rig-mj-batonnets-batonnet"
+      },
+      "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+      "assetKey": "rig-mj-batonnets-batonnet",
+      "width": 23,
+      "height": 141
+    },
+    "batonnet_17": {
+      "id": "batonnet_17",
+      "label": "Batonnet 17",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+        "assetKey": "rig-mj-batonnets-batonnet"
+      },
+      "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+      "assetKey": "rig-mj-batonnets-batonnet",
+      "width": 23,
+      "height": 141
+    },
+    "batonnet_18": {
+      "id": "batonnet_18",
+      "label": "Batonnet 18",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+        "assetKey": "rig-mj-batonnets-batonnet"
+      },
+      "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+      "assetKey": "rig-mj-batonnets-batonnet",
+      "width": 23,
+      "height": 141
+    },
+    "batonnet_19": {
+      "id": "batonnet_19",
+      "label": "Batonnet 19",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+        "assetKey": "rig-mj-batonnets-batonnet"
+      },
+      "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+      "assetKey": "rig-mj-batonnets-batonnet",
+      "width": 23,
+      "height": 141
+    },
+    "batonnet_20": {
+      "id": "batonnet_20",
+      "label": "Batonnet 20",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+        "assetKey": "rig-mj-batonnets-batonnet"
+      },
+      "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+      "assetKey": "rig-mj-batonnets-batonnet",
+      "width": 23,
+      "height": 141
+    },
+    "batonnet_21": {
+      "id": "batonnet_21",
+      "label": "Batonnet 21",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+        "assetKey": "rig-mj-batonnets-batonnet"
+      },
+      "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/batonnet.png",
+      "assetKey": "rig-mj-batonnets-batonnet",
+      "width": 23,
+      "height": 141
+    },
+    "button_take_1": {
+      "id": "button_take_1",
+      "label": "Bouton 1",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/1.png",
+        "assetKey": "rig-mj-batonnets-button-1"
+      },
+      "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/1.png",
+      "assetKey": "rig-mj-batonnets-button-1",
+      "width": 157,
+      "height": 160
+    },
+    "button_take_2": {
+      "id": "button_take_2",
+      "label": "Bouton 2",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/2.png",
+        "assetKey": "rig-mj-batonnets-button-2"
+      },
+      "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/2.png",
+      "assetKey": "rig-mj-batonnets-button-2",
+      "width": 157,
+      "height": 160
+    },
+    "button_take_3": {
+      "id": "button_take_3",
+      "label": "Bouton 3",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/3.png",
+        "assetKey": "rig-mj-batonnets-button-3"
+      },
+      "assetPath": "projects/grodor/assets/minigames/batonnets/terrain/3.png",
+      "assetKey": "rig-mj-batonnets-button-3",
+      "width": 156,
+      "height": 158
+    }
+  },
+  "layerGroups": {},
+  "transforms": {
+    "0": {
+      "background": {
+        "x": 960,
+        "y": 540,
+        "scaleX": 1,
+        "scaleY": 0.99907493,
+        "rotation": 0
+      },
+      "table": {
+        "x": 960,
+        "y": 431.501155,
+        "scaleX": 1.74788216,
+        "scaleY": 1.75981524,
+        "rotation": 0
+      },
+      "batonnet_01": {
+        "x": 503.688312,
+        "y": 391.593533,
+        "scaleX": 1.56332016,
+        "scaleY": 1.99980345,
+        "rotation": 0
+      },
+      "batonnet_02": {
+        "x": 551.064935,
+        "y": 392.840647,
+        "scaleX": 1.56332016,
+        "scaleY": 1.99980345,
+        "rotation": 0
+      },
+      "batonnet_03": {
+        "x": 597.194805,
+        "y": 394.08776,
+        "scaleX": 1.56332016,
+        "scaleY": 1.99980345,
+        "rotation": -1
+      },
+      "batonnet_04": {
+        "x": 642.077922,
+        "y": 392.840647,
+        "scaleX": 1.56332016,
+        "scaleY": 1.99980345,
+        "rotation": -2
+      },
+      "batonnet_05": {
+        "x": 688.207792,
+        "y": 394.08776,
+        "scaleX": 1.56332016,
+        "scaleY": 1.99980345,
+        "rotation": -2
+      },
+      "batonnet_06": {
+        "x": 734.337662,
+        "y": 392.840647,
+        "scaleX": 1.56332016,
+        "scaleY": 1.99980345,
+        "rotation": -2
+      },
+      "batonnet_07": {
+        "x": 780.467532,
+        "y": 392.840647,
+        "scaleX": 1.56332016,
+        "scaleY": 1.99980345,
+        "rotation": -2
+      },
+      "batonnet_08": {
+        "x": 825.350649,
+        "y": 395.334873,
+        "scaleX": 1.56332016,
+        "scaleY": 1.99980345,
+        "rotation": -3
+      },
+      "batonnet_09": {
+        "x": 871.480519,
+        "y": 394.08776,
+        "scaleX": 1.56332016,
+        "scaleY": 1.99980345,
+        "rotation": -3
+      },
+      "batonnet_10": {
+        "x": 917.61039,
+        "y": 396.581986,
+        "scaleX": 1.56332016,
+        "scaleY": 1.99980345,
+        "rotation": -4
+      },
+      "batonnet_11": {
+        "x": 962.493506,
+        "y": 395.334873,
+        "scaleX": 1.56332016,
+        "scaleY": 1.99980345,
+        "rotation": -4
+      },
+      "batonnet_12": {
+        "x": 1008.623377,
+        "y": 396.581986,
+        "scaleX": 1.56332016,
+        "scaleY": 1.99980345,
+        "rotation": -5
+      },
+      "batonnet_13": {
+        "x": 1056,
+        "y": 397.829099,
+        "scaleX": 1.56332016,
+        "scaleY": 1.99980345,
+        "rotation": -6
+      },
+      "batonnet_14": {
+        "x": 1100.883117,
+        "y": 396.581986,
+        "scaleX": 1.56332016,
+        "scaleY": 1.99980345,
+        "rotation": -6
+      },
+      "batonnet_15": {
+        "x": 1147.012987,
+        "y": 395.334873,
+        "scaleX": 1.56332016,
+        "scaleY": 1.99980345,
+        "rotation": -6
+      },
+      "batonnet_16": {
+        "x": 1193.142857,
+        "y": 396.581986,
+        "scaleX": 1.56332016,
+        "scaleY": 1.99980345,
+        "rotation": -7
+      },
+      "batonnet_17": {
+        "x": 1239.272727,
+        "y": 396.581986,
+        "scaleX": 1.56332016,
+        "scaleY": 1.99980345,
+        "rotation": -7
+      },
+      "batonnet_18": {
+        "x": 1286.649351,
+        "y": 396.581986,
+        "scaleX": 1.56332016,
+        "scaleY": 1.99980345,
+        "rotation": -8
+      },
+      "batonnet_19": {
+        "x": 1332.779221,
+        "y": 399.076212,
+        "scaleX": 1.56332016,
+        "scaleY": 1.99980345,
+        "rotation": -8
+      },
+      "batonnet_20": {
+        "x": 1380.155844,
+        "y": 397.829099,
+        "scaleX": 1.56332016,
+        "scaleY": 1.99980345,
+        "rotation": -9
+      },
+      "batonnet_21": {
+        "x": 1425.038961,
+        "y": 395.334873,
+        "scaleX": 1.56332016,
+        "scaleY": 1.99980345,
+        "rotation": -10
+      },
+      "button_take_1": {
+        "x": 604.675325,
+        "y": 718.337182,
+        "scaleX": 0.65244106,
+        "scaleY": 0.65270785,
+        "rotation": 0
+      },
+      "button_take_2": {
+        "x": 956.25974,
+        "y": 718.337182,
+        "scaleX": 0.65244106,
+        "scaleY": 0.65270785,
+        "rotation": 0
+      },
+      "button_take_3": {
+        "x": 1320.311688,
+        "y": 718.337182,
+        "scaleX": 0.65662338,
+        "scaleY": 0.66096998,
+        "rotation": 0
+      }
+    }
+  },
+  "visibility": {
+    "0": {
+      "background": true,
+      "table": true,
+      "batonnet_01": true,
+      "batonnet_02": true,
+      "batonnet_03": true,
+      "batonnet_04": true,
+      "batonnet_05": true,
+      "batonnet_06": true,
+      "batonnet_07": true,
+      "batonnet_08": true,
+      "batonnet_09": true,
+      "batonnet_10": true,
+      "batonnet_11": true,
+      "batonnet_12": true,
+      "batonnet_13": true,
+      "batonnet_14": true,
+      "batonnet_15": true,
+      "batonnet_16": true,
+      "batonnet_17": true,
+      "batonnet_18": true,
+      "batonnet_19": true,
+      "batonnet_20": true,
+      "batonnet_21": true,
+      "button_take_1": true,
+      "button_take_2": true,
+      "button_take_3": true
+    }
+  },
+  "exportTarget": "generic",
+  "sandbox": {
+    "id": "grodor-batonnets-terrain-import-note",
+    "config": {
+      "source": "grodor public/assets/minigames/batonnets/saves/terrain_jm_save.json",
+      "importFormula": "WorkshopLayerRuntime fitToLayer background 1920x1080, with offsets and sizes applied.",
+      "gameplay": "not-imported"
+    }
+  }
+}

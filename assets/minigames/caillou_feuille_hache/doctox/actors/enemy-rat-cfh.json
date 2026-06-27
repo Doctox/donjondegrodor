@@ -1,0 +1,275 @@
+{
+  "version": 1,
+  "name": "Rat CFH",
+  "type": "side",
+  "template": {
+    "kind": "sideRig",
+    "label": "Side animation",
+    "description": "Actor ennemi CFH importable dans une toile terrain, sans etats de resultat."
+  },
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": {
+      "type": "grid",
+      "color": "#15181c",
+      "gridColor": "#2d3740",
+      "gridSize": 48
+    }
+  },
+  "frames": 3,
+  "selectedFrame": 0,
+  "selectedLayerId": "rat_boss",
+  "layerOrder": [
+    "arm_back",
+    "rat_boss",
+    "arm_front"
+  ],
+  "layers": {
+    "arm_back": {
+      "id": "arm_back",
+      "label": "Bras arriere",
+      "classification": "body",
+      "sourceLayerId": "arm_back",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/caillou_feuille_hache/boss/rat_boss_arm_back.png",
+        "assetKey": "rat_cfh.arm_back"
+      },
+      "assetPath": "projects/grodor/assets/minigames/caillou_feuille_hache/boss/rat_boss_arm_back.png",
+      "assetKey": "rat_cfh.arm_back",
+      "width": 461,
+      "height": 200
+    },
+    "rat_boss": {
+      "id": "rat_boss",
+      "label": "Rat corps",
+      "classification": "body",
+      "sourceLayerId": "rat_boss",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/caillou_feuille_hache/boss/rat_boss.png",
+        "assetKey": "rat_cfh.rat_boss"
+      },
+      "assetPath": "projects/grodor/assets/minigames/caillou_feuille_hache/boss/rat_boss.png",
+      "assetKey": "rat_cfh.rat_boss",
+      "width": 697,
+      "height": 1295
+    },
+    "arm_front": {
+      "id": "arm_front",
+      "label": "Bras avant",
+      "classification": "body",
+      "sourceLayerId": "arm_front",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/caillou_feuille_hache/boss/rat_boss_arm_front.png",
+        "assetKey": "rat_cfh.arm_front"
+      },
+      "assetPath": "projects/grodor/assets/minigames/caillou_feuille_hache/boss/rat_boss_arm_front.png",
+      "assetKey": "rat_cfh.arm_front",
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  "actor": {
+    "schema": "doctoxEnemyActorMiniGameCfh.v1",
+    "actorId": "rat_cfh",
+    "actorFamily": "enemyActor",
+    "actorType": "miniGameActor",
+    "usage": "caillou_feuille_hache",
+    "sourceProject": "Donjon de Grodor",
+    "sourcePreset": "public/assets/minigames/caillou_feuille_hache/saves/boss_jm_save.json",
+    "sourceAssetRoot": "public/assets/minigames/caillou_feuille_hache/boss",
+    "sourceRuntimeComposite": "caillouFeuilleHacheTerrainRuntime boss_anim / cfhBoss",
+    "sourceRenderMethod": "Composite runtime CFH: image position = layer base + save offsets + pose offsets; display size = runtime display size * save size * pose size.",
+    "frameCount": 3,
+    "poseCount": 3,
+    "frameSequence": [
+      0,
+      1,
+      0,
+      1,
+      0,
+      2
+    ],
+    "poseFrameByDocumentFrame": [
+      0,
+      1,
+      2
+    ],
+    "runtimeSequences": {
+      "idle": [
+        0,
+        1
+      ],
+      "reveal": [
+        0,
+        1,
+        2
+      ],
+      "result": [
+        2
+      ]
+    },
+    "defaultScale": 1,
+    "origin": {
+      "x": 960,
+      "y": 620
+    },
+    "pivot": {
+      "x": 0,
+      "y": 0
+    },
+    "bounds": {
+      "x": 687.325,
+      "y": 295.997,
+      "width": 447.176,
+      "height": 648.005
+    },
+    "bodyLayers": [
+      "arm_back",
+      "rat_boss",
+      "arm_front"
+    ],
+    "stuffLayers": [],
+    "helperLayers": [],
+    "layerClassifications": {
+      "arm_back": {
+        "kind": "body",
+        "label": "Bras arriere",
+        "sourceLayerId": "arm_back",
+        "assetPath": "projects/grodor/assets/minigames/caillou_feuille_hache/boss/rat_boss_arm_back.png",
+        "runtimeDisplaySize": {
+          "width": 277,
+          "height": 120
+        }
+      },
+      "rat_boss": {
+        "kind": "body",
+        "label": "Rat corps",
+        "sourceLayerId": "rat_boss",
+        "assetPath": "projects/grodor/assets/minigames/caillou_feuille_hache/boss/rat_boss.png",
+        "runtimeDisplaySize": {
+          "width": 349,
+          "height": 648
+        }
+      },
+      "arm_front": {
+        "kind": "body",
+        "label": "Bras avant",
+        "sourceLayerId": "arm_front",
+        "assetPath": "projects/grodor/assets/minigames/caillou_feuille_hache/boss/rat_boss_arm_front.png",
+        "runtimeDisplaySize": {
+          "width": 384,
+          "height": 157
+        }
+      }
+    },
+    "excludedLayers": [
+      {
+        "id": "rat_ko",
+        "reason": "Layer resultat du terrain CFH affiche quand JM gagne; pas un layer interne de l'actor principal."
+      },
+      {
+        "id": "rat_victoire",
+        "reason": "Layer resultat du terrain CFH affiche quand le rat gagne; pas un layer interne de l'actor principal."
+      }
+    ],
+    "sourceIssues": [
+      "Le runtime Grodor nomme ce composite boss_anim/cfhBoss, mais Doctox le classe comme enemyActor Rat CFH pour ne pas le melanger avec Grodor.",
+      "Le save source contient 5 poseAdjustments, mais le runtime CFH cree le composite avec 3 poses et ignore les poses suivantes.",
+      "rat_ko et rat_victoire restent exclus: ils seront traites avec le futur terrain CFH."
+    ],
+    "importReady": true
+  },
+  "transforms": {
+    "0": {
+      "arm_back": {
+        "x": 804,
+        "y": 602,
+        "scaleX": 0.45666,
+        "scaleY": 0.528,
+        "rotation": -24
+      },
+      "rat_boss": {
+        "x": 960,
+        "y": 620,
+        "scaleX": 0.50072,
+        "scaleY": 0.50039,
+        "rotation": 0
+      },
+      "arm_front": {
+        "x": 856,
+        "y": 588,
+        "scaleX": 0.152,
+        "scaleY": 0.18462,
+        "rotation": 13
+      }
+    },
+    "1": {
+      "arm_back": {
+        "x": 804,
+        "y": 602,
+        "scaleX": 0.45666,
+        "scaleY": 0.528,
+        "rotation": -24
+      },
+      "rat_boss": {
+        "x": 960,
+        "y": 620,
+        "scaleX": 0.50072,
+        "scaleY": 0.50039,
+        "rotation": 0
+      },
+      "arm_front": {
+        "x": 856,
+        "y": 566,
+        "scaleX": 0.152,
+        "scaleY": 0.18462,
+        "rotation": 30
+      }
+    },
+    "2": {
+      "arm_back": {
+        "x": 796,
+        "y": 590,
+        "scaleX": 0.45666,
+        "scaleY": 0.528,
+        "rotation": -10
+      },
+      "rat_boss": {
+        "x": 960,
+        "y": 620,
+        "scaleX": 0.50072,
+        "scaleY": 0.50039,
+        "rotation": 0
+      },
+      "arm_front": {
+        "x": 842,
+        "y": 592,
+        "scaleX": 0.16112,
+        "scaleY": 0.17354,
+        "rotation": 12
+      }
+    }
+  },
+  "visibility": {
+    "0": {
+      "arm_back": true,
+      "rat_boss": true,
+      "arm_front": true
+    },
+    "1": {
+      "arm_back": true,
+      "rat_boss": true,
+      "arm_front": true
+    },
+    "2": {
+      "arm_back": true,
+      "rat_boss": true,
+      "arm_front": true
+    }
+  },
+  "exportTarget": "generic"
+}

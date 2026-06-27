@@ -1,0 +1,408 @@
+{
+  "version": 1,
+  "name": "Boss Tug",
+  "type": "side",
+  "template": {
+    "kind": "sideRig",
+    "label": "Side animation",
+    "description": "Actor ennemi Tug importable dans une toile terrain, separe du terrain Tir a la corde."
+  },
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "background": {
+      "type": "grid",
+      "color": "#15181c",
+      "gridColor": "#2d3740",
+      "gridSize": 48
+    }
+  },
+  "frames": 4,
+  "selectedFrame": 0,
+  "selectedLayerId": "haut_du_corp",
+  "layerOrder": [
+    "bras_back",
+    "dos",
+    "bas_du_corp",
+    "haut_du_corp",
+    "bras_front"
+  ],
+  "layers": {
+    "bras_back": {
+      "id": "bras_back",
+      "label": "Bras arriere",
+      "classification": "body",
+      "sourceLayerId": "bras_back",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/tug_of_war/boss/bras_back.png",
+        "assetKey": "boss_tug.bras_back"
+      },
+      "assetPath": "projects/grodor/assets/minigames/tug_of_war/boss/bras_back.png",
+      "assetKey": "boss_tug.bras_back",
+      "width": 303,
+      "height": 271
+    },
+    "dos": {
+      "id": "dos",
+      "label": "Dos",
+      "classification": "body",
+      "sourceLayerId": "dos",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/tug_of_war/boss/dos.png",
+        "assetKey": "boss_tug.dos"
+      },
+      "assetPath": "projects/grodor/assets/minigames/tug_of_war/boss/dos.png",
+      "assetKey": "boss_tug.dos",
+      "width": 336,
+      "height": 245
+    },
+    "bas_du_corp": {
+      "id": "bas_du_corp",
+      "label": "Bas du corps",
+      "classification": "body",
+      "sourceLayerId": "bas_du_corp",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/tug_of_war/boss/bas_du_corp.png",
+        "assetKey": "boss_tug.bas_du_corp"
+      },
+      "assetPath": "projects/grodor/assets/minigames/tug_of_war/boss/bas_du_corp.png",
+      "assetKey": "boss_tug.bas_du_corp",
+      "width": 522,
+      "height": 580
+    },
+    "haut_du_corp": {
+      "id": "haut_du_corp",
+      "label": "Haut du corps",
+      "classification": "body",
+      "sourceLayerId": "haut_du_corp",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/tug_of_war/boss/haut_du_corp.png",
+        "assetKey": "boss_tug.haut_du_corp"
+      },
+      "assetPath": "projects/grodor/assets/minigames/tug_of_war/boss/haut_du_corp.png",
+      "assetKey": "boss_tug.haut_du_corp",
+      "width": 416,
+      "height": 550
+    },
+    "bras_front": {
+      "id": "bras_front",
+      "label": "Bras avant",
+      "classification": "body",
+      "sourceLayerId": "bras_front",
+      "assetRef": {
+        "type": "assetPath",
+        "assetPath": "projects/grodor/assets/minigames/tug_of_war/boss/bras_front.png",
+        "assetKey": "boss_tug.bras_front"
+      },
+      "assetPath": "projects/grodor/assets/minigames/tug_of_war/boss/bras_front.png",
+      "assetKey": "boss_tug.bras_front",
+      "width": 498,
+      "height": 349
+    }
+  },
+  "actor": {
+    "schema": "doctoxEnemyActorMiniGameTug.v1",
+    "actorId": "boss_tug",
+    "actorFamily": "enemyActor",
+    "actorType": "miniGameActor",
+    "usage": "tug_of_war",
+    "sourceProject": "Donjon de Grodor",
+    "sourcePreset": "public/assets/minigames/tug_of_war/saves/boss_tug_jm_save.json",
+    "sourceAssetRoot": "public/assets/minigames/tug_of_war/boss",
+    "sourceRuntime": "tugOfWarTerrainRuntime",
+    "sourceRenderMethod": "Runtime Boss Tug: local position = layer base - stage + save offset + pose offset; display size = runtime display size * save size * pose size.",
+    "frameCount": 4,
+    "poseCount": 4,
+    "frameSequence": [
+      0,
+      1,
+      2,
+      3,
+      2,
+      1,
+      0
+    ],
+    "defaultScale": 1,
+    "origin": {
+      "x": 960,
+      "y": 620
+    },
+    "pivot": {
+      "x": 0,
+      "y": 0
+    },
+    "bounds": {
+      "x": 350.5,
+      "y": -1,
+      "width": 741.5,
+      "height": 1093
+    },
+    "bodyLayers": [
+      "bras_back",
+      "dos",
+      "bas_du_corp",
+      "haut_du_corp",
+      "bras_front"
+    ],
+    "stuffLayers": [],
+    "helperLayers": [],
+    "frontOverlayLayers": [
+      "bras_front"
+    ],
+    "terrainLayerHints": {
+      "mainActorLayerId": "boss_tug",
+      "frontOverlayLayerId": "boss_tug_front_arm",
+      "reason": "Dans le runtime Tug, bras_front est rendu dans un conteneur separe pour passer devant la corde."
+    },
+    "layerClassifications": {
+      "bras_back": {
+        "kind": "body",
+        "label": "Bras arriere",
+        "sourceLayerId": "bras_back",
+        "assetPath": "projects/grodor/assets/minigames/tug_of_war/boss/bras_back.png",
+        "runtimeDisplaySize": {
+          "width": 303,
+          "height": 271
+        }
+      },
+      "dos": {
+        "kind": "body",
+        "label": "Dos",
+        "sourceLayerId": "dos",
+        "assetPath": "projects/grodor/assets/minigames/tug_of_war/boss/dos.png",
+        "runtimeDisplaySize": {
+          "width": 336,
+          "height": 245
+        }
+      },
+      "bas_du_corp": {
+        "kind": "body",
+        "label": "Bas du corps",
+        "sourceLayerId": "bas_du_corp",
+        "assetPath": "projects/grodor/assets/minigames/tug_of_war/boss/bas_du_corp.png",
+        "runtimeDisplaySize": {
+          "width": 522,
+          "height": 580
+        }
+      },
+      "haut_du_corp": {
+        "kind": "body",
+        "label": "Haut du corps",
+        "sourceLayerId": "haut_du_corp",
+        "assetPath": "projects/grodor/assets/minigames/tug_of_war/boss/haut_du_corp.png",
+        "runtimeDisplaySize": {
+          "width": 416,
+          "height": 550
+        }
+      },
+      "bras_front": {
+        "kind": "body",
+        "label": "Bras avant",
+        "sourceLayerId": "bras_front",
+        "assetPath": "projects/grodor/assets/minigames/tug_of_war/boss/bras_front.png",
+        "runtimeDisplaySize": {
+          "width": 498,
+          "height": 349
+        }
+      }
+    },
+    "excludedLayers": [
+      {
+        "id": "boss_loose",
+        "reason": "Image resultat terrain quand Boss perd; pas un layer interne de l'actor principal."
+      }
+    ],
+    "sourceIssues": [
+      "Boss Tug est un enemyActor mini-jeu, pas un rig Grodor.",
+      "bras_front est conserve dans le document source actor, mais marque frontOverlayLayers pour le futur terrain Tug.",
+      "boss_loose est volontairement exclu: ce sera un layer/resultat du terrain Tug.",
+      "Le runtime interpole entre les poses; Doctox bake ici les 4 poses source et utilise frameSequence [0,1,2,3,2,1,0]."
+    ],
+    "importReady": true
+  },
+  "transforms": {
+    "0": {
+      "bras_back": {
+        "x": 502,
+        "y": 440,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": -22
+      },
+      "dos": {
+        "x": 868,
+        "y": 514,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 10
+      },
+      "bas_du_corp": {
+        "x": 756,
+        "y": 802,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      },
+      "haut_du_corp": {
+        "x": 744,
+        "y": 274,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": -26
+      },
+      "bras_front": {
+        "x": 654,
+        "y": 414,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": -13
+      }
+    },
+    "1": {
+      "bras_back": {
+        "x": 526,
+        "y": 422,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": -15
+      },
+      "dos": {
+        "x": 868,
+        "y": 514,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 10
+      },
+      "bas_du_corp": {
+        "x": 756,
+        "y": 802,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      },
+      "haut_du_corp": {
+        "x": 782,
+        "y": 284,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": -18
+      },
+      "bras_front": {
+        "x": 658,
+        "y": 414,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 2
+      }
+    },
+    "2": {
+      "bras_back": {
+        "x": 618,
+        "y": 404,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": -19
+      },
+      "dos": {
+        "x": 862,
+        "y": 492,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      },
+      "bas_du_corp": {
+        "x": 756,
+        "y": 802,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      },
+      "haut_du_corp": {
+        "x": 856,
+        "y": 332,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 1
+      },
+      "bras_front": {
+        "x": 744,
+        "y": 436,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 10
+      }
+    },
+    "3": {
+      "bras_back": {
+        "x": 654,
+        "y": 390,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": -10
+      },
+      "dos": {
+        "x": 860,
+        "y": 480,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      },
+      "bas_du_corp": {
+        "x": 756,
+        "y": 802,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 0
+      },
+      "haut_du_corp": {
+        "x": 884,
+        "y": 344,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 10
+      },
+      "bras_front": {
+        "x": 742,
+        "y": 438,
+        "scaleX": 1,
+        "scaleY": 1,
+        "rotation": 14
+      }
+    }
+  },
+  "visibility": {
+    "0": {
+      "bras_back": true,
+      "dos": true,
+      "bas_du_corp": true,
+      "haut_du_corp": true,
+      "bras_front": true
+    },
+    "1": {
+      "bras_back": true,
+      "dos": true,
+      "bas_du_corp": true,
+      "haut_du_corp": true,
+      "bras_front": true
+    },
+    "2": {
+      "bras_back": true,
+      "dos": true,
+      "bas_du_corp": true,
+      "haut_du_corp": true,
+      "bras_front": true
+    },
+    "3": {
+      "bras_back": true,
+      "dos": false,
+      "bas_du_corp": true,
+      "haut_du_corp": true,
+      "bras_front": true
+    }
+  },
+  "exportTarget": "generic"
+}
