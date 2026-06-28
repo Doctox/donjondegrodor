@@ -56,10 +56,10 @@
       "sourceLayerId": "cape_side",
       "assetRef": {
         "type": "assetPath",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/cape_trop_longue_profil_bas.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/cape_trop_longue_profil_bas.png",
         "assetKey": "grodor.cfh.cape_side"
       },
-      "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/cape_trop_longue_profil_bas.png",
+      "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/cape_trop_longue_profil_bas.png",
       "assetKey": "grodor.cfh.cape_side",
       "width": 522,
       "height": 767
@@ -71,10 +71,10 @@
       "sourceLayerId": "cape_side_collar",
       "assetRef": {
         "type": "assetPath",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/cape_trop_longue_profil_haut.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/cape_trop_longue_profil_haut.png",
         "assetKey": "grodor.cfh.cape_side_collar"
       },
-      "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/cape_trop_longue_profil_haut.png",
+      "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/cape_trop_longue_profil_haut.png",
       "assetKey": "grodor.cfh.cape_side_collar",
       "width": 522,
       "height": 767
@@ -86,10 +86,10 @@
       "sourceLayerId": "leg_back",
       "assetRef": {
         "type": "assetPath",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_leg_back.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_leg_back.png",
         "assetKey": "grodor.cfh.leg_back"
       },
-      "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_leg_back.png",
+      "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_leg_back.png",
       "assetKey": "grodor.cfh.leg_back",
       "width": 522,
       "height": 767
@@ -101,10 +101,10 @@
       "sourceLayerId": "shoe_back",
       "assetRef": {
         "type": "assetPath",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/test_shoe_back.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/test_shoe_back.png",
         "assetKey": "grodor.cfh.shoe_back"
       },
-      "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/test_shoe_back.png",
+      "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/test_shoe_back.png",
       "assetKey": "grodor.cfh.shoe_back",
       "width": 458,
       "height": 288,
@@ -117,10 +117,10 @@
       "sourceLayerId": "leg_front",
       "assetRef": {
         "type": "assetPath",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_leg_front.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_leg_front.png",
         "assetKey": "grodor.cfh.leg_front"
       },
-      "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_leg_front.png",
+      "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_leg_front.png",
       "assetKey": "grodor.cfh.leg_front",
       "width": 522,
       "height": 767
@@ -132,10 +132,10 @@
       "sourceLayerId": "shoe_front",
       "assetRef": {
         "type": "assetPath",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/test_shoe_front.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/test_shoe_front.png",
         "assetKey": "grodor.cfh.shoe_front"
       },
-      "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/test_shoe_front.png",
+      "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/test_shoe_front.png",
       "assetKey": "grodor.cfh.shoe_front",
       "width": 458,
       "height": 288,
@@ -148,10 +148,10 @@
       "sourceLayerId": "arm_back_upper",
       "assetRef": {
         "type": "assetPath",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_arm_back_upper.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_arm_back_upper.png",
         "assetKey": "grodor.cfh.arm_back_upper"
       },
-      "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_arm_back_upper.png",
+      "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_arm_back_upper.png",
       "assetKey": "grodor.cfh.arm_back_upper",
       "width": 522,
       "height": 767
@@ -163,10 +163,10 @@
       "sourceLayerId": "arm_back_forearm",
       "assetRef": {
         "type": "assetPath",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_arm_back_forearm.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_arm_back_forearm.png",
         "assetKey": "grodor.cfh.arm_back_forearm"
       },
-      "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_arm_back_forearm.png",
+      "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_arm_back_forearm.png",
       "assetKey": "grodor.cfh.arm_back_forearm",
       "width": 522,
       "height": 767
@@ -178,10 +178,10 @@
       "sourceLayerId": "hand_back",
       "assetRef": {
         "type": "assetPath",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_hand_back.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_hand_back.png",
         "assetKey": "grodor.cfh.hand_back"
       },
-      "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_hand_back.png",
+      "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_hand_back.png",
       "assetKey": "grodor.cfh.hand_back",
       "width": 522,
       "height": 767
@@ -193,10 +193,10 @@
       "sourceLayerId": "belly",
       "assetRef": {
         "type": "assetPath",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_belly.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_belly.png",
         "assetKey": "grodor.cfh.belly"
       },
-      "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_belly.png",
+      "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_belly.png",
       "assetKey": "grodor.cfh.belly",
       "width": 522,
       "height": 767
@@ -208,10 +208,10 @@
       "sourceLayerId": "torso",
       "assetRef": {
         "type": "assetPath",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_torso.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_torso.png",
         "assetKey": "grodor.cfh.torso"
       },
-      "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_torso.png",
+      "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_torso.png",
       "assetKey": "grodor.cfh.torso",
       "width": 522,
       "height": 767
@@ -223,10 +223,10 @@
       "sourceLayerId": "glove_back",
       "assetRef": {
         "type": "assetPath",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/test_glove_back.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/test_glove_back.png",
         "assetKey": "grodor.cfh.glove_back"
       },
-      "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/test_glove_back.png",
+      "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/test_glove_back.png",
       "assetKey": "grodor.cfh.glove_back",
       "width": 168,
       "height": 109,
@@ -239,10 +239,10 @@
       "sourceLayerId": "underwear",
       "assetRef": {
         "type": "assetPath",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_underwear.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_underwear.png",
         "assetKey": "grodor.cfh.underwear"
       },
-      "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_underwear.png",
+      "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_underwear.png",
       "assetKey": "grodor.cfh.underwear",
       "width": 522,
       "height": 767
@@ -254,10 +254,10 @@
       "sourceLayerId": "head",
       "assetRef": {
         "type": "assetPath",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_head.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_head.png",
         "assetKey": "grodor.cfh.head"
       },
-      "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_head.png",
+      "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_head.png",
       "assetKey": "grodor.cfh.head",
       "width": 522,
       "height": 767
@@ -269,10 +269,10 @@
       "sourceLayerId": "arm_front_upper",
       "assetRef": {
         "type": "assetPath",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_arm_front_upper.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_arm_front_upper.png",
         "assetKey": "grodor.cfh.arm_front_upper"
       },
-      "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_arm_front_upper.png",
+      "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_arm_front_upper.png",
       "assetKey": "grodor.cfh.arm_front_upper",
       "width": 522,
       "height": 767
@@ -284,10 +284,10 @@
       "sourceLayerId": "arm_front_forearm",
       "assetRef": {
         "type": "assetPath",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_arm_front_forearm.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_arm_front_forearm.png",
         "assetKey": "grodor.cfh.arm_front_forearm"
       },
-      "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_arm_front_forearm.png",
+      "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_arm_front_forearm.png",
       "assetKey": "grodor.cfh.arm_front_forearm",
       "width": 522,
       "height": 767
@@ -299,10 +299,10 @@
       "sourceLayerId": "hand_front",
       "assetRef": {
         "type": "assetPath",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_hand_front.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_hand_front.png",
         "assetKey": "grodor.cfh.hand_front"
       },
-      "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_hand_front.png",
+      "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_hand_front.png",
       "assetKey": "grodor.cfh.hand_front",
       "width": 522,
       "height": 767
@@ -314,10 +314,10 @@
       "sourceLayerId": "glove_front",
       "assetRef": {
         "type": "assetPath",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/test_glove_front.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/test_glove_front.png",
         "assetKey": "grodor.cfh.glove_front"
       },
-      "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/test_glove_front.png",
+      "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/test_glove_front.png",
       "assetKey": "grodor.cfh.glove_front",
       "width": 168,
       "height": 109,
@@ -330,10 +330,10 @@
       "sourceLayerId": "auto_side_axe",
       "assetRef": {
         "type": "assetPath",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/axe.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/axe.png",
         "assetKey": "grodor.cfh.auto_side_axe"
       },
-      "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/axe.png",
+      "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/axe.png",
       "assetKey": "grodor.cfh.auto_side_axe",
       "width": 248,
       "height": 436
@@ -345,10 +345,10 @@
       "sourceLayerId": "auto_side_cape_quart_heure_profil_bas",
       "assetRef": {
         "type": "assetPath",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/cape_quart_heure_profil_bas.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/cape_quart_heure_profil_bas.png",
         "assetKey": "grodor.cfh.auto_side_cape_quart_heure_profil_bas"
       },
-      "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/cape_quart_heure_profil_bas.png",
+      "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/cape_quart_heure_profil_bas.png",
       "assetKey": "grodor.cfh.auto_side_cape_quart_heure_profil_bas",
       "width": 590,
       "height": 451
@@ -360,10 +360,10 @@
       "sourceLayerId": "auto_side_cape_quart_heure_profil_haut",
       "assetRef": {
         "type": "assetPath",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/cape_quart_heure_profil_haut.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/cape_quart_heure_profil_haut.png",
         "assetKey": "grodor.cfh.auto_side_cape_quart_heure_profil_haut"
       },
-      "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/cape_quart_heure_profil_haut.png",
+      "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/cape_quart_heure_profil_haut.png",
       "assetKey": "grodor.cfh.auto_side_cape_quart_heure_profil_haut",
       "width": 597,
       "height": 512
@@ -375,10 +375,10 @@
       "sourceLayerId": "auto_side_ceinture_test",
       "assetRef": {
         "type": "assetPath",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/ceinture_test.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/ceinture_test.png",
         "assetKey": "grodor.cfh.auto_side_ceinture_test"
       },
-      "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/ceinture_test.png",
+      "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/ceinture_test.png",
       "assetKey": "grodor.cfh.auto_side_ceinture_test",
       "width": 250,
       "height": 167,
@@ -391,10 +391,10 @@
       "sourceLayerId": "auto_side_moufles_reflexion_back",
       "assetRef": {
         "type": "assetPath",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/moufles_reflexion_back.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/moufles_reflexion_back.png",
         "assetKey": "grodor.cfh.auto_side_moufles_reflexion_back"
       },
-      "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/moufles_reflexion_back.png",
+      "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/moufles_reflexion_back.png",
       "assetKey": "grodor.cfh.auto_side_moufles_reflexion_back",
       "width": 997,
       "height": 778,
@@ -407,10 +407,10 @@
       "sourceLayerId": "auto_side_moufles_reflexion_front",
       "assetRef": {
         "type": "assetPath",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/moufles_reflexion_front.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/moufles_reflexion_front.png",
         "assetKey": "grodor.cfh.auto_side_moufles_reflexion_front"
       },
-      "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/moufles_reflexion_front.png",
+      "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/moufles_reflexion_front.png",
       "assetKey": "grodor.cfh.auto_side_moufles_reflexion_front",
       "width": 970,
       "height": 824,
@@ -423,10 +423,10 @@
       "sourceLayerId": "auto_side_tiny_helmet",
       "assetRef": {
         "type": "assetPath",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/tiny_helmet.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/tiny_helmet.png",
         "assetKey": "grodor.cfh.auto_side_tiny_helmet"
       },
-      "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/tiny_helmet.png",
+      "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/tiny_helmet.png",
       "assetKey": "grodor.cfh.auto_side_tiny_helmet",
       "width": 168,
       "height": 144,
@@ -439,10 +439,10 @@
       "sourceLayerId": "auto_side_war_underwear_walk",
       "assetRef": {
         "type": "assetPath",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/war_underwear_walk.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/war_underwear_walk.png",
         "assetKey": "grodor.cfh.auto_side_war_underwear_walk"
       },
-      "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/war_underwear_walk.png",
+      "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/war_underwear_walk.png",
       "assetKey": "grodor.cfh.auto_side_war_underwear_walk",
       "width": 248,
       "height": 118,
@@ -480,8 +480,6 @@
     "usage": "caillou_feuille_hache",
     "sourceProject": "Donjon de Grodor",
     "sourceRig": "sideWalk",
-    "sourcePreset": "public/assets/minigames/caillou_feuille_hache/saves/grodor_jm_save.json",
-    "sourceAssetRoot": "public/assets/sprites/grodor/rig/side_walk_master",
     "sourceRenderMethod": "RigMjCaillouFeuilleHacheGrodorScene / caillouFeuilleHacheTerrainRuntime sideWalk composite converted from pivot-origin render to Doctox center-origin transforms.",
     "frameCount": 6,
     "poseCount": 3,
@@ -599,165 +597,165 @@
         "kind": "stuff",
         "label": "Cape cote",
         "sourceLayerId": "cape_side",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/cape_trop_longue_profil_bas.png"
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/cape_trop_longue_profil_bas.png"
       },
       "cape_side_collar": {
         "kind": "stuff",
         "label": "Col cape cote",
         "sourceLayerId": "cape_side_collar",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/cape_trop_longue_profil_haut.png"
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/cape_trop_longue_profil_haut.png"
       },
       "leg_back": {
         "kind": "body",
         "label": "Jambe arriere",
         "sourceLayerId": "leg_back",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_leg_back.png"
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_leg_back.png"
       },
       "shoe_back": {
         "kind": "stuff",
         "label": "Chauss. arriere",
         "sourceLayerId": "shoe_back",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/test_shoe_back.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/test_shoe_back.png",
         "anchorParentId": "leg_back"
       },
       "leg_front": {
         "kind": "body",
         "label": "Jambe avant",
         "sourceLayerId": "leg_front",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_leg_front.png"
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_leg_front.png"
       },
       "shoe_front": {
         "kind": "stuff",
         "label": "Chauss. avant",
         "sourceLayerId": "shoe_front",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/test_shoe_front.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/test_shoe_front.png",
         "anchorParentId": "leg_front"
       },
       "arm_back_upper": {
         "kind": "body",
         "label": "Epaule arriere",
         "sourceLayerId": "arm_back_upper",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_arm_back_upper.png"
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_arm_back_upper.png"
       },
       "arm_back_forearm": {
         "kind": "body",
         "label": "Av-bras arriere",
         "sourceLayerId": "arm_back_forearm",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_arm_back_forearm.png"
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_arm_back_forearm.png"
       },
       "hand_back": {
         "kind": "body",
         "label": "Main arriere",
         "sourceLayerId": "hand_back",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_hand_back.png"
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_hand_back.png"
       },
       "belly": {
         "kind": "body",
         "label": "Ventre",
         "sourceLayerId": "belly",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_belly.png"
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_belly.png"
       },
       "torso": {
         "kind": "body",
         "label": "Torse",
         "sourceLayerId": "torso",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_torso.png"
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_torso.png"
       },
       "glove_back": {
         "kind": "stuff",
         "label": "Gant arriere",
         "sourceLayerId": "glove_back",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/test_glove_back.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/test_glove_back.png",
         "anchorParentId": "hand_back"
       },
       "underwear": {
         "kind": "body",
         "label": "Slip",
         "sourceLayerId": "underwear",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_underwear.png"
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_underwear.png"
       },
       "head": {
         "kind": "body",
         "label": "Tete",
         "sourceLayerId": "head",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_head.png"
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_head.png"
       },
       "arm_front_upper": {
         "kind": "body",
         "label": "Epaule avant",
         "sourceLayerId": "arm_front_upper",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_arm_front_upper.png"
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_arm_front_upper.png"
       },
       "arm_front_forearm": {
         "kind": "body",
         "label": "Av-bras avant",
         "sourceLayerId": "arm_front_forearm",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_arm_front_forearm.png"
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_arm_front_forearm.png"
       },
       "hand_front": {
         "kind": "body",
         "label": "Main avant",
         "sourceLayerId": "hand_front",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/side_hand_front.png"
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/side_hand_front.png"
       },
       "glove_front": {
         "kind": "stuff",
         "label": "Gant avant",
         "sourceLayerId": "glove_front",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/test_glove_front.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/test_glove_front.png",
         "anchorParentId": "hand_front"
       },
       "auto_side_axe": {
         "kind": "stuff",
         "label": "Axe",
         "sourceLayerId": "auto_side_axe",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/axe.png"
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/axe.png"
       },
       "auto_side_cape_quart_heure_profil_bas": {
         "kind": "stuff",
         "label": "Cape Quart Heure Profil Bas",
         "sourceLayerId": "auto_side_cape_quart_heure_profil_bas",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/cape_quart_heure_profil_bas.png"
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/cape_quart_heure_profil_bas.png"
       },
       "auto_side_cape_quart_heure_profil_haut": {
         "kind": "stuff",
         "label": "Cape Quart Heure Profil Haut",
         "sourceLayerId": "auto_side_cape_quart_heure_profil_haut",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/cape_quart_heure_profil_haut.png"
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/cape_quart_heure_profil_haut.png"
       },
       "auto_side_ceinture_test": {
         "kind": "stuff",
         "label": "Ceinture Test",
         "sourceLayerId": "auto_side_ceinture_test",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/ceinture_test.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/ceinture_test.png",
         "anchorParentId": "underwear"
       },
       "auto_side_moufles_reflexion_back": {
         "kind": "stuff",
         "label": "Moufles Reflexion Back",
         "sourceLayerId": "auto_side_moufles_reflexion_back",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/moufles_reflexion_back.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/moufles_reflexion_back.png",
         "anchorParentId": "hand_back"
       },
       "auto_side_moufles_reflexion_front": {
         "kind": "stuff",
         "label": "Moufles Reflexion Front",
         "sourceLayerId": "auto_side_moufles_reflexion_front",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/moufles_reflexion_front.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/moufles_reflexion_front.png",
         "anchorParentId": "hand_front"
       },
       "auto_side_tiny_helmet": {
         "kind": "stuff",
         "label": "Tiny Helmet",
         "sourceLayerId": "auto_side_tiny_helmet",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/tiny_helmet.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/tiny_helmet.png",
         "anchorParentId": "head"
       },
       "auto_side_war_underwear_walk": {
         "kind": "stuff",
         "label": "War Underwear Walk",
         "sourceLayerId": "auto_side_war_underwear_walk",
-        "assetPath": "projects/grodor/assets/grodor/side_walk_master/stuff/war_underwear_walk.png",
+        "assetPath": "projects/grodor/assets/grodor/doctox/body/side/stuff/war_underwear_walk.png",
         "anchorParentId": "underwear"
       }
     },
